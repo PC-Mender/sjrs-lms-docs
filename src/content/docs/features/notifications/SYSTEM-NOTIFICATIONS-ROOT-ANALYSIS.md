@@ -1,0 +1,300 @@
+---
+title: "SYSTEM NOTIFICATIONS ROOT ANALYSIS"
+---
+
+# System Notifications - Root Level Analysis
+
+## 🎯 Purpose & Definition
+
+**System Notifications** are platform-wide event notifications automatically pulled from external sources like:
+- **Deployment Events** - When new deployments are done (from release pipeline)
+- **Platform Updates** - Version updates, feature releases
+- **Cloudflare Analytics** - Performance metrics, threshold breaches
+- **Sentry** - Error tracking, system issues, exceptions
+- **System-Side Issues** - Infrastructure problems, maintenance windows
+
+**Key Characteristics:**
+- ✅ **Automatically generated** from external sources (not manual user actions)
+- ✅ **Permission-based visibility** - Superuser controls who can see them
+- ✅ **Platform-wide** - Not user-specific transactions
+- ✅ **System health focused** - Deployment status, errors, performance issues
+
+---
+
+## ⚠️ Current Confusion - What Needs to be Fixed
+
+### ❌ **WRONG**: Loans/Payments Creating System Notifications
+
+**Current Implementation:**
+- `functions/lib/notifications/transaction-notifications.ts` creates System Notifications for:
+  - Loan creation → `publishLoanCreatedNotification()`
+  - Loan status changes → `publishLoanStatusNotification()`
+  - Payment receipts → `publishPaymentReceiptNotification()`
+
+**Problem:**
+- These are **user-specific transaction notifications** (App Notifications)
+- They should NOT be System Notifications
+- System Notifications are for platform/system events, not user transactions
+
+**Fix Required:**
+- Move loan/payment notifications to **App Notifications** (`notifications` table)
+- Remove System Notification creation from transaction-notifications.ts
+- These should create entries in `notifications` table, not `notification_events` table
+
+---
+
+## ✅ What's Already Implemented (Correctly)
+
+### 1. Ingest Endpoint for External Sources
+
+**Endpoint**: `POST /api/notifications/events/ingest`
+- **Handler**: `functions/api/notifications/handlers/ingest-notification-event.ts`
+- **Authentication**: Token-based (via `x-notification-ingest-token` header)
+- **Status**: ✅ **Fully implemented and working**
+
+**Supported Sources:**
+1. **Release Pipeline** (`release:pipeline`)
+   - Deployment events
+   - Version updates
+   - Quality gate status
+   - Already integrated in `scripts/auto-version.js`
+
+2. **Sentry** (`monitoring:sentry`)
+   - Error events
+   - Exception tracking
+   - Issue notifications
+   - Severity mapping (fatal/error → critical, warning → warning, etc.)
+
+3. **Cloudflare Analytics** (`analytics:cloudflare`)
+   - Metric threshold breaches
+   - Performance alerts
+   - Analytics-based notifications
+
+**Token Configuration:**
+```typescript
+// Environment variables needed:
+NOTIFICATION_INGEST_TOKEN_RELEASE
+NOTIFICATION_INGEST_TOKEN_DEPLOYMENT
+NOTIFICATION_INGEST_TOKEN_SENTRY
+NOTIFICATION_INGEST_TOKEN_MONITORING
+NOTIFICATION_INGEST_TOKEN_CLOUDFLARE
+NOTIFICATION_INGEST_TOKEN_ANALYTICS
+```
+
+### 2. Database Schema
+
+**Tables:**
+- ✅ `notification_events` - Main event storage
+- ✅ `notification_event_targets` - Permission-based targeting
+- ✅ `notification_event_acknowledgements` - User interactions
+
+**Fields Support:**
+- ✅ `source` - Tracks origin (release:pipeline, monitoring:sentry, analytics:cloudflare)
+- ✅ `category` - deployment, platform-update, incident, maintenance
+- ✅ `severity` - info, notice, warning, critical
+- ✅ `status` - draft, scheduled, active, resolved, archived
+- ✅ `scope` - global, user, role, permission (for permission-based visibility)
+
+### 3. API Endpoints
+
+**Full CRUD:**
+- ✅ `GET /api/notifications/events` - List events (admin view)
+- ✅ `POST /api/notifications/events` - Manual creation
+- ✅ `PUT /api/notifications/events/:id` - Update event
+- ✅ `DELETE /api/notifications/events/:id` - Delete event
+- ✅ `POST /api/notifications/events/ingest` - **External source ingestion**
+
+### 4. Frontend View
+
+**Notification Center Page:**
+- ✅ `src/pages/dashboard-superuser/notification-center.tsx`
+- ✅ View all system notifications
+- ✅ Filtering by status, scope, category
+- ✅ Displays source, version, severity
+
+---
+
+## 🔧 What Needs to be Implemented/Configured
+
+### 1. Fix Transaction Notifications (HIGH PRIORITY)
+
+**Action Required:**
+- Move loan/payment notifications from System Notifications to App Notifications
+- Update `functions/lib/notifications/transaction-notifications.ts`
+- Create entries in `notifications` table instead of `notification_events` table
+
+**Files to Modify:**
+- `functions/lib/notifications/transaction-notifications.ts`
+- `functions/api/loans/handlers/create-loan.ts`
+- `functions/api/loans/handlers/update-loan.ts`
+- `functions/api/receipts/handlers/create-receipt.ts`
+
+### 2. Configure External Source Webhooks
+
+#### A. Sentry Webhook Integration
+
+**Setup Steps:**
+1. Go to Sentry project settings
+2. Navigate to **Alerts** → **Webhooks**
+3. Add webhook URL: `https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
+4. Configure webhook to send:
+   - Issue alerts (new issues, resolved issues)
+   - Error events (critical errors)
+5. Set authentication header: `x-notification-ingest-token: <NOTIFICATION_INGEST_TOKEN_SENTRY>`
+
+**Sentry Payload Format** (already supported):
+```json
+{
+  "source": "monitoring:sentry",
+  "sentry": {
+    "id": "event-id",
+    "project": "your-sentry-project",
+    "url": "https://sentry.io/...",
+    "event": {
+      "title": "Error message",
+      "level": "error",
+      "message": "Detailed error",
+      "environment": "production"
+    }
+  }
+}
+```
+
+#### B. Cloudflare Analytics Integration
+
+**Setup Steps:**
+1. Use Cloudflare Workers Analytics API
+2. Set up scheduled worker (cron) to check metrics
+3. Or configure Cloudflare webhooks (if available)
+4. Send to ingest endpoint when thresholds are breached
+
+**Analytics Payload Format** (already supported):
+```json
+{
+  "source": "analytics:cloudflare",
+  "analytics": {
+    "metric": "request_rate",
+    "value": 1500,
+    "threshold": 1000,
+    "status": "breached",
+    "window": "5 minutes",
+    "environment": "production"
+  }
+}
+```
+
+#### C. Deployment Events (Already Working)
+
+**Current Status:** ✅ Already integrated
+- `scripts/auto-version.js` calls `notifyDeploymentEvent()`
+- Sends to ingest endpoint after deployment
+- Requires `NOTIFICATION_INGEST_TOKEN_RELEASE` to be set
+
+### 3. Permission-Based Visibility
+
+**Current Status:** ⚠️ Partially implemented
+
+**What Exists:**
+- `notification_event_targets` table supports permission-based targeting
+- `scope` field supports 'permission' type
+- API supports permission-based filtering
+
+**What Needs Implementation:**
+- Frontend should filter System Notifications based on user permissions
+- Superuser should be able to configure who sees which notifications
+- Permission-based targeting in ingest endpoint
+
+**Recommended Approach:**
+1. Superuser creates permission groups (e.g., "view-deployment-notifications")
+2. System Notifications target these permissions
+3. Users with matching permissions see the notifications
+4. Default: Only superusers see all System Notifications
+
+### 4. Frontend Enhancements
+
+**Missing UI:**
+- ❌ Create System Notification manually (for superuser)
+- ❌ Edit System Notification
+- ❌ Delete System Notification
+- ❌ Configure permission-based visibility
+- ❌ User-facing notification feed (shows notifications user has permission to see)
+
+**Recommended:**
+- Add Create/Edit/Delete buttons to Notification Center
+- Add permission selector when creating/editing
+- Create user-facing feed component that filters by permissions
+
+---
+
+## 📋 Implementation Roadmap
+
+### Phase 1: Fix Current Issues (IMMEDIATE)
+1. ✅ Move loan/payment notifications to App Notifications
+2. ✅ Remove System Notification creation from transaction-notifications.ts
+3. ✅ Update all loan/payment handlers
+
+### Phase 2: Configure External Sources
+1. ✅ Set up Sentry webhook
+2. ✅ Configure Cloudflare Analytics monitoring
+3. ✅ Test deployment event notifications
+4. ✅ Verify ingest endpoint security
+
+### Phase 3: Permission-Based Visibility
+1. ✅ Implement permission-based filtering in API
+2. ✅ Add permission selector to frontend
+3. ✅ Create user-facing notification feed
+4. ✅ Add superuser permission management UI
+
+### Phase 4: Frontend Enhancements
+1. ✅ Add Create/Edit/Delete UI
+2. ✅ Add permission configuration UI
+3. ✅ Improve Notification Center with better filtering
+4. ✅ Add notification feed widget for dashboard
+
+---
+
+## 🔐 Security Considerations
+
+### Ingest Endpoint Security
+- ✅ Token-based authentication (already implemented)
+- ✅ Source-specific tokens (already implemented)
+- ✅ Token validation per source (already implemented)
+
+### Permission-Based Access
+- ⚠️ Need to ensure users can only see notifications they have permission for
+- ⚠️ API should filter by user permissions
+- ⚠️ Frontend should respect permission checks
+
+### Data Privacy
+- System Notifications may contain sensitive system information
+- Should only be visible to authorized users (superuser-controlled)
+- Consider audit logging for who views which notifications
+
+---
+
+## 📊 Summary
+
+| Component | Status | Notes |
+|-----------|--------|-------|
+| Database Schema | ✅ Complete | All tables and fields ready |
+| Ingest Endpoint | ✅ Complete | Supports release, Sentry, Analytics |
+| API CRUD | ✅ Complete | Full CRUD operations available |
+| Deployment Events | ✅ Working | Integrated in auto-version.js |
+| Sentry Integration | ⚠️ Needs Setup | Webhook configuration required |
+| CF Analytics | ⚠️ Needs Setup | Monitoring setup required |
+| Transaction Fix | ❌ Needs Fix | Loans/payments should be App Notifications |
+| Permission Filtering | ⚠️ Partial | API supports, needs frontend implementation |
+| Frontend UI | ⚠️ View Only | Missing Create/Edit/Delete |
+| User Feed | ❌ Missing | No user-facing notification feed |
+
+---
+
+## 🎯 Next Steps
+
+1. **Fix transaction notifications** - Move to App Notifications
+2. **Configure Sentry webhook** - Set up error tracking integration
+3. **Set up CF Analytics monitoring** - Configure threshold alerts
+4. **Implement permission-based filtering** - API and frontend
+5. **Add frontend UI** - Create/Edit/Delete, permission management
+6. **Create user feed** - Permission-based notification display
+

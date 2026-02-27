@@ -1,0 +1,206 @@
+---
+title: "BADGE SYSTEM SECURITY ANALYSIS"
+---
+
+# Badge System Security Analysis
+
+## Identified Security Loopholes
+
+### 🔴 **CRITICAL ISSUES**
+
+#### 1. **Self-Assignment Loophole**
+**Location**: `functions/api/badges/index.ts:152-183`
+
+**Issue**: Users with `badges:create` permission can assign badges to themselves, including high-level badges like `superuser_crown`.
+
+**Risk**: Permission escalation - a user could grant themselves powerful badges.
+
+**Current Code**:
+```typescript
+// No check preventing self-assignment
+await env.DB.prepare(`
+  INSERT OR IGNORE INTO user_badges (user_id, badge_id, awarded_by, awarded_reason, expires_at)
+  VALUES (?, ?, ?, ?, ?)
+`).bind(user_id, (badge as any).id, user.id, reason || null, expires_at || null).run();
+```
+
+**Fix Required**: Add validation to prevent users from assigning badges to themselves (unless explicitly allowed for specific low-level badges).
+
+---
+
+#### 2. **Role Badge Manipulation**
+**Location**: `functions/api/badges/index.ts:152-183`
+
+**Issue**: No protection against manually assigning role-based badges (e.g., `superuser_crown`, `professor_mortarboard`). These should only be assigned automatically based on user role.
+
+**Risk**: 
+- Users could assign `superuser_crown` to themselves even if they're not superusers
+- Creates inconsistency between role and badge assignments
+- Role badges are virtual and shouldn't be manually assigned
+
+**Current Code**: No check to prevent assignment of role-based badges.
+
+**Fix Required**: 
+- Check if badge is a role badge before allowing assignment
+- Block manual assignment of role badges (they should only come from role_badges table)
+
+---
+
+#### 3. **No Audit Logging**
+**Location**: `functions/api/badges/index.ts:152-214`
+
+**Issue**: Badge assignments and revocations are not logged to `action_logs` table, unlike permission changes which have full audit trails.
+
+**Risk**: 
+- No accountability for badge changes
+- Cannot track who assigned/revoked badges and when
+- Difficult to investigate security incidents
+
+**Current Code**: No action logging for badge operations.
+
+**Fix Required**: Add action logging similar to permission system:
+```typescript
+// Log badge assignment
+await logAction(env, {
+  user_id: user.id,
+  action_type: 'badge_assignment',
+  table_name: 'user_badges',
+  record_id: user_id,
+  old_values: null,
+  new_values: { badge_key, reason, expires_at }
+});
+```
+
+---
+
+### 🟡 **MEDIUM PRIORITY ISSUES**
+
+#### 4. **Expired Badges in Admin View**
+**Location**: `functions/api/badges/index.ts:216-345`
+
+**Issue**: The `handleGetGrantedBadges` function doesn't filter out expired badges, while `handleGetMyBadges` does.
+
+**Risk**: Admins see expired badges as if they're still active, which could cause confusion.
+
+**Current Code**:
+```typescript
+// handleGetGrantedBadges - no expiry check
+// handleGetMyBadges - has expiry check:
+AND (ub.expires_at IS NULL OR ub.expires_at > datetime('now'))
+```
+
+**Fix Required**: Add expiry filter to granted badges query, or add a filter option to show/hide expired badges.
+
+---
+
+#### 5. **Input Validation - expires_at Format**
+**Location**: `functions/api/badges/index.ts:152-183`
+
+**Issue**: The `expires_at` field is not validated for:
+- Date format (should be ISO datetime)
+- Future dates (should not allow past dates)
+- Invalid date strings
+
+**Risk**: Invalid dates could cause database errors or unexpected behavior.
+
+**Current Code**: No validation on `expires_at` input.
+
+**Fix Required**: Add validation:
+```typescript
+if (expires_at) {
+  const expiryDate = new Date(expires_at);
+  if (isNaN(expiryDate.getTime())) {
+    return createErrorResponse('Invalid expires_at format. Use ISO datetime.', 400);
+  }
+  if (expiryDate < new Date()) {
+    return createErrorResponse('expires_at must be a future date', 400);
+  }
+}
+```
+
+---
+
+#### 6. **No High-Level Badge Protection**
+**Location**: `functions/api/badges/index.ts:152-183`
+
+**Issue**: No checks to prevent assignment of high-level badges (e.g., level 10 badges like `superuser_crown`) to unauthorized users.
+
+**Risk**: Users with `badges:create` permission could assign powerful badges to anyone.
+
+**Fix Required**: Add badge level checks:
+```typescript
+// Check if badge level requires special permissions
+if (badge.level >= 5 && !isSuperuser(user)) {
+  return createErrorResponse('High-level badges can only be assigned by superusers', 403);
+}
+```
+
+---
+
+#### 7. **Revocation Doesn't Verify Badge Exists**
+**Location**: `functions/api/badges/index.ts:185-214`
+
+**Issue**: The revoke function doesn't check if the badge was actually assigned before attempting to revoke it. It silently succeeds even if the badge doesn't exist.
+
+**Risk**: Misleading behavior - users might think they revoked a badge that was never assigned.
+
+**Current Code**:
+```typescript
+await env.DB.prepare(`
+  UPDATE user_badges SET is_revoked = 1, revoked_at = datetime('now')
+  WHERE user_id = ? AND badge_id = ?
+`).bind(user_id, (badge as any).id).run();
+// No check if update actually affected any rows
+```
+
+**Fix Required**: Check if badge was actually revoked:
+```typescript
+const result = await env.DB.prepare(...).run();
+if (result.meta.changes === 0) {
+  return createErrorResponse('Badge not found or already revoked', 404);
+}
+```
+
+---
+
+### 🟢 **LOW PRIORITY / ENHANCEMENTS**
+
+#### 8. **No Rate Limiting on Badge Operations**
+**Issue**: No rate limiting on badge assignment/revocation endpoints.
+
+**Risk**: Potential for abuse or accidental mass operations.
+
+**Fix**: Add rate limiting (may already be handled by security middleware).
+
+---
+
+#### 9. **Role Badge Revocation Attempt**
+**Issue**: Users can attempt to revoke role-based badges, which will silently fail (they're virtual).
+
+**Risk**: Confusing UX - users might think they revoked a role badge but it still appears.
+
+**Fix**: Add check to prevent revocation attempts on role badges, or return clear error message.
+
+---
+
+## Recommended Fixes Priority
+
+1. **HIGH**: Prevent self-assignment of badges
+2. **HIGH**: Block manual assignment of role-based badges
+3. **HIGH**: Add audit logging for badge operations
+4. **MEDIUM**: Add input validation for `expires_at`
+5. **MEDIUM**: Add high-level badge protection
+6. **MEDIUM**: Fix expired badges in admin view
+7. **LOW**: Improve revocation feedback
+8. **LOW**: Handle role badge revocation attempts
+
+## Summary
+
+The badge system has several security loopholes that could allow:
+- Permission escalation (self-assignment)
+- Role badge manipulation
+- Lack of accountability (no audit logs)
+- Data integrity issues (invalid dates, expired badges)
+
+Most critical issues are around authorization checks and audit logging. The permission system is properly enforced at the API level, but business logic validation is missing.
+

@@ -1,0 +1,262 @@
+---
+title: "Action Logs Guide"
+---
+
+# Action Logs User Guide
+
+## Overview
+
+The Action Logs page provides administrators with comprehensive visibility into all user activities within the SJRS LMS system. This guide will help you understand how to access, navigate, and effectively use the action logs for monitoring and auditing purposes.
+
+## 🎯 Who Can Access Action Logs?
+
+- **Superusers**: Full access to all action logs
+- **Admins**: Full access to all action logs  
+- **Librarians**: Full access to all action logs
+- **Other Users**: No access (will see access denied message)
+
+## 🚀 How to Access Action Logs
+
+### Step 1: Login
+1. Login to the SJRS LMS system with your admin credentials
+2. Ensure you have the appropriate role (superuser, admin, or librarian)
+
+### Step 2: Navigate to Action Logs
+- **From Superuser Dashboard**: Click "Action Logs" in the left sidebar
+- **From Admin Dashboard**: Click "Action Logs" in the left sidebar
+- **From Librarian Dashboard**: Click "Action Logs" in the left sidebar
+
+### Step 3: View the Dashboard
+The Action Logs page will display:
+- **Statistics Cards**: Overview of total logs, action types, and tables tracked
+- **Filters Panel**: Advanced filtering options
+- **Logs Table**: Detailed list of all user actions
+- **Pagination**: Navigate through large datasets
+
+## 📊 Understanding the Dashboard
+
+### Statistics Overview
+The top of the page shows four key metrics:
+
+1. **Total Logs**: Total number of action logs in the system
+2. **Action Types**: Number of different action types tracked
+3. **Tables Tracked**: Number of database tables being monitored
+4. **Current Page**: Current page number and total pages
+
+### Filters Panel
+Use the filters to narrow down the results:
+
+#### Action Type Filter
+- **Purpose**: Filter by specific types of actions
+- **Options**: create, update, delete, login, logout, approve, reject, etc.
+- **Usage**: Select from dropdown or type to search
+
+#### Table Name Filter
+- **Purpose**: Filter by affected database table
+- **Options**: library_users, books, loans, authors, etc.
+- **Usage**: Select from dropdown to see actions on specific tables
+
+#### Date Range Filter
+- **Purpose**: Filter by specific time periods
+- **Usage**: Select start and end dates using the date picker
+- **Format**: YYYY-MM-DD
+
+#### Search Box
+- **Purpose**: Full-text search across all log fields
+- **Usage**: Type keywords to search across user names, emails, action types, etc.
+
+### Action Buttons
+- **Refresh**: Reload the current data
+- **Export**: Download logs as CSV (feature coming soon)
+
+## 📋 Understanding the Logs Table
+
+### Column Descriptions
+
+#### User Column
+- **User Name**: Full name of the user who performed the action
+- **Email**: User's email address
+- **Role**: User's role (admin, librarian, etc.)
+
+#### Action Column
+- **Action Type**: Type of operation performed
+- **Color Coding**: Different colors for different action types
+  - 🟢 Green: Create operations
+  - 🔵 Blue: Update operations
+  - 🔴 Red: Delete operations
+  - 🟡 Yellow: Login/Logout
+  - 🟠 Orange: Approval/Rejection
+
+#### Table Column
+- **Table Name**: Database table affected by the action
+- **Icon**: Database icon for visual identification
+
+#### Record ID Column
+- **Record ID**: Specific record that was modified
+- **Format**: Numeric ID or "-" if not applicable
+
+#### IP Address Column
+- **IP Address**: Location where the action was performed
+- **Tooltip**: Hover to see full IP address
+
+#### Timestamp Column
+- **Date/Time**: Exact time of the action
+- **Relative Time**: "2 hours ago", "yesterday", etc.
+
+#### Details Column
+- **View Buttons**: Click to see old/new values (if available)
+- **Eye Icon**: Hover to see tooltip description
+
+## 🔍 How to Use Filters Effectively
+
+### Finding Specific User Activity
+1. Use the **Search** box to find a specific user by name or email
+2. Or use the **Date Range** to narrow down to a specific time period
+3. Combine with **Action Type** to see specific types of actions
+
+### Example: Find Recent User Approvals
+1. Set **Action Type** to "user_approval"
+2. Set **Date Range** to last 7 days
+3. Click **Refresh** to apply filters
+
+### Example: Monitor Book Management
+1. Set **Table Name** to "books"
+2. Set **Action Type** to "create" or "update"
+3. Use **Date Range** to focus on recent activity
+
+### Example: Security Audit
+1. Set **Action Type** to "login" or "failed_login"
+2. Use **Date Range** to focus on suspicious time periods
+3. Look for unusual IP addresses or patterns
+
+## 📈 Interpreting the Data
+
+### Common Action Types
+
+#### Authentication Actions
+- **login**: User successfully logged in
+- **logout**: User logged out
+- **failed_login**: Unsuccessful login attempt
+- **session_timeout**: Session expired
+
+#### User Management Actions
+- **user_registration**: New user registered
+- **user_approval**: User approved by admin
+- **user_rejection**: User rejected by admin
+- **status_change**: User status modified
+- **account_suspension**: User account suspended
+- **account_reactivation**: User account reactivated
+
+#### Data Management Actions
+- **create**: New record created
+- **update**: Existing record modified
+- **delete**: Record deleted
+- **bulk_approve**: Multiple records approved
+- **bulk_deactivate**: Multiple records deactivated
+- **bulk_delete**: Multiple records deleted
+
+#### System Actions
+- **search**: User performed search
+- **export_data**: Data exported
+- **profile_update**: User profile modified
+- **password_change**: Password changed
+
+### Understanding Old/New Values
+When you click the details button, you'll see:
+
+#### For Create Actions
+- **Old Values**: Usually null (no previous data)
+- **New Values**: JSON data of the created record
+
+#### For Update Actions
+- **Old Values**: Previous data before the change
+- **New Values**: New data after the change
+
+#### For Delete Actions
+- **Old Values**: Data of the deleted record
+- **New Values**: Usually null (record no longer exists)
+
+## 🛡️ Security Best Practices
+
+### Regular Monitoring
+- **Daily**: Check for unusual login patterns
+- **Weekly**: Review user management activities
+- **Monthly**: Audit bulk operations and data exports
+
+### Suspicious Activity Indicators
+- **Multiple Failed Logins**: Potential security breach
+- **Unusual IP Addresses**: Access from unexpected locations
+- **Bulk Deletions**: Mass data removal without authorization
+- **Admin Actions**: Superuser activities outside normal hours
+
+### Compliance Requirements
+- **Data Retention**: Logs are retained for audit purposes
+- **Access Control**: Only authorized personnel can view logs
+- **Audit Trail**: Complete history of all system activities
+
+## 🔧 Troubleshooting
+
+### Common Issues
+
+#### No Logs Displayed
+- **Check Permissions**: Ensure you have the correct role
+- **Check Filters**: Clear all filters to see all logs
+- **Check Date Range**: Ensure date range includes current time
+- **Refresh Page**: Try refreshing the page
+
+#### Slow Loading
+- **Reduce Page Size**: Use smaller page limits
+- **Apply Filters**: Use specific filters to reduce data
+- **Check Network**: Ensure stable internet connection
+
+#### Missing Data
+- **Check Database**: Ensure action_logs table exists
+- **Check Permissions**: Verify user has proper access
+- **Contact Admin**: Report to system administrator
+
+### Getting Help
+- **System Administrator**: Contact your system admin
+- **Documentation**: Refer to technical documentation
+- **Support**: Contact technical support team
+
+## 📱 Mobile Usage
+
+### Responsive Design
+The Action Logs page is fully responsive and works on:
+- **Desktop Computers**: Full functionality
+- **Tablets**: Optimized layout
+- **Mobile Phones**: Simplified view
+
+### Mobile Tips
+- **Horizontal Scroll**: Swipe left/right to see all columns
+- **Filter Panel**: Collapsible for better mobile experience
+- **Touch-Friendly**: Large buttons and touch targets
+
+## 🎯 Quick Reference
+
+### Keyboard Shortcuts
+- **Ctrl+F**: Focus search box
+- **Ctrl+R**: Refresh data
+- **Escape**: Clear filters
+
+### Common Filter Combinations
+- **Recent Activity**: Last 24 hours, all actions
+- **User Management**: user_approval, user_rejection, status_change
+- **Data Management**: create, update, delete for specific tables
+- **Security Audit**: login, failed_login, logout
+
+### Export Options (Coming Soon)
+- **CSV Export**: Download filtered results
+- **PDF Report**: Generate audit reports
+- **Scheduled Reports**: Automated report generation
+
+## 📞 Support
+
+For technical support or questions about the Action Logs feature:
+- **Email**: support@yourdomain.com
+- **Documentation**: Check the technical documentation
+- **Admin Contact**: Contact your system administrator
+
+---
+
+**Note**: This guide covers the basic usage of the Action Logs feature. For advanced features or technical implementation details, please refer to the technical documentation. 

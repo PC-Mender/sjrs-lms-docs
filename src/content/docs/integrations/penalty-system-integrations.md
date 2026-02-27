@@ -1,0 +1,190 @@
+---
+title: "Penalty System Integrations"
+---
+
+# Penalty System Integrations
+
+## Overview
+The penalty system has been enhanced with UPI-focused online payment integration to provide a comprehensive solution for library fine management.
+
+## 1. Currency Configuration
+### INR Implementation
+- **Default Currency**: Changed from USD to INR (₹)
+- **Formatting**: Uses Indian number formatting (e.g., ₹1,000.00)
+- **Fine Rates**:
+  - Students: ₹25 per day
+  - Professors: ₹50 per day
+  - Guests: ₹100 per day
+
+### Files Modified
+- `src/utilities/formatting/data.ts` - Currency formatting
+- `functions/email-templates/base/template-utils.ts` - Email currency
+- `src/constants/borrow-limits.ts` - Fine amounts
+- `src/constants/config.ts` - Library rules
+
+## 2. UPI Payment Integration
+### Features
+- **Individual Payment**: Pay one penalty at a time with dedicated modal
+- **Bulk Payment**: Pay multiple penalties together in a single transaction
+- **UPI ID Payment**: Direct transfer to configured UPI ID
+- **QR Code Payment**: Scan QR code with any UPI app (PhonePe, Google Pay, Paytm, etc.)
+- **Online Only**: No offline payment options
+- **Auto Receipt Generation**: Receipts automatically generated upon successful payment
+- **Payment Records**: Complete tracking for users and administration
+- **Security**: JWT authentication, CSRF protection, audit logging
+
+### Payment Flow
+#### Individual Payment
+1. User clicks "Pay" button on pending penalty
+2. UPI Payment Modal opens with penalty details
+3. User selects payment method (UPI ID or QR Code)
+4. User enters email and phone for receipt
+5. System generates UPI URL or QR code
+6. User completes payment via UPI app
+7. User clicks "I've Completed Payment" to verify
+8. System verifies payment and generates receipt
+9. Receipt is automatically sent to user's email
+
+#### Bulk Payment
+1. User clicks "Bulk Pay" button (shows count of pending penalties)
+2. Bulk Payment Modal opens with list of all pending penalties
+3. User selects which penalties to pay together
+4. System calculates total amount automatically
+5. User enters email and phone for receipts
+6. User selects payment method (UPI ID or QR Code)
+7. System generates UPI URL or QR code for total amount
+8. User completes single payment via UPI app
+9. User clicks "I've Completed Payment" to verify
+10. System processes all selected penalties and generates individual receipts
+11. Receipts are automatically sent to user's email
+
+### Components
+- `src/services/upi-payment.service.ts` - UPI payment service
+- `src/components/payment/UPIPaymentModal.tsx` - Individual payment modal component
+- `src/components/payment/BulkUPIPaymentModal.tsx` - Bulk payment modal component
+- `functions/api/payments/` - Backend payment API handlers
+- `functions/api/receipts/` - Receipt generation API handlers
+
+### Database Tables
+- `payments` - Payment records with UPI details
+- `receipts` - Auto-generated receipt records
+
+## 3. Receipt Generation
+### Features
+- **Auto-Generation**: Receipts created automatically upon payment completion
+- **Email Delivery**: Receipts sent to user's email address using the new payment success template
+- **Downloadable**: Receipts can be downloaded as HTML
+- **Professional Format**: Clean, professional receipt design with themechanger support
+
+### Email Template
+- **Template Name**: `payment-success`
+- **Location**: `functions/email-templates/notifications/payment-success.ts`
+- **Features**:
+  - Professional design with payment method-specific styling
+  - Complete payment details including receipt number, transaction ID, and UPI information
+  - Clear next steps and important information sections
+  - Responsive design that works on all devices
+  - Follows existing template structure and themechanger patterns
+
+### Receipt Details
+- Receipt number (unique identifier)
+- Payment date and transaction ID
+- Customer details (name, email)
+- Penalty details (ID, reason, amount)
+- UPI payment method information
+- Total amount in INR
+
+## 4. Security Features
+### Payment Security
+- **JWT Authentication**: Secure API access
+- **CSRF Protection**: Cross-site request forgery prevention
+- **Audit Logging**: Complete payment trail
+- **Input Validation**: Server-side validation of all inputs
+- **Error Handling**: Comprehensive error management
+
+### Data Protection
+- **Encrypted Storage**: Sensitive data encrypted at rest
+- **Secure Transmission**: HTTPS for all communications
+- **Access Control**: Role-based access to payment records
+- **Audit Trail**: Complete logging of all payment activities
+
+## 5. Environment Variables Required
+
+### Cloudflare Dashboard Configuration
+**Use TEXT format for these variables in Cloudflare Dashboard:**
+
+```bash
+# UPI Payment Configuration
+VITE_UPI_ID=your-upi-id@bank
+VITE_UPI_BARCODE_URL=https://your-domain.com/upi-barcode.png
+```
+
+**Why TEXT format:**
+- These are configuration values, not sensitive secrets
+- They follow the same pattern as other `VITE_` variables in your project
+- They are safe to be visible and don't require encryption
+
+### Email Configuration (Already configured)
+The email system is already integrated and configured in your Cloudflare dashboard. The payment success emails will use the existing email infrastructure.
+
+### Database Configuration
+The D1 database is already configured and the new tables will be created via migrations.
+
+## 6. API Endpoints
+### Payments API
+- `POST /api/payments` - Create payment record
+- `GET /api/payments` - Get all payments (admin)
+- `GET /api/payments/user/{userId}` - Get user payment history
+- `PUT /api/payments/{id}` - Update payment status
+- `GET /api/payments/{id}/verify` - Verify payment completion
+
+### Receipts API
+- `POST /api/receipts` - Generate receipt
+- `GET /api/receipts/{id}` - Get receipt details
+- `GET /api/receipts/download/{id}` - Download receipt as HTML
+
+## 7. Usage Instructions
+### For Users
+#### Individual Payment
+1. Navigate to Penalties page
+2. Find pending penalty with "Pay" button
+3. Click "Pay" to open payment modal
+4. Select payment method (UPI ID or QR Code)
+5. Enter email and phone number
+6. Complete payment via UPI app
+7. Click "I've Completed Payment" to verify
+8. Check email for receipt
+
+#### Bulk Payment
+1. Navigate to Penalties page
+2. Look for "Bulk Pay" button showing count of pending penalties
+3. Click "Bulk Pay" to open bulk payment modal
+4. Select which penalties to pay together
+5. Review total amount and selected penalties
+6. Enter email and phone number
+7. Select payment method (UPI ID or QR Code)
+8. Complete single payment for total amount via UPI app
+9. Click "I've Completed Payment" to verify
+10. Check email for individual receipts for each penalty
+
+### For Administrators
+1. Access payment records via `/api/payments`
+2. View payment history for all users
+3. Monitor payment status and completion
+4. Download receipts as needed
+5. Track payment analytics and reports
+
+## 8. Migration Files
+- `sql/migrations/add-payments-table.sql` - Payments table
+- `sql/migrations/add-receipts-table.sql` - Receipts table
+
+## 9. Benefits
+- **Easy Payment**: Simple UPI ID or QR code payment
+- **Bulk Payment**: Pay multiple penalties in one transaction
+- **No Offline Hassle**: Online-only payment system
+- **Auto Receipts**: Automatic receipt generation and email delivery
+- **Complete Records**: Full payment tracking for users and admins
+- **Security**: Comprehensive security measures
+- **User-Friendly**: Intuitive payment flow with both individual and bulk options
+- **Cost-Effective**: No expensive payment gateway fees
+- **Time-Saving**: Bulk payment reduces transaction time for multiple penalties

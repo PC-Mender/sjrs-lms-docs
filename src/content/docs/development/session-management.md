@@ -1,0 +1,257 @@
+---
+title: "Session Management"
+---
+
+# 🔐 Unified Session Management System
+
+## Overview
+
+The unified session management system combines the comprehensive features of the standalone `session-manager.ts` with React-friendly hooks and context patterns. This provides a clean, modern approach to session management with advanced security features.
+
+## 🏗️ Architecture
+
+### **Clean Modular Design**
+```
+src/utilities/session/
+├── core/
+│   └── session-engine.ts       # Core session logic (322 lines)
+├── hooks/
+│   └── use-session-engine.ts   # React hook wrapper (214 lines)
+├── index.ts                    # Clean exports + legacy compatibility (84 lines)
+└── README.md                   # Documentation
+```
+
+### **Legacy Compatibility**
+- ✅ Legacy API functions provided for backward compatibility
+- ✅ All existing APIs continue to work via compatibility layer
+- ✅ New code can use the cleaner React hooks
+
+## 🚀 Quick Start
+
+### **Modern React Usage (Recommended)**
+```typescript
+import { useSessionEngine } from '@/utilities/session';
+
+const MyComponent = () => {
+  const {
+    sessionState,
+    extendSession,
+    updateActivity,
+    getSecurityStatus
+  } = useSessionEngine({
+    timeoutMinutes: 15,
+    warningMinutes: 2,
+    enableSecurityFeatures: true
+  });
+
+  return (
+    <div>
+      <p>Session active: {sessionState.isActive ? 'Yes' : 'No'}</p>
+      <p>Time remaining: {sessionState.formattedTime}</p>
+      {sessionState.isWarning && (
+        <button onClick={extendSession}>Extend Session</button>
+      )}
+    </div>
+  );
+};
+```
+
+### **Direct Engine Usage**
+```typescript
+import { SessionEngine } from '@/utilities/session';
+
+const engine = new SessionEngine({
+  timeoutMinutes: 15,
+  enableSecurityFeatures: true
+});
+
+engine.handleActivity();
+const state = engine.getSessionState();
+```
+
+## ⚡ Features
+
+### **Core Session Management**
+- ✅ **Automatic timeout detection** with configurable duration
+- ✅ **Activity tracking** across multiple event types
+- ✅ **Warning system** with customizable warning period
+- ✅ **Session extension** capabilities
+
+### **Advanced Security Features**
+- ✅ **Security hash validation** - Detects tampering attempts
+- ✅ **Activity pattern analysis** - Monitors user behavior
+- ✅ **Cross-tab synchronization** - Consistent state across tabs
+- ✅ **System sleep detection** - Handles system wake gracefully
+
+### **React Integration**
+- ✅ **Reactive state updates** - Automatic re-renders on state changes
+- ✅ **Automatic cleanup** - Event listeners cleaned up on unmount
+- ✅ **Hook-based API** - Modern React patterns
+- ✅ **Memory leak prevention** - Proper resource management
+
+## 🔧 Configuration
+
+### **Session Configuration Options**
+```typescript
+interface SessionConfig {
+  timeoutMinutes?: number;           // Default: 15
+  warningMinutes?: number;           // Default: 2
+  detectIdleTabs?: boolean;          // Default: true
+  enableSecurityFeatures?: boolean; // Default: true
+  enableSystemSleepDetection?: boolean; // Default: true
+}
+```
+
+### **Security Features**
+```typescript
+// Get security status
+const securityStatus = getSecurityStatus();
+console.log('Security valid:', securityStatus.isValid);
+console.log('Activity count:', securityStatus.activityCount);
+console.log('Security hash:', securityStatus.hash);
+```
+
+## 📊 Session State
+
+### **Complete Session Information**
+```typescript
+interface SessionState {
+  isActive: boolean;              // Whether session is still valid
+  remainingTime: number;          // Seconds remaining
+  formattedTime: string;          // Human-readable time (MM:SS)
+  isWarning: boolean;             // Whether in warning period
+  lastActivity: number;           // Timestamp of last activity
+  securityStatus: {               // Security validation info
+    isValid: boolean;
+    hash: string;
+    activityCount: number;
+  };
+  tabVisible: boolean;            // Tab visibility state
+  pageFocused: boolean;           // Page focus state
+  sessionStartTime: number;       // When session started
+  activityCount: number;          // Total activity events
+}
+```
+
+## 🛡️ Security Features
+
+### **Activity Monitoring**
+```typescript
+// Monitored events:
+const ACTIVITY_EVENTS = [
+  'mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'
+];
+
+// Tab and focus detection:
+- visibilitychange (tab switching)
+- pageshow (tab restoration)
+- focus/blur (window focus changes)
+```
+
+### **Security Validation**
+```typescript
+// Security hash includes:
+- Session start time
+- Activity count
+- Last activity timestamp
+- Tab visibility state
+- Page focus state
+
+// Validation occurs every second
+// Security violations trigger immediate logout
+```
+
+### **System Sleep Detection**
+```typescript
+// Detects system sleep/wake cycles
+// Adjusts session timing appropriately
+// Prevents false timeouts after system wake
+```
+
+## 🔄 Migration Guide
+
+### **From Legacy session-manager.ts**
+```typescript
+// OLD: Class-based approach (now handled by compatibility layer)
+import { initSessionManager } from '@/utilities/session';
+const manager = initSessionManager(config);
+
+// NEW: Hook-based approach (recommended)
+import { useSessionEngine } from '@/utilities/session';
+const { sessionState, extendSession } = useSessionEngine(config);
+```
+
+### **From session-context.tsx**
+```typescript
+// OLD: Basic context implementation
+import { useSession } from '@/contexts/session-context';
+const { sessionState, extendSession } = useSession();
+
+// NEW: Enhanced hook with all features
+import { useSessionEngine } from '@/utilities/session';
+const { sessionState, extendSession } = useSessionEngine();
+```
+
+## 🎯 Benefits
+
+### **Developer Experience**
+- ✅ **Type Safety** - Full TypeScript support
+- ✅ **Clean API** - Intuitive hook-based interface
+- ✅ **Comprehensive State** - All session info in one place
+- ✅ **Automatic Management** - No manual event listener setup
+
+### **Performance**
+- ✅ **Optimized Updates** - Minimal re-renders with proper memoization
+- ✅ **Memory Efficient** - Automatic cleanup prevents memory leaks
+- ✅ **Bundle Size** - Tree-shakable modular design
+- ✅ **Runtime Performance** - Efficient event handling
+
+### **Security**
+- ✅ **Advanced Protection** - Multiple security validation layers
+- ✅ **Tamper Detection** - Hash-based integrity checking
+- ✅ **Pattern Analysis** - Unusual activity detection
+- ✅ **Cross-Tab Sync** - Consistent security state
+
+### **Maintainability**
+- ✅ **Single Source of Truth** - One unified implementation
+- ✅ **Modular Design** - Easy to extend and modify
+- ✅ **Clear Separation** - Core logic separate from React integration
+- ✅ **Backward Compatible** - Existing code continues to work
+
+## 🚧 Architecture Migration Summary
+
+### **Before: Duplicate Session Systems**
+```
+❌ session-manager.ts (613 lines)     # Comprehensive but unused standalone utility
+❌ session-context.tsx (242+ lines)   # React context with duplicate logic
+❌ Total: 855+ lines of overlapping functionality
+```
+
+### **After: Unified Modern System**
+```
+✅ core/session-engine.ts (322 lines)      # Clean core logic
+✅ hooks/use-session-engine.ts (214 lines) # React integration
+✅ index.ts (84 lines)                     # Clean exports + legacy compatibility
+✅ Total: 620 lines of organized, non-duplicate code
+```
+
+### **Issues Resolved**
+- ✅ **Code Duplication ELIMINATED** - Single source of truth
+- ✅ **Security Features INTEGRATED** - Advanced security now available in React
+- ✅ **Performance OPTIMIZED** - Modern React patterns and efficient updates
+- ✅ **Developer Experience ENHANCED** - Clean hook-based API
+- ✅ **Maintainability IMPROVED** - Modular, organized architecture
+- ✅ **Bundle Size REDUCED** - 27% reduction in total lines (855 → 620)
+- ✅ **Zero Breaking Changes** - Complete backward compatibility
+
+## 🔗 Related Documentation
+
+- **[Security Best Practices](../security/)** - Application security guidelines
+- **[Validation System](./validation-system.md)** - Input validation documentation
+- **[Performance Optimization](../architecture/)** - Performance best practices
+
+---
+
+**Last Updated**: November 2025  
+**Version**: 2.0.0 (Unified System)  
+**Status**: ✅ Production Ready

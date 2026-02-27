@@ -1,0 +1,330 @@
+---
+title: "AUTOMATIC PENALTY CALCULATION"
+---
+
+# Automatic Penalty Calculation Feature
+
+## Overview
+
+The automatic penalty calculation feature eliminates the need for manual penalty creation by automatically calculating and creating penalties for overdue loans on a daily basis. This ensures consistent, timely, and accurate penalty assessment based on user type and days overdue.
+
+## Implementation Status
+
+✅ **Fully Implemented**
+
+## Key Features
+
+### 1. **Automatic Daily Calculation**
+- Runs daily at 2 AM UTC via scheduled task
+- Checks all active/overdue loans that have passed their due date
+- Calculates penalties based on days overdue and user type
+
+### 2. **User Type-Based Fine Rates**
+- Automatically retrieves fine rates from `borrow_limits` table
+- Falls back to default rates if not configured:
+  - **Students**: ₹25/day
+  - **Professors**: ₹50/day
+  - **Guests**: ₹100/day
+- Supports year-based student types (Student_1, Student_2, etc.)
+
+### 3. **Smart Penalty Management**
+- **Prevents Duplicates**: Checks for existing penalties before creating new ones
+- **Auto-Updates**: Updates existing penalties if amount changes (e.g., more days overdue)
+- **Status Management**: Automatically marks loans as 'overdue' when penalties are calculated
+
+### 4. **User Notifications**
+- Sends in-app notifications when penalties are automatically created
+- Notification priority based on days overdue:
+  - **High priority**: Less than 14 days overdue
+  - **Urgent priority**: 14+ days overdue
+- Includes penalty details, amount, and direct link to penalty page
+
+## Architecture
+
+### Components
+
+#### 1. **Penalty Calculation Utility**
+**Location**: `functions/lib/penalties/calculate-overdue-penalties.ts`
+
+Core functions:
+- `getFineRateForUserType()`: Retrieves fine rate from database or defaults
+- `calculateDaysOverdue()`: Calculates days overdue from due date
+- `penaltyExistsForLoan()`: Checks for existing penalties
+- `getOrCreatePenalty()`: Creates or updates penalty records
+- `markLoanAsOverdue()`: Updates loan status to overdue
+- `getOverdueLoans()`: Fetches all loans needing penalty calculation
+- `calculateOverduePenalties()`: Main function that orchestrates the process
+- `sendPenaltyNotification()`: Sends notifications to users
+
+#### 2. **Scheduled Task**
+**Location**: `functions/scheduled/calculate-overdue-penalties.ts`
+
+- Runs daily at 2 AM UTC (same cron schedule as other scheduled tasks)
+- Logs comprehensive statistics:
+  - Loans checked
+  - Penalties created
+  - Penalties updated
+  - Loans marked overdue
+  - Total amount calculated
+  - Errors encountered
+
+#### 3. **Integration**
+**Location**: `functions/index.ts`
+
+Integrated into the main scheduled event handler alongside:
+- Token cleanup
+- Visit badges evaluation
+- Reservation expiry check
+
+## Database Schema
+
+### Penalties Table
+```sql
+CREATE TABLE penalties (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  loan_id INTEGER,
+  penalty_type TEXT NOT NULL CHECK (penalty_type IN ('overdue', 'damage', 'loss', 'violation')),
+  amount DECIMAL(10,2) NOT NULL,
+  description TEXT,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'paid', 'waived', 'cancelled')),
+  due_date DATETIME,
+  paid_at DATETIME,
+  waived_by INTEGER,
+  waived_at DATETIME,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES library_users(id) ON DELETE CASCADE,
+  FOREIGN KEY (loan_id) REFERENCES loans(id) ON DELETE SET NULL
+);
+```
+
+### Borrow Limits Table
+```sql
+CREATE TABLE borrow_limits (
+  user_type VARCHAR(20) PRIMARY KEY,
+  max_books INTEGER NOT NULL,
+  loan_period_days INTEGER NOT NULL,
+  max_renewals INTEGER NOT NULL,
+  fine_per_day DECIMAL(10,2) NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+## How It Works
+
+### Daily Execution Flow
+
+1. **Scheduled Trigger** (2 AM UTC daily)
+   - Cloudflare Workers cron triggers the scheduled task
+
+2. **Fetch Overdue Loans**
+   - Query loans with:
+     - Status: 'active' or 'overdue'
+     - Due date: Past current date/time
+     - Returned date: NULL (not yet returned)
+
+3. **For Each Overdue Loan**:
+   - Calculate days overdue
+   - Get user's fine rate from `borrow_limits` table
+   - Calculate total penalty amount (days × rate)
+   - Check if penalty already exists
+   - Create new penalty OR update existing one
+   - Mark loan as 'overdue' if not already
+   - Send notification to user (if new penalty)
+
+4. **Logging & Statistics**
+   - Log all operations and statistics
+   - Track errors for monitoring
+
+### Penalty Calculation Logic
+
+```typescript
+daysOverdue = floor((currentDate - dueDate) / (1000 * 60 * 60 * 24))
+finePerDay = getFineRateForUserType(userType)
+totalAmount = daysOverdue × finePerDay
+```
+
+### Duplicate Prevention
+
+- Checks for existing pending penalties with same `loan_id` and `penalty_type = 'overdue'`
+- If exists: Updates amount if changed
+- If not exists: Creates new penalty record
+
+## Configuration
+
+### Fine Rates
+
+Fine rates are configured in the `borrow_limits` table per user type. The system:
+
+1. **First**: Checks `borrow_limits` table for active fine rate
+2. **Fallback**: Uses default rates if not configured:
+   - Student: ₹25/day
+   - Professor: ₹50/day
+   - Guest: ₹100/day
+
+### Scheduled Task Configuration
+
+The scheduled task runs daily at 2 AM UTC, configured in `wrangler.toml`:
+
+```toml
+[triggers]
+crons = ["0 2 * * *"]  # Daily at 2 AM UTC
+```
+
+## Notification Details
+
+### Notification Content
+
+**Title**: "Overdue Fine Applied"
+
+**Message**: 
+```
+A fine of ₹[amount] has been applied for "[book title]" ([X] day[s] overdue). 
+Please pay the fine to avoid further penalties.
+```
+
+**Type**: `warning`
+
+**Priority**: 
+- `high`: Less than 14 days overdue
+- `urgent`: 14+ days overdue
+
+**Action URL**: `/penalties/[penaltyId]`
+
+**Metadata**:
+```json
+{
+  "penaltyId": 123,
+  "loanId": 456,
+  "amount": 250.00,
+  "daysOverdue": 10,
+  "bookTitle": "Book Title",
+  "autoGenerated": true
+}
+```
+
+## Error Handling
+
+- **Graceful Degradation**: Errors in individual loan processing don't stop the entire job
+- **Comprehensive Logging**: All errors are logged with context
+- **Safe Fallbacks**: Default fine rates used if database lookup fails
+- **Notification Failures**: Don't prevent penalty creation
+
+## Monitoring & Statistics
+
+The scheduled task logs comprehensive statistics:
+
+```typescript
+{
+  loansChecked: number,        // Total loans evaluated
+  penaltiesCreated: number,    // New penalties created
+  penaltiesUpdated: number,    // Existing penalties updated
+  loansMarkedOverdue: number,  // Loans status updated to overdue
+  errors: number,              // Errors encountered
+  totalAmount: number          // Total penalty amount calculated
+}
+```
+
+## Integration Points
+
+### 1. **Loan Return Flow**
+When a loan is returned (`handleUpdateLoan`), the loan status changes to 'returned', which excludes it from future penalty calculations.
+
+### 2. **Manual Penalty Creation**
+Manual penalty creation (`handleCreatePenalty`) still works independently. The automatic system only creates 'overdue' type penalties.
+
+### 3. **Payment Processing**
+When a penalty is paid, its status changes to 'paid', preventing duplicate penalties for the same loan.
+
+## Benefits
+
+### For Administrators
+- ✅ **No Manual Work**: Penalties created automatically
+- ✅ **Consistency**: All overdue loans get penalties
+- ✅ **Accuracy**: Based on actual days overdue
+- ✅ **Timeliness**: Daily calculation ensures up-to-date amounts
+
+### For Users
+- ✅ **Transparency**: Automatic notifications when penalties are applied
+- ✅ **Fairness**: Consistent calculation based on user type
+- ✅ **Awareness**: Immediate notification of overdue status
+
+### For System
+- ✅ **Data Integrity**: Automatic status updates
+- ✅ **Scalability**: Handles large numbers of loans efficiently
+- ✅ **Reliability**: Error handling ensures robustness
+- ✅ **Observability**: Comprehensive logging and statistics
+
+## Testing
+
+### Manual Testing
+
+To test the penalty calculation manually:
+
+1. **Create a test loan** with a past due date
+2. **Wait for scheduled task** OR trigger manually via API
+3. **Verify**:
+   - Penalty created in database
+   - Loan status updated to 'overdue'
+   - Notification sent to user
+   - Amount calculated correctly
+
+### Test Scenarios
+
+1. **New Overdue Loan**: Should create new penalty
+2. **Existing Penalty**: Should update amount if days increased
+3. **Multiple Loans**: Should process all overdue loans
+4. **Different User Types**: Should use correct fine rates
+5. **Returned Loan**: Should not create penalty
+6. **Paid Penalty**: Should not create duplicate
+
+## Future Enhancements
+
+### Potential Improvements
+
+1. **Grace Period**: Add configurable grace period before penalties apply
+2. **Maximum Cap**: Set maximum penalty amount per loan
+3. **Email Notifications**: Send email in addition to in-app notifications
+4. **SMS Notifications**: Optional SMS notifications for urgent penalties
+5. **Penalty Escalation**: Increase fine rate after certain days overdue
+6. **Batch Processing**: Process loans in batches for very large datasets
+
+## Troubleshooting
+
+### Common Issues
+
+#### Penalties Not Created
+- **Check**: Scheduled task is running (check logs)
+- **Check**: Loans have valid due dates
+- **Check**: Loan status is 'active' or 'overdue'
+- **Check**: Loan hasn't been returned
+
+#### Wrong Amount Calculated
+- **Check**: Fine rate in `borrow_limits` table
+- **Check**: User type is correct
+- **Check**: Days overdue calculation
+
+#### Duplicate Penalties
+- **Check**: Existing penalty query logic
+- **Check**: Penalty status (should be 'pending' or 'paid')
+
+#### Notifications Not Sent
+- **Check**: Notification creation logs
+- **Check**: User exists and is active
+- **Check**: Notification preferences
+
+## Related Documentation
+
+- [Penalties Module README](./README.md)
+- [Penalty System Integrations](../../integrations/penalty-system-integrations.md)
+- [Scheduled Tasks Guide](../../development/scheduled-tasks.md)
+- [Notification System](../../features/notifications/README.md)
+
+---
+
+**Last Updated**: 2025-01-15  
+**Status**: ✅ Production Ready
+

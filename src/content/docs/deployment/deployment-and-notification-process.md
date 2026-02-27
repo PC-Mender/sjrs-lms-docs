@@ -1,0 +1,586 @@
+---
+title: "Deployment And Notification Process"
+---
+
+# Deployment and Notification Process Documentation
+
+## Overview
+
+This document describes the complete automated deployment, versioning, and notification process for the SJRS LMS application. This process ensures consistent versioning, changelog generation, GitHub releases, and user notifications.
+
+---
+
+## Table of Contents
+
+1. [Process Flow](#process-flow)
+2. [Prerequisites](#prerequisites)
+3. [Workflow Steps](#workflow-steps)
+4. [Version Management](#version-management)
+5. [Notification System](#notification-system)
+6. [Troubleshooting](#troubleshooting)
+7. [Maintenance](#maintenance)
+
+---
+
+## Process Flow
+
+```
+Push to GitHub
+    ↓
+Quality Gates (blocks if fails)
+    ↓
+Version & Changelog (auto-bump version)
+    ↓
+Build & Deploy (Cloudflare Workers)
+    ↓
+GitHub Release (create/update)
+    ↓
+Database Notification (save to notification_events)
+    ↓
+Users see notification in app
+```
+
+---
+
+## Prerequisites
+
+### Required GitHub Secrets
+
+The following secrets must be configured in GitHub repository settings:
+
+1. **`NOTIFICATION_INGEST_TOKEN_RELEASE`** (Required for notifications)
+   - Location: Repository → Settings → Secrets and variables → Actions
+   - Value: Token from Cloudflare Workers environment variables
+   - Purpose: Authenticates deployment notifications to the ingest API
+   - Alternative: Can use `NOTIFICATION_INGEST_TOKEN` (works for all sources)
+
+2. **`CLOUDFLARE_API_TOKEN`** (Required for deployment)
+   - Location: Repository → Settings → Secrets and variables → Actions
+   - Value: Cloudflare API token with Workers edit permissions
+   - Purpose: Deploys code to Cloudflare Workers
+
+3. **`CLOUDFLARE_ACCOUNT_ID`** (Required for deployment)
+   - Location: Repository → Settings → Secrets and variables → Actions
+   - Value: Your Cloudflare account ID
+   - Purpose: Identifies Cloudflare account for deployment
+
+4. **`GITHUB_TOKEN`** (Auto-provided)
+   - Automatically provided by GitHub Actions
+   - Purpose: Creates/updates GitHub releases
+
+### Required Cloudflare Environment Variables
+
+In Cloudflare Workers environment variables, ensure:
+
+- **`NOTIFICATION_INGEST_TOKEN_RELEASE`** or **`NOTIFICATION_INGEST_TOKEN`**
+  - Must match the value in GitHub Secrets
+  - Used to authenticate incoming notification requests
+
+---
+
+## Workflow Steps
+
+### 1. Quality Gates (`quality-check` job)
+
+**Purpose**: Validates code quality before any changes are made
+
+**What it does**:
+- Runs linting checks
+- Performs security audit
+- Validates configuration
+- Checks infrastructure compatibility
+
+**If it fails**: 
+- Workflow stops
+- No version bump, no deployment
+- Fix issues and push again
+
+**Location**: `.github/workflows/deploy.yml` (lines 21-41)
+
+---
+
+### 2. Version & Changelog (`version-changelog` job)
+
+**Purpose**: Automatically bumps version and updates changelog based on conventional commits
+
+**What it does**:
+1. Checks out repository
+2. Runs `standard-version` to:
+   - Analyze commit messages (feat, fix, etc.)
+   - Bump version in `package.json`
+   - Update `CHANGELOG.md`
+3. Creates Git tag (e.g., `v3.40.27`)
+4. Commits changes
+5. Pushes tag and commits to GitHub
+
+**Conventional Commit Types**:
+- `feat:` → Minor version bump (3.40.27 → 3.41.0)
+- `fix:` → Patch version bump (3.40.27 → 3.40.28)
+- `BREAKING CHANGE:` → Major version bump (3.40.27 → 4.0.0)
+
+**Configuration**: `.versionrc` file
+
+**Location**: `.github/workflows/deploy.yml` (lines 43-142)
+
+**Important**: If no conventional commits found, version doesn't change but workflow continues.
+
+---
+
+### 3. Build & Deploy (`deploy` job)
+
+**Purpose**: Builds and deploys application to Cloudflare Workers
+
+**What it does**:
+1. Checks out latest code (including version bump)
+2. Installs dependencies
+3. Builds application with Vite
+4. Injects version from `package.json` into app
+5. Deploys to Cloudflare Workers
+6. Sends deployment notification to database
+
+**Version Injection**:
+- Version from `package.json` is injected via `vite.config.ts`
+- Available in app as `import.meta.env.VITE_APP_VERSION`
+- Displayed in footer via `src/utilities/version.ts`
+
+**Location**: `.github/workflows/deploy.yml` (lines 145-210)
+
+---
+
+### 4. GitHub Release (`create-release` job)
+
+**Purpose**: Creates or updates GitHub release with changelog
+
+**What it does**:
+1. Fetches latest code to get updated version
+2. Reads version from `package.json`
+3. Checks if tag exists
+4. Extracts changelog for that version
+5. Creates new release OR updates existing release
+6. Uses `gh release create` or `gh release edit`
+
+**Release Notes**:
+- Extracted from `CHANGELOG.md` for the specific version
+- Includes all changes for that version
+- Formatted as markdown
+
+**Location**: `.github/workflows/deploy.yml` (lines 212-344)
+
+**Note**: Release is updated if it already exists (prevents duplicates).
+
+---
+
+### 5. Database Notification (`notify-deployment.js` script)
+
+**Purpose**: Saves deployment notification to database for users to see
+
+**What it does**:
+1. Reads version from `package.json`
+2. Extracts changelog information
+3. Gets commit information (type, hash, time)
+4. Sends POST request to `/api/notifications/events/ingest`
+5. Creates entry in `notification_events` table
+
+**Notification Data Includes**:
+- Version number
+- Changelog sections (Bug Fixes, Features, etc.)
+- Commit type (feat, fix, etc.)
+- Commit hash
+- Deployment time
+- Deployment environment
+
+**Location**: `scripts/notify-deployment.js`
+
+**Endpoint**: `POST /api/notifications/events/ingest`
+- Handler: `functions/api/notifications/handlers/ingest-notification-event.ts`
+- Authentication: `x-notification-ingest-token` header
+
+**Important**: 
+- Non-blocking (deployment continues even if notification fails)
+- Requires `NOTIFICATION_INGEST_TOKEN_RELEASE` secret
+
+---
+
+## Version Management
+
+### How Version is Stored
+
+1. **`package.json`** - Source of truth
+   ```json
+   {
+     "version": "3.40.27"
+   }
+   ```
+
+2. **`CHANGELOG.md`** - Human-readable changes
+   ```markdown
+   ### [3.40.27](https://github.com/.../compare/v3.40.26...v3.40.27)
+   
+   ### Bug Fixes
+   - Fixed notification issue
+   ```
+
+3. **Git Tag** - Release marker
+   ```bash
+   git tag v3.40.27
+   ```
+
+4. **GitHub Release** - Release notes
+   - Created/updated automatically
+   - Contains changelog for that version
+
+### How Version is Displayed
+
+1. **App Footer** (`src/components/layout/templates/components/AppFooter.tsx`)
+   - Shows: `v3.40.27 • Light Theme`
+   - Reads from: `import.meta.env.VITE_APP_VERSION`
+   - Injected at build time via `vite.config.ts`
+
+2. **Notification Center** (`src/pages/dashboard-superuser/notification-center.tsx`)
+   - Shows version in notification details
+   - Displays changelog, commit type, deployment time
+
+### Version Bump Rules
+
+Managed by `standard-version` and `.versionrc`:
+
+- **Patch** (`3.40.27` → `3.40.28`): `fix:`, `perf:`, `refactor:`
+- **Minor** (`3.40.27` → `3.41.0`): `feat:`
+- **Major** (`3.40.27` → `4.0.0`): `BREAKING CHANGE:`
+
+---
+
+## Notification System
+
+### Database Schema
+
+**Table**: `notification_events`
+
+```sql
+CREATE TABLE notification_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  title TEXT NOT NULL,
+  message TEXT NOT NULL,
+  category TEXT NOT NULL DEFAULT 'announcement',
+  severity TEXT NOT NULL DEFAULT 'info',
+  source TEXT NOT NULL DEFAULT 'manual',
+  scope TEXT NOT NULL DEFAULT 'global',
+  status TEXT NOT NULL DEFAULT 'active',
+  version TEXT,
+  metadata TEXT,  -- JSON: changelog, commit info, etc.
+  tags TEXT,      -- JSON array
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  ...
+);
+```
+
+### Notification Flow
+
+1. **Creation** (`scripts/notify-deployment.js`)
+   - Script runs after deployment
+   - Sends POST to `/api/notifications/events/ingest`
+   - Includes `release` payload for `release:pipeline` source
+
+2. **Processing** (`functions/api/notifications/handlers/ingest-notification-event.ts`)
+   - Validates token
+   - Builds event payload
+   - Sets status to `'active'` (explicitly)
+   - Stores in database
+
+3. **Display** (`src/pages/dashboard-superuser/notification-center.tsx`)
+   - Fetches from `/api/notifications/events`
+   - Filters by category: `'deployment'`
+   - Shows version, commit type, changelog sections
+
+### Notification Fields
+
+**Displayed in Notification Center**:
+- **Title**: From changelog or commit message
+- **Version**: `v3.40.27`
+- **Commit Type**: `✨ Feature`, `🐛 Bug Fix`, etc.
+- **Commit Hash**: Short hash (e.g., `34fef53`)
+- **Deployed**: Formatted time
+- **Changelog**: Sections with changes
+
+**Stored in Metadata**:
+- `changelog`: Parsed changelog sections
+- `commit`: Commit details (hash, type, time, author)
+- `release`: Release information (version, environment, status)
+
+---
+
+## Troubleshooting
+
+### Issue: GitHub Release shows wrong version
+
+**Symptoms**: Release shows old version (e.g., v3.40.26) instead of new (v3.40.27)
+
+**Solution**:
+1. Check `create-release` job logs
+2. Verify "Fetch latest changes" step runs before reading version
+3. Ensure `package.json` has correct version after `version-changelog` job
+
+**Fix Applied**: Added `git fetch` and `git reset` before reading version (line 235-238 in deploy.yml)
+
+---
+
+### Issue: Notifications not appearing
+
+**Symptoms**: Deployment succeeds but no notification in Notification Center
+
+**Checklist**:
+
+1. **Token Configuration**
+   ```bash
+   # Check GitHub Actions logs for:
+   🔑 Token configured: Yes (***xxxx)
+   # If shows "No", add secret:
+   # GitHub → Settings → Secrets → NOTIFICATION_INGEST_TOKEN_RELEASE
+   ```
+
+2. **Token Match**
+   - GitHub Secret `NOTIFICATION_INGEST_TOKEN_RELEASE` must match
+   - Cloudflare Workers env var `NOTIFICATION_INGEST_TOKEN_RELEASE`
+
+3. **Notification Status**
+   - Check logs for: `✅ Status: active`
+   - If status is `'draft'`, notification won't appear
+
+4. **Database Query**
+   - Go to Notification Center
+   - Filter: Category = "deployment"
+   - Filter: Status = "active"
+
+5. **API Endpoint**
+   - Verify endpoint: `https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
+   - Check Cloudflare Workers logs for errors
+
+**Fix Applied**: 
+- Explicitly set `status: 'active'` in payload (line 337 in `scripts/notify-deployment.js`)
+- Better error logging and diagnostics
+- Non-blocking (deployment continues even if notification fails)
+
+---
+
+### Issue: Version not updating in footer
+
+**Symptoms**: Footer shows old version after deployment
+
+**Solution**:
+1. Check `vite.config.ts` reads `package.json` correctly
+2. Verify build step includes version injection
+3. Clear browser cache
+4. Check `src/utilities/version.ts` uses `import.meta.env.VITE_APP_VERSION`
+
+**Fix Applied**: Version is injected at build time, should always match `package.json`
+
+---
+
+### Issue: Workflow fails at Quality Gates
+
+**Symptoms**: Workflow stops before versioning/deployment
+
+**Solution**:
+1. Fix linting errors locally: `npm run lint`
+2. Fix security issues: `npm audit fix`
+3. Check quality gates script: `scripts/enhanced-quality-gates.js`
+4. Run locally: `npm run quality-gates`
+
+---
+
+### Issue: Release creation fails
+
+**Symptoms**: Tag exists but release not created/updated
+
+**Solution**:
+1. Check `GITHUB_TOKEN` permissions (should have `contents: write`)
+2. Verify tag exists: `git rev-parse v3.40.27`
+3. Check if release already exists: `gh release view v3.40.27`
+4. Review logs for specific error
+
+**Fix Applied**: Added fallback - if update fails, tries to create instead
+
+---
+
+## Maintenance
+
+### Adding New Notification Sources
+
+To add notifications from other sources (e.g., Sentry, Analytics):
+
+1. **Add Token** (if needed):
+   ```bash
+   # GitHub Secrets
+   NOTIFICATION_INGEST_TOKEN_SENTRY=...
+   
+   # Cloudflare Workers env vars
+   NOTIFICATION_INGEST_TOKEN_SENTRY=...
+   ```
+
+2. **Update Script** (`scripts/notify-deployment.js`):
+   - Add new source type
+   - Format payload for that source
+   - Send to same endpoint with different `source` value
+
+3. **Handler Supports** (`ingest-notification-event.ts`):
+   - Already supports: `release:pipeline`, `monitoring:sentry`, `analytics:cloudflare`
+   - Check `buildEventPayload()` function
+
+### Changing Version Bump Rules
+
+Edit `.versionrc`:
+```json
+{
+  "types": [
+    {"type": "feat", "section": "Features"},
+    {"type": "fix", "section": "Bug Fixes"},
+    // Add custom types here
+  ]
+}
+```
+
+### Modifying Notification Display
+
+Edit `src/pages/dashboard-superuser/notification-center.tsx`:
+- Columns definition (line 229)
+- Metadata display (line 270-299)
+- Source/Version column (line 335-370)
+
+### Updating Changelog Format
+
+Edit `.versionrc`:
+- `commitUrlFormat`: Link to commits
+- `compareUrlFormat`: Link to version comparison
+- `releaseCommitMessageFormat`: Release commit message
+
+---
+
+## Key Files Reference
+
+### Workflow Files
+- `.github/workflows/deploy.yml` - Main workflow definition
+- `.versionrc` - Standard-version configuration
+
+### Scripts
+- `scripts/notify-deployment.js` - Deployment notification script
+- `scripts/enhanced-quality-gates.js` - Quality gates validation
+
+### Version Management
+- `package.json` - Version source of truth
+- `vite.config.ts` - Version injection at build time
+- `src/utilities/version.ts` - Version display utilities
+
+### Notification System
+- `functions/api/notifications/handlers/ingest-notification-event.ts` - Notification ingest handler
+- `functions/api/notifications/repositories/notification-events-admin-repository.ts` - Database operations
+- `src/pages/dashboard-superuser/notification-center.tsx` - Notification display UI
+
+### Database
+- `sql/migrations/2025-11-11_create-notification-events.sql` - Notification events table schema
+
+---
+
+## Testing the Process
+
+### Test Version Bump Locally
+
+```bash
+# Make a conventional commit
+git commit -m "feat: add new feature"
+
+# Run standard-version locally (dry run)
+npm run release -- --dry-run
+
+# Check what would change
+git diff package.json
+git diff CHANGELOG.md
+```
+
+### Test Notification Script Locally
+
+```bash
+# Set environment variables
+export NOTIFICATION_INGEST_TOKEN_RELEASE="your-token"
+export RELEASE_ENVIRONMENT="production"
+export DEPLOYMENT_URL="https://your-worker.your-subdomain.workers.dev"
+
+# Run script
+node scripts/notify-deployment.js
+```
+
+### Verify Database Entry
+
+```sql
+-- Check notification_events table
+SELECT id, title, version, status, category, created_at 
+FROM notification_events 
+WHERE category = 'deployment' 
+ORDER BY created_at DESC 
+LIMIT 5;
+
+-- Check metadata
+SELECT id, title, json_extract(metadata, '$.release.version') as version
+FROM notification_events
+WHERE category = 'deployment';
+```
+
+---
+
+## Best Practices
+
+### Versioning & Commits
+1. **Always use conventional commits** for automatic versioning
+2. **Don't manually edit version** in `package.json` - let `standard-version` handle it
+3. **Follow commit message format**: `type(scope): description` (e.g., `feat: add feature`, `fix: resolve bug`)
+
+### Security & Quality
+4. **Keep tokens secure** - never commit tokens to repository
+5. **Check quality gates pass** before pushing to main branch
+6. **Run linting locally**: `npm run lint` before committing
+7. **Fix security issues**: `npm audit fix` before deployment
+
+### Deployment & Verification
+8. **Verify notifications appear** after each deployment
+9. **Monitor GitHub Actions logs** for any failures
+10. **Test locally first** before pushing changes
+11. **Verify version in footer** matches `package.json` after deployment
+
+### Architecture Compliance
+12. **Backend validation**: All notification data is validated server-side
+13. **Error handling**: Notifications are non-blocking (deployment continues on failure)
+14. **Security first**: Token-based authentication for notification ingest endpoint
+15. **Documentation**: Keep this documentation updated when process changes
+
+---
+
+## Support
+
+If issues persist:
+
+1. Check GitHub Actions logs for detailed error messages
+2. Verify all secrets are configured correctly
+3. Check Cloudflare Workers logs for API errors
+4. Review database entries directly
+5. Test notification endpoint manually with curl/Postman
+
+---
+
+---
+
+## Architecture Compliance
+
+This deployment process follows the project's architectural principles:
+
+- **Security First**: Token-based authentication, backend validation, no secrets in code
+- **Backend-First**: Notification processing happens server-side with proper validation
+- **Error Handling**: Unified error handling, graceful failures, non-blocking notifications
+- **Documentation Standards**: Comprehensive documentation with version tracking
+- **Quality Gates**: Automated quality checks before deployment (linting, security audit)
+
+---
+
+**Last Updated**: November 2025  
+**Documentation Version**: 1.0.0  
+**App Version**: See `package.json`  
+**Maintained By**: Development Team
+

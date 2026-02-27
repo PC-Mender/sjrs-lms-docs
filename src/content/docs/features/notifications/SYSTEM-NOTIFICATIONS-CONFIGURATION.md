@@ -1,0 +1,208 @@
+---
+title: "SYSTEM NOTIFICATIONS CONFIGURATION"
+---
+
+# System Notifications - Current Configuration
+
+## Overview
+
+System Notifications (Notification Events) are platform-wide event notifications with full lifecycle management. They support both **manual creation** and **automatic generation** for various system events.
+
+---
+
+## Current Implementation Status
+
+### ✅ Database Schema
+
+**Primary Table**: `notification_events`
+- **Migration**: `sql/migrations/2025-11-11_create-notification-events.sql`
+- **Fields**:
+  - `id`, `title`, `message`
+  - `category` - deployment, platform-update, incident, maintenance, announcement, policy, event
+  - `severity` - info, notice, warning, critical
+  - `source` - manual, transactions:loan, transactions:payment, etc.
+  - `scope` - global, user, role, permission
+  - `status` - draft, scheduled, active, resolved, archived
+  - `publish_at`, `expires_at`, `resolved_at`
+  - `is_sticky` - Boolean for sticky notifications
+  - `version` - For platform updates
+  - `action_url`, `metadata`, `tags`
+  - `created_by`, `updated_by`, `created_at`, `updated_at`
+
+**Related Tables**:
+- `notification_event_targets` - Specifies target audience (user IDs, role IDs, permission IDs)
+- `notification_event_acknowledgements` - Tracks user interactions (acknowledge, dismiss, pin)
+
+---
+
+## ✅ API Endpoints (Full CRUD)
+
+### 1. List Events (Admin View)
+- **Endpoint**: `GET /api/notifications/events`
+- **Handler**: `functions/api/notifications/handlers/get-notification-events.ts`
+- **Permissions**: No specific permission check (public read)
+- **Features**:
+  - Pagination support
+  - Filtering by status, scope, category
+  - Includes resolved/archived events based on filters
+  - Returns full event details with targets
+
+### 2. Create Event (Manual)
+- **Endpoint**: `POST /api/notifications/events`
+- **Handler**: `functions/api/notifications/handlers/create-notification-event.ts`
+- **Permissions**: Requires `notification_events` resource permissions (create)
+- **Repository**: `functions/api/notifications/repositories/notification-events-admin-repository.ts`
+- **Features**:
+  - Creates event with full lifecycle support
+  - Supports targeting (global, user, role, permission)
+  - Supports scheduling (publish_at, expires_at)
+  - Supports sticky notifications
+  - Tracks creator
+
+### 3. Update Event
+- **Endpoint**: `PUT /api/notifications/events/:id` or `PATCH /api/notifications/events/:id`
+- **Handler**: `functions/api/notifications/handlers/update-notification-event.ts`
+- **Permissions**: Requires `notification_events` resource permissions (update)
+- **Features**:
+  - Update any field including status, targets, scheduling
+  - Tracks updater
+
+### 4. Delete Event
+- **Endpoint**: `DELETE /api/notifications/events/:id`
+- **Handler**: `functions/api/notifications/handlers/delete-notification-event.ts`
+- **Permissions**: Requires `notification_events` resource permissions (delete)
+- **Features**:
+  - Soft delete or hard delete (depending on implementation)
+  - Removes related targets and acknowledgements
+
+### 5. User Acknowledgement
+- **Endpoint**: `POST /api/notifications/events/:id/ack` or `PUT /api/notifications/events/:id/ack`
+- **Handler**: `functions/api/notifications/handlers/update-notification-event-ack.ts`
+- **Permissions**: Requires `notifications` resource permissions (update)
+- **Features**:
+  - Users can acknowledge, dismiss, or pin notifications
+  - Tracks user interactions
+
+---
+
+## ✅ Automatic Generation
+
+### Current Automatic Sources
+
+#### 1. Loan Transactions
+- **File**: `functions/lib/notifications/transaction-notifications.ts`
+- **Functions**:
+  - `publishLoanCreatedNotification()` - When loan is created
+  - `publishLoanStatusNotification()` - When loan status changes
+- **Source**: `'transactions:loan'`
+- **Category**: `'announcement'` (default)
+- **Severity**: `'info'` (default)
+- **Scope**: `'user'` (targets the loan owner)
+- **Status**: `'active'` (immediately active)
+
+#### 2. Payment Transactions
+- **File**: `functions/lib/notifications/transaction-notifications.ts`
+- **Function**: `publishPaymentReceiptNotification()` - When payment is received
+- **Source**: `'transactions:payment'`
+- **Category**: `'announcement'` (default)
+- **Severity**: `'info'` (default)
+- **Scope**: `'user'` (targets the payment owner)
+- **Status**: `'active'` (immediately active)
+
+#### 3. Deployment Events (Potential)
+- **File**: `scripts/auto-version.js`
+- **Function**: `notifyDeploymentEvent()` - For deployment notifications
+- **Status**: ⚠️ **May be configured but not fully active**
+
+---
+
+## ✅ Frontend Implementation
+
+### Notification Center Page
+- **Location**: `src/pages/dashboard-superuser/notification-center.tsx`
+- **Route**: `/system-notifications` (requires superuser role or `notification_events` read permission)
+- **Features**:
+  - ✅ View all system notifications in a table
+  - ✅ Filter by status (draft, scheduled, active, resolved, archived)
+  - ✅ Filter by scope (global, user, role, permission)
+  - ✅ Filter by category (deployment, platform-update, incident, maintenance, announcement, policy, event)
+  - ✅ Pagination support
+  - ✅ Displays: title, message, category, severity, status, audience, schedule, source/version, created date
+  - ❌ **No Create/Edit/Delete UI** - Only viewing capability
+
+### Menu Integration
+- **Menu Location**: `src/components/layout/templates/hooks/useMenuItems.tsx`
+- **Menu Item**: "System Notifications" under "Notifications" parent
+- **Route Key**: `system-notifications`
+- **Permission**: Requires `notification_events` resource read permission
+
+---
+
+## ⚠️ Current Limitations
+
+### 1. Manual Creation UI Missing
+- ✅ API endpoints exist and work
+- ✅ Permissions are properly configured
+- ❌ **No UI for creating System Notifications manually**
+- ❌ **No UI for editing System Notifications**
+- ❌ **No UI for deleting System Notifications**
+
+### 2. Automatic Generation Scope
+- Currently only generates for:
+  - ✅ Loan creation and status changes
+  - ✅ Payment receipts
+- Could be extended for:
+  - ⚠️ Deployment events
+  - ⚠️ Platform updates
+  - ⚠️ System incidents
+  - ⚠️ Maintenance windows
+
+### 3. User Feed
+- **Endpoint**: `GET /api/notifications/feed` (mentioned in docs but needs verification)
+- **Repository**: `functions/api/notifications/repositories/notification-feed-repository.ts`
+- **Status**: ⚠️ **Needs verification if fully implemented**
+
+---
+
+## 📋 Summary
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Database Schema | ✅ Complete | All tables and indexes created |
+| API - List | ✅ Working | Admin view with filtering |
+| API - Create | ✅ Working | Manual creation via API |
+| API - Update | ✅ Working | Full update capability |
+| API - Delete | ✅ Working | Delete functionality |
+| API - Acknowledge | ✅ Working | User interactions |
+| Auto-Generation - Loans | ✅ Working | Creates events for loan transactions |
+| Auto-Generation - Payments | ✅ Working | Creates events for payment receipts |
+| Frontend - View | ✅ Working | Notification Center page |
+| Frontend - Create | ❌ Missing | No UI for manual creation |
+| Frontend - Edit | ❌ Missing | No UI for editing |
+| Frontend - Delete | ❌ Missing | No UI for deletion |
+| Permissions | ✅ Configured | `notification_events` resource |
+
+---
+
+## 🎯 Next Steps (Recommendations)
+
+1. **Add Manual Creation UI**
+   - Create form component for System Notifications
+   - Add "Create" button to Notification Center
+   - Support all fields: category, severity, scheduling, targeting
+
+2. **Add Edit/Delete UI**
+   - Add edit modal/form
+   - Add delete confirmation
+   - Update Notification Center with action buttons
+
+3. **Extend Automatic Generation**
+   - Implement deployment event notifications
+   - Add platform update notifications
+   - Add maintenance window notifications
+
+4. **User Feed Implementation**
+   - Verify and complete user feed endpoint
+   - Create user-facing notification feed component
+   - Show relevant notifications based on targeting
+

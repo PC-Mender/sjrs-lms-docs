@@ -1,0 +1,587 @@
+---
+title: "System Logs User Guide"
+---
+
+# System Logs User Guide
+
+**For**: Superusers and System Administrators  
+**Version**: 1.0  
+**Last Updated**: February 8, 2026
+
+---
+
+## Table of Contents
+
+1. [Overview](#overview)
+2. [Accessing System Logs](#accessing-system-logs)
+3. [Understanding the Interface](#understanding-the-interface)
+4. [Filtering and Searching](#filtering-and-searching)
+5. [Log Levels Explained](#log-levels-explained)
+6. [Viewing Log Details](#viewing-log-details)
+7. [Exporting Logs](#exporting-logs)
+8. [Action Logs](#action-logs)
+9. [Best Practices](#best-practices)
+10. [Troubleshooting](#troubleshooting)
+
+---
+
+## Overview
+
+The System Logs feature provides comprehensive monitoring and auditing capabilities for your LMS. It tracks:
+
+- **System Logs**: Application events, errors, and operations
+- **Action Logs**: User activities and data modifications
+
+This tool helps you:
+- ✅ Monitor system health and performance
+- ✅ Diagnose issues and errors
+- ✅ Track user activities for compliance
+- ✅ Investigate security incidents
+- ✅ Generate audit reports
+
+---
+
+## Accessing System Logs
+
+### Prerequisites
+- **Role**: Superuser
+- **Permission Required**: `system_logs:read`
+
+### Access Steps
+1. Login with your superuser account
+2. Navigate to **Dashboard** → **System Logs** (in sidebar)
+3. The page loads with default filters (last 50 logs)
+
+**URL**: `/dashboard-superuser/system-logs`
+
+---
+
+## Understanding the Interface
+
+### Main Components
+
+#### 1. **Statistics Cards** (Top Section)
+Displays real-time metrics:
+- **Total Logs**: All logs matching current filters
+- **Errors**: Count of ERROR level logs
+- **Warnings**: Count of WARN level logs
+- **Critical**: Count of CRITICAL level logs
+- **Debug**: Count of DEBUG level logs
+- **Info**: Count of INFO level logs
+
+#### 2. **Filter Bar**
+Quick filters for narrowing results:
+- **Log Level** dropdown (DEBUG, INFO, WARN, ERROR, CRITICAL)
+- **Search** text box (searches message content)
+- **Operation** field (filters by operation type)
+- **Date Range** picker (start and end dates)
+- **Clear Filters** button
+
+#### 3. **Data Table**
+Displays logs with columns:
+- **Level**: Color-coded severity badge
+- **Message**: Brief description of the event
+- **Operation**: What action triggered the log
+- **User**: User ID (if applicable)
+- **Timestamp**: When the event occurred (shows relative time, hover for full timestamp with timezone)
+- **Actions**: "View" button for full details
+
+#### 4. **Pagination Controls** (Bottom)
+- Page selector (1, 2, 3...)
+- Page size selector (25, 50, 100, 200 per page)
+- Quick jump to page
+- Shows current range (e.g., "1-50 of 1,234 logs")
+
+#### 5. **Action Buttons** (Top Right)
+- **Refresh**: Reload current view
+- **Export**: Download logs as CSV
+
+---
+
+## Filtering and Searching
+
+### Filter by Log Level
+
+**Use Case**: Focus on errors or warnings
+
+**Steps**:
+1. Click the **Log Level** dropdown
+2. Select desired level (e.g., "ERROR")
+3. Table updates automatically
+
+**Examples**:
+- **ERROR**: Find all errors
+- **WARN**: See warnings that might indicate issues
+- **CRITICAL**: Urgent issues requiring immediate attention
+
+### Search by Message
+
+**Use Case**: Find logs containing specific keywords
+
+**Steps**:
+1. Type keywords in the **Search** field
+2. Results update automatically after 300ms (debounced)
+3. Searches message text only
+
+**Search Tips**:
+- Use specific terms: "authentication", "database", "timeout"
+- Case-insensitive
+- Partial matches work: "auth" finds "authentication"
+
+**Examples**:
+- Search "login failed" → finds authentication errors
+- Search "database" → finds database-related logs
+- Search "user 123" → finds logs mentioning user 123
+
+### Filter by Operation
+
+**Use Case**: Track specific operations across the system
+
+**Steps**:
+1. Type operation name in **Operation** field
+2. Matches exact operation names
+
+**Common Operations**:
+- `user_login` – User login attempts
+- `api_request` – API endpoint calls
+- `database_query` – Database operations
+- `export_data` – Data export operations
+
+### Filter by Date Range
+
+**Use Case**: Investigate issues during specific time periods
+
+**Steps**:
+1. Click **Date Range** picker
+2. Select **Start Date**
+3. Select **End Date**
+4. Click outside to apply
+
+**Tips**:
+- All times shown in **your local timezone**
+- Timestamps automatically converted from UTC
+- Hover over timestamps to see full date/time with timezone
+
+---
+
+## Log Levels Explained
+
+### Level Hierarchy (Least → Most Severe)
+
+| Level | Badge Color | Meaning | When to Review | Retention |
+|-------|------------|---------|----------------|-----------|
+| **DEBUG** | Gray | Detailed debugging information | Only when troubleshooting | 30 days |
+| **INFO** | Blue | General informational messages | Routine monitoring | 90 days |
+| **WARN** | Orange | Warning messages (potential issues) | Weekly review | 180 days |
+| **ERROR** | Red/Volcano | Error conditions | Daily review | 365 days |
+| **CRITICAL** | Red | Critical failures requiring immediate action | Immediately | 365 days |
+
+### When to Act
+
+**Immediate Action Required**:
+- **CRITICAL** logs → investigate immediately
+- Multiple **ERROR** logs in short time → system issue
+
+**Regular Monitoring**:
+- **WARN** logs → review weekly, may indicate future issues
+- **INFO** logs → review for trends
+
+**Development Only**:
+- **DEBUG** logs → typically only useful for developers
+
+---
+
+## Viewing Log Details
+
+### Opening Detail Modal
+
+**Steps**:
+1. Find the log entry in the table
+2. Click the **"eye" icon** button in the Actions column
+3. Modal opens with complete information
+
+### Detail Modal Contents
+
+**System Logs Show**:
+- **Level**: Severity level
+- **Message**: Full message text (no truncation)
+- **Context**: JSON object with:
+  - `operation`: What triggered the log
+  - `userId`: User involved (if applicable)
+  - Additional contextual data
+- **Error Details**: Stack traces and error information (if error log)
+- **Additional Data**: Extra metadata
+- **Timestamp**: Full date/time with timezone
+
+**Action Logs Show**:
+- **Action Type**: create, update, delete, login, etc.
+- **Table**: Database table affected
+- **Record ID**: Specific record modified
+- **User**: Full user details (email, name, role)
+- **IP Address**: User's IP address
+- **Old Values**: Data before change (updates/deletes)
+- **New Values**: Data after change (creates/updates)
+- **Timestamp**: Full date/time with timezone
+
+**Keyboard Shortcut**: Press `Esc` to close modal
+
+---
+
+## Exporting Logs
+
+### Export Process
+
+**Steps**:
+1. Apply desired filters (or export all)
+2. Click **Export** button (top right)
+3. Review confirmation dialog:
+   - Shows record count
+   - Warns if large export (>1,000 records)
+   - Shows estimated file size (>5,000 records)
+4. Click **OK** to confirm
+5. Progress modal shows:
+   - "Preparing export..."
+   - "Fetching X log records..."
+   - "Generating CSV file..."
+   - "Download starting..."
+6. CSV file downloads automatically
+
+### Export Limits & Safety
+
+**Backend Limits**:
+- **Maximum**: 10,000 records per export
+- **Rate Limit**: 200 exports per hour (per user)
+
+**Confirmation Thresholds**:
+| Record Count | Warning |
+|--------------|---------|
+| 0 - 1,000 | No warning (silent export) |
+| 1,001 - 5,000 | Basic confirmation |
+| 5,001 - 10,000 | Detailed warning with size estimate |
+| >10,000 | Export rejected (use narrower filters) |
+
+**Best Practices**:
+- ✅ Use filters to narrow to needed logs
+- ✅ Export in chunks for large date ranges
+- ✅ Check estimated size before confirming
+- ❌ Avoid exporting all logs unnecessarily
+
+### CSV File Format
+
+**File Name**: `system-logs-2026-02-08.csv`
+
+**Columns** (System Logs):
+- Timestamp
+- Level
+- Message
+- Operation
+- Context (JSON)
+- Error Details (if any)
+
+**Columns** (Action Logs):
+- Timestamp
+- Action Type
+- Table Name
+- Record ID
+- User Email
+- User Name
+- IP Address
+- Old Values (JSON)
+- New Values (JSON)
+
+**Opening CSV Files**:
+- Excel: Double-click file
+- Google Sheets: Upload → Import
+- Text editor: View raw data
+
+---
+
+## Action Logs
+
+### What are Action Logs?
+
+Action Logs track **user activities** that modify data:
+- User logins/logouts
+- Record creations
+- Record updates
+- Record deletions
+
+### Accessing Action Logs
+
+**Steps**:
+1. Navigate to System Logs page
+2. Click **"Action Logs"** tab (second tab)
+3. View user activity table
+
+### Action Log Filters
+
+**Available Filters**:
+- **Action Type**: create, update, delete, login, logout
+- **Table Name**: Which database table was affected
+- **Search**: Search by user email or details
+- **Date Range**: Time period
+
+### Common Use Cases
+
+**Audit User Activity**:
+1. Select user email in table
+2. View all actions by that user
+3. Export for compliance report
+
+**Track Data Changes**:
+1. Filter by table name (e.g., "students")
+2. Filter by action type (e.g., "delete")
+3. Review who deleted what data
+
+**Investigate Security Incident**:
+1. Filter by date range (incident window)
+2. Filter by suspicious action types
+3. Check IP addresses
+4. Review old/new values for unauthorized changes
+
+---
+
+## Best Practices
+
+### Daily Monitoring
+
+**Morning Routine** (5 minutes):
+1. Open System Logs
+2. Filter by **ERROR** level
+3. Check for overnight errors
+4. Investigate any CRITICAL logs immediately
+
+**Quick Health Check**:
+- Statistics cards show at-a-glance system health
+- Rising ERROR count → investigate
+- Many WARN logs → review for patterns
+
+### Weekly Review
+
+**Trending Analysis**:
+1. Export last 7 days of logs
+2. Open CSV in Excel/Sheets
+3. Create pivot table by operation
+4. Identify frequently failing operations
+
+**Action Log Audit**:
+1. Switch to Action Logs tab
+2. Review user activity patterns
+3. Look for unusual behavior:
+   - Logins from new IP addresses
+   - Bulk deletions
+   - After-hours activity
+
+### Incident Investigation
+
+**Step-by-Step Process**:
+1. **Identify Time Window**:
+   - When was issue first noticed?
+   - Filter by date range (±30 minutes)
+
+2. **Find Related Logs**:
+   - Search for error messages
+   - Filter by relevant operation
+   - Check user ID if user-reported
+
+3. **Review Log Details**:
+   - Click "eye" icon for full details
+   - Check context JSON for clues
+   - Note error stack traces
+
+4. **Correlate with Action Logs**:
+   - Switch to Action Logs tab
+   - Same time window
+   - Look for related user actions
+
+5. **Document Findings**:
+   - Export relevant logs
+   - Include in incident report
+   - Share with dev team
+
+### Performance Tips
+
+**Faster Searches**:
+- Use specific search terms (not generic words)
+- Narrow date range before searching
+- Use pagination (50/100 records) for faster loading
+
+**Export Large Datasets**:
+- Split into multiple smaller exports by date
+- Export during off-peak hours
+- Use narrowest filters possible
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+#### "Access Denied" Error
+
+**Problem**: Page shows "You do not have permission to view system logs"
+
+**Solution**:
+1. Verify you're logged in as superuser
+2. Contact administrator to request `system_logs:read` permission
+3. Try logging out and back in
+
+#### "Rate Limit Exceeded" Error
+
+**Problem**: "Too many requests. Please wait a minute and try again."
+
+**Cause**: Made more than 100 API requests in 1 minute (or 200 for exports)
+
+**Solution**:
+1. Wait 1 minute before retrying
+2. Avoid rapid filter changes
+3. Use narrower filters to reduce request frequency
+
+#### Slow Loading
+
+**Problem**: Logs take long to load
+
+**Common Causes & Solutions**:
+- **Large page size (200)** → Reduce to 50-100
+- **Wide date range** → Narrow to specific dates
+- **No filters applied** → Add level/operation filters
+- **Network slow** → Check internet connection
+
+#### Export Fails
+
+**Problem**: Export doesn't download or fails
+
+**Troubleshooting**:
+1. **Check record count**: If >10,000, narrow filters
+2. **Check rate limit**: Wait 1 minute if you recently exported
+3. **Check permissions**: Need `system_logs:export` permission
+4. **Try smaller export**: Reduce date range
+5. **Check browser**: Allow file downloads, disable popup blocker
+
+#### Missing Logs
+
+**Problem**: Expected logs don't appear
+
+**Possible Reasons**:
+- **Retention policy**: Old logs may be auto-deleted (see retention table)
+- **Wrong filters**: Check date range, log level
+- **Timezone confusion**: Remember timestamps are in YOUR timezone
+- **Logs not created**: Operation may not log (by design)
+
+#### Timestamps Confusing
+
+**Problem**: Timestamps don't match expectations
+
+**Explanation**:
+- All logs stored in **UTC** (server time)
+- Displayed in **your local timezone**
+- Hover over timestamp to see full date/time with timezone
+- Example: "2 hours ago" → hover → "2026-02-08 15:30:00 IST"
+
+### Getting Help
+
+**When you need assistance**:
+1. **Take screenshot** of issue
+2. **Note timestamp** of problematic log
+3. **Export relevant logs** if possible
+4. **Contact system administrator** with:
+   - Description of issue
+   - Screenshot
+   - Log timestamp or export file
+   - What you were trying to do
+
+**Emergency Contact**:
+- For security incidents or system-wide errors
+- Contact administrator immediately
+- Include CRITICAL log details
+
+---
+
+## Keyboard Shortcuts
+
+| Action | Shortcut |
+|--------|----------|
+| Close modal | `Esc` |
+| Focus search | `Ctrl/Cmd + K` (browser dependent) |
+| Refresh page | `F5` or `Ctrl/Cmd + R` |
+
+---
+
+## Data Retention Policy
+
+Logs are automatically deleted based on severity:
+
+| Level | Retention Period | Auto-Cleanup |
+|-------|------------------|--------------|
+| DEBUG | 30 days | Daily at 2:00 AM UTC |
+| INFO | 90 days | Daily at 2:00 AM UTC |
+| WARN | 180 days | Daily at 2:00 AM UTC |
+| ERROR | 365 days | Daily at 2:00 AM UTC |
+| CRITICAL | 365 days | Daily at 2:00 AM UTC |
+
+**Important**:
+- Export important logs before retention expires
+- Cleanup is automatic (no manual action needed)
+- Deleted logs cannot be recovered
+
+---
+
+## Glossary
+
+**Terms You'll Encounter**:
+
+- **Context**: Additional data about a log event (JSON format)
+- **Operation**: The activity that generated the log (e.g., "user_login")
+- **Record ID**: Database identifier for affected record
+- **Stack Trace**: Technical error details showing where error occurred
+- **Audit Log**: Record of who did what and when (Action Logs)
+- **UTC**: Coordinated Universal Time (timezone for log storage)
+- **Rate Limit**: Maximum requests allowed per time period
+
+---
+
+## FAQ
+
+**Q: How long does it take for logs to appear?**  
+A: Real-time or within seconds. Click Refresh if not seeing expected logs.
+
+**Q: Can I export Action Logs and System Logs together?**  
+A: No, export each separately. Use date range filters to match timeframes.
+
+**Q: What if I accidentally export sensitive data?**  
+A: Action Logs may contain user data. Treat exports as confidential. Delete files after review.
+
+**Q: Can I search by user ID?**  
+A: Yes, use the Search field. Type "user 123" or search context field in System Logs.
+
+**Q: Why do some logs show "-" for user?**  
+A: System-generated logs (e.g., scheduled tasks) have no user association.
+
+**Q: How do I report a bug I found in logs?**  
+A: Export relevant logs, screenshot the error, and contact dev team with details.
+
+**Q: Can I customize what gets logged?**  
+A: No, logging is configured by developers. Contact admin to request changes.
+
+**Q: What's the difference between ERROR and CRITICAL?**  
+A: ERROR = something failed but system continues. CRITICAL = system-wide failure, service may be unavailable.
+
+---
+
+## Need More Help?
+
+**Documentation**:
+- Technical Architecture: See developer docs
+- API Reference: See API documentation
+- Security Model: See security documentation
+
+**Support**:
+- Email: support@yourdomain.com
+- Internal: Contact system administrator
+- Emergency: Call IT helpdesk
+
+---
+
+**Document Version**: 1.0  
+**Last Updated**: February 8, 2026  
+**Next Review**: August 2026

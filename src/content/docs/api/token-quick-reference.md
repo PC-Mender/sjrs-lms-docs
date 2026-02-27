@@ -1,0 +1,230 @@
+---
+title: "Token Quick Reference"
+---
+
+# API Token Quick Reference
+
+## Environment Variables Required
+
+```bash
+# JWT Authentication (choose one approach)
+
+# 1) Single secret (legacy, still supported)
+JWT_SECRET=your-secure-jwt-secret-key
+
+# 2) Rotation-ready (recommended)
+# JSON map of kid -> secret
+JWT_KEYS_JSON={"key-2025-01":"super-secret-1","key-2025-07":"super-secret-2"}
+# Which kid to use when signing
+JWT_DEFAULT_KID=key-2025-01
+# Optional strict validation
+JWT_ISS=your-jwt-issuer
+JWT_AUD=https://your-worker.your-subdomain.workers.dev
+
+# Mailjet Email Service (for both direct and queue)
+MAILJET_API_KEY=your_mailjet_api_key
+MAILJET_API_SECRET=your_mailjet_api_secret
+MAILJET_FROM_EMAIL=noreply@yourdomain.com
+
+# Cloudflare Deployment
+CLOUDFLARE_API_TOKEN=your-cloudflare-api-token
+CLOUDFLARE_ACCOUNT_ID=your-cloudflare-account-id
+
+# API Configuration
+VITE_API_BASE_URL=https://your-worker.your-subdomain.workers.dev
+FRONTEND_URL=https://your-worker.your-subdomain.workers.dev
+```
+
+## Token Types and Usage
+
+### 1. JWT Authentication Tokens
+- **Storage**: Use `tokenManager` from `src/utilities/auth/token-manager.ts` (uses secure storage)
+- **⚠️ Important**: Do NOT use `localStorage` directly. Always use `tokenManager.getToken()`, `tokenManager.setToken()`, or `tokenManager.clearAuth()`
+- **Header**: `Authorization: Bearer <token>` (automatically handled by `unifiedAPIClient`)
+- **Expiration**: 24 hours
+- **Location**: `functions/middleware/auth/tokens/jwt.ts`
+
+### 2. CSRF Protection Tokens
+- **Storage**: Secure memory + cookies
+- **Header**: `X-XSRF-TOKEN: <token>`
+- **Expiration**: 30 minutes
+- **Location**: `src/utilities/security/csrf-protection.ts`
+- **Automatic Injection**: CSRF token is automatically added to all requests via request interceptor in `src/utilities/api/unified-api-client.ts` (lines 735-743)
+
+### 3. Mailjet Email Service API Keys
+- **Storage**: Environment variables
+- **Header**: `Authorization: Basic <base64_encoded_api_key:secret>`
+- **Usage**: Both direct calls and queue backend
+- **Location**: 
+  - Direct: `functions/middleware/auth/index.ts`
+  - Queue: `functions/email-templates/index.ts`
+
+### 4. Cloudflare API Tokens
+- **Storage**: GitHub Secrets
+- **Usage**: Deployment automation
+- **Location**: `.github/workflows/release.yml`
+
+## Email Service Architecture
+
+### **📧 Account Emails (Direct Mailjet)**
+```typescript
+// Registration confirmation
+const emailData = {
+  Messages: [{
+    From: { Email: env.MAILJET_FROM_EMAIL, Name: "SJRS LMS" },
+    To: [{ Email: email, Name: firstName }],
+    Subject: "Confirm Your Email Address",
+    HTMLPart: `<h2>Welcome to SJRS LMS!</h2>...`
+  }]
+};
+
+const response = await fetch('https://api.mailjet.com/v3.1/send', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Basic ${btoa(`${env.MAILJET_API_KEY}:${env.MAILJET_API_SECRET}`)}`
+  },
+  body: JSON.stringify(emailData)
+});
+```
+
+### **📧 Transactional Emails (Queue + Mailjet)**
+```typescript
+// Send to queue
+await env.EMAIL_QUEUE.send({
+  type: 'borrow_notification',
+  data: { userId, email, name, bookTitle, dueDate }
+});
+
+// Queue processor sends via Mailjet backend
+async sendEmailViaMailjet(to: string, content: { subject: string; body: string; html?: string }, env: any) {
+  const emailData = {
+    Messages: [{
+      From: { Email: env.MAILJET_FROM_EMAIL, Name: "SJRS LMS" },
+      To: [{ Email: to, Name: to.split('@')[0] }],
+      Subject: content.subject,
+      TextPart: content.body,
+      HTMLPart: content.html
+    }]
+  };
+
+  const response = await fetch('https://api.mailjet.com/v3.1/send', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${btoa(`${env.MAILJET_API_KEY}:${env.MAILJET_API_SECRET}`)}`
+    },
+    body: JSON.stringify(emailData)
+  });
+}
+```
+
+## Common Token Operations
+
+### Client-Side Token Management
+```typescript
+// ⚠️ IMPORTANT: Always use tokenManager, never localStorage directly
+import { tokenManager } from '@/utilities/auth/token-manager';
+
+// Store token (uses secure storage)
+await tokenManager.setToken(token, 'cookie');
+
+// Get token (from secure storage)
+const token = await tokenManager.getToken('cookie');
+
+// Clear token and session
+await tokenManager.clearAuth();
+
+// Get session data
+const session = await tokenManager.getSession('cookie');
+
+// Include in requests (automatically handled by unifiedAPIClient)
+// No manual header needed - unifiedAPIClient adds Authorization header automatically
+```
+
+**⚠️ Security Note**: Direct `localStorage` usage is deprecated. Always use `tokenManager` which:
+- Uses secure storage (cookies with HttpOnly when possible)
+- Handles token refresh automatically
+- Provides unified session lifecycle management
+- Is the single source of truth for authentication state
+
+### Server-Side Token Validation
+```typescript
+// Validate and extract user
+const user = await validateUserToken(token, env);
+if (!user) {
+  return new Response('Unauthorized', { status: 401 });
+}
+```
+
+### CSRF Token Operations
+```typescript
+// Import CSRF protection utilities
+import { csrfProtection, addCSRFToHeaders, getCSRFToken } from '@/utilities/security/csrf-protection';
+
+// Generate token (usually done automatically on app initialization)
+const csrfToken = await csrfProtection.createToken();
+
+// Get current token (creates if doesn't exist)
+const token = await getCSRFToken();
+
+// Validate token (client-side validation)
+const validation = await csrfProtection.validateToken(headerToken);
+
+// Manually add to headers (usually not needed - handled automatically)
+const headers = await addCSRFToHeaders({ 'Content-Type': 'application/json' });
+// Result: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': '<token>' }
+
+// Note: CSRF token is automatically added to all API requests via
+// request interceptor in src/utilities/api/unified-api-client.ts
+```
+
+### Email Service Operations
+
+#### **Account Email (Direct Mailjet)**
+```typescript
+// Registration confirmation
+if (env.MAILJET_API_KEY && env.MAILJET_API_SECRET) {
+  await sendConfirmationEmail(user.email, user.first_name, confirmationToken, env);
+}
+```
+
+#### **Transactional Email (Queue + Mailjet)**
+```typescript
+// Loan notification
+await sendLoanNotification('borrow_notification', {
+  userId: user.id,
+  userEmail: user.email,
+  userName: user.first_name,
+  bookTitle: book.title,
+  dueDate: dueDate
+});
+```
+
+## Email Service Strategy
+
+### **📧 Account-Related Emails (Direct Mailjet)**
+- Registration confirmation
+- Password reset
+- Email verification
+- Account status changes
+
+### **📧 Transactional Emails (Queue + Mailjet)**
+- Loan notifications (`borrow_notification`)
+- Return reminders (`return_reminder`)
+- Overdue notices (`overdue_notification`)
+- System notifications (`system_notification`)
+- Order status updates (`order_notification`)
+
+## Benefits of Hybrid Approach
+
+### **✅ Direct Mailjet Benefits**
+- Immediate feedback for critical account emails
+- Simple implementation for low-volume emails
+- No queue complexity for account flows
+
+### **✅ Queue + Mailjet Benefits**
+- Reliability with automatic retries
+- Scalability for high-volume transactional emails
+- Non-blocking user experience
+- Background processing for notifications 

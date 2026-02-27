@@ -1,0 +1,161 @@
+---
+title: "Permission Based Security"
+---
+
+# Permission-Based Security System
+
+## Overview
+
+The application now uses a **fully database-driven permission system** for access control. This replaces hardcoded role checks with flexible, database-driven permissions that work for any role.
+
+## Key Principles
+
+1. **Database-Driven**: All permissions are stored in the database, not hardcoded
+2. **Role-Agnostic**: Any role can have any permission - there's no hardcoded role hierarchy
+3. **Centralized**: Security middleware handles permission checks consistently
+4. **Flexible**: Permissions can be granted/revoked without code changes
+
+## Architecture
+
+### Security Middleware
+
+The security middleware now supports two access control methods:
+
+1. **Permission-Based (Preferred)**: Uses `requiredPermission` config
+2. **Role-Based (Deprecated)**: Uses `allowedRoles` config (for backward compatibility)
+
+### Permission-Based Access Control
+
+```typescript
+import { requireReadPermission, requireCreatePermission } from '../../middleware/security';
+
+// Require read permission for books
+const securityConfig = requireReadPermission('books');
+const result = await securityMiddleware(request, env, securityConfig);
+
+// Require create permission for users
+const securityConfig = requireCreatePermission('users');
+const result = await securityMiddleware(request, env, securityConfig);
+```
+
+### Available Helpers
+
+- `requirePermission({ resource, action })` - Require specific permission
+- `requireReadPermission(resource)` - Require resource:read
+- `requireCreatePermission(resource)` - Require resource:create
+- `requireUpdatePermission(resource)` - Require resource:update
+- `requireDeletePermission(resource)` - Require resource:delete
+- `requireAuthenticationOnly()` - Just require authentication, no permission check
+
+## Migration Guide
+
+### Before (Role-Based - Deprecated)
+
+```typescript
+// ❌ OLD: Hardcoded role check
+const securityConfig = {
+  ...SECURITY_CONFIGS.ADMIN, // Hardcoded ['admin', 'superuser']
+  // ...
+};
+```
+
+### After (Permission-Based - Preferred)
+
+```typescript
+// ✅ NEW: Database-driven permission check
+import { requireReadPermission } from '../../middleware/security';
+
+const securityConfig = requireReadPermission('books');
+// Now any role with books:read permission can access
+```
+
+## Examples
+
+### Example 1: Read-Only Endpoint
+
+```typescript
+// Allow all authenticated users to read roles (metadata)
+const securityConfig = requireAuthenticationOnly();
+const result = await securityMiddleware(request, env, securityConfig);
+```
+
+### Example 2: Resource-Specific Permission
+
+```typescript
+// Require books:read permission
+const securityConfig = requireReadPermission('books');
+const result = await securityMiddleware(request, env, securityConfig);
+```
+
+### Example 3: Mutation Endpoint
+
+```typescript
+// Require users:create permission
+const securityConfig = requireCreatePermission('users');
+const result = await securityMiddleware(request, env, securityConfig);
+```
+
+## Benefits
+
+1. **Flexibility**: Permissions can be granted/revoked via database without code changes
+2. **Consistency**: All endpoints use the same permission checking mechanism
+3. **Maintainability**: No hardcoded role checks scattered throughout codebase
+4. **Scalability**: Easy to add new roles or permissions
+5. **Security**: Single source of truth for access control
+
+## Dashboard Access
+
+Dashboards now work for **any role** that has the appropriate permissions:
+
+- **Admin Dashboard**: Requires permissions like `users:read`, `books:read`, etc.
+- **Librarian Dashboard**: Requires permissions like `loans:read`, `books:read`, etc.
+- **Student Dashboard**: Requires permissions like `books:read`, `loans:read`, etc.
+
+No hardcoded role checks - if a role has the permissions, they can access the dashboard.
+
+## Security Config Reference
+
+### SecurityConfig Interface
+
+```typescript
+interface SecurityConfig {
+  // Permission-based access control (preferred)
+  requiredPermission?: {
+    resource: string;
+    action: string;
+  };
+  
+  // Role-based access control (deprecated)
+  allowedRoles?: readonly string[];
+  
+  // Other security settings...
+  requireAuthentication?: boolean;
+  enableValidation?: boolean;
+  // ...
+}
+```
+
+## Best Practices
+
+1. **Always use permission-based access control** for new code
+2. **Migrate existing code** from `allowedRoles` to `requiredPermission`
+3. **Use helper functions** (`requireReadPermission`, etc.) for consistency
+4. **Document required permissions** in endpoint comments
+5. **Test with different roles** to ensure permissions work correctly
+
+## Migration Checklist
+
+- [ ] Replace `SECURITY_CONFIGS.ADMIN` with permission-based configs
+- [ ] Replace `allowedRoles` arrays with `requiredPermission`
+- [ ] Update all API endpoints to use permission helpers
+- [ ] Test all dashboards with different roles
+- [ ] Verify permissions are granted in database for all roles
+- [ ] Remove hardcoded role checks from handlers
+
+## Questions?
+
+If you have questions about the permission-based security system, check:
+- `functions/middleware/security/utils/permission-based-security.ts` - Helper functions
+- `functions/middleware/security/handlers/auth-handler.ts` - Permission checking logic
+- `functions/middleware/permissions/has-permission.ts` - Core permission check
+

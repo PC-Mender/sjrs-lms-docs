@@ -1,0 +1,327 @@
+---
+title: "Version And Release Management"
+---
+
+# Version and Release Management
+
+## 🎯 Overview
+
+This document explains how version management, GitHub releases, and notifications work together in the deployment workflow.
+
+---
+
+## 📋 Complete Workflow
+
+### Step-by-Step Process
+
+```
+1. Developer runs: npm run version:prepare
+   ↓
+2. Script analyzes commits and determines version bump type
+   ↓
+3. Version bumped in package.json
+   ↓
+4. CHANGELOG.md updated
+   ↓
+5. Changes committed with proper commit type
+   ↓
+6. Git tag created (vX.Y.Z)
+   ↓
+7. Pushed to GitHub
+   ↓
+8. GitHub Actions triggers automatically
+   ↓
+9. Quality gates → Build → Deploy
+   ↓
+10. GitHub Release created (with categorized commits)
+   ↓
+11. Notification saved to notification_events table
+```
+
+---
+
+## 🔢 Version Consistency
+
+### How Version Stays Consistent
+
+**Three places where version must match:**
+
+1. **package.json** - `"version": "3.40.0"`
+2. **Git Tag** - `v3.40.0`
+3. **GitHub Release** - Release `3.40.0`
+
+### Version Verification
+
+The workflow includes automatic version verification:
+
+```yaml
+# In GitHub Actions workflow
+- name: Verify version consistency
+  run: |
+    TAG_VERSION="v3.40.0"
+    PACKAGE_VERSION="3.40.0"
+    
+    if [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
+      echo "⚠️ WARNING: Version mismatch!"
+      exit 1
+    else
+      echo "✅ Version consistency verified"
+    fi
+```
+
+**If versions don't match:**
+- GitHub Actions will fail
+- Deployment will be blocked
+- You'll need to fix the version mismatch
+
+---
+
+## 📝 Commit Type Analysis
+
+### How Commit Types Are Analyzed
+
+The workflow analyzes commits to determine version bump type:
+
+#### Commit Type Detection
+
+```bash
+# From commit messages:
+feat: add new feature        → Minor version bump (1.0.0 → 1.1.0)
+fix: resolve bug            → Patch version bump (1.0.0 → 1.0.1)
+BREAKING CHANGE: major      → Major version bump (1.0.0 → 2.0.0)
+chore: update deps          → Patch version bump (1.0.0 → 1.0.1)
+```
+
+#### File-Based Analysis
+
+If no commit message is available, the script analyzes changed files:
+
+```javascript
+// From file paths:
+src/components/...          → feat (minor version)
+functions/api/...          → feat (minor version)
+docs/...                   → docs (patch version)
+scripts/...                 → chore (patch version)
+```
+
+---
+
+## 🏷️ GitHub Releases
+
+### Automatic Release Creation
+
+When a tag is pushed, GitHub Actions automatically:
+
+1. **Analyzes commits** since last release
+2. **Categorizes commits** by type:
+   - ⚠️ Breaking Changes
+   - ✨ Features
+   - 🐛 Bug Fixes
+   - 📚 Documentation
+   - 🔧 Other Changes
+3. **Creates GitHub Release** with formatted notes
+4. **Includes deployment info**:
+   - Deployment URL
+   - Deployment status
+   - Commit SHA
+
+### Release Notes Format
+
+```markdown
+## Release v3.40.0
+
+### ✨ Features
+- Add new analytics dashboard (a1b2c3d)
+- Improve user authentication flow (e4f5g6h)
+
+### 🐛 Bug Fixes
+- Fix login redirect issue (i7j8k9l)
+- Resolve notification display bug (m1n2o3p)
+
+### 📚 Documentation
+- Update API documentation (q4r5s6t)
+
+---
+**Deployed to**: https://your-worker.your-subdomain.workers.dev
+**Deployment Status**: ✅ Success
+```
+
+---
+
+## 📊 Notifications to Database
+
+### How Notifications Are Saved
+
+**Flow:**
+```
+GitHub Actions → Notification Payload → Ingest Endpoint → notification_events table
+```
+
+### Notification Payload Structure
+
+```json
+{
+  "source": "release:pipeline",
+  "title": "Deployment completed successfully",
+  "message": "Deployment to production completed successfully.\n\nVersion: 3.40.0\nCommit: a1b2c3d",
+  "category": "deployment",
+  "severity": "info",
+  "status": "active",
+  "tags": ["deployment", "production", "success"],
+  "version": "3.40.0",
+  "metadata": {
+    "deployment": {
+      "version": "3.40.0",
+      "environment": "production",
+      "status": "success",
+      "deploymentUrl": "https://your-worker.your-subdomain.workers.dev",
+      "commitSha": "a1b2c3d...",
+      "githubRunId": "123456789",
+      "githubRunUrl": "https://github.com/.../actions/runs/123456789"
+    }
+  }
+}
+```
+
+### Database Table: `notification_events`
+
+The notification is saved to the `notification_events` table with:
+
+- **title**: Deployment status
+- **message**: Detailed deployment info
+- **category**: `deployment`
+- **severity**: `info` (success) or `warning` (failed)
+- **version**: Version number (e.g., "3.40.0")
+- **metadata**: Full deployment details (JSON)
+- **tags**: `["deployment", "production", "success"]`
+- **status**: `active`
+
+### Verification
+
+After deployment, you can verify the notification was saved:
+
+```sql
+SELECT * FROM notification_events 
+WHERE category = 'deployment' 
+ORDER BY created_at DESC 
+LIMIT 1;
+```
+
+Or check via API:
+
+```bash
+GET /api/notifications/events?category=deployment&limit=1
+```
+
+---
+
+## 🔧 Configuration
+
+### Required GitHub Secrets
+
+For notifications to work, configure:
+
+```bash
+NOTIFICATION_INGEST_TOKEN_RELEASE=your_token_here
+# OR
+NOTIFICATION_INGEST_TOKEN=your_token_here
+```
+
+**Where to set:**
+- GitHub → Repository → Settings → Secrets and variables → Actions
+
+### Ingest Endpoint
+
+Default endpoint (can be overridden):
+```bash
+NOTIFICATION_INGEST_ENDPOINT=https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest
+```
+
+---
+
+## ✅ Version Synchronization Checklist
+
+### Before Running `npm run version:prepare`
+
+- [ ] All changes committed
+- [ ] Commit messages follow conventional commits format
+- [ ] No uncommitted changes (or they'll be included in version bump)
+
+### After Version Preparation
+
+- [ ] Version in `package.json` matches git tag
+- [ ] Git tag exists: `git tag | grep v3.40.0`
+- [ ] Tag pushed to GitHub: Check GitHub tags page
+
+### After Deployment
+
+- [ ] GitHub Release created: Check releases page
+- [ ] Release version matches package.json version
+- [ ] Notification saved to database: Check notification_events table
+- [ ] Deployment successful: Check GitHub Actions logs
+
+---
+
+## 🐛 Troubleshooting
+
+### Version Mismatch
+
+**Issue**: Tag version doesn't match package.json version
+
+**Solution**:
+```bash
+# Check current version
+node -p "require('./package.json').version"
+
+# Check git tags
+git tag | tail -5
+
+# If mismatch, fix package.json and recreate tag
+npm version 3.40.0 --no-git-tag-version
+git tag -d v3.40.0
+git tag v3.40.0
+git push origin v3.40.0 --force
+```
+
+### Notification Not Saved
+
+**Issue**: Notification not appearing in database
+
+**Check**:
+1. Token configured in GitHub Secrets?
+2. Ingest endpoint accessible?
+3. Check GitHub Actions logs for notification step
+4. Verify HTTP status code (should be 201)
+
+**Debug**:
+```bash
+# Check notification endpoint
+curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+  -H "Content-Type: application/json" \
+  -H "x-notification-ingest-token: YOUR_TOKEN" \
+  -d '{"source":"release:pipeline","title":"Test","message":"Test","category":"deployment"}'
+```
+
+### GitHub Release Not Created
+
+**Issue**: Release not appearing on GitHub
+
+**Check**:
+1. Tag was pushed? `git ls-remote --tags origin`
+2. GitHub Actions workflow completed successfully?
+3. Check workflow logs for release job
+4. Verify tag format: `v3.40.0` (not `3.40.0`)
+
+---
+
+## 📚 Related Documentation
+
+- **[Deployment Quick Reference](./quick-reference.md)** - Quick reference guide
+- **[Deployment Flow Explained](./deployment-flow-explained.md)** - How deployment works
+- **[Deployment Flow Explained](./deployment-flow-explained.md)** - Deployment flow details
+
+---
+
+**Last Updated**: January 2025  
+**Status**: Active
+

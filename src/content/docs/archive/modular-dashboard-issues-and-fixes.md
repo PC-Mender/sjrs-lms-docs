@@ -1,0 +1,155 @@
+---
+title: "Modular Dashboard Issues And Fixes"
+---
+
+# Modular Dashboard - Identified Issues & Fixes
+
+## 🔍 Issues Found
+
+### 1. **Stale Widget Preferences After Role Change** ⚠️ MEDIUM
+**Issue**: If user's role changes, their widget preferences might reference widgets from old role that don't exist for new role.
+
+**Scenario**:
+- User is superuser, enables "tools" widget
+- Admin changes user role to "admin"
+- Admin role doesn't have "tools" widget
+- Preferences still reference "tools" widget (harmless but messy)
+
+**Impact**: Low - preferences are filtered by available widgets, so stale preferences are ignored. However, they accumulate in database.
+
+**Fix Needed**: Clean up preferences when role changes, or filter out invalid widget IDs.
+
+---
+
+### 2. **Tab Order Contains Invalid Widget IDs** ⚠️ LOW
+**Issue**: `tabOrder` array can contain widget IDs that:
+- Don't exist anymore (widget removed from registry)
+- Are disabled (user disabled them)
+- Are from different role
+
+**Current Behavior**: Invalid IDs in `tabOrder` are silently ignored during sorting.
+
+**Impact**: Low - sorting still works, but order might not match user's expectations.
+
+**Fix Needed**: Validate and clean `tabOrder` to only include valid, enabled widget IDs.
+
+---
+
+### 3. **Empty Widgets Edge Case** ⚠️ LOW
+**Issue**: If all widgets are disabled, `orderedWidgets[0]?.id` is undefined, fallback to 'overview' might not exist.
+
+**Current Code**:
+```typescript
+const activeTab = (urlTab && validTabIds.includes(urlTab)) 
+  ? urlTab 
+  : (orderedWidgets[0]?.id || 'overview');
+```
+
+**Impact**: Low - Component handles empty widgets array, but fallback 'overview' might not exist.
+
+**Fix Needed**: Better fallback handling.
+
+---
+
+### 4. **Race Condition in Settings** ⚠️ MEDIUM
+**Issue**: If user rapidly toggles widgets, multiple API calls could be in flight, causing:
+- Inconsistent state
+- Last write wins (could lose intermediate changes)
+- UI showing wrong state
+
+**Current Code**: No debouncing or request cancellation.
+
+**Impact**: Medium - Could cause confusion if user toggles quickly.
+
+**Fix Needed**: Debounce widget toggles or cancel previous requests.
+
+---
+
+### 5. **Permission Check Timing** ⚠️ LOW
+**Issue**: Permission checks happen at render time. If permissions change while user is viewing dashboard:
+- Widget might still be visible until refresh
+- No real-time permission updates
+
+**Impact**: Low - Permissions don't change frequently, and page refresh fixes it.
+
+**Fix Needed**: Listen for permission update events and refresh widgets.
+
+---
+
+### 6. **Widget ID Collision** ⚠️ LOW
+**Issue**: No validation that widget IDs are unique across roles. If two roles have widgets with same ID:
+- Preferences might conflict
+- Settings might show wrong widget
+
+**Current Behavior**: Each role has separate registry, so IDs can overlap.
+
+**Impact**: Low - Each role's preferences are separate, but could be confusing.
+
+**Fix Needed**: Validate widget IDs are unique globally, or namespace by role.
+
+---
+
+### 7. **Preferences Merge Issue** ⚠️ LOW
+**Issue**: When updating preferences, we merge with existing preferences. If preference structure changes:
+- Old invalid data might persist
+- Settings might show inconsistent state
+
+**Current Code**:
+```typescript
+dashboard_widgets: {
+  ...preferences,  // Spreads existing preferences
+  enabled: newEnabled
+}
+```
+
+**Impact**: Low - Structure is stable, but could cause issues if structure changes.
+
+**Fix Needed**: Validate preference structure before merging.
+
+---
+
+### 8. **Settings Shows Widgets That Will Be Filtered** ⚠️ LOW
+**Issue**: Settings shows `availableWidgets` which includes widgets user might not have permission for. User can enable widget, but it gets filtered out due to permissions.
+
+**Impact**: Low - Widget just won't appear, but user might be confused why.
+
+**Fix Needed**: Show only widgets user can actually enable (filter by permissions in settings).
+
+---
+
+### 9. **No Validation of Widget Component** ⚠️ LOW
+**Issue**: No runtime check that `widget.component` is actually a valid React component. If registry has invalid component:
+- Error only shows when widget is rendered
+- Could crash dashboard
+
+**Impact**: Low - Registry is static, but developer error could cause issues.
+
+**Fix Needed**: Validate components at registry level or add error boundary per widget.
+
+---
+
+### 10. **Duplicate Widget IDs in Same Role** ⚠️ LOW
+**Issue**: No validation that widget IDs are unique within a role's widget array.
+
+**Impact**: Low - Developer error, but could cause issues.
+
+**Fix Needed**: Validate widget IDs are unique per role.
+
+---
+
+## 🔧 Recommended Fixes
+
+### Priority 1 (High Impact)
+1. **Clean up stale preferences on role change**
+2. **Validate and clean tabOrder array**
+3. **Debounce widget toggle operations**
+
+### Priority 2 (Medium Impact)
+4. **Filter settings widgets by permissions**
+5. **Better empty widgets handling**
+
+### Priority 3 (Low Impact)
+6. **Validate widget IDs are unique**
+7. **Add widget component validation**
+8. **Listen for permission updates**
+

@@ -1,0 +1,165 @@
+---
+title: "Email Preview"
+---
+
+# Email Preview Feature
+
+## Overview
+
+The Email Preview feature provides a comprehensive preview system for all email templates used in the SJRS Library Management System. This feature allows superusers to preview email templates in both light and dark modes to ensure proper rendering and visibility across different email clients and user preferences. The interface is fully integrated with the existing app theme system for seamless user experience.
+
+## Features
+
+### 🔐 Access Control
+- **Superuser Only**: This feature is restricted to superusers only for security and administrative purposes
+- **Role-based Access**: Automatically checks user role and redirects unauthorized users
+- **Secure Navigation**: Integrated with the existing authentication system
+
+### 🎨 Theme Integration
+- **Native Theme Support**: Fully integrated with the existing app theme system
+- **Automatic Theme Detection**: Uses the same theme as the rest of the application
+- **Consistent Styling**: Matches the app's design language and color scheme
+- **Ant Design Components**: Uses the same UI components as the rest of the app
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+
+### 📧 Template Preview
+- **All Email Templates**: Preview all system email templates in one place
+- **Individual Template Selection**: Filter to view specific templates
+- **Real-time Rendering**: Live preview using iframe with proper sandboxing
+- **Subject Line Display**: Shows the email subject for each template
+- **Individual Dark Mode Toggle**: Switch between light and dark mode for each template independently
+
+### 🔧 Technical Features
+- **Script Execution**: Proper iframe sandboxing with `allow-scripts` permission
+- **Theme-aware Styling**: Dynamic styling based on current app theme
+- **Error Handling**: Graceful error handling for unauthorized access
+- **Performance Optimized**: Efficient rendering and minimal resource usage
+
+## Access Instructions
+
+### For Superusers
+1. Log in to the system with superuser credentials
+2. Navigate to the main menu
+3. Look for "Email Preview" in the Analytics section
+4. Click to access the email preview page
+
+### For Other Users
+- Non-superuser users will see an access denied page
+- Automatic redirect to dashboard with appropriate error message
+- Clear explanation of access requirements
+
+## Usage Guide
+
+### Viewing Templates
+1. **Select Template**: Use the dropdown to choose "All Templates" or a specific template
+2. **Toggle Dark Mode**: Use the switch in each preview card to test dark mode rendering
+3. **Scroll Through**: Each template is displayed in a responsive grid layout
+4. **Inspect Details**: View the subject line and full email content for each template
+
+### Theme Integration
+- **Automatic Theme**: The interface automatically matches your current app theme
+- **Theme Indicator**: Shows your current theme mode (Light/Dark)
+- **Consistent Experience**: Same look and feel as the rest of the application
+- **Theme Switching**: Change the app theme to see how it affects the preview interface
+
+### Template Categories
+- **Email Confirmation**: Account verification emails
+- **Profile Completion**: User profile completion notifications
+- **Admin Approval**: Administrative approval notifications
+- **Borrow Notification**: Book borrowing confirmations
+- **Return Reminder**: Book return reminders
+- **Overdue Notification**: Overdue book notifications
+- **Order Notification**: Book order confirmations
+- **System Notification**: System-wide announcements
+- **Password Reset**: Password reset emails
+
+## Technical Details
+
+### File Structure
+```
+src/pages/
+├── email-preview.tsx      # Main component with theme integration
+
+functions/email-templates/
+└── index.ts              # Template generation functions
+```
+
+### Key Components
+- **EmailPreview**: Individual template preview component with theme-aware styling
+- **EmailPreviewPage**: Main page with access control and theme integration
+- **Superuser Guard**: Access control implementation
+- **Ant Design Grid**: Responsive layout using Ant Design components
+
+### Theme Integration
+- **useColorMode Hook**: Uses the existing theme context
+- **Dynamic Styling**: Theme-aware colors and shadows
+- **Consistent Components**: Ant Design Card, Row, Col, Typography
+- **Theme Indicators**: Shows current theme status
+
+### Security Features
+- **Role-based Access**: Checks user role before rendering
+- **Iframe Sandboxing**: Secure iframe with proper permissions
+- **Error Boundaries**: Graceful error handling
+- **Navigation Guards**: Prevents unauthorized access
+
+## Benefits
+
+### For Administrators
+- **Quality Assurance**: Verify email template appearance before sending
+- **Theme Testing**: Test templates in the same theme context as users
+- **Template Management**: Centralized view of all email templates
+- **User Experience**: Better understanding of what users receive
+
+### For Development
+- **Template Development**: Easy testing of new email templates
+- **Theme Validation**: Verify templates work with app theme system
+- **Access Control**: Secure access to sensitive template information
+- **Maintenance**: Simplified template management and updates
+
+## Recent Improvements
+
+### Theme Integration
+- **Native Theme Support**: Fully integrated with existing app theme system
+- **Consistent Design**: Matches app's design language and components
+- **Dynamic Styling**: Theme-aware colors, shadows, and spacing
+- **Ant Design Components**: Uses same UI components as rest of app
+
+### Technical Improvements
+- **Removed Custom CSS**: Eliminated separate CSS file for better maintainability
+- **Theme Context**: Uses existing `useColorMode` hook
+- **Responsive Layout**: Ant Design Grid system for better responsiveness
+- **Performance**: Reduced CSS bundle size and improved loading
+
+### Security Improvements
+- **Role Verification**: Strict superuser-only access
+- **Navigation Guards**: Proper redirect for unauthorized users
+- **Secure Rendering**: Safe iframe implementation
+- **Error Boundaries**: Graceful error handling
+
+## Future Enhancements
+
+### Planned Features
+- **Template Editing**: In-place template editing capabilities
+- **Export Functionality**: Export templates for external review
+- **Version History**: Track template changes over time
+- **A/B Testing**: Compare different template versions
+- **Email Client Testing**: Test across different email clients
+- **Template Analytics**: Usage statistics and performance metrics
+
+### Technical Improvements
+- **Real-time Updates**: Live template updates without page refresh
+- **Advanced Filtering**: Filter templates by category or type
+- **Bulk Operations**: Select and preview multiple templates
+- **Template Search**: Search functionality for large template collections
+- **Custom Data**: Allow custom data input for template testing
+
+## Troubleshooting
+
+### Common Issues
+1. **Access Denied**: Ensure you're logged in as a superuser
+2. **Template Not Loading**: Check network connection and refresh page
+3. **Theme Issues**: Verify app theme is working correctly
+4. **Iframe Errors**: Ensure browser allows iframe content
+
+### Support
+For technical issues or feature requests, contact the development team or create an issue in the project repository. 

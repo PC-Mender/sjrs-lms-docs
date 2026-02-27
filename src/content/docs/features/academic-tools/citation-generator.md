@@ -1,0 +1,91 @@
+---
+title: "Citation Generator"
+---
+
+# Citation Generator
+
+## Overview
+- Generates citations in multiple formats: APA, MLA, Chicago, Harvard
+- Supports common source types: book, journal article, website, newspaper, magazine, thesis, report
+- Validates inputs and enforces source-type specific requirements
+
+## Endpoints
+- GET `/api/citations` — Supported formats and source types
+  - Implementation: `functions/api/citations/handlers/get-citation-formats.ts:7`
+- POST `/api/citations` — Generate citation
+  - Implementation: `functions/api/citations/handlers/generate-citation.ts:9`
+- GET `/api/citations/history` — List saved citations
+  - Implementation: `functions/api/citations/handlers/get-citation-history.ts:7`
+- POST `/api/citations/save` — Save citation
+  - Implementation: `functions/api/citations/handlers/save-citation.ts:7`
+- DELETE `/api/citations/:id` — Delete saved citation
+  - Implementation: `functions/api/citations/handlers/delete-citation.ts:7`
+
+## Permissions
+- `citations:read` — List formats, view history, fetch a citation
+- `citations:create` — Generate and save citations
+- `citations:delete` — Delete saved citations
+
+## Validation
+- Schema: `functions/middleware/validation/schemas/citation-schemas.ts:8`
+- Required fields:
+  - `source_type`: one of `book | journal | website | newspaper | magazine | thesis | report`
+  - `format`: one of `apa | mla | chicago | harvard`
+  - `source_data`: object with fields varying by source type
+
+### Source-type rules
+- Backend validation enforces additional fields depending on `source_type`
+  - Book: `publisher`
+  - Journal: `journal_title`
+  - Website: `url`
+  - Newspaper: `newspaper_name`
+  - Thesis: `institution`
+  - Report: `organization`
+
+## Request Example
+```json
+{
+  "source_type": "book",
+  "format": "apa",
+  "source_data": {
+    "title": "Introduction to Algorithms",
+    "authors": ["Thomas H. Cormen", "Charles E. Leiserson", "Ronald L. Rivest", "Clifford Stein"],
+    "year": 2022,
+    "publisher": "MIT Press",
+    "edition": "4th",
+    "place": "Cambridge"
+  }
+}
+```
+
+## Response Example
+- Handler: `functions/api/citations/handlers/generate-citation.ts:30`
+```json
+{
+  "success": true,
+  "data": {
+    "citation": {
+      "text": "Cormen, T. H., Leiserson, C. E., Rivest, R. L., & Stein, C. (2022). Introduction to Algorithms (4th ed.). MIT Press.",
+      "in_text": "(Cormen et al., 2022)",
+      "format": "apa",
+      "source_type": "book"
+    }
+  }
+}
+```
+
+## Saving Citations
+- Handler: `functions/api/citations/handlers/save-citation.ts:7`
+- Body: `citation_text`, `in_text_citation?`, `format`, `source_type`, `source_data?`
+- Returns: `{ success: true, id }`
+
+## Database
+- Tables used by handlers:
+  - `saved_citations` — storage for user-saved citations
+  - `citation_history` — optional history of generated citations
+- History handler references `saved_citations` at `functions/api/citations/handlers/get-citation-history.ts:29`
+
+## Frontend Integration
+- Route definitions: `src/router/route-definitions.ts:446–448`
+- Menu items: `src/components/layout/templates/hooks/useMenuItems.tsx:340–344`
+- Page component: `src/pages/citation-generator`

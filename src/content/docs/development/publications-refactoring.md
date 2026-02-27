@@ -1,0 +1,96 @@
+---
+title: "Publications Refactoring"
+---
+
+# Publications Module Refactoring
+
+## Overview
+The publications module has been refactored to improve modularity, backend alignment, and code organization.
+
+## Changes Made
+
+### 1. Backend Alignment
+- **Field Mapping**: Updated backend handlers to support both new frontend fields and maintain backward compatibility
+- **Database Schema**: Added new fields (`name`, `description`, `website`, `email`, `phone`, `address`) while keeping legacy fields
+- **Migration**: Created `add-publication-fields.sql` migration for database updates
+
+### 2. Modular Structure
+- **Reusable Components**: Created `PublicationForm` component to eliminate code duplication
+- **Component Organization**: Moved form logic to `src/pages/publications/components/`
+- **Clean Exports**: Removed redundant page wrapper files
+
+### 3. Type Safety
+- **Enhanced Interfaces**: Updated `Publication` and `PublicationFormData` types
+- **Backward Compatibility**: Maintained support for legacy fields (`title`, `publisher`, etc.)
+- **Form Validation**: Added proper validation rules for all fields
+
+### 4. Code Quality
+- **Navigation**: Replaced `window.location.href` with React Router `navigate`
+- **Error Handling**: Consistent error handling using unified error handler
+- **State Management**: Proper loading states and form management
+
+## File Structure
+
+```
+src/pages/publications/
+├── index.tsx                 # Main module with all components
+├── components/
+│   ├── index.ts             # Component exports
+│   └── PublicationForm.tsx  # Reusable form component
+```
+
+## Backend Changes
+
+### API Handlers Updated
+- `create-publication.ts` - Supports new field structure
+- `update-publication.ts` - Handles both old and new fields
+- `get-publications.ts` - Returns enhanced publication data
+- `get-publication.ts` - Single publication with all fields
+
+### Database Migration
+```sql
+-- Add new fields
+ALTER TABLE publications ADD COLUMN name TEXT;
+ALTER TABLE publications ADD COLUMN description TEXT;
+ALTER TABLE publications ADD COLUMN website TEXT;
+ALTER TABLE publications ADD COLUMN email TEXT;
+ALTER TABLE publications ADD COLUMN phone TEXT;
+ALTER TABLE publications ADD COLUMN address TEXT;
+
+-- Populate name field from existing title
+UPDATE publications SET name = title WHERE name IS NULL;
+```
+
+## Frontend Changes
+
+### Form Fields
+- **Required**: Publication Name
+- **Optional**: Description, Website, Email, Phone, Address, Publication Date, ISBN
+- **Validation**: URL validation for website, email validation, length limits
+
+### Component Reuse
+- `PublicationCreate` and `PublicationEdit` now use the same `PublicationForm` component
+- Consistent UI and validation across create/edit operations
+- Reduced code duplication by ~60%
+
+## Benefits
+
+1. **Maintainability**: Single source of truth for form logic
+2. **Consistency**: Uniform user experience across create/edit operations
+3. **Type Safety**: Proper TypeScript interfaces for all data structures
+4. **Backward Compatibility**: Existing data and API calls continue to work
+5. **Performance**: Optimized database queries with proper indexing
+
+## Migration Steps
+
+1. Run the database migration: `add-publication-fields.sql`
+2. Deploy updated backend handlers
+3. Deploy new frontend components
+4. Test create/edit operations with new fields
+
+## Future Improvements
+
+- Add publication logo/avatar support
+- Implement publication categories/tags
+- Add publication statistics dashboard
+- Support for publication hierarchies (parent/child publications)

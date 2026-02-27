@@ -1,0 +1,491 @@
+---
+title: "Functions Module Status"
+---
+
+# Functions Module Status Tracker
+
+## Module Status Overview
+
+| Module | Status | Pattern | Priority | Notes | 
+|--------|--------|---------|----------|-------|
+| orders | ✅ Complete | Modern | - | Reference implementation |
+| notifications | ✅ Complete | Modern | - | Reference implementation |
+| reports | ✅ Complete | Modern | - | Has services layer |
+| books | ✅ Complete | Modern | Phase 1 | Refactored |
+| authors | ✅ Complete | Modern | Phase 1 | Has repositories, services, validation, policies |
+| action-logs | ✅ Complete | Modern | - | Has repositories, validation |
+| analytics | ✅ Complete | Modern | Phase 4 | Has repositories |
+| user/preferences | ✅ Complete | Modern | Phase 6 | Has repositories |
+| loans | 🔄 Pending | Legacy | Phase 1 | High priority |
+| reservations | 🔄 Pending | Legacy | Phase 1 | High priority |
+| users | 🔄 Pending | Legacy | Phase 1 | High priority |
+| students | 🔄 Pending | Legacy | Phase 2 | - |
+| professors | 🔄 Pending | Legacy | Phase 2 | - |
+| publications | 🔄 Pending | Legacy | Phase 2 | - |
+| book-copies | ✅ Complete | Modern | Phase 2 | Refactored 2025-01-27 |
+| book-reviews | 🔄 Pending | Legacy | Phase 2 | - |
+| borrow-limits | ⚠️ Partial | Partial | Phase 2 | Most handlers use repositories, one handler still has SQL |
+| roles | 🔄 Pending | Legacy | Phase 2 | - |
+| permissions | 🔄 Pending | Legacy | Phase 2 | - |
+| penalties | ⚠️ Partial | Partial | Phase 3 | SQL in service layer, needs repository |
+| payments | 🔄 Pending | Legacy | Phase 3 | - |
+| receipts | 🔄 Pending | Legacy | Phase 3 | - |
+| wishlist | 🔄 Pending | Legacy | Phase 3 | - |
+| bookmarks | ✅ Complete | Modern | Phase 3 | Has repositories, validation |
+| citations | 🔄 Pending | Special | Phase 4 | Has services, needs repositories |
+| plagiarism | 🔄 Pending | Special | Phase 4 | Has services, needs repositories |
+| book-views | 🔄 Pending | Special | Phase 4 | No base utils |
+| digital-book-reads | 🔄 Pending | Special | Phase 4 | No base utils |
+| journals | 🔄 Pending | Special | Phase 4 | - |
+| badges | ⚠️ Partial | Minimal | Phase 5 | Has repositories/validation, handlers in index.ts |
+| email | 🔄 Pending | Minimal | Phase 5 | Single file |
+| help | 🔄 Pending | Minimal | Phase 5 | Single file |
+| reference-books | 🔄 Pending | Minimal | Phase 5 | Single file |
+| reference-categories | 🔄 Pending | Minimal | Phase 5 | Single file |
+| reference-resources | 🔄 Pending | Minimal | Phase 5 | Single file |
+| reference-sections | 🔄 Pending | Minimal | Phase 5 | Single file |
+| resources | 🔄 Pending | Minimal | Phase 5 | Single file |
+| sections | 🔄 Pending | Minimal | Phase 5 | Single file |
+| system-settings | 🔄 Pending | Minimal | Phase 5 | Single file |
+| auth | 🔄 Pending | Special | Phase 6 | Security-critical, has services |
+| migrations | 🔄 Pending | Special | Phase 6 | Special structure |
+| superuser | 🔄 Pending | Special | Phase 6 | Special permissions |
+| system-logs | 🔄 Pending | Special | Phase 6 | Special structure |
+| upload | 🔄 Pending | Special | Phase 6 | File handling |
+
+**Legend:**
+- ✅ Complete: Follows modern pattern (has repositories/services/validation layers, handlers separated)
+- ⚠️ Partial: Partially refactored (has some modern layers but needs handler separation or additional layers)
+- 🔄 Pending: Needs refactoring (legacy pattern with SQL in handlers)
+
+## Detailed Module Analysis
+
+### ✅ Complete Modules
+
+#### orders
+- **Structure**: Modern (Reference)
+- **Has**: repositories/, services/, policies/, validation/
+- **Status**: Complete
+- **Notes**: Use as reference implementation
+
+#### notifications
+- **Structure**: Modern
+- **Has**: repositories/, handlers/, base/, utils/
+- **Status**: Complete
+- **Notes**: Complex structure with multiple repository types
+
+#### reports
+- **Structure**: Modern
+- **Has**: services/, handlers/, base/
+- **Status**: Complete
+- **Notes**: Has services layer for business logic
+
+#### authors
+- **Structure**: Modern ✅
+- **Has**: repositories/, services/, validation/, policies/, handlers/, base/
+- **Status**: Complete
+- **Notes**: Full modern pattern with all layers
+
+#### action-logs
+- **Structure**: Modern ✅
+- **Has**: repositories/, validation/, handlers/, base/
+- **Status**: Complete
+- **Notes**: Repository and validation layers implemented
+
+#### analytics
+- **Structure**: Modern ✅
+- **Has**: repositories/, handlers/, base/
+- **Status**: Complete
+- **Notes**: Repository layer for complex analytics queries
+
+#### user/preferences
+- **Structure**: Modern ✅
+- **Has**: repositories/, handlers/, base/
+- **Status**: Complete
+- **Notes**: Repository layer implemented, nested structure maintained
+
+### 🔄 Legacy Modules (Pattern 2)
+
+#### books
+- **Current Structure**: Modern ✅
+- **Files**: base/book-utils.ts, handlers/*.ts, repositories/, validation/, index.ts
+- **Status**: ✅ Complete
+- **Refactored**: 2025-01-27
+- **Notes**: 
+  - Repository layer implemented
+  - Validation layer implemented
+  - All handlers refactored
+  - All handlers under 300 lines
+
+#### authors
+- **Current Structure**: Modern ✅
+- **Files**: base/author-utils.ts, handlers/*.ts, repositories/, services/, validation/, policies/, index.ts
+- **Status**: ✅ Complete
+- **Refactored**: Has repositories, services, validation, and policies layers
+- **Notes**: 
+  - Repository layer implemented (queries, mutations, normalizers)
+  - Service layer for business logic
+  - Validation layer implemented
+  - Policies layer for authorization checks
+  - All handlers use repository/service pattern
+
+#### loans
+- **Current Structure**: Legacy
+- **Files**: base/loan-utils.ts, handlers/*.ts, index.ts
+- **Issues**: 
+  - SQL queries in handlers
+  - Complex business logic in handlers
+  - No repository layer
+  - No services layer
+- **Priority**: Phase 1 (High)
+- **Estimated Complexity**: High
+
+#### reservations
+- **Current Structure**: Legacy
+- **Files**: base/reservation-utils.ts, handlers/*.ts, index.ts
+- **Issues**: 
+  - SQL queries in handlers
+  - Complex business logic in handlers
+  - No repository layer
+- **Priority**: Phase 1 (High)
+- **Estimated Complexity**: Medium
+
+#### users
+- **Current Structure**: Legacy
+- **Files**: base/user-utils.ts, handlers/*.ts, index.ts
+- **Issues**: 
+  - SQL queries in handlers
+  - No repository layer
+- **Priority**: Phase 1 (High)
+- **Estimated Complexity**: Medium
+
+#### students
+- **Current Structure**: Legacy
+- **Files**: base/student-utils.ts, handlers/*.ts, index.ts
+- **Issues**: 
+  - SQL queries in handlers
+  - No repository layer
+- **Priority**: Phase 2
+- **Estimated Complexity**: Low
+
+#### professors
+- **Current Structure**: Legacy
+- **Files**: base/professor-utils.ts, handlers/*.ts, index.ts
+- **Issues**: 
+  - SQL queries in handlers
+  - No repository layer
+- **Priority**: Phase 2
+- **Estimated Complexity**: Low
+
+#### publications
+- **Current Structure**: Legacy
+- **Files**: base/publication-utils.ts, handlers/*.ts, index.ts
+- **Issues**: 
+  - SQL queries in handlers
+  - No repository layer
+- **Priority**: Phase 2
+- **Estimated Complexity**: Medium
+
+#### book-copies
+- **Current Structure**: Modern ✅
+- **Files**: base/book-copy-utils.ts, handlers/*.ts, repositories/, index.ts
+- **Status**: ✅ Complete
+- **Refactored**: 2025-01-27
+- **Notes**: 
+  - Repository layer implemented (queries, mutations, normalizers)
+  - All handlers use repository pattern
+  - All handlers under 100 lines
+  - Validation layer implemented
+  - Audit logging implemented
+
+#### book-reviews
+- **Current Structure**: Legacy
+- **Files**: base/book-review-utils.ts, handlers/*.ts, index.ts
+- **Issues**: 
+  - SQL queries in handlers
+  - No repository layer
+- **Priority**: Phase 2
+- **Estimated Complexity**: Medium
+
+#### borrow-limits
+- **Current Structure**: ⚠️ Partial (has repositories, services, validation, types)
+- **Files**: base/borrow-limit-utils.ts, handlers/*.ts, repositories/, services/, validation/, types/, index.ts
+- **Issues**: 
+  - ⚠️ SQL queries still in handlers (2 SQL statements in update-borrow-limit.ts)
+  - ⚠️ Incomplete migration - most handlers use repositories, but one handler still has SQL
+- **Priority**: Phase 2
+- **Estimated Complexity**: Low (needs completion)
+- **Action Required**: Complete migration by removing remaining SQL from handlers
+
+#### roles
+- **Current Structure**: Legacy
+- **Files**: base/role-utils.ts, handlers/*.ts, index.ts
+- **Issues**: 
+  - SQL queries in handlers
+  - No repository layer
+- **Priority**: Phase 2
+- **Estimated Complexity**: Medium
+
+#### permissions
+- **Current Structure**: Legacy
+- **Files**: base/permission-utils.ts, handlers/*.ts, index.ts
+- **Issues**: 
+  - SQL queries in handlers
+  - No repository layer
+- **Priority**: Phase 2
+- **Estimated Complexity**: Medium
+
+#### penalties
+- **Current Structure**: ⚠️ Partial (has services, validators, types, but SQL in service layer)
+- **Files**: base/penalty-utils.ts, handlers/*.ts, services/penalty-service.ts, validators/, types/, index.ts
+- **Issues**: 
+  - ⚠️ SQL queries in service layer (should be in repository layer)
+  - ⚠️ No repository layer (SQL is in services/penalty-service.ts)
+  - ⚠️ Service layer contains data access logic (violates separation of concerns)
+- **Priority**: Phase 3
+- **Estimated Complexity**: Medium
+- **Action Required**: Extract SQL from service to repository layer
+
+#### payments
+- **Current Structure**: Legacy
+- **Files**: base/payment-utils.ts, handlers/*.ts, index.ts
+- **Issues**: 
+  - SQL queries in handlers
+  - No repository layer
+- **Priority**: Phase 3
+- **Estimated Complexity**: Medium
+
+#### receipts
+- **Current Structure**: Legacy
+- **Files**: base/receipt-utils.ts, handlers/*.ts, index.ts
+- **Issues**: 
+  - SQL queries in handlers
+  - No repository layer
+- **Priority**: Phase 3
+- **Estimated Complexity**: Low
+
+#### wishlist
+- **Current Structure**: Legacy
+- **Files**: base/wishlist-utils.ts, handlers/*.ts, index.ts
+- **Issues**: 
+  - SQL queries in handlers
+  - No repository layer
+- **Priority**: Phase 3
+- **Estimated Complexity**: Low
+
+#### bookmarks
+- **Current Structure**: Legacy
+- **Files**: base/bookmark-utils.ts, handlers/*.ts, index.ts
+- **Issues**: 
+  - SQL queries in handlers
+  - No repository layer
+  - No validation layer
+- **Priority**: Phase 3
+- **Estimated Complexity**: Medium
+
+### 🔄 Special Cases
+
+#### analytics
+- **Current Structure**: Modern ✅
+- **Files**: base/analytics-utils.ts, handlers/*.ts, repositories/, index.ts
+- **Status**: ✅ Complete
+- **Notes**: 
+  - Repository layer implemented (collection, search, user-behavior, my-loans analytics)
+  - Handlers use repository pattern
+  - Complex queries abstracted into repositories
+
+#### citations
+- **Current Structure**: Special
+- **Files**: handlers/*.ts, services/citation-engine.ts, index.ts
+- **Issues**: 
+  - Queries in handlers
+  - Has services but needs repository
+- **Priority**: Phase 4
+- **Estimated Complexity**: Medium
+
+#### plagiarism
+- **Current Structure**: Special
+- **Files**: handlers/*.ts, services/plagiarism-checker.ts, index.ts
+- **Issues**: 
+  - Queries in handlers
+  - Has services but needs repository
+- **Priority**: Phase 4
+- **Estimated Complexity**: Medium
+
+#### book-views
+- **Current Structure**: Special
+- **Files**: handlers/*.ts, index.ts
+- **Issues**: 
+  - No base utils
+  - Queries in handlers
+  - No repository layer
+- **Priority**: Phase 4
+- **Estimated Complexity**: Low
+
+#### digital-book-reads
+- **Current Structure**: Special
+- **Files**: handlers/*.ts, index.ts
+- **Issues**: 
+  - No base utils
+  - Queries in handlers
+  - No repository layer
+- **Priority**: Phase 4
+- **Estimated Complexity**: Low
+
+#### journals
+- **Current Structure**: Special
+- **Files**: handlers/*.ts, index.ts
+- **Issues**: 
+  - No base utils
+  - Queries in handlers
+  - No repository layer
+- **Priority**: Phase 4
+- **Estimated Complexity**: Medium
+
+#### auth
+- **Current Structure**: Special
+- **Files**: Flat structure with shared/
+- **Issues**: 
+  - Security-critical, needs careful handling
+  - Mixed patterns
+- **Priority**: Phase 6
+- **Estimated Complexity**: High
+
+#### migrations
+- **Current Structure**: Special
+- **Files**: base/*.ts, handlers/*.ts, index.ts
+- **Issues**: 
+  - Special structure for migrations
+  - May need different approach
+- **Priority**: Phase 6
+- **Estimated Complexity**: Medium
+
+#### superuser
+- **Current Structure**: Special
+- **Files**: actions/, emergency-access/, impersonate/, index.ts
+- **Issues**: 
+  - Special permissions
+  - May need different approach
+- **Priority**: Phase 6
+- **Estimated Complexity**: Medium
+
+#### system-logs
+- **Current Structure**: Special
+- **Files**: handlers/*.ts, index.ts
+- **Issues**: 
+  - No base utils
+  - Queries in handlers
+- **Priority**: Phase 6
+- **Estimated Complexity**: Low
+
+#### upload
+- **Current Structure**: Special
+- **Files**: base/upload-utils.ts, handlers/*.ts, index.ts
+- **Issues**: 
+  - File handling logic
+  - May need different approach
+- **Priority**: Phase 6
+- **Estimated Complexity**: Medium
+
+#### user/preferences
+- **Current Structure**: Modern ✅
+- **Files**: base/user-preferences-utils.ts, handlers/*.ts, repositories/, index.ts
+- **Status**: ✅ Complete
+- **Notes**: 
+  - Repository layer implemented
+  - Handlers use repository pattern
+  - Nested structure maintained for organization
+
+### ⚠️ Partially Refactored Modules
+
+#### action-logs
+- **Current Structure**: Modern ✅
+- **Files**: base/action-log-utils.ts, handlers/*.ts, repositories/, validation/, index.ts
+- **Status**: ✅ Complete
+- **Notes**: 
+  - Repository layer implemented
+  - Validation layer implemented
+  - Handlers use repository pattern
+
+#### badges
+- **Current Structure**: Partial
+- **Files**: base/badge-utils.ts, repositories/, validation/, index.ts (handlers in index.ts)
+- **Issues**: 
+  - Has repositories and validation layers
+  - Handlers still in main index.ts file (not separated)
+  - Needs handler separation for full modernization
+- **Priority**: Phase 5
+- **Estimated Complexity**: Low (needs handler extraction)
+
+### 🔄 Minimal Modules (Pattern 3)
+
+All minimal modules (email, help, reference-*, resources, sections, system-settings) have:
+- **Current Structure**: Single file
+- **Issues**: 
+  - All logic in one file
+  - No separation of concerns
+- **Priority**: Phase 5
+- **Estimated Complexity**: Low (but may need to expand structure)
+
+## Progress Tracking
+
+### Phase 1: High-Impact Core Modules
+- [x] books
+- [x] authors
+- [ ] loans
+- [ ] reservations
+- [ ] users
+
+### Phase 2: Supporting Modules
+- [ ] students
+- [ ] professors
+- [ ] publications
+- [x] book-copies
+- [ ] book-reviews
+- [ ] borrow-limits
+- [ ] roles
+- [ ] permissions
+
+### Phase 3: Transactional Modules
+- [ ] penalties
+- [ ] payments
+- [ ] receipts
+- [ ] wishlist
+- [ ] bookmarks
+
+### Phase 4: Specialized Modules
+- [x] analytics
+- [ ] citations
+- [ ] plagiarism
+- [ ] book-views
+- [ ] digital-book-reads
+- [ ] journals
+
+### Phase 5: Minimal Modules
+- [ ] badges
+- [ ] email
+- [ ] help
+- [ ] reference-books
+- [ ] reference-categories
+- [ ] reference-resources
+- [ ] reference-sections
+- [ ] resources
+- [ ] sections
+- [ ] system-settings
+
+### Phase 6: Complex Special Cases
+- [ ] auth
+- [ ] migrations
+- [ ] superuser
+- [ ] system-logs
+- [ ] upload
+- [x] user/preferences
+
+---
+
+**Last Updated**: 2025-01-27
+**Total Modules**: 37
+**Completed**: 9 (orders, notifications, reports, books, authors, action-logs, analytics, user/preferences, book-copies)
+**Partially Refactored**: 3 (badges, penalties, borrow-limits)
+**Pending**: 25
+

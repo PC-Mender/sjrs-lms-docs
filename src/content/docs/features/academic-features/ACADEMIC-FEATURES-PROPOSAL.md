@@ -1,0 +1,335 @@
+---
+title: "ACADEMIC FEATURES PROPOSAL"
+---
+
+# Academic Features Proposal
+
+## Overview
+This document outlines potential academic features that can be added to enhance the library management system's academic capabilities.
+
+## Current Academic Features ✅
+
+1. **Academic Year Management**
+   - Global academic year setting (Admin/Superuser)
+   - Personal academic year preference (all users)
+   - Academic year bounds (start/end months: July-April/May)
+   - Academic year format: "YYYY-YY" (e.g., "2024-25")
+
+2. **Semester Management**
+   - Semester filtering (1-7: First Year Sem 1-2, Second Year Sem 3-4, Third Year Sem 5-6, Fourth Year Sem 7)
+   - Global semester date configuration
+   - Personal semester preference
+   - Semester-based data filtering (loans, reservations, penalties)
+
+3. **Year-Based Borrowing Limits**
+   - Different limits for Student_1, Student_2, Student_3, Student_4
+   - Year of study tracking in students table
+
+## Proposed Academic Features 🚀
+
+### 1. Academic Calendar & Events 📅
+**Priority: High**
+
+**Features:**
+- Academic calendar with important dates
+- Semester start/end dates (already configured, but could be displayed as calendar)
+- Mid-break periods
+- Exam periods
+- Holidays and closures
+- Library closure dates
+- Special events (book fairs, author visits)
+
+**Database Schema:**
+```sql
+CREATE TABLE academic_calendar (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  academic_year TEXT NOT NULL,
+  event_type TEXT NOT NULL CHECK (event_type IN ('semester_start', 'semester_end', 'mid_break', 'exam_period', 'holiday', 'closure', 'event')),
+  title TEXT NOT NULL,
+  description TEXT,
+  start_date DATE NOT NULL,
+  end_date DATE,
+  is_recurring INTEGER DEFAULT 0,
+  affects_loans INTEGER DEFAULT 0, -- If 1, loans may be extended during this period
+  created_by INTEGER REFERENCES library_users(id),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+**Use Cases:**
+- Display calendar on dashboard
+- Auto-extend loan due dates during exam periods
+- Block new loans during closure periods
+- Show upcoming important dates
+
+---
+
+### 2. Course Management 📚
+**Priority: High**
+
+**Features:**
+- Course catalog (course code, name, department)
+- Course-semester associations
+- Course-book recommendations
+- Course reading lists
+- Track which courses students are enrolled in
+
+**Database Schema:**
+```sql
+CREATE TABLE courses (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  course_code TEXT UNIQUE NOT NULL, -- e.g., "CS101"
+  course_name TEXT NOT NULL,
+  department TEXT,
+  description TEXT,
+  credits INTEGER,
+  semester_number INTEGER CHECK (semester_number BETWEEN 1 AND 7),
+  academic_year TEXT, -- Optional: if course is specific to an academic year
+  is_active INTEGER DEFAULT 1,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE course_books (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  course_id INTEGER REFERENCES courses(id),
+  book_id INTEGER REFERENCES books(id),
+  is_required INTEGER DEFAULT 0, -- 0 = recommended, 1 = required
+  priority INTEGER DEFAULT 0, -- For ordering reading lists
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(course_id, book_id)
+);
+
+CREATE TABLE student_courses (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  student_id INTEGER REFERENCES students(id),
+  course_id INTEGER REFERENCES courses(id),
+  academic_year TEXT NOT NULL,
+  semester INTEGER CHECK (semester BETWEEN 1 AND 7),
+  enrollment_date DATE,
+  status TEXT DEFAULT 'enrolled' CHECK (status IN ('enrolled', 'completed', 'dropped')),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(student_id, course_id, academic_year, semester)
+);
+```
+
+**Use Cases:**
+- Librarians can create course reading lists
+- Students see recommended books for their courses
+- Analytics: Most borrowed books by course
+- Reserve books for specific courses
+
+---
+
+### 3. Academic Reports & Analytics 📊
+**Priority: Medium**
+
+**Features:**
+- Loan statistics by academic year/semester
+- Popular books by semester
+- Student borrowing patterns by year level
+- Course-based book usage statistics
+- Academic year comparison reports
+- Semester-wise performance metrics
+
+**Reports:**
+- "Most Popular Books in Semester 1, 2024-25"
+- "Borrowing Trends by Year Level"
+- "Course Reading List Usage"
+- "Academic Year Summary Report"
+- "Semester Comparison Report"
+
+**Implementation:**
+- Extend existing analytics page
+- Add academic year/semester filters
+- Create new report components
+
+---
+
+### 4. Semester-Based Notifications 🔔
+**Priority: Medium**
+
+**Features:**
+- Semester start reminders
+- Semester end notifications
+- Exam period reminders
+- Course reading list updates
+- Academic calendar updates
+- Year level progression notifications
+
+**Use Cases:**
+- Notify students when new semester starts
+- Remind about upcoming exam periods
+- Alert about course reading list changes
+- Notify about academic year transitions
+
+**Implementation:**
+- Extend notification system
+- Add academic event triggers
+- Create notification templates
+
+---
+
+### 5. Academic Dashboard 📈
+**Priority: Medium**
+
+**Features:**
+- Current semester display
+- Upcoming academic events
+- Semester progress indicator
+- Academic year overview
+- Quick access to course reading lists
+- Academic calendar widget
+
+**For Students:**
+- Current courses
+- Recommended books for courses
+- Academic calendar
+- Semester progress
+
+**For Librarians/Admins:**
+- Academic year statistics
+- Semester-wise loan trends
+- Course book usage
+- Academic calendar management
+
+---
+
+### 6. Student Semester Tracking 🎓
+**Priority: Medium**
+
+**Features:**
+- Track which semester each student is currently in
+- Auto-progression based on academic year
+- Semester enrollment history
+- Year level progression tracking
+
+**Database Schema:**
+```sql
+-- Add to students table or create new table
+ALTER TABLE students ADD COLUMN current_semester INTEGER CHECK (current_semester BETWEEN 1 AND 7);
+ALTER TABLE students ADD COLUMN enrollment_academic_year TEXT;
+ALTER TABLE students ADD COLUMN expected_graduation_year TEXT;
+```
+
+**Use Cases:**
+- Auto-assign semester based on year of study and current date
+- Track student progress through semesters
+- Generate reports by semester enrollment
+
+---
+
+### 7. Course-Book Reservations 📖
+**Priority: Low**
+
+**Features:**
+- Reserve books for entire courses
+- Course-based book allocation
+- Priority reservations for required course books
+- Course reading room reservations
+
+**Use Cases:**
+- Professors reserve books for their courses
+- Students get priority for course-required books
+- Manage course reading room collections
+
+---
+
+### 8. Academic Year Transitions 🔄
+**Priority: Low**
+
+**Features:**
+- Auto-archive old academic year data
+- Academic year transition wizard
+- Bulk operations by academic year
+- Data migration tools
+
+**Use Cases:**
+- Archive loans from previous academic years
+- Transition students to new year level
+- Update academic year settings
+- Generate year-end reports
+
+---
+
+### 9. Semester-Based Quotas & Limits 📋
+**Priority: Low**
+
+**Features:**
+- Different borrowing limits per semester
+- Semester-specific fine rates
+- Course-based borrowing limits
+- Special limits during exam periods
+
+**Use Cases:**
+- Increase borrowing limits during exam periods
+- Different limits for different semesters
+- Course-specific book limits
+
+---
+
+### 10. Academic Announcements 📢
+**Priority: Low**
+
+**Features:**
+- Semester-specific announcements
+- Course-related announcements
+- Academic year announcements
+- Targeted announcements by year level
+
+**Use Cases:**
+- Announce semester start/end
+- Course-related library updates
+- Year-level specific announcements
+
+---
+
+## Implementation Priority
+
+### Phase 1 (High Priority) 🎯
+1. **Academic Calendar & Events** - Foundation for other features
+2. **Course Management** - Core academic functionality
+
+### Phase 2 (Medium Priority) 📊
+3. **Academic Reports & Analytics** - Valuable insights
+4. **Semester-Based Notifications** - User engagement
+5. **Academic Dashboard** - Better UX
+6. **Student Semester Tracking** - Data accuracy
+
+### Phase 3 (Low Priority) 🔧
+7. **Course-Book Reservations** - Advanced feature
+8. **Academic Year Transitions** - Administrative tool
+9. **Semester-Based Quotas** - Advanced limits
+10. **Academic Announcements** - Communication tool
+
+## Integration Points
+
+### With Existing Features:
+- **Borrowing Limits**: Extend to semester-based limits
+- **Notifications**: Add academic event triggers
+- **Analytics**: Add academic year/semester filters
+- **Dashboard**: Add academic widgets
+- **Settings**: Extend academic settings page
+
+### Database Considerations:
+- All new tables should include `academic_year` and `semester` fields where relevant
+- Use existing academic year utilities
+- Leverage semester date configuration
+
+## Technical Notes
+
+1. **Academic Year Format**: Continue using "YYYY-YY" format
+2. **Semester Numbering**: Maintain 1-7 system (First Year: 1-2, Second: 3-4, Third: 5-6, Fourth: 7)
+3. **Date Handling**: Use existing semester date utilities
+4. **Filtering**: Extend existing academic filter utilities
+5. **Permissions**: Add course management permissions for librarians/admins
+
+## Next Steps
+
+1. Review and prioritize features based on user needs
+2. Create detailed specifications for Phase 1 features
+3. Design database schemas
+4. Plan UI/UX for new features
+5. Implement incrementally, starting with Phase 1
+

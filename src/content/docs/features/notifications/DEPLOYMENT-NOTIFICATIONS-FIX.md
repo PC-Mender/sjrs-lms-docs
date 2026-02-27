@@ -1,0 +1,105 @@
+---
+title: "DEPLOYMENT NOTIFICATIONS FIX"
+---
+
+# Deployment Notifications - Issue and Fix
+
+## Problem
+
+Deployment notifications are not appearing in the notification center even though deployments have been completed.
+
+## Root Cause
+
+The notification token is configured in **Cloudflare Workers** (as a secret), but the deployment script (`scripts/auto-version.js`) runs **locally** and needs the token in your **local environment**.
+
+When the deployment script runs:
+1. It checks for `NOTIFICATION_INGEST_TOKEN` in `process.env`
+2. If not found, it silently skips sending the notification (non-blocking)
+3. The notification is never created
+
+## Solution
+
+You need to set the notification token in your **local environment** so the deployment script can use it.
+
+### Quick Fix (Windows PowerShell)
+
+```powershell
+# Run the setup script
+.\scripts\setup-notification-token-local.ps1
+```
+
+Or manually:
+
+```powershell
+# Get the token from setup-notification-tokens.md or use the one from Cloudflare Workers
+$env:NOTIFICATION_INGEST_TOKEN = "36a8e15d439bff37c67e9d67e43876241c87b1ac81ab485b61eb671e6719fb4f"
+
+# Or add to .env file for persistence
+Add-Content .env "NOTIFICATION_INGEST_TOKEN=36a8e15d439bff37c67e9d67e43876241c87b1ac81ab485b61eb671e6719fb4f"
+```
+
+### Quick Fix (Linux/Mac)
+
+```bash
+# Run the setup script
+./scripts/setup-notification-token-local.sh
+```
+
+Or manually:
+
+```bash
+# Get the token from setup-notification-tokens.md or use the one from Cloudflare Workers
+export NOTIFICATION_INGEST_TOKEN="36a8e15d439bff37c67e9d67e43876241c87b1ac81ab485b61eb671e6719fb4f"
+
+# Or add to .env file for persistence
+echo "NOTIFICATION_INGEST_TOKEN=36a8e15d439bff37c67e9d67e43876241c87b1ac81ab485b61eb671e6719fb4f" >> .env
+```
+
+## Token Values
+
+The token values are stored in `scripts/setup-notification-tokens.md`:
+
+- **Global Token**: `36a8e15d439bff37c67e9d67e43876241c87b1ac81ab485b61eb671e6719fb4f`
+- **Release Token**: `3ce4b025fcf630eae2bdd7f26e05210ec53f3df027db121ca3cc6c1950648464`
+
+You can use either token - the deployment script checks for `NOTIFICATION_INGEST_TOKEN_RELEASE` first, then falls back to `NOTIFICATION_INGEST_TOKEN`.
+
+## Verification
+
+After setting the token:
+
+1. **Verify it's set**:
+   ```powershell
+   # Windows
+   echo $env:NOTIFICATION_INGEST_TOKEN
+   
+   # Linux/Mac
+   echo $NOTIFICATION_INGEST_TOKEN
+   ```
+
+2. **Run a test deployment** (or wait for the next real deployment):
+   ```bash
+   npm run release
+   ```
+
+3. **Check the notification center**:
+   - Go to `/dashboard-superuser/system-notifications`
+   - You should see deployment notifications appear
+
+## Important Notes
+
+- The token must match the one configured in Cloudflare Workers
+- The token is already set in Cloudflare Workers (verified)
+- You only need to set it locally for the deployment script to work
+- The token can be set in:
+  - Current session (temporary)
+  - `.env` file (persists across sessions)
+  - User environment variables (permanent)
+
+## Why Two Places?
+
+- **Cloudflare Workers Secret**: Used by the ingest endpoint to authenticate incoming requests
+- **Local Environment Variable**: Used by the deployment script to authenticate outgoing requests
+
+Both need to have the same token value for the system to work end-to-end.
+

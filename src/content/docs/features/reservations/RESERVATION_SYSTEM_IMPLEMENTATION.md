@@ -1,0 +1,205 @@
+---
+title: "RESERVATION SYSTEM IMPLEMENTATION"
+---
+
+# Reservation/Hold System Implementation
+
+## Overview
+A complete reservation/hold system has been implemented for the SJRS LMS, allowing users to reserve books that are currently unavailable and automatically join a queue system.
+
+## Implementation Status
+
+### ✅ Completed Backend Components
+
+1. **Database Schema**
+   - Migration: `sql/migrations/2025-01-15_add-reservations-table.sql`
+   - Creates `reservations` table with proper indexes and constraints
+   - Unique constraint prevents duplicate active reservations per user/book
+
+2. **API Endpoints** (`/api/reservations`)
+   - `POST /api/reservations` - Create a new reservation
+   - `GET /api/reservations` - List reservations (with filters)
+   - `GET /api/reservations/:id` - Get reservation details
+   - `POST /api/reservations/:id/claim` - Claim a ready reservation (converts to loan)
+   - `PUT /api/reservations/:id/cancel` - Cancel a reservation
+   - `DELETE /api/reservations/:id` - Delete a reservation (same as cancel)
+
+3. **Core Features**
+   - Queue position management (first-come-first-served)
+   - Automatic activation when books are returned
+   - 48-hour expiry for ready reservations
+   - Queue position updates when reservations are cancelled/expired
+   - Integration with loan return flow
+
+4. **Notifications**
+   - Reservation created notification
+   - Reservation ready notification (when book becomes available)
+   - Reservation claimed notification
+   - Email and in-app notifications supported
+
+5. **Scheduled Jobs**
+   - Daily expiry check for ready reservations
+   - Automatic activation of next reservation when one expires
+   - Runs at 2 AM UTC (same cron as other scheduled tasks)
+
+6. **Permissions**
+   - Migration: `sql/migrations/2025-01-15_add-reservations-permissions.sql`
+   - Resource: `reservations` with actions: create, read, update, delete
+   - Default grants:
+     - Superuser/Admin/Librarian: Full access
+     - Dean: Read access
+     - Students/Professors/Guests: Create/Read/Update (own reservations only)
+
+7. **Integration**
+   - Loan return flow automatically activates next reservation
+   - Order creation suggests reservations for unavailable books
+   - Book copy status updated to 'available' on loan return
+
+### 🔄 Remaining Frontend Components
+
+The backend is fully functional. Frontend components need to be created:
+
+1. **Reservation List Page** (`/reservations`)
+   - Display user's reservations
+   - Show queue position
+   - Status indicators (pending, ready, claimed, expired, cancelled)
+   - Claim button for ready reservations
+   - Cancel button for pending/ready reservations
+
+2. **Reservation Creation**
+   - Add "Reserve" button to book detail pages
+   - Show reservation option when book is unavailable
+   - Display queue position after creation
+
+3. **Admin Reservation Management**
+   - View all reservations
+   - Filter by status, book, user
+   - Manage reservations on behalf of users
+
+## Database Schema
+
+```sql
+CREATE TABLE reservations (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  book_id INTEGER NOT NULL,
+  status TEXT DEFAULT 'pending' CHECK (status IN ('pending', 'ready', 'claimed', 'expired', 'cancelled')),
+  position INTEGER, -- Queue position (1 = first in line)
+  expires_at DATETIME, -- Reservation expiry (48 hours after becoming ready)
+  notified_at DATETIME, -- When user was notified
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES library_users(id) ON DELETE CASCADE,
+  FOREIGN KEY (book_id) REFERENCES books(id) ON DELETE CASCADE
+);
+```
+
+## API Usage Examples
+
+### Create Reservation
+```bash
+POST /api/reservations
+{
+  "book_id": 123
+}
+```
+
+### List Reservations
+```bash
+GET /api/reservations?status=pending&page=1&limit=20
+```
+
+### Claim Reservation
+```bash
+POST /api/reservations/456/claim
+```
+
+### Cancel Reservation
+```bash
+PUT /api/reservations/456/cancel
+```
+
+## Workflow
+
+1. **User reserves unavailable book**
+   - Reservation created with status 'pending'
+   - Position assigned based on queue
+   - Notification sent
+
+2. **Book is returned**
+   - Copy status updated to 'available'
+   - Next pending reservation activated (status → 'ready')
+   - Expiry set to 48 hours from now
+   - User notified
+
+3. **User claims reservation**
+   - Reservation status → 'claimed'
+   - Loan created automatically
+   - Copy status → 'borrowed'
+   - Queue positions updated
+
+4. **Reservation expires**
+   - Scheduled job runs daily
+   - Expired reservations marked
+   - Next reservation activated
+   - Queue positions updated
+
+## Benefits
+
+✅ **Improved User Experience**
+- Users can reserve unavailable books
+- Automatic notifications when available
+- Fair queue system
+
+✅ **Better Resource Utilization**
+- Reduces idle time between returns
+- Ensures books go to interested users
+- Automatic queue management
+
+✅ **Reduced Administrative Overhead**
+- No manual coordination needed
+- Automatic notifications
+- Clear visibility into demand
+
+✅ **Data Insights**
+- Track popular books (queue length)
+- Understand demand patterns
+- Inform acquisition decisions
+
+## Next Steps
+
+1. Apply database migrations:
+   ```bash
+   # Run migrations via admin panel or directly
+   sql/migrations/2025-01-15_add-reservations-table.sql
+   sql/migrations/2025-01-15_add-reservations-permissions.sql
+   ```
+
+2. Create frontend components (see remaining tasks above)
+
+3. Test the system:
+   - Create reservations for unavailable books
+   - Return books and verify next reservation activates
+   - Test expiry handling
+   - Verify notifications
+
+## Files Created/Modified
+
+### New Files
+- `sql/migrations/2025-01-15_add-reservations-table.sql`
+- `sql/migrations/2025-01-15_add-reservations-permissions.sql`
+- `functions/api/reservations/base/reservation-utils.ts`
+- `functions/api/reservations/handlers/create-reservation.ts`
+- `functions/api/reservations/handlers/get-reservations.ts`
+- `functions/api/reservations/handlers/get-reservation.ts`
+- `functions/api/reservations/handlers/claim-reservation.ts`
+- `functions/api/reservations/handlers/cancel-reservation.ts`
+- `functions/api/reservations/index.ts`
+- `functions/lib/notifications/reservation-notifications.ts`
+- `functions/scheduled/reservation-expiry.ts`
+
+### Modified Files
+- `functions/index.ts` - Added reservations route and scheduled job
+- `functions/api/loans/handlers/update-loan.ts` - Integrated reservation activation
+- `functions/api/orders/handlers/create-order.ts` - Updated error message
+

@@ -1,0 +1,512 @@
+---
+title: "Dashboard Fixes Proposal"
+---
+
+# Dashboard Architecture Fixes - Proposal
+
+## Executive Summary
+
+This document proposes fixes for 10 systemic issues affecting all role-based dashboards and evaluates whether the current architecture aligns with industry standards.
+
+---
+
+## Issue-by-Issue Fix Proposals
+
+### ✅ Issue 1: API Versioning Violations (CRITICAL)
+
+**Problem**: All dashboard endpoints are unversioned (`/api/dashboard-stats/*`)
+
+**Fix Strategy**: Migrate to `/api/v1/dashboard-stats/*`
+
+**Implementation Steps**:
+
+1. **Backend**: Update endpoint registration in `functions/router/registry.ts`
+   ```typescript
+   // Change from:
+   { name: 'dashboard-stats', test: (p) => p.startsWith('/api/dashboard-stats'), ... }
+   // To:
+   { name: 'dashboard-stats', test: (p) => p.startsWith('/api/v1/dashboard-stats'), ... }
+   ```
+
+2. **Backend Handler**: Update path parsing in `functions/api/dashboard-stats/index.ts`
+   ```typescript
+   // Change from:
+   const path = url.pathname.replace('/api/dashboard-stats', '');
+   // To:
+   const path = url.pathname.replace('/api/v1/dashboard-stats', '');
+   ```
+
+3. **Frontend Hooks**: Update all 4 dashboard hooks
+   - `useAdminDashboard.ts`: `/api/dashboard-stats/admin` → `/api/v1/dashboard-stats/admin`
+   - `useLibrarianDashboard.ts`: `/api/dashboard-stats/librarian` → `/api/v1/dashboard-stats/librarian`
+   - `useDeanDashboard.ts`: `/api/dashboard-stats/dean` → `/api/v1/dashboard-stats/dean`
+   - `useSuperuserDashboard.ts`: `/api/dashboard-stats/superuser` → `/api/v1/dashboard-stats/superuser`
+
+4. **Prefetch Configuration**: Update `src/App.tsx` prefetch endpoints
+
+**Priority**: **CRITICAL** - Blocks future API evolution
+
+---
+
+### ✅ Issue 2: Full Page Reload (FORBIDDEN)
+
+**Problem**: `window.location.reload()` used in QuickAnalyticsWidget
+
+**Fix Strategy**: Replace with React Query refetch
+
+**Implementation**:
+```typescript
+// In QuickAnalyticsWidget.tsx
+// BEFORE:
+<Button icon={<ReloadOutlined />} size="small" onClick={() => window.location.reload()}>
+  Refresh
+</Button>
+
+// AFTER:
+const { refetch } = useQuery(...);
+<Button 
+  icon={<ReloadOutlined />} 
+  size="small" 
+  onClick={() => refetch()}
+  loading={isRefetching}
+>
+  Refresh
+</Button>
+```
+
+**Additional Locations to Fix**:
+- `src/pages/journals/articles/components/JournalArticleList.tsx`
+- `src/components/features/help/HelpSearchAndFilters.tsx`
+- `src/components/features/book-catalog/components/BookCatalogErrorBoundary.tsx`
+
+**Priority**: **HIGH** - UX degradation
+
+---
+
+### ✅ Issue 3: React Query Configuration Deviations
+
+**Problem**: Dashboards use `staleTime: 30_000, refetchOnWindowFocus: false` (non-standard)
+
+**Fix Strategy**: Two options
+
+**Option A: Conform to Project Defaults** (Recommended)
+```typescript
+// Remove custom config, use defaults:
+staleTime: 0,  // Always revalidate
+refetchOnWindowFocus: true,  // Revalidate on focus
+```
+
+**Option B: Document Exception with Centralized Config**
+```typescript
+// Create shared config if exception is justified
+// src/constants/dashboard-query-config.ts
+export const DASHBOARD_QUERY_CONFIG = {
+  staleTime: 30_000,  // 30s cache for dashboard stats
+  refetchOnWindowFocus: false,  // Avoid excessive revalidation
+  // Documented reason: Dashboard stats are expensive to compute and 30s staleness is acceptable
+} as const;
+
+// Use consistently in all hooks:
+useQuery({
+  ...DASHBOARD_QUERY_CONFIG,
+  queryKey: [...],
+  queryFn: ...,
+});
+```
+
+**Recommendation**: Use **Option A** (project defaults) unless there's measured performance justification. If keeping custom config, document in `project-rules.md` as an approved exception.
+
+**Priority**: **MEDIUM** - Consistency and predictability
+
+---
+
+### ✅ Issue 4: Cache-Sync After Mutations (invalidate-only)
+
+**Problem**: `badges.tsx` only calls `invalidateQueries()` on assign/revoke
+
+**Fix Strategy**: Add optimistic updates + setQueryData
+
+**Implementation**:
+```typescript
+// BEFORE (invalidate-only):
+const assignMutation = useMutation({
+  mutationFn: (params) => assignBadge(params),
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['grantedBadges'] });
+    queryClient.invalidateQueries({ queryKey: ['userBadges', userId] });
+  },
+});
+
+// AFTER (optimistic update + cache sync):
+const assignMutation = useMutation({
+  mutationFn: (params) => assignBadge(params),
+  onMutate: async (newBadge) => {
+    // Cancel outgoing refetches
+    await queryClient.cancelQueries({ queryKey: ['grantedBadges'] });
+    
+    // Snapshot previous value
+    const previousBadges = queryClient.getQueryData(['grantedBadges']);
+    
+    // Optimistically update cache
+    queryClient.setQueryData(['grantedBadges'], (old: any) => {
+      return {
+        ...old,
+        data: [...(old?.data || []), newBadge],
+      };
+    });
+    
+    return { previousBadges };
+  },
+  onSuccess: (data) => {
+    // Sync cache with server response
+    queryClient.setQueryData(['grantedBadges'], data);
+  },
+  onError: (err, newBadge, context) => {
+    // Rollback on error
+    queryClient.setQueryData(['grantedBadges'], context?.previousBadges);
+  },
+  onSettled: () => {
+    // Background revalidation
+    queryClient.invalidateQueries({ queryKey: ['grantedBadges'] });
+  },
+});
+```
+
+**Note**: This pattern should be applied to all mutation handlers (students, reservations, wishlist, etc.)
+
+**Priority**: **HIGH** - UX immediacy and correctness
+
+---
+
+### ✅ Issue 5: Type Safety Issues (any usage)
+
+**Problem**: Widespread use of `any` in dashboard hooks and components
+
+**Fix Strategy**: Progressive type narrowing with proper interfaces
+
+**Implementation Examples**:
+
+**A. Dashboard Hooks - Define Response Types**:
+```typescript
+// Create src/types/dashboard-api-responses.ts
+export interface DashboardAPIResponse<T> {
+  success: boolean;
+  data: T;
+  message?: string;
+}
+
+export interface AdminStatsResponse {
+  stats: AdminStats;
+  recentActivities: AdminActivity[];
+}
+
+// In useAdminDashboard.ts:
+// BEFORE:
+const response = await unifiedAPIClient.get<any>('/api/v1/dashboard-stats/admin');
+const payload = response.data as any;
+
+// AFTER:
+const response = await unifiedAPIClient.get<DashboardAPIResponse<AdminStatsResponse>>(
+  '/api/v1/dashboard-stats/admin'
+);
+const { data } = response.data;
+```
+
+**B. Error Handling - Typed Errors**:
+```typescript
+// BEFORE:
+} catch (error: any) {
+  const errorMsg = error?.message || 'Failed';
+}
+
+// AFTER:
+} catch (error) {
+  const errorMsg = error instanceof Error 
+    ? error.message 
+    : 'Failed to assign badge';
+}
+```
+
+**C. Role Normalization - Type Guard**:
+```typescript
+// In useDashboardWidgets.ts:
+// BEFORE:
+const userRole = typeof user.role === 'object' && (user.role as any)?.name
+  ? String((user.role as any).name).toLowerCase()
+  : String(user.role).toLowerCase();
+
+// AFTER:
+type RoleValue = string | { name: string };
+
+const normalizeRole = (role: RoleValue | undefined): string => {
+  if (!role) return '';
+  if (typeof role === 'string') return role.toLowerCase();
+  if (typeof role === 'object' && 'name' in role && typeof role.name === 'string') {
+    return role.name.toLowerCase();
+  }
+  return '';
+};
+
+const userRole = normalizeRole(user?.role);
+```
+
+**Priority**: **MEDIUM** - Code quality and maintainability
+
+---
+
+### ✅ Issue 6: State Duplication (React Query + useState)
+
+**Problem**: `useLibrarianDashboard` uses React Query + separate useState/useEffect
+
+**Fix Strategy**: Trust React Query as single source of truth
+
+**Implementation**:
+```typescript
+// BEFORE (duplicated state):
+const [stats, setStats] = useState<LibrarianStats>({...});
+const [overdueItems, setOverdueItems] = useState<OverdueItem[]>([]);
+const dashboardQuery = useQuery({...});
+
+useEffect(() => {
+  if (dashboardQuery.data) {
+    setStats(dashboardQuery.data.stats);
+    setOverdueItems(dashboardQuery.data.overdueItems);
+  }
+}, [dashboardQuery.data]);
+
+return { stats, overdueItems, loading: dashboardQuery.isLoading };
+
+// AFTER (single source of truth):
+const dashboardQuery = useQuery<LibrarianDashboardData>({
+  queryKey: ['librarian-dashboard-stats'],
+  queryFn: async () => {
+    const response = await unifiedAPIClient.get<DashboardAPIResponse<LibrarianDashboardData>>(
+      '/api/v1/dashboard-stats/librarian'
+    );
+    return response.data.data;
+  },
+  staleTime: 0,
+  refetchOnWindowFocus: true,
+});
+
+return {
+  stats: dashboardQuery.data?.stats ?? DEFAULT_STATS,
+  overdueItems: dashboardQuery.data?.overdueItems ?? [],
+  popularBooks: dashboardQuery.data?.popularBooks ?? [],
+  recentActivities: dashboardQuery.data?.recentActivities ?? [],
+  loading: dashboardQuery.isLoading,
+  refetch: dashboardQuery.refetch,
+  dataUpdatedAt: dashboardQuery.dataUpdatedAt,  // For "last updated" timestamps
+};
+```
+
+**Note**: `app-notifications-log.tsx` should be migrated to React Query entirely (currently uses manual state management).
+
+**Priority**: **MEDIUM** - Code simplification and correctness
+
+---
+
+### ✅ Issue 7: Backend Response Correctness
+
+**Problem**: `dashboard-stats/index.ts` returns "internal error" for 405/404 cases
+
+**Fix Strategy**: Use correct HTTP status codes and response builders
+
+**Implementation**:
+```typescript
+// In functions/api/dashboard-stats/index.ts
+
+// BEFORE (Line 211):
+if (request.method !== 'GET') {
+  return createInternalErrorResponse('Method not allowed', undefined, origin);
+}
+
+// AFTER:
+if (request.method !== 'GET') {
+  return new Response(
+    JSON.stringify({ success: false, message: 'Method not allowed' }),
+    { 
+      status: 405,
+      headers: {
+        'Content-Type': 'application/json',
+        'Allow': 'GET',
+        ...getCORSHeaders(origin),
+      }
+    }
+  );
+}
+
+// BEFORE (Line 273):
+const response = createInternalErrorResponse('Not found', undefined, origin);
+
+// AFTER:
+return new Response(
+  JSON.stringify({ success: false, message: 'Not found' }),
+  { 
+    status: 404,
+    headers: {
+      'Content-Type': 'application/json',
+      ...getCORSHeaders(origin),
+    }
+  }
+);
+
+// BEFORE (Line 277 - error exposure):
+return createInternalErrorResponse('Internal server error', error, request.headers.get('Origin'));
+
+// AFTER (verify createInternalErrorResponse doesn't leak error details):
+// Review functions/utilities/response-builder.ts to ensure:
+// 1. Error details are never included in production responses
+// 2. Only safe error messages are returned to client
+// 3. Full error details are logged server-side only
+return createInternalErrorResponse('Internal server error', undefined, request.headers.get('Origin'));
+// Log error separately with proper context
+await handleError(error, { operation: 'dashboard_stats', endpoint: path, env });
+```
+
+**Also Fix**: Duplicate imports (lines 1-2)
+```typescript
+// BEFORE:
+import { securityMiddleware } from '../../middleware/security';
+import { requireAuthenticationOnly } from '../../middleware/security';
+
+// AFTER:
+import { securityMiddleware, requireAuthenticationOnly } from '../../middleware/security';
+```
+
+**Priority**: **HIGH** - Security and API correctness
+
+---
+
+### ✅ Issue 8: Role/Route Boundary UX Concerns
+
+**Problem**: "Access Denied" UI exposes `dashboardType` and `userRole`
+
+**Fix Strategy**: Generic error message without internal details
+
+**Implementation**:
+```typescript
+// In src/router/components/DashboardSubRouter.tsx (Line 184)
+
+// BEFORE:
+<div style={{ textAlign: 'center', padding: '50px 20px' }}>
+  <h2>Access Denied</h2>
+  <p>You don't have permission to access this dashboard.</p>
+  <p>Dashboard type: {dashboardType}, User role: {userRole}</p>
+</div>
+
+// AFTER:
+<div style={{ textAlign: 'center', padding: '50px 20px' }}>
+  <Alert
+    type="warning"
+    message="Access Denied"
+    description="You don't have permission to access this resource. If you believe this is an error, please contact your administrator."
+    showIcon
+  />
+  <Button 
+    type="primary" 
+    onClick={() => navigate(getDashboardPathForRole(userRole))}
+    style={{ marginTop: 16 }}
+  >
+    Go to My Dashboard
+  </Button>
+</div>
+```
+
+**Consider**: Add audit logging for failed access attempts (security monitoring).
+
+**Priority**: **LOW** - Security hardening (not a vulnerability, just best practice)
+
+---
+
+### ✅ Issue 9: Import Boundary Violations
+
+**Problem**: `DashboardContainer.tsx` imports from `../../index` (non-shared location)
+
+**Fix Strategy**: Move SessionDebug to shared location or import directly
+
+**Implementation**:
+
+**Option A: Import Directly** (Quick Fix)
+```typescript
+// In src/components/features/dashboard/DashboardContainer.tsx
+
+// BEFORE:
+import { SessionDebug } from '../../index';
+
+// AFTER:
+import { SessionDebug } from '../../SessionDebug';  // Direct path
+// OR if it's in a different location:
+import { SessionDebug } from '../../../components/SessionDebug';
+```
+
+**Option B: Move to Shared** (Better Long-Term)
+- If SessionDebug is used across multiple features, move to `src/components/ui/` or `src/utilities/debug/`
+- Update imports accordingly
+- Export from appropriate index file
+
+**Priority**: **LOW** - Code organization (not affecting functionality)
+
+---
+
+### ✅ Issue 10: File Size Limits
+
+**Problem**: `SuperuserSystemHealth.tsx` is at 292 lines (limit: 300)
+
+**Fix Strategy**: Extract sub-components before adding more features
+
+**Refactoring Targets** (when component exceeds 300 lines):
+```
+SuperuserSystemHealth.tsx (292 lines) →
+  - SuperuserSystemHealthHeader.tsx
+  - SystemHealthMetrics.tsx
+  - DependencyStatusList.tsx
+  - RecentMetricsChart.tsx
+```
+
+**Prevention**: Monitor file sizes during PR reviews; enforce with `scripts/check-file-sizes.js`
+
+**Priority**: **LOW** - Preventive maintenance (not currently violated)
+
+---
+
+## Implementation Priority Matrix
+
+| Issue | Priority | Impact | Effort | Order |
+|-------|----------|--------|--------|-------|
+| 1. API Versioning | CRITICAL | Breaking Changes | Medium | 1st |
+| 7. Backend Errors | HIGH | Security | Low | 2nd |
+| 2. Page Reload | HIGH | UX | Low | 3rd |
+| 4. Cache-Sync | HIGH | UX | Medium | 4th |
+| 3. Query Config | MEDIUM | Consistency | Low | 5th |
+| 6. State Duplication | MEDIUM | Code Quality | Medium | 6th |
+| 5. Type Safety | MEDIUM | Maintainability | High | 7th |
+| 8. UX Leakage | LOW | Security | Low | 8th |
+| 9. Import Boundaries | LOW | Code Org | Low | 9th |
+| 10. File Size | LOW | Prevention | N/A | Monitor |
+
+---
+
+## Rollout Strategy
+
+### Phase 1: Critical Fixes (Week 1)
+- ✅ Fix API versioning (all endpoints + backend)
+- ✅ Fix backend error responses
+- ✅ Remove page reloads
+
+### Phase 2: UX Improvements (Week 2)
+- ✅ Implement proper cache-sync patterns
+- ✅ Standardize React Query config
+
+### Phase 3: Code Quality (Week 3)
+- ✅ Eliminate state duplication
+- ✅ Progressive type safety improvements
+
+### Phase 4: Polish (Week 4)
+- ✅ Fix import boundaries
+- ✅ Improve error messages
+- ✅ Documentation updates
+
+---
+
+**Next Steps**: See "Dashboard Architecture Recommendations" section below for strategic re-architecture proposal.

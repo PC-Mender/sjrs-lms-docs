@@ -1,0 +1,383 @@
+---
+title: "CONFIGURATION GUIDE"
+---
+
+# System Notifications - Step-by-Step Configuration Guide
+
+## Quick Start
+
+This guide will help you configure all three external sources for System Notifications.
+
+---
+
+## Step 1: Generate Secure Tokens
+
+First, generate secure tokens for each source. You can use any secure random string generator.
+
+### Option A: Using Node.js (Recommended)
+```bash
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+```
+
+### Option B: Using OpenSSL
+```bash
+openssl rand -hex 32
+```
+
+### Option C: Online Generator
+Use a secure random string generator (e.g., https://randomkeygen.com/)
+
+**Generate 3 tokens:**
+1. `NOTIFICATION_INGEST_TOKEN` - Global token (works for all sources)
+2. `NOTIFICATION_INGEST_TOKEN_RELEASE` - Deployment pipeline specific (optional, but recommended)
+3. `NOTIFICATION_INGEST_TOKEN_SENTRY` - Sentry webhook specific (optional, but recommended)
+4. `NOTIFICATION_INGEST_TOKEN_CLOUDFLARE` - Cloudflare Analytics specific (optional, but recommended)
+
+---
+
+## Step 2: Configure Deployment Pipeline Token
+
+### For Local/Manual Deployments
+
+If you deploy manually or from your local machine:
+
+1. **Add to your environment** (temporary for testing):
+   ```bash
+   # Windows PowerShell
+   $env:NOTIFICATION_INGEST_TOKEN="your-generated-token-here"
+   
+   # Linux/Mac
+   export NOTIFICATION_INGEST_TOKEN="your-generated-token-here"
+   ```
+
+2. **Or add to `.env` file** (for local development):
+   ```bash
+   NOTIFICATION_INGEST_TOKEN=your-generated-token-here
+   ```
+
+### For GitHub Actions / CI/CD
+
+1. **Go to GitHub Repository** → Settings → Secrets and variables → Actions
+2. **Add New Secret**:
+   - Name: `NOTIFICATION_INGEST_TOKEN`
+   - Value: Your generated token
+3. **Update your workflow file** (if needed) to use the secret
+
+### For Cloudflare Workers (Production)
+
+Set the token as a secret in Cloudflare Workers:
+
+```bash
+wrangler secret put NOTIFICATION_INGEST_TOKEN
+# When prompted, paste your generated token
+```
+
+**Note**: The deployment script (`scripts/auto-version.js`) will automatically use this token when calling the ingest endpoint.
+
+---
+
+## Step 3: Set Tokens in Cloudflare Workers
+
+Set all tokens as secrets in your Cloudflare Workers:
+
+```bash
+# Global token (works for all sources)
+wrangler secret put NOTIFICATION_INGEST_TOKEN
+
+# Source-specific tokens (recommended for better security)
+wrangler secret put NOTIFICATION_INGEST_TOKEN_RELEASE
+wrangler secret put NOTIFICATION_INGEST_TOKEN_SENTRY
+wrangler secret put NOTIFICATION_INGEST_TOKEN_CLOUDFLARE
+```
+
+**For each command:**
+1. It will prompt: `Enter the secret value:`
+2. Paste your generated token
+3. Press Enter
+
+**Verify tokens are set:**
+```bash
+wrangler secret list
+```
+
+You should see all your notification tokens listed.
+
+---
+
+## Step 4: Configure Sentry Webhook
+
+### Prerequisites
+- Sentry account and project set up
+- Sentry DSN already configured (if you're using Sentry)
+
+### Configuration Steps
+
+1. **Log in to Sentry Dashboard**
+   - Go to https://sentry.io
+   - Select your project
+
+2. **Navigate to Webhooks**
+   - Go to **Settings** → **Integrations** → **Webhooks**
+   - Or go to **Alerts** → **Rules** → **Webhooks**
+
+3. **Add Webhook**
+   - Click **Add Webhook** or **Create Webhook**
+   - **Webhook URL**: `https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
+   - **Secret**: Leave empty (we use header-based auth)
+
+4. **Configure Authentication Header**
+   - In Sentry webhook settings, look for **Custom Headers** or **HTTP Headers**
+   - Add header:
+     - **Name**: `x-notification-ingest-token`
+     - **Value**: Your `NOTIFICATION_INGEST_TOKEN_SENTRY` token (or `NOTIFICATION_INGEST_TOKEN` if using global token)
+
+5. **Select Events**
+   - **Issue Created** - When a new error is detected
+   - **Issue Resolved** - When an issue is marked as resolved
+   - **Issue Updated** - When an issue is updated
+   - **Event Created** - For critical errors (optional)
+
+6. **Test Webhook**
+   - Sentry usually provides a "Test" button
+   - Or trigger a test error in your application
+   - Check System Notifications page to verify
+
+### Alternative: Sentry Alert Rules
+
+If Sentry doesn't have direct webhook support, use Alert Rules:
+
+1. Go to **Alerts** → **Rules** → **Create Alert Rule**
+2. Set conditions (e.g., "Issue frequency is greater than 10")
+3. Add action: **Send a notification via webhook**
+4. Configure webhook URL and headers as above
+
+---
+
+## Step 5: Configure Cloudflare Analytics Monitoring
+
+Cloudflare Analytics doesn't have native webhooks, so we need to create a monitoring solution.
+
+### Option A: Scheduled Worker (Recommended)
+
+Create a scheduled worker that checks metrics periodically:
+
+1. **Create new worker file**: `functions/analytics-monitor.ts`
+
+```typescript
+import type { ScheduledEvent } from '@cloudflare/workers-types';
+import type { Environment } from './lib/types';
+
+export default {
+  async scheduled(event: ScheduledEvent, env: Environment) {
+    // This runs on a schedule (configure in wrangler.toml)
+    const token = env.NOTIFICATION_INGEST_TOKEN_CLOUDFLARE || env.NOTIFICATION_INGEST_TOKEN;
+    
+    if (!token) {
+      console.warn('Analytics monitor: No notification token configured');
+      return;
+    }
+
+    // TODO: Query Cloudflare Analytics API
+    // TODO: Check thresholds
+    // TODO: Send notification if threshold breached
+    
+    // Example:
+    const errorRate = await getErrorRate(env);
+    if (errorRate > 0.05) { // 5% threshold
+      await fetch(`${env.FRONTEND_URL}/api/notifications/events/ingest`, {
+        method: 'POST',
+        headers: {
+          'x-notification-ingest-token': token,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          source: 'analytics:cloudflare',
+          title: 'High Error Rate Detected',
+          message: `Error rate is ${(errorRate * 100).toFixed(2)}% (threshold: 5%)`,
+          category: 'incident',
+          severity: 'warning',
+          analytics: {
+            errorRate,
+            timestamp: new Date().toISOString(),
+          },
+        }),
+      });
+    }
+  },
+};
+```
+
+2. **Add to wrangler.toml**:
+```toml
+[[triggers.crons]]
+schedule = "*/15 * * * *"  # Every 15 minutes
+```
+
+### Option B: External Monitoring Service
+
+Use a service like UptimeRobot, Pingdom, or similar:
+
+1. **Set up monitoring service**
+2. **Configure webhook**:
+   - URL: `https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
+   - Header: `x-notification-ingest-token: <your-token>`
+3. **Set thresholds** for metrics you want to monitor
+
+### Option C: Manual Setup (For Now)
+
+For now, you can skip Cloudflare Analytics monitoring and set it up later when needed.
+
+---
+
+## Step 6: Test Configuration
+
+### Test Deployment Pipeline
+
+1. **Make a small change** and deploy:
+   ```bash
+   npm run release
+   ```
+
+2. **Check deployment logs** for:
+   - ✅ `📣 Posted deployment update to system notifications feed.` = Success
+   - ⚠️ `ℹ️ Notification ingest token is not configured` = Token missing
+
+3. **Check System Notifications**:
+   - Go to `/dashboard-superuser/system-notifications`
+   - You should see a deployment notification
+
+### Test Sentry Webhook
+
+1. **Trigger a test error** in your application
+2. **Check Sentry** - Error should appear
+3. **Check System Notifications** - Should see notification with source: `monitoring:sentry`
+
+### Test Cloudflare Analytics
+
+1. **If using scheduled worker**, wait for cron to run
+2. **If using external service**, trigger a threshold breach
+3. **Check System Notifications** - Should see notification with source: `analytics:cloudflare`
+
+---
+
+## Step 7: Verify All Tokens
+
+Run this command to verify all tokens are set:
+
+```bash
+wrangler secret list | Select-String -Pattern "NOTIFICATION"
+```
+
+You should see:
+- `NOTIFICATION_INGEST_TOKEN` ✅
+- `NOTIFICATION_INGEST_TOKEN_RELEASE` ✅ (optional)
+- `NOTIFICATION_INGEST_TOKEN_SENTRY` ✅ (optional)
+- `NOTIFICATION_INGEST_TOKEN_CLOUDFLARE` ✅ (optional)
+
+---
+
+## Troubleshooting
+
+### Deployment Notifications Not Working
+
+**Check:**
+1. Token is set: `wrangler secret list`
+2. Deployment logs show notification attempt
+3. Endpoint is accessible: `curl https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
+4. Token is correct (test with curl)
+
+**Test manually:**
+```bash
+curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+  -H "Content-Type: application/json" \
+  -H "x-notification-ingest-token: YOUR_TOKEN" \
+  -d '{
+    "source": "release:pipeline",
+    "title": "Test Deployment",
+    "message": "Testing deployment notification",
+    "category": "deployment",
+    "release": {
+      "version": "1.0.0",
+      "environment": "production",
+      "status": "success"
+    }
+  }'
+```
+
+### Sentry Webhook Not Working
+
+**Check:**
+1. Webhook URL is correct
+2. Header `x-notification-ingest-token` is set
+3. Token value matches what's in Cloudflare Workers
+4. Sentry webhook logs show delivery attempts
+5. Check ingest endpoint logs for errors
+
+**Test manually:**
+```bash
+curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+  -H "Content-Type: application/json" \
+  -H "x-notification-ingest-token: YOUR_TOKEN" \
+  -d '{
+    "source": "monitoring:sentry",
+    "title": "Test Sentry Alert",
+    "message": "Testing Sentry webhook",
+    "category": "incident",
+    "severity": "warning",
+    "sentry": {
+      "id": "test-event-id",
+      "project": "your-sentry-project",
+      "event": {
+        "title": "Test Error",
+        "level": "error",
+        "message": "Test error message",
+        "environment": "production"
+      }
+    }
+  }'
+```
+
+---
+
+## Security Best Practices
+
+1. **Use Different Tokens** for each source (recommended)
+2. **Rotate Tokens** periodically (every 90 days)
+3. **Never Commit Tokens** to git
+4. **Use Strong Tokens** (32+ characters, random)
+5. **Monitor Token Usage** - Check logs for unauthorized access attempts
+
+---
+
+## Next Steps
+
+After configuration:
+1. ✅ Test deployment pipeline
+2. ✅ Test Sentry webhook
+3. ⚠️ Set up Cloudflare Analytics monitoring (optional, can be done later)
+4. ✅ Monitor System Notifications page for incoming notifications
+5. ✅ Configure permission-based visibility (already set up)
+
+---
+
+## Quick Reference
+
+### Endpoint
+```
+POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest
+```
+
+### Required Header
+```
+x-notification-ingest-token: <your-token>
+```
+
+### Supported Sources
+- `release:pipeline` - Deployment events
+- `monitoring:sentry` - Sentry error tracking
+- `analytics:cloudflare` - Cloudflare Analytics
+
+### View Notifications
+- Admin: `/dashboard-superuser/system-notifications`
+- Requires: `notification_events` resource read permission
+

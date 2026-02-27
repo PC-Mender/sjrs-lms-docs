@@ -1,0 +1,348 @@
+---
+title: "Email Templates"
+---
+
+# 📧 Beautiful Email Templates
+
+This document describes the comprehensive email template system for SJRS LMS, featuring modern, responsive designs that enhance user experience and brand consistency.
+
+## 🎨 Design Features
+
+### **Modern Visual Design**
+- **Gradient Headers**: Beautiful purple gradient headers with SJRS LMS branding
+- **Responsive Layout**: Mobile-friendly design that works on all devices
+- **Professional Typography**: Clean, readable fonts with proper hierarchy
+- **Color-Coded Status**: Different colors for different email types (success, warning, error, info)
+- **Interactive Elements**: Hover effects and modern button designs
+
+### **Template Components**
+- **Header**: Branded header with logo and tagline
+- **Content Area**: Main message with proper spacing and typography
+- **Action Buttons**: Prominent call-to-action buttons with gradients
+- **Info Cards**: Highlighted information boxes with color coding
+- **Footer**: Professional footer with links and disclaimers
+
+## 📧 Available Email Templates
+
+### **1. Email Confirmation Template**
+**Purpose**: Welcome new users and confirm email addresses
+
+**Features**:
+- 🎉 Welcome message with excitement
+- ✅ Clear confirmation button
+- 🔒 Security notice about link expiration
+- 🎯 "What's Next" section with next steps
+- 📚 Library benefits overview
+
+**Usage**:
+```typescript
+const emailContent = generateEmailConfirmationTemplate({
+  recipientName: "John Doe",
+  confirmationUrl: "https://your-worker.your-subdomain.workers.dev/email-confirmation?token=abc123"
+});
+```
+
+### **2. Book Borrow Notification Template**
+**Purpose**: Confirm successful book borrowing
+
+**Features**:
+- 📖 Success celebration
+- 📚 Detailed book information card
+- ✅ Important reminders about returns
+- 📚 Link to browse more books
+- 🎯 Clear due date information
+
+**Usage**:
+```typescript
+const emailContent = generateBorrowNotificationTemplate({
+  recipientName: "John Doe",
+  bookTitle: "The Great Gatsby",
+  dueDate: "2024-01-15",
+  bookDetails: {
+    author: "F. Scott Fitzgerald",
+    isbn: "978-0743273565",
+    location: "Fiction Section A"
+  }
+});
+```
+
+### **3. Return Reminder Template**
+**Purpose**: Remind users about upcoming due dates
+
+**Features**:
+- ⚠️ Urgency indicators based on days remaining
+- 🚨 Special styling for urgent reminders (1 day or less)
+- 📚 Book details with due date
+- 💰 Late fee information
+- 🔄 Renewal options
+
+**Usage**:
+```typescript
+const emailContent = generateReturnReminderTemplate({
+  recipientName: "John Doe",
+  bookTitle: "The Great Gatsby",
+  dueDate: "2024-01-15",
+  daysUntilDue: 2
+});
+```
+
+### **4. Overdue Notification Template**
+**Purpose**: Alert users about overdue books and fines
+
+**Features**:
+- 🚨 Urgent warning styling
+- 💰 Current fine amount display
+- 📊 Days overdue information
+- 💳 Payment options
+- ⚠️ Consequences of non-payment
+
+**Usage**:
+```typescript
+const emailContent = generateOverdueNotificationTemplate({
+  recipientName: "John Doe",
+  bookTitle: "The Great Gatsby",
+  daysOverdue: 5,
+  fineAmount: 2.50
+});
+```
+
+### **5. Order Notification Template**
+**Purpose**: Update users on book order status
+
+**Features**:
+- ✅ Color-coded status indicators
+- 📚 Book information
+- 📝 Custom messages for different statuses
+- 🎯 Next steps based on status
+- 📚 Browse more books option
+
+**Usage**:
+```typescript
+const emailContent = generateOrderNotificationTemplate({
+  recipientName: "John Doe",
+  bookTitle: "The Great Gatsby",
+  status: "approved", // approved, rejected, pending, updated
+  message: "Your book will be available for pickup tomorrow."
+});
+```
+
+### **6. System Notification Template**
+**Purpose**: General system notifications
+
+**Features**:
+- ℹ️ Type-based styling (info, success, warning, error)
+- 📞 Support contact information
+- 🎯 Clear messaging
+- 🔗 Helpful links
+
+**Usage**:
+```typescript
+const emailContent = generateSystemNotificationTemplate({
+  recipientName: "John Doe",
+  subject: "Account Updated",
+  message: "Your account information has been successfully updated.",
+  type: "success" // info, success, warning, error
+});
+```
+
+### **7. Password Reset Template**
+**Purpose**: Secure password reset functionality
+
+**Features**:
+- 🔐 Security-focused design
+- ⏰ Expiration notice
+- 💡 Password tips
+- 🔒 Security warnings
+- ✅ Clear reset button
+
+**Usage**:
+```typescript
+const emailContent = generatePasswordResetTemplate({
+  recipientName: "John Doe",
+  resetUrl: "https://your-worker.your-subdomain.workers.dev/resetPassword?token=abc123"
+});
+```
+
+## 🎨 Design System
+
+### **Color Palette**
+- **Primary**: `#667eea` (Purple Blue)
+- **Secondary**: `#764ba2` (Purple)
+- **Success**: `#28a745` (Green)
+- **Warning**: `#ffc107` (Yellow)
+- **Danger**: `#dc3545` (Red)
+- **Info**: `#667eea` (Blue)
+
+### **Typography**
+- **Font Family**: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif
+- **Line Height**: 1.6 for readability
+- **Font Sizes**: 14px (body), 16px (emphasis), 18px (titles), 24px (headers)
+
+### **Spacing**
+- **Container**: 600px max-width
+- **Padding**: 30px (desktop), 20px (mobile)
+- **Margins**: 20px between sections
+- **Border Radius**: 8px for cards, 12px for container
+
+### **Interactive Elements**
+- **Buttons**: Gradient backgrounds with hover effects
+- **Links**: Underlined with hover color changes
+- **Cards**: Subtle shadows and borders
+
+## 📱 Responsive Design
+
+### **Mobile Optimization**
+- **Breakpoint**: 600px
+- **Container**: Full width with margins
+- **Typography**: Adjusted font sizes
+- **Buttons**: Full-width on mobile
+- **Spacing**: Reduced padding
+
+### **Email Client Compatibility**
+- **Gmail**: ✅ Fully supported
+- **Outlook**: ✅ Compatible
+- **Apple Mail**: ✅ Optimized
+- **Thunderbird**: ✅ Tested
+- **Mobile Apps**: ✅ Responsive
+
+## 🔧 Implementation
+
+### **Template Structure**
+```typescript
+interface EmailTemplateData {
+  recipientName: string;
+  [key: string]: any;
+}
+
+interface EmailContent {
+  subject: string;
+  textPart: string;
+  htmlPart: string;
+}
+```
+
+### **Base Template Function**
+```typescript
+function getBaseEmailTemplate(content: string, showFooter: boolean = true): string
+```
+
+### **Usage in Functions**
+```typescript
+// Generate template
+const emailContent = generateEmailConfirmationTemplate({
+  recipientName: "John Doe",
+  confirmationUrl: "https://example.com/confirm"
+});
+
+// Send via Mailjet
+const emailData = {
+  Messages: [{
+    From: { Email: "noreply@yourdomain.com", Name: "SJRS LMS" },
+    To: [{ Email: "user@example.com", Name: "John Doe" }],
+    Subject: emailContent.subject,
+    TextPart: emailContent.textPart,
+    HTMLPart: emailContent.htmlPart
+  }]
+};
+```
+
+## 🚀 Benefits
+
+### **User Experience**
+- **Professional Appearance**: Builds trust and credibility
+- **Clear Communication**: Easy-to-read, well-structured content
+- **Mobile-Friendly**: Works perfectly on all devices
+- **Brand Consistency**: Unified SJRS LMS branding
+
+### **Technical Benefits**
+- **Maintainable**: Centralized template system
+- **Reusable**: Consistent components across email types
+- **Scalable**: Easy to add new email types
+- **Accessible**: Proper HTML structure and alt text
+
+### **Business Benefits**
+- **Higher Engagement**: Beautiful emails get better open rates
+- **Reduced Support**: Clear information reduces user confusion
+- **Brand Recognition**: Consistent visual identity
+- **Professional Image**: Modern design reflects system quality
+
+## 🔄 Migration Guide
+
+### **From Old Templates**
+1. **Replace HTML strings** with template function calls
+2. **Update data structure** to match new interfaces
+3. **Test email rendering** in different clients
+4. **Update documentation** for new template usage
+
+### **Adding New Templates**
+1. **Create template function** in `email-templates/index.ts`
+2. **Define interface** for template data
+3. **Use base template** for consistent styling
+4. **Add to exports** and documentation
+5. **Test thoroughly** in multiple email clients
+
+## 📊 Analytics & Tracking
+
+### **Email Metrics**
+- **Open Rates**: Track with Mailjet analytics
+- **Click Rates**: Monitor button interactions
+- **Bounce Rates**: Monitor delivery success
+- **Conversion Rates**: Track user actions after emails
+
+### **A/B Testing**
+- **Subject Lines**: Test different subject variations
+- **Button Text**: Optimize call-to-action wording
+- **Content Length**: Test concise vs. detailed versions
+- **Visual Elements**: Test different color schemes
+
+## 🔒 Security Considerations
+
+### **Email Security**
+- **HTTPS Links**: All links use secure protocols
+- **Token Expiration**: Limited-time tokens for security
+- **No Sensitive Data**: Avoid sending passwords or personal info
+- **Unsubscribe Options**: Include opt-out mechanisms
+
+### **Privacy Compliance**
+- **GDPR Compliance**: Clear data usage information
+- **CAN-SPAM**: Include physical address and unsubscribe
+- **User Consent**: Only send to users who opted in
+- **Data Protection**: Secure handling of user information
+
+## 🎯 Best Practices
+
+### **Content Guidelines**
+- **Clear Subject Lines**: Descriptive and action-oriented
+- **Concise Content**: Get to the point quickly
+- **Action Buttons**: Prominent and clear call-to-action
+- **Personalization**: Use recipient names and relevant data
+
+### **Technical Guidelines**
+- **Inline CSS**: Ensure compatibility across email clients
+- **Alt Text**: Include for all images
+- **Fallback Text**: Provide text versions for all emails
+- **Testing**: Test in multiple email clients before deployment
+
+### **Design Guidelines**
+- **Consistent Branding**: Use SJRS LMS colors and logo
+- **Readable Typography**: Clear, accessible fonts
+- **Visual Hierarchy**: Important information stands out
+- **Mobile First**: Design for mobile, enhance for desktop
+
+## 📈 Future Enhancements
+
+### **Planned Features**
+- **Dynamic Content**: Personalized recommendations
+- **Interactive Elements**: Surveys and feedback forms
+- **Rich Media**: Embedded images and videos
+- **Advanced Analytics**: Detailed engagement tracking
+
+### **Template Expansion**
+- **Welcome Series**: Multi-email onboarding sequence
+- **Newsletter Templates**: Regular library updates
+- **Event Notifications**: Special library events
+- **Maintenance Alerts**: System maintenance notifications
+
+---
+
+This email template system provides a modern, professional foundation for all SJRS LMS communications, ensuring consistent branding and excellent user experience across all email interactions. 

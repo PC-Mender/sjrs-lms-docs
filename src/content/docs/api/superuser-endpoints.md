@@ -1,0 +1,509 @@
+---
+title: "Superuser Endpoints"
+---
+
+# Superuser API Endpoints Reference
+
+**Base URL:** `/api/superuser`  
+**Authentication:** Required (Superuser role only)  
+**Version:** 1.0  
+**Last Updated:** January 6, 2025
+
+---
+
+## 🔐 Authentication
+
+All superuser endpoints require:
+- Valid JWT token in Authorization header or httpOnly cookie
+- User role must be `superuser`
+- Token must not be expired
+
+**Headers:**
+```http
+Authorization: Bearer <your-jwt-token>
+Content-Type: application/json
+```
+
+---
+
+## 📊 Superuser Actions Logging
+
+### GET /api/superuser/actions
+
+Retrieve superuser actions log with filtering and pagination.
+
+**Query Parameters:**
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `limit` | integer | No | 50 | Number of records to return |
+| `offset` | integer | No | 0 | Number of records to skip |
+| `action_type` | string | No | - | Filter by action type |
+| `target_user_id` | integer | No | - | Filter by target user |
+
+**Example Request:**
+```bash
+curl -X GET "https://your-domain.com/api/superuser/actions?limit=10&offset=0" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+**Example Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "superuser_id": 1,
+      "action_type": "impersonation_start",
+      "target_user_id": 5,
+      "target_table": "library_users",
+      "target_record_id": 5,
+      "action_details": "{\"reason\":\"Support ticket #123\",\"target_email\":\"student@example.com\"}",
+      "ip_address": "192.168.1.1",
+      "user_agent": "Mozilla/5.0...",
+      "created_at": "2025-01-06T10:30:00Z",
+      "superuser_email": "admin@yourdomain.com",
+      "superuser_first_name": "Admin",
+      "superuser_last_name": "User",
+      "target_user_email": "student@example.com",
+      "target_user_first_name": "John",
+      "target_user_last_name": "Doe"
+    }
+  ],
+  "pagination": {
+    "limit": 10,
+    "offset": 0,
+    "total": 45
+  }
+}
+```
+
+**Status Codes:**
+- `200 OK` - Success
+- `401 Unauthorized` - Not authenticated
+- `403 Forbidden` - Not a superuser
+- `500 Internal Server Error` - Server error
+
+---
+
+### POST /api/superuser/actions
+
+Manually log a superuser action (automatic logging happens for most actions).
+
+**Request Body:**
+```json
+{
+  "action_type": "manual_action",
+  "target_user_id": 5,
+  "target_table": "library_users",
+  "target_record_id": 5,
+  "action_details": {
+    "reason": "Manual intervention required",
+    "changes": "Updated user status"
+  }
+}
+```
+
+**Example Response:**
+```json
+{
+  "success": true,
+  "message": "Superuser action logged successfully"
+}
+```
+
+**Status Codes:**
+- `200 OK` - Success
+- `400 Bad Request` - Missing required fields
+- `401 Unauthorized` - Not authenticated
+- `403 Forbidden` - Not a superuser
+- `500 Internal Server Error` - Server error
+
+---
+
+## 🚨 Emergency Access Management
+
+### POST /api/superuser/emergency-access/request
+
+Request emergency access to a user account.
+
+**Request Body:**
+```json
+{
+  "target_user_id": 5,
+  "reason": "User locked out, password reset failed",
+  "duration_hours": 24
+}
+```
+
+**Parameters:**
+| Field | Type | Required | Default | Description |
+|-------|------|----------|---------|-------------|
+| `target_user_id` | integer | Yes | - | User ID to access |
+| `reason` | string | Yes | - | Reason for emergency access |
+| `duration_hours` | integer | No | 24 | Access duration in hours |
+
+**Example Response:**
+```json
+{
+  "success": true,
+  "message": "Emergency access requested successfully",
+  "request_id": 1
+}
+```
+
+**Status Codes:**
+- `201 Created` - Request created
+- `400 Bad Request` - Missing required fields
+- `403 Forbidden` - Not a superuser
+- `500 Internal Server Error` - Server error
+
+---
+
+### POST /api/superuser/emergency-access/approve
+
+Approve an emergency access request.
+
+**Request Body:**
+```json
+{
+  "request_id": 1
+}
+```
+
+**Example Response:**
+```json
+{
+  "success": true,
+  "message": "Emergency access approved successfully"
+}
+```
+
+**Status Codes:**
+- `200 OK` - Approved
+- `400 Bad Request` - Missing request_id
+- `404 Not Found` - Request not found or already processed
+- `403 Forbidden` - Not a superuser
+- `500 Internal Server Error` - Server error
+
+---
+
+### POST /api/superuser/emergency-access/reject
+
+Reject an emergency access request.
+
+**Request Body:**
+```json
+{
+  "request_id": 1,
+  "rejection_reason": "Insufficient justification"
+}
+```
+
+**Example Response:**
+```json
+{
+  "success": true,
+  "message": "Emergency access rejected successfully"
+}
+```
+
+**Status Codes:**
+- `200 OK` - Rejected
+- `400 Bad Request` - Missing required fields
+- `404 Not Found` - Request not found
+- `403 Forbidden` - Not a superuser
+- `500 Internal Server Error` - Server error
+
+---
+
+### GET /api/superuser/emergency-access/list
+
+List all emergency access requests with filtering.
+
+**Query Parameters:**
+| Parameter | Type | Required | Default | Description |
+|-----------|------|----------|---------|-------------|
+| `status` | string | No | - | Filter by status (pending, approved, rejected, expired, revoked) |
+| `limit` | integer | No | 50 | Number of records |
+| `offset` | integer | No | 0 | Pagination offset |
+
+**Example Request:**
+```bash
+curl -X GET "https://your-domain.com/api/superuser/emergency-access/list?status=pending" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+**Example Response:**
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": 1,
+      "requester_id": 1,
+      "target_user_id": 5,
+      "reason": "User locked out",
+      "approved_by": null,
+      "approved_at": null,
+      "rejected_by": null,
+      "rejected_at": null,
+      "rejection_reason": null,
+      "expires_at": "2025-01-07T10:30:00Z",
+      "is_active": 0,
+      "status": "pending",
+      "created_at": "2025-01-06T10:30:00Z",
+      "updated_at": "2025-01-06T10:30:00Z",
+      "requester_email": "admin@yourdomain.com",
+      "requester_first_name": "Admin",
+      "requester_last_name": "User",
+      "target_user_email": "student@example.com",
+      "target_user_first_name": "John",
+      "target_user_last_name": "Doe"
+    }
+  ],
+  "pagination": {
+    "limit": 50,
+    "offset": 0,
+    "total": 5
+  }
+}
+```
+
+---
+
+### POST /api/superuser/emergency-access/revoke
+
+Revoke an active emergency access.
+
+**Request Body:**
+```json
+{
+  "request_id": 1
+}
+```
+
+**Example Response:**
+```json
+{
+  "success": true,
+  "message": "Emergency access revoked successfully"
+}
+```
+
+**Status Codes:**
+- `200 OK` - Revoked
+- `400 Bad Request` - Missing request_id
+- `404 Not Found` - Request not found or not active
+- `403 Forbidden` - Not a superuser
+- `500 Internal Server Error` - Server error
+
+---
+
+## 👤 User Impersonation
+
+### POST /api/superuser/impersonate/start
+
+Start impersonating a user account.
+
+**Request Body:**
+```json
+{
+  "target_user_id": 5,
+  "reason": "Support ticket #123 - user reports missing loans"
+}
+```
+
+**Example Response:**
+```json
+{
+  "success": true,
+  "message": "Impersonation started successfully",
+  "impersonation_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "target_user": {
+    "id": 5,
+    "email": "student@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "role": "student"
+  }
+}
+```
+
+**Important Notes:**
+- Cannot impersonate another superuser (returns 403)
+- Impersonation token contains `isImpersonation: true` flag
+- All actions performed while impersonating are logged
+- Token should replace current auth token in client
+
+**Status Codes:**
+- `200 OK` - Impersonation started
+- `400 Bad Request` - Missing required fields
+- `403 Forbidden` - Cannot impersonate superuser or not authorized
+- `404 Not Found` - Target user not found
+- `500 Internal Server Error` - Server error
+
+---
+
+### POST /api/superuser/impersonate/stop
+
+Stop impersonating and return to superuser account.
+
+**Request Body:**
+```json
+{
+  "superuser_id": 1
+}
+```
+
+**Example Response:**
+```json
+{
+  "success": true,
+  "message": "Impersonation stopped successfully",
+  "superuser_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "superuser": {
+    "id": 1,
+    "email": "admin@yourdomain.com",
+    "first_name": "Admin",
+    "last_name": "User",
+    "role": "superuser"
+  }
+}
+```
+
+**Status Codes:**
+- `200 OK` - Impersonation stopped
+- `400 Bad Request` - Missing superuser_id
+- `403 Forbidden` - Invalid superuser_id
+- `500 Internal Server Error` - Server error
+
+---
+
+### GET /api/superuser/impersonate/active
+
+Check if current session is an impersonation session.
+
+**Example Response:**
+```json
+{
+  "success": true,
+  "is_impersonation": false,
+  "current_user": {
+    "id": 1,
+    "email": "admin@yourdomain.com",
+    "role": "superuser"
+  }
+}
+```
+
+**Status Codes:**
+- `200 OK` - Success
+- `401 Unauthorized` - Not authenticated
+- `500 Internal Server Error` - Server error
+
+---
+
+## 🔒 Security Considerations
+
+### Action Logging
+- All superuser actions are automatically logged
+- IP address and user agent are captured
+- Action details stored as JSON for audit trail
+- Logs cannot be deleted (immutable audit trail)
+
+### Emergency Access
+- Requires documented reason (accountability)
+- Time-limited with automatic expiration
+- Approval workflow prevents abuse
+- Can be revoked at any time
+- All actions tracked in superuser_actions log
+
+### User Impersonation
+- Cannot impersonate other superusers (security boundary)
+- Requires documented reason
+- Separate JWT token with impersonation flag
+- Start and stop actions are logged
+- Frontend should display clear impersonation banner
+
+---
+
+## 📋 Error Codes
+
+| Code | Message | Description |
+|------|---------|-------------|
+| `400` | Bad Request | Missing or invalid parameters |
+| `401` | Unauthorized | Not authenticated or token expired |
+| `403` | Forbidden | Not a superuser or action not allowed |
+| `404` | Not Found | Resource not found |
+| `409` | Conflict | Resource already exists or state conflict |
+| `500` | Internal Server Error | Server-side error occurred |
+
+---
+
+## 🧪 Testing Examples
+
+### Using cURL
+
+**Log Superuser Action:**
+```bash
+curl -X POST "https://your-domain.com/api/superuser/actions" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "action_type": "manual_intervention",
+    "target_user_id": 5,
+    "action_details": {"reason": "Test action"}
+  }'
+```
+
+**Start Impersonation:**
+```bash
+curl -X POST "https://your-domain.com/api/superuser/impersonate/start" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "target_user_id": 5,
+    "reason": "Support ticket investigation"
+  }'
+```
+
+### Using JavaScript/TypeScript
+
+```typescript
+import { superuserService } from '@/services/superuser.service';
+
+// Log an action
+await superuserService.logSuperuserAction({
+  action_type: 'manual_intervention',
+  target_user_id: 5,
+  action_details: { reason: 'Test' }
+});
+
+// Start impersonation
+const result = await superuserService.startImpersonation({
+  target_user_id: 5,
+  reason: 'Support ticket #123'
+});
+
+// ⚠️ IMPORTANT: Always use tokenManager, never localStorage directly
+import { tokenManager } from '@/utilities/auth/token-manager';
+
+// Use the impersonation token (uses secure storage)
+await tokenManager.setToken(result.impersonation_token, 'cookie');
+```
+
+---
+
+## 📚 Related Documentation
+
+- [Superuser Guide](../user-guides/superuser-guide.md) - Role overview and capabilities
+- [Superuser Features Guide](../user-guides/superuser-features-guide.md) - How to use features
+- [Implementation Summary](../features/superuser-features-implementation.md) - Technical details
+- [Action Logging](../features/action-logging.md) - Action logging system
+- [API Patterns](./api-patterns.md) - General API guidelines
+
+---
+
+**For Support:** Contact your system administrator or refer to the troubleshooting guide.
+

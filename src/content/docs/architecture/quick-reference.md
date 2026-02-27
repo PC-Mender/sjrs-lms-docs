@@ -1,0 +1,410 @@
+---
+title: "Quick Reference"
+---
+
+# Quick Reference Guide
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+- Cloudflare account with D1 database
+
+### Installation
+```bash
+git clone <repository>
+cd sjrslms
+npm install
+```
+
+### Development
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+```
+
+## 📁 Key Directories
+
+### Frontend (`src/`)
+```
+src/
+├── components/       # Reusable UI components
+├── pages/           # Route components
+├── services/        # API service layer
+├── hooks/           # Custom React hooks
+├── contexts/        # React context providers
+├── utilities/       # Helper functions
+├── constants/       # Application constants
+└── types/           # TypeScript definitions
+```
+
+### Backend (`functions/`)
+```
+functions/
+├── api/             # REST API endpoints
+├── middleware/      # Request processing
+├── durable-objects/ # Real-time features
+├── queue-handlers/  # Background jobs (planned)
+└── email-templates/ # Email system
+```
+
+### Database (`sql/`)
+```
+sql/
+├── d1-schema.sql    # Main database schema
+├── migrations/      # Database migration files
+└── setup/          # Initial setup scripts
+```
+
+## 🔧 Core Components
+
+### Authentication
+```typescript
+// Login component
+import { useAuth } from '../contexts/auth-context-d1';
+
+// MFA setup
+import { MFASetup } from '../components/mfa-setup';
+
+// Session management
+import { SessionManager } from '../components/session-management';
+```
+
+### Permission System
+```typescript
+// Permission guard
+import { PermissionGuard } from '../components/permission-buttons';
+
+// Permission checks
+import { usePermissions } from '../hooks/usePermissions';
+
+// Role management
+import { useRoles } from '../hooks/useRoles';
+```
+
+### API Calls
+```typescript
+// Service layer
+import { bookService } from '../services/book.service';
+
+// Direct API calls
+import { apiClient } from '../utilities/api-client';
+
+// React Query hooks
+import { useUnifiedQuery } from '../hooks/unified/useUnifiedQuery';
+```
+
+## 🎯 Common Patterns
+
+### Creating a New Page
+```typescript
+// 1. Create page component
+// src/pages/feature/index.tsx
+import React from 'react';
+import { useUnifiedQuery } from '../../hooks/unified/useUnifiedQuery';
+
+export const FeaturePage: React.FC = () => {
+  const { data, isLoading, error } = useUnifiedQuery('feature', '/api/feature');
+  
+  if (isLoading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+  
+  return (
+    <div>
+      {/* Your component content */}
+    </div>
+  );
+};
+```
+
+### Creating a New API Endpoint
+```typescript
+// functions/api/feature.ts
+import { getAuthenticatedUser } from '../../middleware/auth';
+import { addCORSHeaders } from '../../middleware/cors';
+import { handleError } from '../../utilities/error/unified-error-handler';
+
+export async function feature(request: Request, env: any) {
+  const url = new URL(request.url);
+  const path = url.pathname.replace('/api/feature', '');
+  
+  try {
+    // Authentication
+    const user = await getAuthenticatedUser(request, env);
+    if (!user) {
+      const response = new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' }
+      });
+      return addCORSHeaders(response, request.headers.get('Origin'));
+    }
+    
+    // Route handling
+    if (request.method === 'GET' && (path === '' || path === '/')) {
+      const result = await env.DB.prepare('SELECT * FROM feature').all();
+      const response = new Response(JSON.stringify({ success: true, data: result.results }), {
+        headers: { 'Content-Type': 'application/json' }
+      });
+      return addCORSHeaders(response, request.headers.get('Origin'));
+    }
+    
+    // Handle other methods...
+    
+  } catch (error) {
+    return await handleError(error, {
+      operation: 'feature_api',
+      component: 'FeatureAPI',
+      context: { endpoint: '/api/feature' }
+    });
+  }
+}
+```
+
+### Adding Permissions
+```typescript
+// 1. Add permission to database
+INSERT INTO permissions (name, description) VALUES ('feature:read', 'Read feature data');
+
+// 2. Assign to role
+INSERT INTO role_permissions (role_id, permission_id) VALUES (1, (SELECT id FROM permissions WHERE name = 'feature:read'));
+
+// 3. Use in component
+<PermissionGuard permission="feature:read">
+  <FeatureComponent />
+</PermissionGuard>
+```
+
+## 🔒 Security Patterns
+
+### Input Validation
+```typescript
+import { validateInput } from '../utilities/validation/input';
+
+const schema = {
+  name: { type: 'string', required: true, minLength: 2 },
+  email: { type: 'email', required: true }
+};
+
+const validation = validateInput(data, schema);
+if (!validation.isValid) {
+  throw new Error(validation.errors.join(', '));
+}
+```
+
+### CSRF Protection
+```typescript
+import { csrfProtection } from '../utilities/csrf-protection';
+
+// In API endpoint
+app.post('/', csrfProtection, async (c) => {
+  // Your endpoint logic
+});
+```
+
+### Session Management
+```typescript
+import { useSession } from '../contexts/session-context';
+
+const { session, logout, refreshSession } = useSession();
+
+// Check session status
+if (session.isExpired) {
+  logout();
+}
+```
+
+## 📊 Database Patterns
+
+### Query Patterns
+```typescript
+// Simple query
+const result = await DB.prepare('SELECT * FROM users WHERE id = ?').bind(userId).first();
+
+// Complex query with joins
+const result = await DB.prepare(`
+  SELECT u.*, r.name as role_name 
+  FROM users u 
+  JOIN user_roles ur ON u.id = ur.user_id 
+  JOIN roles r ON ur.role_id = r.id 
+  WHERE u.id = ?
+`).bind(userId).all();
+
+// Insert with return
+const result = await DB.prepare(`
+  INSERT INTO books (title, author, isbn) 
+  VALUES (?, ?, ?) 
+  RETURNING *
+`).bind(title, author, isbn).first();
+```
+
+### Migration Pattern
+```sql
+-- sql/migrations/add_feature_table.sql
+CREATE TABLE IF NOT EXISTS features (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  description TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX idx_features_name ON features(name);
+```
+
+## 🎨 UI Patterns
+
+### Form Components
+```typescript
+import { UnifiedForm } from '../components/common/UnifiedForm';
+
+<UnifiedForm
+  initialValues={data}
+  onSubmit={handleSubmit}
+  validationSchema={schema}
+  fields={[
+    { name: 'title', label: 'Title', type: 'text' },
+    { name: 'description', label: 'Description', type: 'textarea' }
+  ]}
+/>
+```
+
+### Modal Components
+```typescript
+import { UnifiedModal } from '../components/common/UnifiedModal';
+
+<UnifiedModal
+  title="Edit Item"
+  visible={visible}
+  onCancel={handleCancel}
+  onOk={handleSubmit}
+>
+  {/* Modal content */}
+</UnifiedModal>
+```
+
+### Table Components
+```typescript
+import { OptimizedTable } from '../components/optimized/OptimizedTable';
+
+<OptimizedTable
+  dataSource={data}
+  columns={columns}
+  loading={loading}
+  pagination={{
+    current: page,
+    pageSize: pageSize,
+    total: total,
+    onChange: handlePageChange
+  }}
+/>
+```
+
+## 🔄 State Management
+
+### React Query for Server State
+```typescript
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+
+// Query
+const { data, isLoading } = useQuery({
+  queryKey: ['books'],
+  queryFn: () => bookService.getAll()
+});
+
+// Mutation
+const mutation = useMutation({
+  mutationFn: bookService.create,
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['books'] });
+  }
+});
+```
+
+### Context for Client State
+```typescript
+import { createContext, useContext, useState } from 'react';
+
+const ThemeContext = createContext();
+
+export const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = useState('light');
+  
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
+export const useTheme = () => useContext(ThemeContext);
+```
+
+## 🛠️ Development Tools
+
+### Available Scripts
+```bash
+# Development
+npm run dev                    # Start development server
+npm run build                  # Build for production
+npm run preview               # Preview production build
+
+# Refactoring (completed)
+npm run migrate-error-handling # Migrate error handling
+npm run migrate-hooks         # Migrate React hooks
+npm run migrate-components    # Migrate components
+
+# Testing
+npm run test:app-functionality # Test application functionality
+```
+
+### Environment Variables
+```bash
+# Required in wrangler.toml
+## JWT (choose single secret or rotation)
+# Single secret
+JWT_SECRET=your-jwt-secret
+# Rotation-ready (recommended)
+# JWT_KEYS_JSON={"key-2025-01":"super-secret-1","key-2025-07":"super-secret-2"}
+# JWT_DEFAULT_KID=key-2025-01
+# JWT_ISS=your-jwt-issuer
+# JWT_AUD=https://your-worker.your-subdomain.workers.dev
+MAILJET_API_KEY=your-mailjet-key
+MAILJET_API_SECRET=your-mailjet-secret
+FRONTEND_URL=https://your-domain.com
+```
+
+## 📝 Best Practices
+
+### Code Organization
+- ✅ Use TypeScript for all new code
+- ✅ Follow consistent naming conventions
+- ✅ Implement proper error handling
+- ✅ Add comprehensive documentation
+- ✅ Use modular component architecture
+
+### Security
+- ✅ Validate all inputs
+- ✅ Use parameterized queries
+- ✅ Implement proper authentication
+- ✅ Add CSRF protection
+- ✅ Log security events
+
+### Performance
+- ✅ Use React.memo for expensive components
+- ✅ Implement proper caching
+- ✅ Optimize database queries
+- ✅ Use code splitting
+- ✅ Implement lazy loading
+
+### Testing
+- ✅ Write unit tests for critical functions
+- ✅ Test API endpoints
+- ✅ Validate user workflows
+- ✅ Test error scenarios
+- ✅ Monitor performance
+
+---
+
+*This quick reference guide provides essential information for developers working with the refactored SJRS LMS codebase.*

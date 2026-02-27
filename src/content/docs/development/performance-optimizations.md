@@ -1,0 +1,254 @@
+---
+title: "Performance Optimizations"
+---
+
+# Performance Optimizations for Millisecond Page Loads
+
+This document explains the JavaScript-based performance optimizations implemented to achieve millisecond-level page load times.
+
+## Overview
+
+The application uses several modern web performance techniques:
+
+1. **Resource Hints** - Preload critical assets, prefetch likely routes
+2. **Service Worker** - Aggressive caching of static assets
+3. **Build-time Optimizations** - Automatic resource hint injection
+4. **Cloudflare Edge Caching** - Long-term caching with proper headers
+5. **HTTP/2 Server Push** - Push critical assets before browser requests them
+
+## 1. Resource Hints
+
+Resource hints tell the browser to fetch resources before they're needed, reducing perceived load time.
+
+### Types Used
+
+- **`<link rel="preload">`** - Loads critical resources immediately (high priority)
+- **`<link rel="prefetch">`** - Loads likely next routes in background (low priority)
+- **`<link rel="preconnect">`** - Establishes early connection to API domains
+- **`<link rel="dns-prefetch">`** - Resolves DNS for external domains early
+
+### Implementation
+
+Resource hints are automatically injected during build by `vite-plugin-resource-hints.ts`:
+
+```typescript
+// Critical chunks (preloaded)
+- index.js (main entry point)
+- vendor.js (React, libraries)
+- Critical CSS
+
+// Likely routes (prefetched)
+- auth.js (login/register)
+- dashboard.js (dashboard pages)
+- books.js (book catalog)
+```
+
+### Manual Configuration
+
+Edit `vite.config.ts` to customize:
+
+```typescript
+resourceHintsPlugin({
+  preloadCritical: true,
+  prefetchRoutes: ['auth', 'dashboard', 'books'],
+  preconnectDomains: ['https://your-worker.your-subdomain.workers.dev']
+})
+```
+
+## 2. Service Worker Caching
+
+The service worker (`public/sw.js`) implements aggressive caching strategies:
+
+### Caching Strategies
+
+1. **Cache First** (Static Assets)
+   - JS, CSS, fonts, images
+   - Served from cache instantly
+   - Network used only if cache miss
+
+2. **Network First** (API Calls)
+   - API responses cached as fallback
+   - Network preferred for fresh data
+   - Cache used if network fails
+
+3. **Network First** (HTML/Routes)
+   - HTML pages cached for offline support
+   - Network preferred for updates
+   - Falls back to cached `/index.html` for SPA routes
+
+### Cache Versions
+
+- `static-v1` - Static assets (JS, CSS, images)
+- `api-v1` - API responses
+- `routes-v1` - HTML pages
+
+Cache versions are incremented on updates to force refresh.
+
+### Registration
+
+Service worker is registered in `src/index.tsx`:
+
+```typescript
+import { registerServiceWorker } from './lib/service-worker';
+registerServiceWorker();
+```
+
+Only registers in production builds.
+
+## 3. Build-time Optimizations
+
+### Automatic Resource Hint Injection
+
+The Vite plugin (`vite-plugin-resource-hints.ts`) analyzes build output and injects resource hints:
+
+1. Scans generated chunks
+2. Identifies critical vs. non-critical assets
+3. Injects appropriate `<link>` tags into HTML
+
+### Build Script
+
+The build process (`package.json`) includes:
+
+```json
+"build": "tsc && vite build && node scripts/inject-resource-hints.js"
+```
+
+This ensures resource hints are always up-to-date with build output.
+
+## 4. Cloudflare Edge Caching
+
+### Cache Headers
+
+Static assets receive aggressive cache headers:
+
+```http
+Cache-Control: public, max-age=31536000, immutable
+```
+
+- **1 year** cache for JS/CSS/images
+- **1 hour** cache for HTML
+- **`immutable`** flag prevents revalidation
+
+### HTTP/2 Server Push
+
+Critical assets include `Link` headers for HTTP/2 Server Push:
+
+```http
+Link: </assets/index.js>; rel=preload; as=script
+```
+
+Cloudflare automatically pushes these assets before browser requests them.
+
+## 5. Performance Metrics
+
+### Expected Results
+
+- **First Contentful Paint (FCP)**: < 100ms (cached)
+- **Time to Interactive (TTI)**: < 500ms (cached)
+- **Largest Contentful Paint (LCP)**: < 200ms (cached)
+- **Subsequent Page Loads**: < 50ms (service worker cache)
+
+### Measuring Performance
+
+Use browser DevTools:
+
+1. **Network Tab** - Check cache hits (disk cache, service worker)
+2. **Performance Tab** - Measure load times
+3. **Lighthouse** - Run performance audit
+
+## 6. How It Works Together
+
+### First Visit Flow
+
+1. Browser requests HTML
+2. HTML includes resource hints (preload/prefetch)
+3. Browser preloads critical JS/CSS
+4. Service worker installs and caches assets
+5. Page loads in ~200-500ms
+
+### Subsequent Visits Flow
+
+1. Browser requests HTML (cached for 1 hour)
+2. Service worker intercepts requests
+3. Static assets served from cache instantly (< 50ms)
+4. API calls use network-first with cache fallback
+5. Page loads in < 100ms
+
+### Route Navigation Flow
+
+1. User clicks link
+2. Prefetched route chunks already loaded
+3. React Router renders instantly
+4. Page transition in < 50ms
+
+## 7. Troubleshooting
+
+### Service Worker Not Registering
+
+- Check browser console for errors
+- Verify `import.meta.env.PROD` is true
+- Ensure HTTPS (required for service workers)
+
+### Resource Hints Not Appearing
+
+- Check `dist/index.html` after build
+- Verify Vite plugin is enabled in production
+- Check build logs for plugin errors
+
+### Cache Not Working
+
+- Clear browser cache and service worker
+- Check `Cache-Control` headers in Network tab
+- Verify Cloudflare cache settings
+
+### Stale Content
+
+- Service worker updates automatically every hour
+- Force update: Unregister service worker in DevTools
+- Increment cache version in `sw.js` to force refresh
+
+## 8. Advanced Optimizations
+
+### Critical CSS Inlining
+
+For even faster FCP, inline critical CSS:
+
+```html
+<style>
+  /* Above-the-fold CSS here */
+</style>
+<link rel="preload" href="/assets/main.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+```
+
+### Route-based Prefetching
+
+Prefetch routes based on user role:
+
+```typescript
+// In AppRouter.tsx
+const prefetchRoutes = user?.role === 'admin' 
+  ? ['books', 'members', 'system-admin']
+  : ['books', 'loans'];
+```
+
+### Image Optimization
+
+- Use WebP format
+- Implement lazy loading
+- Use responsive images (`srcset`)
+
+## 9. Best Practices
+
+1. **Keep chunks small** - Split code by route/feature
+2. **Minimize critical path** - Load only essential code first
+3. **Use HTTP/2** - Enables parallel requests
+4. **Cache aggressively** - Static assets rarely change
+5. **Monitor performance** - Use Lighthouse and Web Vitals
+
+## 10. References
+
+- [Resource Hints Spec](https://www.w3.org/TR/resource-hints/)
+- [Service Worker API](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API)
+- [HTTP/2 Server Push](https://developers.cloudflare.com/cache/about/http2-server-push/)
+- [Web Vitals](https://web.dev/vitals/)
+

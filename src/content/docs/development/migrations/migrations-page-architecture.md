@@ -1,0 +1,207 @@
+---
+title: "Migrations Page Architecture"
+---
+
+# Migrations Feature - Feature-Based Architecture
+
+## Overview
+The migrations module has been refactored into a feature-based architecture that follows the project's modular design principles. This feature serves as a **Database Change Monitor** rather than a migration execution tool.
+
+## Architecture
+
+### Feature Structure (`src/components/features/migrations/`)
+
+The migrations feature follows the standard feature-based organization pattern:
+
+```
+src/components/features/migrations/
+├── components/          # Reusable migration components
+│   ├── MigrationProgress.tsx
+│   ├── MigrationHistory.tsx
+│   ├── DatabaseStatus.tsx
+│   ├── MigrationInfo.tsx
+│   ├── MigrationDetailsModal.tsx
+│   ├── MigrationFilters.tsx
+│   └── index.ts         # Barrel export
+├── hooks/              # Custom hooks
+│   ├── useMigrationData.ts
+│   └── index.ts         # Barrel export
+├── types/              # TypeScript type definitions
+│   ├── migration.types.ts
+│   └── index.ts        # Barrel export
+├── utils/              # Utility functions
+│   ├── migration.utils.ts
+│   └── index.ts        # Barrel export
+└── index.ts            # Main feature barrel export
+```
+
+### 1. **Page Component** (`src/pages/migrations/index.tsx`)
+- **Purpose**: Thin page wrapper that orchestrates feature components
+- **Responsibilities**: 
+  - User authentication and permission checks
+  - Component composition
+  - Data flow coordination
+  - Statistics calculation
+
+### 2. **Custom Hook** (`hooks/useMigrationData.ts`)
+- **Purpose**: Centralized data management
+- **Responsibilities**:
+  - API calls to backend
+  - State management
+  - Error handling
+  - Data fetching logic
+
+### 3. **Components** (`components/`)
+- **MigrationProgress**: Progress bar and completion statistics
+- **MigrationHistory**: List of migrations with filtering and grouping
+- **DatabaseStatus**: Database health and feature status
+- **MigrationInfo**: Educational information about migrations
+- **MigrationDetailsModal**: Detailed migration information modal
+- **MigrationFilters**: Search and filter controls
+
+### 4. **Utilities** (`utils/migration.utils.ts`)
+- **Purpose**: Helper functions for formatting and display
+- **Responsibilities**:
+  - Status icon/color mapping
+  - Text formatting
+  - Type label generation
+  - Migration filtering and grouping
+
+### 5. **Types** (`types/migration.types.ts`)
+- **Purpose**: TypeScript interfaces for type safety
+- **Defines**: Migration, MigrationStatus, MigrationDetails, MigrationFilterState
+
+## Backend Alignment
+
+### Current API Endpoints
+- `GET /api/migrations/status` - Database status and feature availability
+- `GET /api/migrations/list` - List of all migrations
+- `GET /api/migrations/{name}/details` - Detailed migration information (may not exist yet)
+
+### Backend Alignment Issues
+1. **Migration Details Endpoint**: The `/details` endpoint may not exist in the backend
+2. **Enhanced Status Fields**: New fields like `last_migration_date` and `total_migrations_applied` may not be available
+3. **Fallback Handling**: The hook includes fallback logic for missing endpoints
+
+### Recommended Backend Updates
+```typescript
+// Enhanced MigrationStatus interface
+interface MigrationStatus {
+  tables: string[];
+  action_logs_exists: boolean;
+  updated_at_columns_exists: boolean;
+  enhanced_roles_exists: boolean;
+  user_type_mappings_exists: boolean;
+  total_tables: number;
+  last_migration_date?: string;        // NEW
+  total_migrations_applied: number;    // NEW
+}
+
+// Enhanced Migration interface
+interface Migration {
+  name: string;
+  description: string;
+  type: string;
+  dependencies: string[];
+  status: 'pending' | 'completed';
+  created_at?: string;
+  applied_at?: string;                 // NEW
+  applied_by?: string;                 // NEW
+  affected_tables?: string[];          // NEW
+  affected_columns?: string[];         // NEW
+  execution_notes?: string;            // NEW
+}
+
+// New MigrationDetails interface
+interface MigrationDetails {
+  name: string;
+  description: string;
+  type: string;
+  applied_at: string;
+  applied_by: string;
+  affected_tables: string[];
+  affected_columns: string[];
+  execution_notes: string;
+  sql_changes: string[];
+  rollback_available: boolean;
+}
+```
+
+## Benefits of Modular Architecture
+
+1. **Separation of Concerns**: Each component has a single responsibility
+2. **Reusability**: Components can be reused in other parts of the application
+3. **Testability**: Individual components can be tested in isolation
+4. **Maintainability**: Changes to one component don't affect others
+5. **Type Safety**: Strong TypeScript interfaces prevent runtime errors
+6. **Error Handling**: Centralized error handling in the custom hook
+
+## Usage
+
+### Importing from Feature Module
+
+```typescript
+// Import from the feature module (recommended)
+import {
+  useMigrationData,
+  MigrationProgress,
+  MigrationHistory,
+  DatabaseStatus,
+  MigrationInfo,
+  MigrationDetailsModal,
+  MigrationFilters,
+  type Migration,
+  type MigrationStatus,
+  type MigrationDetails
+} from '../../components/features/migrations';
+
+// Or import from main features index
+import { useMigrationData, MigrationProgress } from '../../components/features';
+
+const MyComponent = () => {
+  const { migrations, status, loading, handleRefresh } = useMigrationData();
+  
+  return (
+    <div>
+      <MigrationProgress 
+        completionPercentage={75}
+        completedMigrations={15}
+        totalMigrations={20}
+      />
+      <MigrationHistory
+        migrations={migrations}
+        loading={loading}
+        onRefresh={handleRefresh}
+        onViewDetails={handleViewDetails}
+      />
+    </div>
+  );
+};
+```
+
+### Page Implementation
+
+```typescript
+// src/pages/migrations/index.tsx
+import {
+  useMigrationData,
+  MigrationProgress,
+  MigrationHistory,
+  DatabaseStatus,
+  MigrationInfo,
+  MigrationDetailsModal
+} from '../../components/features/migrations';
+
+const MigrationsPage: React.FC = () => {
+  const { migrations, status, loading, ... } = useMigrationData();
+  // Page logic here
+};
+```
+
+## Future Enhancements
+
+1. **Real-time Updates**: WebSocket integration for live migration status
+2. **Advanced Filtering**: Search and filter migrations by type, date, etc.
+3. **Export Functionality**: Export migration history to CSV/PDF
+4. **Charts and Analytics**: Visual representation of migration trends
+5. **Notification System**: Alerts for failed or pending migrations

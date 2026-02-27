@@ -1,0 +1,357 @@
+---
+title: "Action Logging"
+---
+
+# Action Logging System
+
+## Overview
+
+The Action Logging System provides comprehensive audit trail capabilities for the SJRS LMS platform. It automatically captures and logs all user actions throughout the application, providing administrators with detailed insights into system usage, security monitoring, and compliance requirements.
+
+## 🎯 Features
+
+### Automatic Action Capture
+- **User Authentication**: Login, logout, failed login attempts
+- **CRUD Operations**: Create, update, delete operations on all entities
+- **User Management**: Approvals, rejections, status changes, suspensions
+- **Bulk Operations**: Mass actions on multiple records
+- **Search Activities**: User search queries and filters
+- **Export Operations**: Data export activities
+- **Profile Updates**: User profile modifications
+- **Password Changes**: Password reset and change activities
+
+### Security & Audit Features
+- **IP Address Tracking**: Monitor access locations
+- **User Agent Logging**: Track device and browser information
+- **Detailed Records**: JSON storage of old and new values
+- **User Attribution**: Link all actions to specific users
+- **Timestamp Tracking**: Precise timing of all activities
+- **Permission-Based Access**: Role-based viewing restrictions
+
+### User Interface
+- **Comprehensive Dashboard**: View all system actions
+- **Advanced Filtering**: Filter by action type, table, date range
+- **Search Functionality**: Full-text search across logs
+- **Pagination Support**: Handle large datasets efficiently
+- **Statistics Overview**: Activity summaries and metrics
+- **Export Capabilities**: Data export for analysis
+
+## 🔧 Technical Implementation
+
+### Database Schema
+
+#### `action_logs` Table
+```sql
+CREATE TABLE action_logs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  action_type TEXT NOT NULL,
+  table_name TEXT NOT NULL,
+  record_id INTEGER,
+  old_values TEXT, -- JSON string of old values
+  new_values TEXT, -- JSON string of new values
+  ip_address TEXT,
+  user_agent TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES library_users(id) ON DELETE CASCADE
+);
+```
+
+#### Indexes for Performance
+```sql
+CREATE INDEX idx_action_logs_user_id ON action_logs(user_id);
+CREATE INDEX idx_action_logs_action_type ON action_logs(action_type);
+CREATE INDEX idx_action_logs_table_name ON action_logs(table_name);
+CREATE INDEX idx_action_logs_created_at ON action_logs(created_at);
+```
+
+### Action Logger Utility
+
+The `ActionLogger` class provides comprehensive logging methods:
+
+```typescript
+// Basic action logging
+await ActionLogger.logAction({
+  user_id: userId,
+  action_type: 'create',
+  table_name: 'books',
+  record_id: bookId,
+  new_values: bookData
+});
+
+// User lifecycle events
+await ActionLogger.logUserApproval(targetUserId, approvedBy, email);
+await ActionLogger.logUserRejection(targetUserId, rejectedBy, email);
+await ActionLogger.logStatusChange(userId, oldStatus, newStatus, changedBy);
+
+// Authentication events
+await ActionLogger.logLogin(userId, email);
+await ActionLogger.logLogout(userId, email);
+await ActionLogger.logFailedLogin(email, reason);
+
+// CRUD operations
+await ActionLogger.logCreate(userId, tableName, recordId, newData);
+await ActionLogger.logUpdate(userId, tableName, recordId, oldData, newData);
+await ActionLogger.logDelete(userId, tableName, recordId, oldData);
+
+// Bulk operations
+await ActionLogger.logBulkAction(userId, actionType, tableName, recordIds, data);
+```
+
+### API Endpoints
+
+#### GET `/api/action_logs`
+Retrieve action logs with filtering and pagination.
+
+**Query Parameters:**
+- `page`: Page number (default: 1)
+- `limit`: Records per page (default: 50)
+- `user_id`: Filter by specific user
+- `action_type`: Filter by action type
+- `table_name`: Filter by table name
+- `start_date`: Filter from date (YYYY-MM-DD)
+- `end_date`: Filter to date (YYYY-MM-DD)
+
+**Response:**
+```json
+{
+  "logs": [
+    {
+      "id": 1,
+      "user_id": 123,
+      "action_type": "create",
+      "table_name": "books",
+      "record_id": 456,
+      "old_values": null,
+      "new_values": "{\"title\":\"Sample Book\"}",
+      "ip_address": "192.168.1.1",
+      "user_agent": "Mozilla/5.0...",
+      "created_at": "2024-01-15T10:30:00Z",
+      "user_email": "user@example.com",
+      "first_name": "John",
+      "last_name": "Doe",
+      "user_role": "admin"
+    }
+  ],
+  "pagination": {
+    "page": 1,
+    "limit": 50,
+    "total": 1250,
+    "totalPages": 25
+  },
+  "filters": {
+    "actionTypes": ["create", "update", "delete", "login"],
+    "tableNames": ["books", "users", "loans"]
+  }
+}
+```
+
+## 🛡️ Security & Permissions
+
+### Access Control
+- **Superusers**: Full access to all action logs
+- **Admins**: Full access to all action logs
+- **Librarians**: Full access to all action logs
+- **Other Users**: No access to action logs
+
+### Permission Checks
+```typescript
+// API level permission check
+if (!['superuser', 'admin', 'librarian'].includes(user.role)) {
+  return new Response(JSON.stringify({ error: 'Insufficient permissions' }), {
+    status: 403
+  });
+}
+```
+
+### Data Protection
+- **Foreign Key Constraints**: Maintains referential integrity
+- **Cascade Deletes**: Removes logs when users are deleted
+- **JSON Validation**: Ensures data integrity
+- **IP Address Logging**: Tracks access locations
+
+## 🚀 Usage Guide
+
+### For Administrators
+
+#### Accessing Action Logs
+1. Login as Superuser, Admin, or Librarian
+2. Navigate to "Action Logs" in the menu
+3. View comprehensive system activity
+
+#### Filtering and Searching
+- **Action Type**: Filter by specific actions (create, update, delete, login, etc.)
+- **Table Name**: Filter by affected database table
+- **Date Range**: Filter by specific time periods
+- **User**: Filter by specific user activities
+- **Search**: Full-text search across all fields
+
+#### Understanding Log Data
+- **User Information**: Shows who performed the action
+- **Action Type**: Type of operation performed
+- **Table Name**: Database table affected
+- **Record ID**: Specific record modified
+- **Old/New Values**: JSON data showing changes
+- **IP Address**: Location where action was performed
+- **Timestamp**: Exact time of the action
+
+### For Developers
+
+#### Adding Action Logging to New Features
+
+1. **Import the ActionLogger**:
+```typescript
+import ActionLogger from '../utilities/action-logger';
+```
+
+2. **Log User Actions**:
+```typescript
+// After successful operation
+await ActionLogger.logCreate(user.id, 'books', bookId, bookData);
+```
+
+3. **Log Bulk Operations**:
+```typescript
+await ActionLogger.logBulkAction(user.id, 'approve', 'users', userIds, { status: 'active' });
+```
+
+4. **Log Authentication Events**:
+```typescript
+await ActionLogger.logLogin(user.id, user.email);
+```
+
+#### Custom Action Types
+Create custom action types for specific business logic:
+
+```typescript
+await ActionLogger.logAction({
+  user_id: userId,
+  action_type: 'book_borrow',
+  table_name: 'loans',
+  record_id: loanId,
+  new_values: { book_id: bookId, due_date: dueDate }
+});
+```
+
+## 📊 Monitoring & Analytics
+
+### Key Metrics
+- **Total Actions**: Overall system activity
+- **Action Types**: Distribution of different operations
+- **User Activity**: Most active users
+- **Table Activity**: Most modified tables
+- **Time Patterns**: Peak usage times
+
+### Common Use Cases
+- **Security Auditing**: Track suspicious activities
+- **User Behavior Analysis**: Understand system usage patterns
+- **Compliance Reporting**: Generate audit reports
+- **Performance Monitoring**: Identify bottlenecks
+- **Troubleshooting**: Debug user-reported issues
+
+## 🔄 Integration Points
+
+### Navigation
+- **Superuser Dashboard**: `/dashboard-superuser/action-logs`
+- **Admin Dashboard**: `/dashboard-admin/action-logs`
+- **Librarian Dashboard**: `/dashboard-librarian/action-logs`
+
+### Routing Configuration
+```typescript
+// App.tsx
+const ActionLogsPage = lazy(() => import("./pages/action-logs"));
+
+// Route definitions
+<Route path="action-logs" element={<ActionLogsPage />} />
+```
+
+### Constants
+```typescript
+// config.ts
+ACTION_LOGS: '/dashboard/action-logs',
+SUPERUSER_ACTION_LOGS: '/dashboard-superuser/action-logs',
+```
+
+## 📈 Performance Considerations
+
+### Database Optimization
+- **Indexed Queries**: Fast filtering and sorting
+- **Pagination**: Efficient handling of large datasets
+- **Selective Logging**: Only log meaningful actions
+- **JSON Storage**: Efficient storage of complex data
+
+### Query Performance
+```sql
+-- Optimized queries with proper indexes
+SELECT * FROM action_logs 
+WHERE user_id = ? AND created_at >= ? 
+ORDER BY created_at DESC 
+LIMIT 50 OFFSET 0;
+```
+
+### Storage Management
+- **Regular Cleanup**: Archive old logs periodically
+- **Data Retention**: Configure retention policies
+- **Compression**: Compress old log data
+- **Backup Strategy**: Include logs in backup procedures
+
+## 🧪 Testing
+
+### Test Scenarios
+1. **User Authentication**: Verify login/logout logging
+2. **CRUD Operations**: Test create, update, delete logging
+3. **Bulk Actions**: Verify bulk operation logging
+4. **Permission Checks**: Ensure proper access control
+5. **Filtering**: Test all filter combinations
+6. **Pagination**: Verify large dataset handling
+
+### Sample Test Data
+```typescript
+// Test action logging
+await ActionLogger.logCreate(1, 'books', 123, { title: 'Test Book' });
+await ActionLogger.logUpdate(1, 'books', 123, { title: 'Old Title' }, { title: 'New Title' });
+await ActionLogger.logDelete(1, 'books', 123, { title: 'Deleted Book' });
+```
+
+## 🔮 Future Enhancements
+
+### Planned Features
+- **Real-time Notifications**: Alert on suspicious activities
+- **Advanced Analytics**: Machine learning for anomaly detection
+- **Export Functionality**: CSV/PDF export capabilities
+- **API Integration**: REST API for external tools
+- **Custom Dashboards**: Configurable monitoring views
+
+### Performance Improvements
+- **Database Partitioning**: Time-based table partitioning
+- **Caching Layer**: Redis integration for faster queries
+- **Compression**: Archive old logs for storage efficiency
+- **Virtual Scrolling**: Handle millions of log entries
+
+## 📋 Maintenance
+
+### Regular Tasks
+- **Log Rotation**: Archive old logs monthly
+- **Performance Monitoring**: Check query performance
+- **Security Audits**: Review access patterns
+- **Storage Management**: Monitor disk usage
+
+### Troubleshooting
+- **Empty Logs**: Check database connection and permissions
+- **Performance Issues**: Verify indexes exist and are used
+- **Access Denied**: Confirm user has proper role
+- **Missing Data**: Check foreign key constraints
+
+## 🎯 Conclusion
+
+The Action Logging System provides comprehensive audit trail capabilities essential for security, compliance, and system monitoring. It automatically captures all user activities while maintaining performance and providing intuitive access for administrators.
+
+**Key Benefits:**
+- ✅ **Complete Audit Trail**: All user actions tracked
+- ✅ **Security Compliance**: Detailed activity records
+- ✅ **Performance Optimized**: Efficient storage and retrieval
+- ✅ **User-Friendly Interface**: Intuitive filtering and search
+- ✅ **Developer-Friendly**: Easy integration for new features
+- ✅ **Scalable Architecture**: Handles large datasets efficiently
+
+The system is designed to be robust, performant, and maintainable while providing the detailed insights necessary for effective system administration and security monitoring. 

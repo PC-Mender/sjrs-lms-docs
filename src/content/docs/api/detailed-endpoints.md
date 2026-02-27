@@ -1,0 +1,1405 @@
+---
+title: "Detailed Endpoints"
+---
+
+# 🔍 Detailed API Endpoints Documentation
+
+This document provides detailed documentation for the most important SJRS LMS API endpoints, including request/response examples, parameters, and detailed usage information.
+
+## 🔑 Authentication Endpoints
+
+### **User Login**
+**Endpoint:** `POST /api/auth/login`  
+**Description:** Authenticate user and create session  
+**Authentication:** None (public endpoint)
+
+#### Request Body
+```json
+{
+  "email": "user@example.com",
+  "password": "securepassword123"
+}
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "message": "Login successful",
+  "user": {
+    "id": 123,
+    "email": "user@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "role": "Student",
+    "status": "active",
+    "email_verified": true,
+    "workflowStatus": "active"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+Note:
+- `workflowStatus`: A user-friendly workflow state derived from `status` and verification flags.
+  - `pending_email_confirmation`
+  - `profile_incomplete`
+  - `pending_approval`
+  - `active`
+  - `inactive`
+  - `suspended`
+
+#### Response (Error - 401)
+```json
+{
+  "error": "Invalid credentials"
+}
+```
+
+### **User Registration**
+**Endpoint:** `POST /api/auth/register`  
+**Description:** Register new user account  
+**Authentication:** None (public endpoint)
+
+#### Request Body
+```json
+{
+  "email": "newuser@example.com",
+  "password": "securepassword123",
+  "firstName": "Jane",
+  "lastName": "Smith",
+  "userType": "Student",
+  "phone": "+1234567890",
+  "stream": "CSE",
+  "turnstileToken": "<optional-captcha-token>"
+}
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "message": "Registration received. If this email is associated with an account, you will receive further instructions shortly.",
+  "data": { "pending": true }
+}
+```
+
+Notes:
+- The endpoint intentionally returns a generic success message to prevent email enumeration.
+- Newly created accounts have `status = "pending"` and `email_verified = false` until email confirmation and admin approval.
+- `role_id` is resolved using `user_type_role_mapping` during creation; if no mapping exists, `role_id` remains `NULL` until an admin assigns a role.
+
+### **Get Current User Profile**
+**Endpoint:** `GET /api/auth/me`  
+**Description:** Get current authenticated user's profile  
+**Authentication:** Required (Bearer token)
+
+#### Request Headers
+```
+Authorization: Bearer <jwt_token>
+X-XSRF-TOKEN: <csrf_token>
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "message": "Profile retrieved successfully",
+  "user": {
+    "id": 123,
+    "email": "user@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "role": "Student",
+    "status": "active",
+    "user_type": "Student",
+    "phone": "+1234567890",
+    "stream": "CSE",
+    "email_verified": true,
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z",
+    "workflowStatus": "active"
+  }
+}
+```
+
+### **Update User Profile**
+**Endpoint:** `PUT /api/auth/profile`  
+**Description:** Update current user's profile information  
+**Authentication:** Required (Bearer token)
+
+#### Request Body
+```json
+{
+  "first_name": "John Updated",
+  "last_name": "Doe Updated",
+  "phone": "+1234567890",
+  "address": "456 New St, City, State"
+}
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "message": "Profile updated successfully",
+  "data": {
+    "id": 123,
+    "email": "user@example.com",
+    "first_name": "John Updated",
+    "last_name": "Doe Updated",
+    "phone": "+1234567890",
+    "address": "456 New St, City, State",
+    "updated_at": "2024-01-15T11:00:00Z"
+  }
+}
+```
+
+## 📚 Book Management Endpoints
+
+### **Get All Books**
+**Endpoint:** `GET /api/books`  
+**Description:** Retrieve list of all books with pagination and filtering  
+**Authentication:** Required (Bearer token)
+
+#### Query Parameters
+```
+?page=1&limit=20&search=title&category=fiction&author=author_name&status=available
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "data": {
+    "books": [
+      {
+        "id": 1,
+        "title": "The Great Gatsby",
+        "author": "F. Scott Fitzgerald",
+        "isbn": "978-0743273565",
+        "category": "fiction",
+        "status": "available",
+        "copies_available": 3,
+        "total_copies": 5,
+        "publication_year": 1925,
+        "created_at": "2024-01-15T10:30:00Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 150,
+      "total_pages": 8
+    }
+  }
+}
+```
+
+### **Search Books**
+**Endpoint:** `GET /api/books/search`  
+**Description:** Search books by various criteria  
+**Authentication:** Required (Bearer token)
+
+#### Query Parameters
+```
+?q=search_term&category=fiction&author=author_name&isbn=isbn_number&status=available&year=2020
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "data": {
+    "results": [
+      {
+        "id": 1,
+        "title": "The Great Gatsby",
+        "author": "F. Scott Fitzgerald",
+        "isbn": "978-0743273565",
+        "category": "fiction",
+        "status": "available",
+        "copies_available": 3,
+        "total_copies": 5,
+        "publication_year": 1925,
+        "relevance_score": 0.95
+      }
+    ],
+    "total_results": 25,
+    "search_query": "search_term"
+  }
+}
+```
+
+### **Get Specific Book**
+**Endpoint:** `GET /api/books/:id`  
+**Description:** Retrieve detailed information about a specific book  
+**Authentication:** Required (Bearer token)
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "title": "The Great Gatsby",
+    "author": "F. Scott Fitzgerald",
+    "isbn": "978-0743273565",
+    "category": "fiction",
+    "description": "A story of the fabulously wealthy Jay Gatsby and his love for the beautiful Daisy Buchanan.",
+    "status": "available",
+    "copies": [
+      {
+        "id": 101,
+        "copy_number": "C001",
+        "status": "available",
+        "location": "Main Library - Fiction Section",
+        "condition": "good"
+      }
+    ],
+    "reviews": [
+      {
+        "id": 201,
+        "user_name": "John Doe",
+        "rating": 5,
+        "comment": "Excellent classic novel",
+        "created_at": "2024-01-10T10:30:00Z"
+      }
+    ],
+    "publication_year": 1925,
+    "publisher": "Scribner",
+    "pages": 180,
+    "language": "English",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+### **Create Book**
+**Endpoint:** `POST /api/books`  
+**Description:** Create a new book (Librarian+ only)  
+**Authentication:** Required (Bearer token + Librarian role)
+
+#### Request Body
+```json
+{
+  "title": "New Book Title",
+  "author": "Author Name",
+  "isbn": "978-1234567890",
+  "category": "non-fiction",
+  "description": "Book description here",
+  "publication_year": 2024,
+  "publisher": "Publisher Name",
+  "pages": 300,
+  "language": "English",
+  "copies": [
+    {
+      "copy_number": "C001",
+      "location": "Main Library - Non-Fiction Section",
+      "condition": "new"
+    }
+  ]
+}
+```
+
+#### Response (Success - 201)
+```json
+{
+  "success": true,
+  "message": "Book created successfully",
+  "data": {
+    "id": 2,
+    "title": "New Book Title",
+    "author": "Author Name",
+    "isbn": "978-1234567890",
+    "category": "non-fiction",
+    "status": "available",
+    "copies_available": 1,
+    "total_copies": 1,
+    "created_at": "2024-01-15T11:00:00Z"
+  }
+}
+```
+
+## 📚 Resource Management Endpoints
+
+### **Get All Resources**
+**Endpoint:** `GET /api/resources`  
+**Description:** Retrieve list of all resources with pagination and filtering  
+**Authentication:** Required (Bearer token)
+
+#### Query Parameters
+```
+?page=1&limit=20&resource_type_id=1&section_id=2&status=available&search=resource_name
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "data": {
+    "resources": [
+      {
+        "id": 1,
+        "name": "Study Room A",
+        "description": "Quiet study room with 4 desks",
+        "resource_type_id": 1,
+        "resource_type_name": "Study Room",
+        "section_id": 2,
+        "section_name": "Main Library",
+        "status": "available",
+        "created_at": "2024-01-15T10:30:00Z",
+        "updated_at": "2024-01-15T10:30:00Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 25,
+      "total_pages": 2
+    }
+  }
+}
+```
+
+### **Get Specific Resource**
+**Endpoint:** `GET /api/resources/:id`  
+**Description:** Retrieve detailed information about a specific resource  
+**Authentication:** Required (Bearer token)
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "data": {
+    "id": 1,
+    "name": "Study Room A",
+    "description": "Quiet study room with 4 desks and natural lighting",
+    "resource_type_id": 1,
+    "resource_type_name": "Study Room",
+    "section_id": 2,
+    "section_name": "Main Library",
+    "status": "available",
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+### **Create Resource**
+**Endpoint:** `POST /api/resources`  
+**Description:** Create a new resource (Admin/Librarian only)  
+**Authentication:** Required (Bearer token + appropriate permissions)
+
+#### Request Body
+```json
+{
+  "name": "New Study Room",
+  "description": "Additional study space for students",
+  "resource_type_id": 1,
+  "section_id": 2,
+  "status": "available"
+}
+```
+
+#### Response (Success - 201)
+```json
+{
+  "success": true,
+  "message": "Resource created successfully",
+  "data": {
+    "id": 2,
+    "name": "New Study Room",
+    "description": "Additional study space for students",
+    "resource_type_id": 1,
+    "resource_type_name": "Study Room",
+    "section_id": 2,
+    "section_name": "Main Library",
+    "status": "available",
+    "created_at": "2024-01-15T11:00:00Z"
+  }
+}
+```
+
+## 📚 Loan Management Endpoints
+
+### **Get All Loans**
+**Endpoint:** `GET /api/loans`  
+**Description:** Retrieve list of all loans with filtering options  
+**Authentication:** Required (Bearer token)
+
+#### Query Parameters
+```
+?page=1&limit=20&status=active&user_id=123&book_id=1&due_date=2024-02-01
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "data": {
+    "loans": [
+      {
+        "id": 1,
+        "user": {
+          "id": 123,
+          "first_name": "John",
+          "last_name": "Doe",
+          "email": "john@example.com"
+        },
+        "book": {
+          "id": 1,
+          "title": "The Great Gatsby",
+          "author": "F. Scott Fitzgerald"
+        },
+        "copy": {
+          "id": 101,
+          "copy_number": "C001"
+        },
+        "status": "active",
+        "borrowed_date": "2024-01-01T10:00:00Z",
+        "due_date": "2024-02-01T10:00:00Z",
+        "returned_date": null,
+        "created_at": "2024-01-01T10:00:00Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 45,
+      "total_pages": 3
+    }
+  }
+}
+```
+
+### **Create Loan**
+**Endpoint:** `POST /api/loans`  
+**Description:** Create a new loan (Librarian+ only)  
+**Authentication:** Required (Bearer token + Librarian role)
+
+#### Request Body
+```json
+{
+  "user_id": 123,
+  "book_copy_id": 101,
+  "due_date": "2024-02-01T10:00:00Z",
+  "notes": "Loan created for student"
+}
+```
+
+#### Response (Success - 201)
+```json
+{
+  "success": true,
+  "message": "Loan created successfully",
+  "data": {
+    "id": 2,
+    "user": {
+      "id": 123,
+      "first_name": "John",
+      "last_name": "Doe"
+    },
+    "book": {
+      "id": 1,
+      "title": "The Great Gatsby"
+    },
+    "copy": {
+      "id": 101,
+      "copy_number": "C001"
+    },
+    "status": "active",
+    "borrowed_date": "2024-01-15T11:00:00Z",
+    "due_date": "2024-02-01T10:00:00Z",
+    "created_at": "2024-01-15T11:00:00Z"
+  }
+}
+```
+
+### **Update Loan (Return Book)**
+**Endpoint:** `PUT /api/loans/:id`  
+**Description:** Update loan status (e.g., return book)  
+**Authentication:** Required (Bearer token + Librarian role)
+
+#### Request Body
+```json
+{
+  "status": "returned",
+  "returned_date": "2024-01-15T11:00:00Z",
+  "notes": "Book returned in good condition"
+}
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "message": "Loan updated successfully",
+  "data": {
+    "id": 1,
+    "status": "returned",
+    "returned_date": "2024-01-15T11:00:00Z",
+    "updated_at": "2024-01-15T11:00:00Z"
+  }
+}
+```
+
+## 👥 User Management Endpoints
+
+### **Get All Users**
+**Endpoint:** `GET /api/users`  
+**Description:** Retrieve list of all users (Admin/Librarian only)  
+**Authentication:** Required (Bearer token + Admin/Librarian role)
+
+#### Query Parameters
+```
+?page=1&limit=20&role=student&status=active&search=john
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "data": {
+    "users": [
+      {
+        "id": 123,
+        "email": "john@example.com",
+        "first_name": "John",
+        "last_name": "Doe",
+        "role": "student",
+        "status": "active",
+        "user_type": "student",
+        "created_at": "2024-01-15T10:30:00Z",
+        "last_login": "2024-01-15T10:30:00Z"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 150,
+      "total_pages": 8
+    }
+  }
+}
+```
+
+### **Get Specific User**
+**Endpoint:** `GET /api/users/:id`  
+**Description:** Retrieve detailed information about a specific user  
+**Authentication:** Required (Bearer token + Admin/Librarian role or own profile)
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "data": {
+    "id": 123,
+    "email": "john@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "role": "student",
+    "status": "active",
+    "user_type": "student",
+    "phone": "+1234567890",
+    "address": "123 Main St, City, State",
+    "profile_completed": true,
+    "email_confirmed": true,
+    "mfa_enabled": false,
+    "created_at": "2024-01-15T10:30:00Z",
+    "updated_at": "2024-01-15T10:30:00Z",
+    "last_login": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+## 🔔 User Experience Endpoints
+
+### **Get User Wishlist**
+**Endpoint:** `GET /api/wishlist`  
+**Description:** Retrieve current user's wishlist  
+**Authentication:** Required (Bearer token)
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "data": {
+    "wishlist": [
+      {
+        "id": 1,
+        "book": {
+          "id": 1,
+          "title": "The Great Gatsby",
+          "author": "F. Scott Fitzgerald",
+          "isbn": "978-0743273565",
+          "status": "available"
+        },
+        "added_at": "2024-01-10T10:30:00Z",
+        "priority": "high"
+      }
+    ],
+    "total_items": 1
+  }
+}
+```
+
+### **Add to Wishlist**
+**Endpoint:** `POST /api/wishlist`  
+**Description:** Add a book to user's wishlist  
+**Authentication:** Required (Bearer token)
+
+#### Request Body
+```json
+{
+  "book_id": 1,
+  "priority": "high"
+}
+```
+
+#### Response (Success - 201)
+```json
+{
+  "success": true,
+  "message": "Book added to wishlist successfully",
+  "data": {
+    "id": 2,
+    "book": {
+      "id": 1,
+      "title": "The Great Gatsby"
+    },
+    "added_at": "2024-01-15T11:00:00Z",
+    "priority": "high"
+  }
+}
+```
+
+### **Get User Notifications**
+**Endpoint:** `GET /api/notifications`  
+**Description:** Retrieve current user's notifications  
+**Authentication:** Required (Bearer token)
+
+#### Query Parameters
+```
+?page=1&limit=20&status=unread&type=loan_reminder
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "data": {
+    "notifications": [
+      {
+        "id": 1,
+        "type": "loan_reminder",
+        "title": "Book Due Soon",
+        "message": "Your book 'The Great Gatsby' is due in 3 days",
+        "status": "unread",
+        "created_at": "2024-01-15T10:30:00Z",
+        "read_at": null,
+        "metadata": {
+          "book_id": 1,
+          "due_date": "2024-02-01T10:00:00Z"
+        }
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 15,
+      "total_pages": 1
+    },
+    "unread_count": 5
+  }
+}
+```
+
+## ⚖️ System Management Endpoints
+
+### **Check User Permissions**
+**Endpoint:** `GET /api/permissions/check`  
+**Description:** Check current user's permissions for specific resources  
+**Authentication:** Required (Bearer token)
+
+**⚠️ RBAC Policy: This endpoint is the single source of truth for all permission decisions. Client-side permission checks are for UI optimization only and deny by default when backend validation is unavailable.**
+
+#### Query Parameters
+```
+?resource=books&action=create&user_id=123
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "data": {
+    "has_permission": true,
+    "permissions": [
+      {
+        "resource": "books",
+        "action": "create",
+        "granted": true,
+        "source": "role",
+        "role_name": "librarian"
+      }
+    ],
+    "user_role": "librarian",
+    "effective_permissions": ["books:read", "books:create", "books:update", "books:delete"]
+  }
+}
+```
+
+### **Get System Logs**
+**Endpoint:** `GET /api/system_logs`  
+**Description:** Retrieve system logs (Admin+ only)  
+**Authentication:** Required (Bearer token + Admin role)
+
+#### Query Parameters
+```
+?page=1&limit=20&level=error&component=auth&start_date=2024-01-01&end_date=2024-01-15
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "data": {
+    "logs": [
+      {
+        "id": 1,
+        "level": "info",
+        "component": "auth",
+        "message": "User login successful",
+        "user_id": 123,
+        "ip_address": "192.168.1.100",
+        "user_agent": "Mozilla/5.0...",
+        "created_at": "2024-01-15T10:30:00Z",
+        "metadata": {
+          "email": "john@example.com",
+          "session_id": 456
+        }
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 1000,
+      "total_pages": 50
+    }
+  }
+}
+```
+
+## 📁 File Management Endpoints
+
+### **Upload File**
+**Endpoint:** `POST /api/upload`  
+**Description:** Upload a file to the system  
+**Authentication:** Required (Bearer token + appropriate permissions)
+
+#### Request Body (Multipart Form Data)
+```
+file: [binary file data]
+category: "book_covers"
+description: "Book cover image"
+```
+
+#### Response (Success - 201)
+```json
+{
+  "success": true,
+  "message": "File uploaded successfully",
+  "data": {
+    "id": 1,
+    "filename": "book_cover.jpg",
+    "original_name": "great_gatsby_cover.jpg",
+    "size": 2048576,
+    "mime_type": "image/jpeg",
+    "url": "https://cdn.example.com/uploads/book_cover.jpg",
+    "category": "book_covers",
+    "description": "Book cover image",
+    "uploaded_by": 123,
+    "created_at": "2024-01-15T11:00:00Z"
+  }
+}
+```
+
+## 🏥 Health & System Endpoints
+
+### **Health Check**
+**Endpoint:** `GET /api/health`  
+**Description:** Check system health status  
+**Authentication:** None (public endpoint)
+
+#### Response (Success - 200)
+```json
+{
+  "status": "ok",
+  "timestamp": "2024-01-15T11:00:00Z",
+  "version": "2.2.0",
+  "environment": "production",
+  "services": {
+    "database": "healthy",
+    "email": "healthy",
+    "storage": "healthy"
+  },
+  "uptime": "7 days, 3 hours, 45 minutes"
+}
+```
+
+## 📧 Email Service Endpoints
+
+### **Send Email**
+**Endpoint:** `POST /api/email`  
+**Description:** Send an email through the system  
+**Authentication:** Required (Bearer token + appropriate permissions)
+
+#### Request Body
+```json
+{
+  "to": "user@example.com",
+  "subject": "Welcome to SJRS LMS",
+  "template": "welcome_email",
+  "data": {
+    "user_name": "John Doe",
+    "activation_link": "https://example.com/activate?token=abc123"
+  }
+}
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "message": "Email sent successfully",
+  "data": {
+    "message_id": "msg_123456789",
+    "to": "user@example.com",
+    "subject": "Welcome to SJRS LMS",
+    "status": "sent",
+    "sent_at": "2024-01-15T11:00:00Z"
+  }
+}
+```
+
+---
+
+## 🔧 Common Response Patterns
+
+### **Success Response Format**
+```json
+{
+  "success": true,
+  "message": "Operation completed successfully",
+  "data": { /* response data */ }
+}
+```
+
+### **Error Response Format**
+```json
+{
+  "success": false,
+  "error": "Error message description",
+  "code": "ERROR_CODE",
+  "details": { /* additional error details */ }
+}
+```
+
+### **Pagination Format**
+```json
+{
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 150,
+    "total_pages": 8,
+    "has_next": true,
+    "has_prev": false
+  }
+}
+```
+
+## 🎖️ Badge Management Endpoints
+
+### **Get Badge Catalog**
+**Endpoint:** `GET /api/badges/catalog`  
+**Description:** Get all available badges in the system  
+**Authentication:** Required (Bearer token)  
+**Permissions:** Superuser only
+
+#### Request Headers
+```
+Authorization: Bearer <jwt_token>
+X-XSRF-TOKEN: <csrf_token>
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "message": "Badge catalog retrieved",
+  "data": {
+    "badges": [
+      {
+        "id": 1,
+        "key": "welcome",
+        "name": "Welcome Badge",
+        "description": "Awarded for joining the platform",
+        "icon": "🎉",
+        "color": "#1890ff",
+        "level": 1,
+        "created_at": "2025-01-15T10:30:00.000Z",
+        "updated_at": "2025-01-15T10:30:00.000Z"
+      },
+      {
+        "id": 2,
+        "key": "first_loan",
+        "name": "First Loan",
+        "description": "Borrowed your first library item",
+        "icon": "📚",
+        "color": "#52c41a",
+        "level": 1,
+        "created_at": "2025-01-15T10:30:00.000Z",
+        "updated_at": "2025-01-15T10:30:00.000Z"
+      }
+    ]
+  }
+}
+```
+
+#### Notes
+- Returns all badges ordered by level (ascending) then name (ascending)
+- Badge keys are unique identifiers used in assignment/revocation
+- Level indicates badge rarity/importance (1-5, where 5 is highest)
+- Icons are emoji or icon component names
+
+---
+
+### **Assign Badge to User**
+**Endpoint:** `POST /api/badges/assign`  
+**Description:** Manually assign a badge to a user  
+**Authentication:** Required (Bearer token)  
+**Permissions:** Superuser or appropriate level-based permissions
+
+#### Request Headers
+```
+Authorization: Bearer <jwt_token>
+X-XSRF-TOKEN: <csrf_token>
+Content-Type: application/json
+```
+
+#### Request Body
+```json
+{
+  "user_id": 123,
+  "badge_key": "welcome",
+  "reason": "Manual award for outstanding participation",
+  "expires_at": "2026-12-31T23:59:59Z"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `user_id` | number | Yes | ID of the user to receive the badge |
+| `badge_key` | string | Yes | Unique key of the badge to assign |
+| `reason` | string | No | Reason for manual assignment (max 512 chars) |
+| `expires_at` | string (ISO 8601) | No | Expiration date/time (must be future) |
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "message": "Badge assigned successfully",
+  "data": {
+    "user_badge_id": 456,
+    "user_id": 123,
+    "badge_id": 1,
+    "badge_key": "welcome",
+    "awarded_at": "2025-02-07T14:30:00.000Z",
+    "awarded_by": 789,
+    "awarded_reason": "Manual award for outstanding participation",
+    "expires_at": "2026-12-31T23:59:59.000Z",
+    "is_revoked": 0
+  }
+}
+```
+
+#### Security Validations
+- **Self-Assignment Prevention**: Users cannot assign badges to themselves (403)
+- **Role Badge Blocking**: Role badges cannot be manually assigned (403)
+- **Level Restrictions**: Level 5 badges require superuser (403)
+- **Expiration Validation**: `expires_at` must be a future date if provided (400)
+
+#### Response (Error - 403)
+```json
+{
+  "error": "Users cannot assign badges to themselves"
+}
+```
+
+```json
+{
+  "error": "This is a role badge and cannot be manually assigned"
+}
+```
+
+```json
+{
+  "error": "Only superusers can assign level 5 badges"
+}
+```
+
+#### Response (Error - 404)
+```json
+{
+  "error": "Badge not found"
+}
+```
+
+```json
+{
+  "error": "Target user not found"
+}
+```
+
+#### Response (Error - 409)
+```json
+{
+  "error": "User already has this badge (active)"
+}
+```
+
+#### Notes
+- If a user already has a revoked instance of the badge, it will be reactivated
+- All assignments are audit-logged with assigner ID, target user, badge key, and reason
+- Role badges (tied to role_id) are awarded automatically and cannot be manually assigned
+
+---
+
+### **Revoke Badge from User**
+**Endpoint:** `POST /api/badges/revoke`  
+**Description:** Revoke a badge from a user  
+**Authentication:** Required (Bearer token)  
+**Permissions:** Superuser only
+
+#### Request Headers
+```
+Authorization: Bearer <jwt_token>
+X-XSRF-TOKEN: <csrf_token>
+Content-Type: application/json
+```
+
+#### Request Body
+```json
+{
+  "user_id": 123,
+  "badge_key": "welcome",
+  "reason": "Violation of community guidelines"
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `user_id` | number | Yes | ID of the user to revoke badge from |
+| `badge_key` | string | Yes | Unique key of the badge to revoke |
+| `reason` | string | No | Reason for revocation (max 512 chars) |
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "message": "Badge revoked successfully",
+  "data": {
+    "user_badge_id": 456,
+    "revoked": true
+  }
+}
+```
+
+#### Response (Error - 403)
+```json
+{
+  "error": "Role badges cannot be manually revoked"
+}
+```
+
+#### Response (Error - 404)
+```json
+{
+  "error": "Badge assignment not found or already revoked"
+}
+```
+
+#### Notes
+- Revocation sets `is_revoked = 1` and updates `revoked_at`, `revoked_by`, `revoked_reason`
+- Role badges cannot be manually revoked (they are managed automatically)
+- All revocations are audit-logged
+
+---
+
+### **Get Granted Badges (All Users)**
+**Endpoint:** `GET /api/badges/granted`  
+**Description:** Get paginated list of all granted badges across all users  
+**Authentication:** Required (Bearer token)  
+**Permissions:** Superuser only
+
+#### Request Headers
+```
+Authorization: Bearer <jwt_token>
+X-XSRF-TOKEN: <csrf_token>
+```
+
+#### Query Parameters
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `page` | number | 1 | Page number (1-indexed) |
+| `limit` | number | 20 | Items per page (max 100) |
+| `status` | string | all | Filter by status: `active`, `revoked`, or `all` |
+
+#### Request Example
+```
+GET /api/badges/granted?page=1&limit=20&status=active
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "message": "Granted badges retrieved",
+  "data": {
+    "items": [
+      {
+        "user_badge_id": 456,
+        "user_id": 123,
+        "badge_id": 1,
+        "key": "welcome",
+        "name": "Welcome Badge",
+        "description": "Awarded for joining the platform",
+        "icon": "🎉",
+        "color": "#1890ff",
+        "level": 1,
+        "first_name": "John",
+        "last_name": "Doe",
+        "email": "john.doe@example.com",
+        "awarded_at": "2025-02-07T14:30:00.000Z",
+        "awarded_by": 789,
+        "awarded_reason": "Manual award for outstanding participation",
+        "expires_at": "2026-12-31T23:59:59.000Z",
+        "is_revoked": 0,
+        "revoked_at": null,
+        "revoked_by": null,
+        "revoked_reason": null
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 20,
+      "total": 150,
+      "total_pages": 8,
+      "has_next": true,
+      "has_prev": false
+    }
+  }
+}
+```
+
+#### Notes
+- Joins user_badges with badges and users tables
+- Returns comprehensive data for admin dashboard
+- Supports filtering by active/revoked status
+- Ordered by awarded_at DESC (newest first)
+
+---
+
+### **Get User's Badges**
+**Endpoint:** `GET /api/badges/my-badges`  
+**Description:** Get all badges for the current authenticated user  
+**Authentication:** Required (Bearer token)
+
+#### Request Headers
+```
+Authorization: Bearer <jwt_token>
+X-XSRF-TOKEN: <csrf_token>
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "message": "User badges retrieved",
+  "data": {
+    "badges": [
+      {
+        "user_badge_id": 456,
+        "badge_id": 1,
+        "key": "welcome",
+        "name": "Welcome Badge",
+        "description": "Awarded for joining the platform",
+        "icon": "🎉",
+        "color": "#1890ff",
+        "level": 1,
+        "awarded_at": "2025-02-07T14:30:00.000Z",
+        "awarded_reason": "Automatic award on registration",
+        "expires_at": null,
+        "is_revoked": 0
+      }
+    ]
+  }
+}
+```
+
+#### Notes
+- Returns only badges for the authenticated user
+- Automatically filtered to user's ID from JWT
+- Includes both active and revoked badges
+- Ordered by awarded_at DESC
+
+---
+
+### **Get Specific User's Granted Badges**
+**Endpoint:** `GET /api/badges/granted/:userId`  
+**Description:** Get all badges for a specific user  
+**Authentication:** Required (Bearer token)  
+**Permissions:** Superuser or viewing own badges
+
+#### Request Headers
+```
+Authorization: Bearer <jwt_token>
+X-XSRF-TOKEN: <csrf_token>
+```
+
+#### URL Parameters
+| Parameter | Type | Description |
+|-----------|------|-------------|
+| `userId` | number | ID of the user to retrieve badges for |
+
+#### Request Example
+```
+GET /api/badges/granted/123
+```
+
+#### Response (Success - 200)
+```json
+{
+  "success": true,
+  "message": "User badges retrieved",
+  "data": {
+    "user_id": 123,
+    "badges": [
+      {
+        "user_badge_id": 456,
+        "badge_id": 1,
+        "key": "welcome",
+        "name": "Welcome Badge",
+        "description": "Awarded for joining the platform",
+        "icon": "🎉",
+        "color": "#1890ff",
+        "level": 1,
+        "awarded_at": "2025-02-07T14:30:00.000Z",
+        "awarded_reason": "Automatic award on registration",
+        "expires_at": null,
+        "is_revoked": 0
+      }
+    ]
+  }
+}
+```
+
+#### Response (Error - 403)
+```json
+{
+  "error": "Access denied: insufficient permissions"
+}
+```
+
+#### Notes
+- Non-superusers can only view their own badges
+- Superusers can view any user's badges
+- Includes both active and revoked badges
+
+---
+
+### **Badge Evaluators (Automatic Awards)**
+
+The system includes automatic badge evaluators that run on specific triggers:
+
+#### Welcome Badge
+- **Trigger:** User login
+- **Condition:** First successful login
+- **Badge:** `welcome`
+- **File:** `functions/api/badges/evaluators/welcome.ts`
+
+#### Loan Milestone Badges
+- **Trigger:** Loan creation
+- **Conditions:**
+  - `first_loan`: First approved loan
+  - `loan_explorer`: 5+ approved loans
+  - `loan_enthusiast`: 10+ approved loans
+  - `loan_master`: 25+ approved loans
+- **File:** `functions/api/badges/evaluators/loans.ts`
+
+#### Review Contributor Badges
+- **Trigger:** Review submission
+- **Conditions:**
+  - `first_review`: First approved review
+  - `review_contributor`: 5+ approved reviews
+  - `review_expert`: 10+ approved reviews
+- **File:** `functions/api/badges/evaluators/reviews.ts`
+
+#### Visit Milestone Badges
+- **Trigger:** User login
+- **Conditions:**
+  - `regular_visitor`: 5+ visits
+  - `frequent_visitor`: 10+ visits
+  - `dedicated_member`: 25+ visits
+- **File:** `functions/api/badges/evaluators/visits.ts`
+
+#### Approval Badge
+- **Trigger:** User approval (status change to active)
+- **Badge:** `approved`
+- **File:** `functions/api/badges/evaluators/approval.ts`
+
+---
+
+### **Pagination Format**
+```json
+{
+  "pagination": {
+    "page": 1,
+    "limit": 20,
+    "total": 150,
+    "total_pages": 8,
+    "has_next": true,
+    "has_prev": false
+  }
+}
+```
+
+## 🚨 Common HTTP Status Codes
+
+- **200** - Success
+- **201** - Created
+- **400** - Bad Request
+- **401** - Unauthorized
+- **403** - Forbidden
+- **404** - Not Found
+- **405** - Method Not Allowed
+- **422** - Validation Error
+- **429** - Rate Limited
+- **500** - Internal Server Error
+
+## 🔐 Authentication Headers
+
+All authenticated endpoints require these headers:
+```
+Authorization: Bearer <jwt_token>
+X-XSRF-TOKEN: <csrf_token>
+Content-Type: application/json
+```
+
+---
+
+**Last Updated:** November 2025  
+**Version:** 3.41.25

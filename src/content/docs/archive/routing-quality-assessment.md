@@ -1,0 +1,7 @@
+---
+title: "Routing Quality Assessment"
+---
+
+# Route Definitions Quality Assessment Report (Archived)
+
+This document has been archived. For the active routing design, refer to `docs/architecture/routing-system.md`.

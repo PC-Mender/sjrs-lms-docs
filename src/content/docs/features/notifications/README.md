@@ -1,0 +1,112 @@
+---
+title: "Overview"
+---
+
+# Notifications Module
+
+This directory contains a modular, well-structured notification system that properly aligns with the backend API.
+
+## 📚 Comprehensive Documentation
+
+**👉 [Notification Types Guide](./notification-types-guide.md)** - Complete guide covering all three notification types:
+- **Announcements** - Bulk notifications sent to multiple users
+- **System Notifications** - Platform-wide event notifications with lifecycle management
+- **App Notifications** - User-specific in-app notifications
+
+This guide explains the differences, use cases, API endpoints, and when to use each type.
+
+## Structure
+
+```
+notifications/
+├── components/           # Modular React components
+│   ├── NotificationList.tsx      # List view with search and actions
+│   ├── NotificationCreate.tsx    # Create new notifications
+│   ├── NotificationEdit.tsx      # Edit existing notifications
+│   ├── NotificationShow.tsx      # Detailed view of notifications
+│   └── index.ts                  # Component exports
+├── NotificationListPage.tsx      # Page wrapper for list view
+├── NotificationCreatePage.tsx    # Page wrapper for create view
+├── NotificationEditPage.tsx      # Page wrapper for edit view
+├── NotificationShowPage.tsx      # Page wrapper for show view
+└── README.md                     # This documentation
+```
+
+## Components
+
+### NotificationList
+- Displays user's notifications in a table format
+- Includes search functionality
+- Supports marking notifications as read
+- Allows deletion of notifications
+- Navigation to create, edit, and view pages
+
+### NotificationCreate
+- Form for creating new notifications
+- Includes title, message, type, and priority fields
+- Proper validation and error handling
+- Redirects to list view after successful creation
+
+### NotificationEdit
+- Form for editing existing notifications
+- Pre-populates with current notification data
+- Includes all editable fields including read status
+- Proper error handling and validation
+
+### NotificationShow
+- Detailed view of a single notification
+- Displays all notification information
+- Includes action buttons for editing
+- Shows metadata and timestamps
+
+## Backend Alignment
+
+The frontend now properly aligns with the backend API:
+
+1. **User-Specific Data**: Backend only returns notifications for the current authenticated user
+2. **Proper Field Mapping**: Frontend uses the correct field names from the backend schema
+3. **API Endpoints**: Uses the correct API endpoints defined in the backend
+4. **Error Handling**: Consistent error handling across all components
+
+## Hooks
+
+All notification hooks are centralized in `src/hooks/d1/notifications.ts`:
+
+- `useD1NotificationsQuery` - Fetch user's notifications
+- `useD1NotificationQuery` - Fetch single notification
+- `useD1CreateNotification` - Create new notification
+- `useD1UpdateNotification` - Update existing notification
+- `useD1DeleteNotification` - Delete notification
+
+## Benefits of New Structure
+
+1. **Modularity**: Each component has a single responsibility
+2. **Reusability**: Components can be easily reused in other parts of the app
+3. **Maintainability**: Easier to maintain and debug individual components
+4. **Type Safety**: Proper TypeScript interfaces for all data
+5. **Consistency**: Consistent patterns across all notification components
+6. **Performance**: Better code splitting and lazy loading support
+
+## Usage
+
+The components are used through the page wrappers, which are lazy-loaded by the router:
+
+```tsx
+// In route definitions
+const NotificationList = lazy(() => import("../pages/notifications/NotificationListPage"));
+const NotificationCreate = lazy(() => import("../pages/notifications/NotificationCreatePage"));
+const NotificationEdit = lazy(() => import("../pages/notifications/NotificationEditPage"));
+const NotificationShow = lazy(() => import("../pages/notifications/NotificationShowPage"));
+```
+
+## Future Enhancements
+
+1. **Real-time Updates**: WebSocket integration for live notifications
+2. **Bulk Operations**: Support for bulk marking as read/delete
+3. **Notification Preferences**: User preference management
+4. **Email Integration**: Email notification support
+5. **Push Notifications**: Browser push notification support
+
+---
+
+**Source**: Moved from `src/pages/notifications/README.md` during documentation consolidation

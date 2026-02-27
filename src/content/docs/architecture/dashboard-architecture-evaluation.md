@@ -1,0 +1,579 @@
+---
+title: "Dashboard Architecture Evaluation"
+---
+
+# Dashboard Architecture Evaluation & Industry Standards
+
+## Current Architecture Analysis
+
+### What We Have Now
+
+**Pattern**: **Role-Specific Hooks + Role-Specific Endpoints**
+
+```
+Frontend:
+- useAdminDashboard.ts       → /api/dashboard-stats/admin
+- useLibrarianDashboard.ts   → /api/dashboard-stats/librarian
+- useDeanDashboard.ts        → /api/dashboard-stats/dean
+- useSuperuserDashboard.ts   → /api/dashboard-stats/superuser
+
+Backend:
+- functions/api/dashboard-stats/index.ts
+  ├─ /admin      → getAdminStats()
+  ├─ /librarian  → getLibrarianStats()
+  ├─ /dean       → getDeanStats()
+  └─ /superuser  → getSuperuserCoreStats()
+```
+
+### Pros of Current Approach ✅
+1. **Clear Separation**: Each role's logic is isolated and easy to trace
+2. **Type Safety**: Each hook can have role-specific TypeScript types
+3. **Explicit Permissions**: Easy to see which role accesses what data
+4. **Independent Evolution**: Can change one role's dashboard without affecting others
+5. **Performance**: Each endpoint only fetches data needed for that role (no over-fetching)
+
+### Cons of Current Approach ❌
+1. **Code Duplication**: Similar patterns repeated across 4 hooks
+2. **Inconsistent Patterns**: Mixed implementations (useState vs pure React Query)
+3. **Maintenance Burden**: Bug fixes must be applied to multiple hooks
+4. **Scaling Issues**: Adding a new role requires creating new hook + endpoint
+5. **Shared Logic Duplication**: Common transforms/error handling repeated
+6. **Testing Overhead**: Must test similar logic across multiple hooks
+
+---
+
+## Industry Standards for Role-Based Dashboards
+
+### Pattern 1: **Unified Hook with Role Detection** ⭐ Most Common
+
+Used by: Auth0, Stripe Dashboard, GitHub, AWS Console
+
+**Architecture**:
+```typescript
+// Single hook, backend determines data based on authenticated user
+const useDashboard = () => {
+  const { user } = useAuth();  // Get authenticated user with role
+  
+  return useQuery({
+    queryKey: ['dashboard', user.id],  // User-specific cache key
+    queryFn: () => api.get('/api/v1/dashboard'),  // Single endpoint
+    // Backend uses JWT/session to determine user's role and return appropriate data
+  });
+};
+
+// Backend automatically returns role-appropriate data:
+// GET /api/v1/dashboard
+// → If user is admin: returns admin stats
+// → If user is librarian: returns librarian stats
+```
+
+**Pros**:
+- ✅ Single source of truth for dashboard logic
+- ✅ Backend owns authorization logic (secure)
+- ✅ Minimal duplication
+- ✅ Easy to maintain
+- ✅ Scales well (new roles just update backend)
+
+**Cons**:
+- ❌ Less explicit about what each role sees (must read backend code)
+- ❌ Harder to have role-specific TypeScript types (unless using discriminated unions)
+
+---
+
+### Pattern 2: **Unified Hook with Role Parameter** (Explicit)
+
+Used by: Linear, Monday.com, Notion
+
+**Architecture**:
+```typescript
+// Hook accepts role parameter
+const useDashboard = (role: UserRole) => {
+  return useQuery({
+    queryKey: ['dashboard', role],
+    queryFn: () => api.get(`/api/v1/dashboard?role=${role}`),
+    // OR: queryFn: () => api.get(`/api/v1/dashboard/${role}`),
+  });
+};
+
+// Usage in component:
+const { user } = useAuth();
+const dashboard = useDashboard(user.role);
+```
+
+**Pros**:
+- ✅ Single hook to maintain
+- ✅ Explicit about role-based fetching
+- ✅ Can still have role-specific types with generics
+- ✅ Backend validates user has permission for requested role
+
+**Cons**:
+- ❌ Must always pass role parameter
+- ❌ Potential security risk if client can request any role's data (must validate server-side)
+
+---
+
+### Pattern 3: **Shared Base Hook + Role-Specific Wrappers** (Hybrid)
+
+Used by: Atlassian (Jira/Confluence), GitLab
+
+**Architecture**:
+```typescript
+// Base hook with reusable logic
+const useBaseDashboard = <TData>(config: DashboardConfig<TData>) => {
+  return useQuery({
+    queryKey: [config.queryKey],
+    queryFn: async () => {
+      const response = await api.get(config.endpoint);
+      return config.transformResponse(response.data);
+    },
+    staleTime: 0,
+    refetchOnWindowFocus: true,
+  });
+};
+
+// Role-specific wrappers (thin)
+export const useAdminDashboard = () => {
+  return useBaseDashboard({
+    queryKey: 'admin-dashboard',
+    endpoint: '/api/v1/dashboard/admin',
+    transformResponse: (data) => ({
+      stats: data.stats as AdminStats,
+      activities: data.activities as AdminActivity[],
+    }),
+  });
+};
+
+export const useLibrarianDashboard = () => {
+  return useBaseDashboard({
+    queryKey: 'librarian-dashboard',
+    endpoint: '/api/v1/dashboard/librarian',
+    transformResponse: (data) => ({
+      stats: data.stats as LibrarianStats,
+      overdueItems: data.overdueItems as OverdueItem[],
+    }),
+  });
+};
+```
+
+**Pros**:
+- ✅ Eliminates duplication (shared base hook)
+- ✅ Type-safe role-specific wrappers
+- ✅ Explicit about each role's endpoint
+- ✅ Consistent behavior across roles
+- ✅ Easy to add role-specific customizations
+
+**Cons**:
+- ❌ Still have multiple wrapper hooks (but very thin)
+- ❌ Multiple endpoints to maintain
+
+**Note**: **This is closest to your current `useBaseDashboard` pattern!** You're already using this for `useDeanDashboard`.
+
+---
+
+### Pattern 4: **Permission-Based Component Composition** (Granular)
+
+Used by: Salesforce, ServiceNow, enterprise SaaS
+
+**Architecture**:
+```typescript
+// Single dashboard component with permission checks
+const Dashboard = () => {
+  const { hasPermission } = usePermissions();
+  const { data } = useDashboard();  // Fetch all available data
+  
+  return (
+    <DashboardLayout>
+      {hasPermission('users', 'read') && <UserStatsWidget data={data.userStats} />}
+      {hasPermission('books', 'read') && <BookStatsWidget data={data.bookStats} />}
+      {hasPermission('loans', 'read') && <LoanStatsWidget data={data.loanStats} />}
+      {hasPermission('system', 'read') && <SystemHealthWidget data={data.systemHealth} />}
+    </DashboardLayout>
+  );
+};
+
+// Backend returns union of all data user has permission to see
+// GET /api/v1/dashboard
+// → Returns only stats for resources user has read permission for
+```
+
+**Pros**:
+- ✅ Maximum flexibility (permissions can change dynamically)
+- ✅ Composable widgets
+- ✅ Single endpoint
+- ✅ Easy A/B testing of widgets
+
+**Cons**:
+- ❌ May over-fetch data
+- ❌ Permissions checked in multiple places
+- ❌ Harder to optimize backend queries
+
+---
+
+## Recommendation for Your Application
+
+### 🎯 **Recommended Pattern: Hybrid (Pattern 3) with Standardization**
+
+**Why?**
+1. You **already have** `useBaseDashboard` implemented
+2. You have distinct data models per role (AdminStats, LibrarianStats, etc.)
+3. You want type safety and explicit contracts
+4. Backend queries are significantly different per role (no over-fetching)
+
+**What to Fix**:
+1. ✅ **Migrate all hooks to use `useBaseDashboard`**
+   - `useAdminDashboard` ← convert to useBaseDashboard
+   - `useLibrarianDashboard` ← convert to useBaseDashboard (remove useState duplication)
+   - `useSuperuserDashboard` ← convert to useBaseDashboard
+   - `useDeanDashboard` ← already uses it ✅
+
+2. ✅ **Standardize `useBaseDashboard`**
+   - Remove `any` types
+   - Use proper generic constraints
+   - Export reusable types
+
+3. ✅ **Version all endpoints**
+   - `/api/dashboard-stats/*` → `/api/v1/dashboard-stats/*`
+
+4. ✅ **Backend: Single handler with role-based routing**
+   - Keep single `dashboard-stats/index.ts` handler
+   - Use role from authenticated user (not URL) for authorization
+   - URL path just determines which stats function to call
+
+---
+
+## Improved Architecture Proposal
+
+### Frontend: Standardized Hook Pattern
+
+```typescript
+// src/hooks/dashboard/base/useBaseDashboard.ts (Improved)
+import { useQuery, UseQueryOptions } from '@tanstack/react-query';
+import { unifiedAPIClient } from '../../../utilities/api/unified-api-client';
+import type { DashboardAPIResponse } from '../../../types/dashboard-api-responses';
+
+export interface BaseDashboardConfig<TStats, TData> {
+  queryKey: string;
+  endpoint: string;
+  defaultStats: TStats;
+  transformResponse: (response: DashboardAPIResponse<TData>) => {
+    stats: TStats;
+    [key: string]: unknown;
+  };
+  queryOptions?: Partial<UseQueryOptions>;
+}
+
+export const useBaseDashboard = <TStats, TData>(
+  config: BaseDashboardConfig<TStats, TData>
+) => {
+  const query = useQuery({
+    queryKey: [config.queryKey],
+    queryFn: async () => {
+      const response = await unifiedAPIClient.get<DashboardAPIResponse<TData>>(
+        config.endpoint
+      );
+      return config.transformResponse(response.data);
+    },
+    staleTime: 0,  // Project default
+    refetchOnWindowFocus: true,  // Project default
+    ...config.queryOptions,  // Allow overrides if documented
+  });
+
+  return {
+    stats: query.data?.stats ?? config.defaultStats,
+    data: query.data ?? { stats: config.defaultStats },
+    loading: query.isLoading,
+    error: query.error,
+    refetch: query.refetch,
+    dataUpdatedAt: query.dataUpdatedAt,
+    isRefetching: query.isRefetching,
+  };
+};
+```
+
+### Frontend: Thin Role-Specific Wrappers
+
+```typescript
+// src/hooks/dashboard/useAdminDashboard.ts (Refactored)
+import { useBaseDashboard } from './base/useBaseDashboard';
+import type { AdminStats, AdminActivity } from '../../types/dashboard';
+
+interface AdminDashboardData {
+  stats: AdminStats;
+  recentActivities: AdminActivity[];
+}
+
+const DEFAULT_ADMIN_STATS: AdminStats = {
+  totalUsers: 0,
+  activeUsers: 0,
+  newRegistrations: 0,
+  pendingUsers: 0,
+  suspendedUsers: 0,
+  roleDistribution: {},
+};
+
+export const useAdminDashboard = () => {
+  const { stats, data, ...rest } = useBaseDashboard<AdminStats, AdminDashboardData>({
+    queryKey: 'admin-dashboard-stats',
+    endpoint: '/api/v1/dashboard-stats/admin',
+    defaultStats: DEFAULT_ADMIN_STATS,
+    transformResponse: (response) => ({
+      stats: response.data.stats,
+      recentActivities: response.data.recentActivities ?? [],
+    }),
+  });
+
+  return {
+    stats,
+    recentActivities: (data as AdminDashboardData).recentActivities ?? [],
+    ...rest,
+  };
+};
+```
+
+### Backend: Role-Based Authorization
+
+```typescript
+// functions/api/dashboard-stats/index.ts (Improved)
+export async function dashboardStats(request: Request, env: Environment): Promise<Response> {
+  const url = new URL(request.url);
+  const path = url.pathname.replace('/api/v1/dashboard-stats', '');  // ✅ Versioned
+  const origin = request.headers.get('Origin');
+
+  try {
+    // ✅ Authenticate user
+    const securityResult = await securityMiddleware(request, env, requireAuthenticationOnly());
+    if (!securityResult.allowed) return securityResult.response as Response;
+
+    const user = securityResult.user as any;
+    const userRole = normalizeRoleName(user);  // Get authenticated user's role
+
+    // ✅ Method validation with correct status code
+    if (request.method !== 'GET') {
+      return new Response(
+        JSON.stringify({ success: false, message: 'Method not allowed' }),
+        { status: 405, headers: { 'Content-Type': 'application/json', 'Allow': 'GET' } }
+      );
+    }
+
+    // ✅ Determine which stats to return based on path
+    if (path === '/admin' || path === '/admin/') {
+      // ✅ Verify user has permission for this dashboard
+      if (!['admin', 'superuser'].includes(userRole)) {
+        return createForbiddenResponse('Access denied.', origin || null);
+      }
+      
+      const stats = await getAdminStats(env);
+      const recentActivities = await getRecentActivities(env, 10);
+      
+      return createSuccessResponse(
+        { stats, recentActivities }, 
+        'Dashboard stats retrieved', 
+        200, 
+        undefined, 
+        origin, 
+        { endpoint: '/api/v1/dashboard-stats/admin', isUserSpecific: true, env, startTime: Date.now() }
+      );
+    }
+
+    // ... similar for /librarian, /dean, /superuser
+
+    // ✅ 404 for unknown paths (not internal error)
+    return new Response(
+      JSON.stringify({ success: false, message: 'Not found' }),
+      { status: 404, headers: { 'Content-Type': 'application/json' } }
+    );
+
+  } catch (error) {
+    // ✅ Log error server-side, don't expose details to client
+    await handleError(error, { operation: 'dashboard_stats', endpoint: path, env });
+    return createInternalErrorResponse(
+      'Internal server error',  // Generic message
+      undefined,  // Don't pass error to client
+      origin
+    );
+  }
+}
+```
+
+---
+
+## Alternative: Full Refactor to Pattern 1 (Unified)
+
+If you want to **eliminate role-specific endpoints entirely**, here's the approach:
+
+### Single Unified Endpoint
+
+```typescript
+// Backend: GET /api/v1/dashboard
+export async function dashboardUnified(request: Request, env: Environment): Promise<Response> {
+  const user = await authenticateRequest(request, env);
+  const userRole = normalizeRoleName(user);
+  
+  // Route to appropriate stats function based on authenticated user's role
+  let dashboardData;
+  
+  switch (userRole) {
+    case 'admin':
+      dashboardData = {
+        stats: await getAdminStats(env),
+        recentActivities: await getRecentActivities(env, 10),
+      };
+      break;
+    case 'librarian':
+      dashboardData = {
+        stats: await getLibrarianStats(env),
+        overdueItems: await getLibrarianOverdueItems(env),
+        popularBooks: await getLibrarianPopularBooks(env),
+        recentActivities: await getRecentActivities(env, 10),
+      };
+      break;
+    case 'dean':
+      dashboardData = {
+        stats: await getDeanStats(env),
+        recentActivities: await getRecentActivities(env, 5),
+      };
+      break;
+    case 'superuser':
+      dashboardData = {
+        stats: await getSuperuserCoreStats(env),
+        auditLog: await getSuperuserAuditLog(env),
+      };
+      break;
+    default:
+      return createForbiddenResponse('Access denied', null);
+  }
+  
+  return createSuccessResponse(
+    { ...dashboardData, role: userRole },  // Include role for frontend discrimination
+    'Dashboard data retrieved',
+    200,
+    undefined,
+    request.headers.get('Origin'),
+    { endpoint: '/api/v1/dashboard', isUserSpecific: true, env, startTime: Date.now() }
+  );
+}
+```
+
+### Unified Frontend Hook with Discriminated Union
+
+```typescript
+// Discriminated union type for all dashboard data
+type DashboardData =
+  | { role: 'admin'; stats: AdminStats; recentActivities: AdminActivity[] }
+  | { role: 'librarian'; stats: LibrarianStats; overdueItems: OverdueItem[]; popularBooks: Book[]; recentActivities: ActivityItem[] }
+  | { role: 'dean'; stats: DeanStats; recentActivities: DeanActivity[] }
+  | { role: 'superuser'; stats: SuperuserStats; auditLog: AuditLogEntry[] };
+
+export const useDashboard = () => {
+  return useQuery({
+    queryKey: ['dashboard'],
+    queryFn: async () => {
+      const response = await api.get<DashboardAPIResponse<DashboardData>>('/api/v1/dashboard');
+      return response.data.data;
+    },
+  });
+};
+
+// Usage with type narrowing:
+const Dashboard = () => {
+  const { data } = useDashboard();
+  
+  if (!data) return <Loader />;
+  
+  switch (data.role) {
+    case 'admin':
+      return <AdminDashboard stats={data.stats} activities={data.recentActivities} />;
+    case 'librarian':
+      return <LibrarianDashboard stats={data.stats} overdue={data.overdueItems} />;
+    // ... etc
+  }
+};
+```
+
+**Pros of Full Refactor**:
+- ✅ Single endpoint to maintain
+- ✅ Single hook to maintain
+- ✅ Backend owns all role logic
+
+**Cons of Full Refactor**:
+- ❌ More complex types (discriminated unions)
+- ❌ All role changes require backend + frontend updates together
+- ❌ Less explicit separation of concerns
+- ❌ Significant refactoring effort
+
+---
+
+## Final Recommendation: **Incremental Improvement**
+
+### ✅ **Keep role-specific endpoints + hooks, but standardize them**
+
+**Reasoning**:
+1. Your current pattern has valid architectural benefits (separation, type safety, performance)
+2. The issues are **implementation bugs**, not fundamental architectural flaws
+3. Fixing issues 1-10 brings you to industry-standard quality **without** re-architecture
+4. `useBaseDashboard` already provides the abstraction you need
+
+### Implementation Plan:
+
+#### Phase 1: Fix Critical Issues (Low Risk)
+- ✅ Version all endpoints (`/api/v1/...`)
+- ✅ Fix backend status codes (405, 404)
+- ✅ Remove `window.location.reload()`
+
+#### Phase 2: Standardize Hooks (Medium Effort)
+- ✅ Migrate `useAdminDashboard` to use `useBaseDashboard`
+- ✅ Migrate `useLibrarianDashboard` to use `useBaseDashboard` (eliminate useState duplication)
+- ✅ Migrate `useSuperuserDashboard` to use `useBaseDashboard`
+- ✅ Improve `useBaseDashboard` type safety
+
+#### Phase 3: Quality Improvements
+- ✅ Add proper cache-sync patterns
+- ✅ Progressive type safety (eliminate `any`)
+- ✅ Standardize error handling
+
+#### Phase 4: Future Consideration
+- 🤔 **If** you add 3+ more roles, **then** consider consolidating to unified endpoint
+- 🤔 **If** roles start sharing 70%+ of their logic, **then** refactor to Pattern 1
+- 🤔 For now, role-specific endpoints are **justified and maintainable**
+
+---
+
+## Comparison with Other Applications
+
+| Application | Pattern | Notes |
+|-------------|---------|-------|
+| **GitHub** | Unified endpoint + role detection | `/api/dashboard` returns role-specific data |
+| **GitLab** | Role-specific endpoints | Similar to yours; `/api/v4/admin/dashboard`, `/api/v4/users/dashboard` |
+| **Stripe** | Permission-based widgets | Single endpoint, permission checks in UI |
+| **AWS Console** | Service-specific + IAM checks | Hybrid: service endpoints + fine-grained permissions |
+| **Jira/Confluence** | Unified with plugins | Single endpoint, role determines widget availability |
+| **Your App** | Role-specific endpoints | ✅ **Valid pattern**, just needs standardization |
+
+**Verdict**: Your architecture is **common and acceptable** for applications with:
+- 3-5 distinct user roles
+- Significantly different data needs per role
+- Performance-sensitive dashboards (avoid over-fetching)
+
+---
+
+## Summary
+
+### ✅ Your Current Architecture is **Acceptable**
+- Role-specific hooks + endpoints are used by GitLab, Salesforce, and others
+- The issues you have are **bugs/inconsistencies**, not architectural flaws
+- Fixing issues 1-10 brings you to production-quality standards
+
+### 🎯 Recommended Actions:
+1. **Fix issues 1-10** per the proposal document
+2. **Standardize all hooks** to use `useBaseDashboard`
+3. **Document the pattern** in project-rules.md as the approved approach
+4. **Monitor code duplication** — if shared logic grows, extract to utilities
+5. **Re-evaluate** if you add 5+ more roles or see 70%+ logic overlap
+
+### 🚫 DON'T Refactor to Unified Pattern Unless:
+- You have 5+ roles and growing
+- Roles share 70%+ of dashboard logic
+- You need dynamic role permissions (roles change without deploy)
+- You're building a multi-tenant SaaS with custom roles
+
+Your current pattern **works** — it just needs **standardization and bug fixes**.

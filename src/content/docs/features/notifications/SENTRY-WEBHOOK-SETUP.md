@@ -1,0 +1,237 @@
+---
+title: "SENTRY WEBHOOK SETUP"
+---
+
+# Sentry Webhook Configuration Guide
+
+## Quick Setup
+
+### Step 1: Access Sentry Dashboard
+
+1. Go to https://sentry.io
+2. Log in to your account
+3. Select your **SJRS LMS** project
+
+### Step 2: Navigate to Webhooks
+
+**Option A: Via Settings**
+1. Go to **Settings** (gear icon in left sidebar)
+2. Click **Integrations**
+3. Find **Webhooks** section
+4. Click **Add Webhook** or **Create Webhook**
+
+**Option B: Via Alerts**
+1. Go to **Alerts** → **Rules**
+2. Click **Create Alert Rule**
+3. Add action: **Send a notification via webhook**
+
+### Step 3: Configure Webhook
+
+**Webhook URL:**
+```
+https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest
+```
+
+**Authentication Header:**
+- **Header Name**: `x-notification-ingest-token`
+- **Header Value**: `eca83a2bd34858142bac0a17fce8378b63bf8973d68be6077e1a4d274070b6fc`
+
+**Note**: If Sentry doesn't support custom headers directly, you may need to:
+- Use Sentry's webhook secret feature (if available)
+- Or configure via Alert Rules instead
+
+### Step 4: Select Events
+
+Choose which events should trigger notifications:
+
+- ✅ **Issue Created** - When a new error is detected
+- ✅ **Issue Resolved** - When an issue is marked as resolved  
+- ✅ **Issue Updated** - When an issue is updated
+- ✅ **Event Created** - For critical errors (optional)
+
+### Step 5: Test Webhook
+
+1. **Trigger a test error** in your application:
+   ```javascript
+   // Add this temporarily to test
+   throw new Error('Test Sentry webhook notification');
+   ```
+
+2. **Check Sentry**:
+   - Error should appear in Sentry dashboard
+   - Check webhook delivery logs
+
+3. **Check System Notifications**:
+   - Go to `/dashboard-superuser/system-notifications`
+   - Should see notification with:
+     - Source: `monitoring:sentry`
+     - Category: `incident`
+     - Severity: Based on error level
+
+---
+
+## Alternative: Alert Rules (If Webhooks Not Available)
+
+If Sentry doesn't have direct webhook support, use Alert Rules:
+
+1. **Go to Alerts** → **Rules** → **Create Alert Rule**
+
+2. **Set Conditions**:
+   - Example: "Issue frequency is greater than 10 in 1 hour"
+   - Or: "An issue is created"
+
+3. **Add Action**:
+   - Action Type: **Send a notification via webhook**
+   - Webhook URL: `https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
+   - Custom Headers:
+     - `x-notification-ingest-token: eca83a2bd34858142bac0a17fce8378b63bf8973d68be6077e1a4d274070b6fc`
+
+4. **Save Rule**
+
+---
+
+## Webhook Payload Format
+
+Sentry will send events in their format. The ingest handler automatically converts:
+
+**Sentry Level → Notification Severity:**
+- `fatal` → `critical`
+- `error` → `critical`
+- `warning` → `warning`
+- `info` → `notice`
+- `log` → `info`
+- `debug` → `info`
+
+**Example Sentry Payload:**
+```json
+{
+  "source": "monitoring:sentry",
+  "sentry": {
+    "id": "event-id-123",
+    "project": "your-sentry-project",
+    "url": "https://sentry.io/organizations/.../issues/123/",
+    "event": {
+      "title": "TypeError: Cannot read property 'x' of undefined",
+      "level": "error",
+      "message": "Detailed error message",
+      "environment": "production",
+      "culprit": "app.js:123:45"
+    }
+  }
+}
+```
+
+---
+
+## Verification
+
+### Check Webhook Delivery
+
+1. **In Sentry Dashboard**:
+   - Go to webhook settings
+   - Check delivery logs
+   - Look for successful deliveries (200 status)
+
+2. **In System Notifications**:
+   - Go to `/dashboard-superuser/system-notifications`
+   - Filter by source: `monitoring:sentry`
+   - Should see Sentry notifications
+
+### Manual Test
+
+Test the webhook manually using curl:
+
+```bash
+curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+  -H "Content-Type: application/json" \
+  -H "x-notification-ingest-token: eca83a2bd34858142bac0a17fce8378b63bf8973d68be6077e1a4d274070b6fc" \
+  -d '{
+    "source": "monitoring:sentry",
+    "title": "Test Sentry Alert",
+    "message": "Testing Sentry webhook integration",
+    "category": "incident",
+    "severity": "warning",
+    "sentry": {
+      "id": "test-event-id",
+      "project": "your-sentry-project",
+      "url": "https://sentry.io/test",
+      "event": {
+        "title": "Test Error",
+        "level": "error",
+        "message": "Test error message",
+        "environment": "production"
+      }
+    }
+  }'
+```
+
+**Expected Response:**
+```json
+{
+  "success": true,
+  "message": "Notification event ingested",
+  "data": {
+    "event": {
+      "id": 123,
+      "title": "Test Sentry Alert",
+      "source": "monitoring:sentry",
+      ...
+    }
+  }
+}
+```
+
+---
+
+## Troubleshooting
+
+### Webhook Not Receiving Events
+
+1. **Check Sentry Webhook Settings**:
+   - Verify URL is correct
+   - Verify header is set correctly
+   - Check webhook is enabled
+
+2. **Check Sentry Delivery Logs**:
+   - Look for failed deliveries
+   - Check error messages
+   - Verify authentication
+
+3. **Check Ingest Endpoint**:
+   - Test manually with curl (see above)
+   - Check endpoint logs
+   - Verify token is correct
+
+### Notifications Not Appearing
+
+1. **Check Token**:
+   - Verify `NOTIFICATION_INGEST_TOKEN_SENTRY` is set in Cloudflare Workers
+   - Token should match header value
+
+2. **Check Permissions**:
+   - Verify you have `notification_events:read` permission
+   - Check `/dashboard-superuser/system-notifications` is accessible
+
+3. **Check Source Filtering**:
+   - Notifications are filtered by permission
+   - Make sure you have access to view system notifications
+
+---
+
+## Next Steps
+
+After configuring Sentry webhook:
+
+1. ✅ Test with a real error
+2. ✅ Verify notification appears in System Notifications
+3. ✅ Configure alert rules for different severity levels
+4. ✅ Set up notifications for specific error types
+
+---
+
+## Related Documentation
+
+- [Configuration Status](./CONFIGURATION-STATUS.md)
+- [Full Configuration Guide](./CONFIGURATION-GUIDE.md)
+- [External Sources Configuration](./EXTERNAL-SOURCES-CONFIGURATION.md)
+

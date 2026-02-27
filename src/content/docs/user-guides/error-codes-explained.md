@@ -1,0 +1,176 @@
+---
+title: "Error Codes Explained"
+---
+
+# Error Codes Explained (End-User Guide)
+
+Last updated: February 2026  
+Audience: End users, librarians, and support staff
+
+This guide explains what each error means in plain language, why it appears, and what to do next.
+
+## How to use this page
+
+When you see an error:
+1. Find the **Error Code** shown in the app.
+2. Read the **What this means** and **Why this happened** columns.
+3. Follow **What you can do now**.
+4. If the issue continues, contact support and include the **Error Number**.
+
+## Quick support checklist
+
+Before contacting support, try these first:
+- Refresh the page and retry once.
+- Sign out and sign in again.
+- Check your internet connection.
+- If uploading files, confirm file type and size.
+- If rate-limited, wait until the retry period has passed.
+
+## Error reference
+
+### Core request errors
+
+| Error Number | Error Code | What this means | Why this happened | What you can do now |
+|---|---|---|---|---|
+| 1000 | VALIDATION_ERROR | Some input values are invalid or missing. | Required fields were empty or formatted incorrectly. | Check highlighted fields and submit again. |
+| 1001 | NOT_FOUND | The item or page you requested does not exist. | The resource was deleted, moved, or the link is outdated. | Return to the previous page and search again. |
+| 1002 | UNAUTHORIZED | You must sign in to continue. | Your session is missing or invalid. | Sign in and retry the action. |
+| 1003 | FORBIDDEN | You are signed in but do not have access. | Your role or permissions do not allow this action. | Contact an admin if you need access. |
+| 1004 | CONFLICT | The action conflicts with current data. | The same record already exists or state changed. | Refresh data and retry with updated values. |
+| 1005 | INTERNAL_ERROR | Something went wrong on the server. | Unexpected server-side failure. | Try again shortly; contact support if repeated. |
+| 1006 | RATE_LIMITED | Too many requests were sent in a short time. | Protection limits were triggered. | Wait and try again later. |
+| 1007 | BAD_REQUEST | The request format is invalid. | Missing/invalid request structure or parameters. | Retry from the proper form/page flow. |
+| 1008 | DATABASE_ERROR | A temporary data storage issue occurred. | Database operation failed unexpectedly. | Retry in a moment; contact support if persistent. |
+| 1009 | EXTERNAL_SERVICE_ERROR | A connected external service failed. | Third-party dependency was unavailable or failed. | Retry later; no user action usually needed. |
+
+### Authentication and authorization
+
+| Error Number | Error Code | What this means | Why this happened | What you can do now |
+|---|---|---|---|---|
+| 2000 | AUTH_INVALID_CREDENTIALS | Your login details are incorrect. | Wrong email or password was entered. | Re-enter credentials or reset password. |
+| 2001 | AUTH_ACCOUNT_LOCKED | Your account is temporarily or administratively locked. | Too many failed attempts or admin lock. | Contact administrator/support. |
+| 2002 | AUTH_SESSION_EXPIRED | Your login session has timed out. | Inactivity timeout or session invalidation. | Sign in again. |
+| 2003 | AUTH_EMAIL_NOT_VERIFIED | Your email is not verified yet. | Email confirmation step not completed. | Verify email and then sign in. |
+| 2004 | AUTH_TOO_MANY_ATTEMPTS | Too many sign-in attempts were made. | Brute-force protection triggered. | Wait before trying again. |
+| 2005 | AUTH_FORCE_LOGOUT | You were signed out for security reasons. | Security policy detected risk/session conflict. | Sign in again; change password if suspicious. |
+| 2006 | AUTH_MFA_REQUIRED | Multi-factor code is required to continue. | MFA is enabled and second step is missing. | Enter your authenticator/OTP code. |
+| 2007 | AUTH_MFA_SETUP_REQUIRED | MFA setup must be completed first. | Policy requires MFA enrollment before access. | Complete MFA setup in account settings. |
+| 2100 | AUTHZ_PERMISSION_DENIED | You do not have permission for this action. | Permission check failed. | Request access from an administrator. |
+| 2101 | AUTHZ_INSUFFICIENT_PRIVILEGES | Your role level is not high enough. | Action requires elevated privileges. | Ask admin to perform action or upgrade role. |
+| 2102 | AUTHZ_ROLE_REQUIRED | A specific role is required. | Current role is not allowed for this feature. | Switch account/role or contact admin. |
+
+### Validation errors
+
+| Error Number | Error Code | What this means | Why this happened | What you can do now |
+|---|---|---|---|---|
+| 3000 | VALIDATION_REQUIRED_FIELD | A required field is missing. | Empty field submitted. | Fill all required fields and retry. |
+| 3001 | VALIDATION_INVALID_FORMAT | Input format is not accepted. | Value does not match expected pattern. | Correct the field format and submit again. |
+| 3002 | VALIDATION_INVALID_EMAIL | Email format is invalid. | Typo or incomplete email address. | Enter a valid email (example: name@example.com). |
+| 3003 | VALIDATION_INVALID_PASSWORD | Password does not meet rules. | Password length/complexity requirement failed. | Update password to meet stated requirements. |
+| 3004 | VALIDATION_INVALID_PHONE | Phone number is invalid. | Unsupported or malformed phone value. | Use a valid phone format for your region. |
+| 3005 | VALIDATION_INVALID_URL | URL is invalid. | Missing protocol or malformed link. | Enter a full valid URL (example: https://...). |
+| 3006 | VALIDATION_INVALID_FILE_TYPE | File type is not allowed. | Uploaded extension/MIME type not accepted. | Upload one of the allowed file types only. |
+| 3007 | VALIDATION_INVALID_FILE_SIZE | File is too large. | Upload exceeds configured size limit. | Compress or choose a smaller file. |
+| 3008 | VALIDATION_DUPLICATE_ENTRY | That value already exists. | Duplicate value in a unique field. | Use a different value. |
+| 3010 | VALIDATION_INVALID_STREAM | Stream/department value is invalid. | Value not in accepted list. | Choose a valid stream from provided options. |
+| 3011 | VALIDATION_NAME_TOO_SHORT | Name is too short. | Name does not meet minimum length. | Enter a longer valid name. |
+| 3012 | VALIDATION_NAME_INVALID | Name contains unsupported characters. | Invalid symbols or formatting used. | Use letters/spaces and allowed punctuation only. |
+
+### Database and record errors
+
+| Error Number | Error Code | What this means | Why this happened | What you can do now |
+|---|---|---|---|---|
+| 4000 | DATABASE_CONNECTION_ERROR | The system cannot reach the database right now. | Temporary connectivity/service issue. | Wait and retry; contact support if it continues. |
+| 4001 | DATABASE_QUERY_ERROR | A data query failed unexpectedly. | Request could not be processed correctly server-side. | Retry once; report if repeatable. |
+| 4002 | DATABASE_CONSTRAINT_VIOLATION | Data rule was violated. | Save/update breaks required data constraints. | Correct related fields and retry. |
+| 4003 | DATABASE_RECORD_NOT_FOUND | Requested record does not exist. | Record may have been removed or ID is invalid. | Refresh list and open the record again. |
+| 4004 | DATABASE_DUPLICATE_KEY | A unique key already exists. | Duplicate value for a unique database field. | Change unique field value and retry. |
+
+### Library business and order workflow
+
+| Error Number | Error Code | What this means | Why this happened | What you can do now |
+|---|---|---|---|---|
+| 5000 | BUSINESS_BOOK_NOT_AVAILABLE | This book cannot be borrowed now. | Book is unavailable based on lending rules/state. | Try another copy/book or retry later. |
+| 5001 | BUSINESS_BORROW_LIMIT_REACHED | Borrowing limit is reached. | You already have maximum active borrowings. | Return items or wait until eligible. |
+| 5002 | BUSINESS_OVERDUE_BOOKS | You have overdue books. | Overdue policy blocks new borrowing actions. | Return overdue items first. |
+| 5003 | BUSINESS_MAX_RENEWALS_REACHED | Renewal limit has been reached. | Item already renewed maximum times. | Return item and create a new borrow request if allowed. |
+| 5004 | BUSINESS_CANNOT_RENEW_OVERDUE | Overdue items cannot be renewed. | Renewal blocked by overdue status. | Return the overdue item and check fines/policies. |
+| 5005 | BUSINESS_ORDER_ALREADY_PROCESSED | This order is already finalized. | Duplicate processing attempt on same order. | Refresh order status; no further action needed. |
+| 5006 | ORDER_ALREADY_COMPLETED | Order was already completed earlier. | Completion attempted again. | Refresh and review completed order details. |
+| 5007 | ORDER_ALREADY_REJECTED | Order has already been rejected. | Rejection action repeated or stale page data. | Refresh and create a new request if eligible. |
+| 5008 | ORDER_CANCELLED | Order was cancelled. | Cancellation already performed or order closed. | Create a new order if needed. |
+| 5009 | INVALID_ORDER_TYPE | This operation does not support that order type. | Mismatched workflow/action type. | Retry from the correct order action. |
+| 5010 | INVALID_USER_ID | Order references an invalid user record. | User association is missing/corrupted. | Contact support/admin for data correction. |
+| 5011 | INVALID_BOOK_ID | Order references an invalid book record. | Book association is missing/corrupted. | Contact support/admin for data correction. |
+| 5012 | USER_NOT_FOUND | The linked user cannot be found. | User record removed or inaccessible. | Contact support/admin. |
+| 5013 | USER_INACTIVE | Your account is inactive. | Account deactivated or requires reverification. | Reverify/reactivate account or contact admin. |
+| 5014 | BOOK_NOT_FOUND | The linked book cannot be found. | Book record removed or invalid reference. | Search again or contact librarian. |
+| 5015 | BOOK_UNAVAILABLE | Book is currently unavailable. | Copies are not available for lending now. | Join waitlist/request later if available. |
+| 5016 | NO_COPIES_AVAILABLE | No lendable copies exist currently. | All copies are in use. | Retry later or choose another title. |
+| 5017 | ALL_COPIES_UNAVAILABLE | All copies are unavailable long-term. | Copies may be lost/damaged/retired. | Ask librarian for alternatives. |
+| 5018 | NO_AVAILABLE_COPIES | No copies can be allocated now. | Allocation check found zero free copies. | Retry later. |
+| 5019 | BORROW_LIMIT_EXCEEDED | Borrow request exceeds your limit. | Active borrowing count is over allowed policy. | Return items, then retry. |
+| 5020 | DUPLICATE_PENDING_ORDER | A pending request already exists for this book. | Duplicate order submission. | Wait for current request decision. |
+| 5021 | RECENTLY_REJECTED_COOLDOWN | You must wait before requesting this item again. | Cooldown period after recent rejection is active. | Retry after cooldown expires. |
+
+### API request routing
+
+| Error Number | Error Code | What this means | Why this happened | What you can do now |
+|---|---|---|---|---|
+| 6000 | API_INVALID_REQUEST | API request is malformed. | Invalid body, parameters, or headers. | Retry using the correct app flow. |
+| 6001 | API_RESOURCE_NOT_FOUND | API endpoint/resource does not exist. | Wrong URL/path or removed endpoint. | Refresh app; if persistent, contact support. |
+| 6002 | API_METHOD_NOT_ALLOWED | HTTP method is not supported here. | Action used wrong request method. | Retry action from the correct UI action button. |
+| 6003 | API_CONFLICT | API operation conflicts with current state. | Duplicate or state conflict detected. | Refresh data and retry. |
+
+### File upload errors
+
+| Error Number | Error Code | What this means | Why this happened | What you can do now |
+|---|---|---|---|---|
+| 7000 | FILE_UPLOAD_FAILED | Upload did not complete. | Network interruption or server-side failure. | Retry upload with stable connection. |
+| 7001 | FILE_INVALID_FILE | Selected file is not valid. | Corrupted or unsupported file format. | Choose a supported, valid file. |
+| 7002 | FILE_FILE_TOO_LARGE | File exceeds size limit. | File is larger than configured maximum. | Compress or upload a smaller file. |
+| 7003 | FILE_UPLOAD_TIMEOUT | Upload took too long and timed out. | Slow network or large file upload duration exceeded. | Retry on stronger connection or smaller file. |
+
+### Email delivery errors
+
+| Error Number | Error Code | What this means | Why this happened | What you can do now |
+|---|---|---|---|---|
+| 8000 | EMAIL_SEND_FAILED | The system could not send email. | Temporary email service issue. | Retry later; verify email address is correct. |
+| 8001 | EMAIL_INVALID_TEMPLATE | Email template could not be used. | Internal template/configuration problem. | Contact support (admin action required). |
+| 8002 | EMAIL_RATE_LIMITED | Too many emails requested in short time. | Email protection limits were triggered. | Wait and request again later. |
+
+### Session and device errors
+
+| Error Number | Error Code | What this means | Why this happened | What you can do now |
+|---|---|---|---|---|
+| 9000 | SESSION_INVALID_SESSION | Current session is invalid. | Session token is malformed, revoked, or outdated. | Sign in again. |
+| 9001 | SESSION_EXPIRED | Session has expired. | Inactivity timeout reached. | Sign in again and continue. |
+| 9002 | SESSION_MULTIPLE_DEVICES | Account is active on another device/session. | Single-session policy or security policy conflict. | Sign out from other device or use force logout flow. |
+
+### CAPTCHA and registration protection
+
+| Error Number | Error Code | What this means | Why this happened | What you can do now |
+|---|---|---|---|---|
+| 9500 | TURNSTILE_NOT_CONFIGURED | CAPTCHA service is unavailable. | System CAPTCHA configuration is missing. | Contact support/admin and retry later. |
+| 9501 | TURNSTILE_TOKEN_MISSING | CAPTCHA step was not completed. | Verification token was not submitted. | Complete CAPTCHA and submit again. |
+| 9502 | TURNSTILE_VERIFY_FAILED | CAPTCHA check could not be verified. | Verification failed with CAPTCHA provider. | Retry CAPTCHA and submit again. |
+| 9503 | TURNSTILE_VERIFICATION_FAILED | CAPTCHA challenge failed. | Invalid CAPTCHA response or failed verification. | Complete challenge again and retry. |
+| 9504 | TURNSTILE_TOKEN_EXPIRED | CAPTCHA token expired. | Too much delay before form submit. | Complete CAPTCHA again and resubmit quickly. |
+| 9505 | TURNSTILE_ERROR | General CAPTCHA validation error. | Temporary verification/service issue. | Refresh page and retry; contact support if repeated. |
+| 9600 | REGISTRATION_EMAIL_RATE_LIMIT | Too many registration attempts for this email. | Email-based signup guard was triggered. | Wait for retry window before registering again. |
+| 9601 | REGISTRATION_IP_RATE_LIMIT | Too many registration attempts from this network. | IP-based abuse protection was triggered. | Wait and retry later, or use a trusted network. |
+| 9602 | REGISTRATION_RATE_LIMIT | Registration attempt limit reached. | Composite registration guard was triggered. | Wait for cooldown and retry once. |
+
+## For support teams
+
+When escalating an issue, include:
+- Error Code
+- Error Number
+- Time of occurrence
+- User action being performed (for example: login, borrow, upload)
+- Screenshot of the visible error message
+
+Related technical references:
+- `docs/api/error-codes-reference.md`
+- `docs/development/error-mapping.md`
+- `shared/types/error-codes.ts`

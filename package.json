@@ -1,0 +1,21 @@
+{
+  "name": "sjrslms-docs",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "astro": "^5.0.0",
+    "@astrojs/starlight": "^0.30.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "@astrojs/react": "^4.0.0",
+    "@astrojs/check": "^0.9.3",
+    "typescript": "^5.5.3"
+  }
+}

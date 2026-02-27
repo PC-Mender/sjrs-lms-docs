@@ -1,0 +1,64 @@
+flowchart TD
+  A["React page/component (src/pages/... .tsx)"] --> B["Hooks/Services (src/hooks/useD1Query.ts, src/hooks/unified/useUnifiedQuery.ts, src/services/*.ts)"]
+  B --> C["d1Client (src/utilities/api/d1Client.ts) adds Authorization header"]
+  C --> D["unified-api-client (src/utilities/api/unified-api-client.ts) with retries/cache/interceptors"]
+  D --> E["Build URL: VITE_API_BASE_URL + endpoint (defaults to remote)"]
+  E --> F["Cloudflare Worker entry router (functions/index.ts)"]
+  F --> G{"Route match"}
+  G --> H1["Books module (functions/api/books/index.ts) with securityMiddleware and handlers"]
+  G --> H2["Users module (functions/api/users/index.ts)"]
+  G --> H3["Auth module (functions/api/auth/index.ts)"]
+  G --> Hp["Payments module (functions/api/payments/index.ts)"]
+  G --> Hr["Receipts module (functions/api/receipts/index.ts)"]
+  G --> Ha["Action Logs (functions/api/action-logs/index.ts)"]
+  G --> Hs["System Logs (functions/api/system-logs/index.ts)"]
+  G --> He["Email module (functions/api/email/index.ts)"]
+  G --> Hperm["Permissions module (functions/api/permissions/index.ts)"]
+  G --> Hn["Other modules (functions/api/*/index.ts)"]
+  H1 --> I["Handlers (e.g., handleGetBooks) validate/authorize/parse params"]
+  H2 --> I
+  H3 --> I
+  Hp --> I
+  Hr --> I
+  Ha --> I
+  Hs --> I
+  He --> I
+  Hperm --> I
+  Hn --> I
+  I --> J["Database via env.DB (Cloudflare D1)"]
+  J --> K["Response builder and CORS headers"]
+  K --> L["HTTP response -> unifiedAPIClient"]
+  L --> M["React Query resolves -> UI updates"]
+
+  subgraph "Frontend"
+    A
+    B
+    C
+    D
+    E
+    M
+  end
+  subgraph "Backend (Cloudflare Worker)"
+    F
+    G
+    H1
+    H2
+    H3
+    Hp
+    Hr
+    Ha
+    Hs
+    He
+    Hperm
+    Hn
+    I
+    J
+    K
+    L
+  end
+
+  subgraph "Legacy Compatibility"
+    LC["Legacy permission endpoints:\n- /api/role_permissions\n- /api/permission_resources\n- /api/permission_actions\n- /api/permission_audit_log\n- /api/update_role_permission"]
+  end
+  LC -. routed to .-> Hperm
+

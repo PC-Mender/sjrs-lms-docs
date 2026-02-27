@@ -1,0 +1,107 @@
+---
+title: "Documentation Standards"
+---
+
+# Documentation Standards
+
+This document outlines the standards and guidelines for maintaining documentation in this project, following modular and feature-based architecture principles.
+
+## Naming Conventions
+
+### File Naming
+- Use **kebab-case** for all documentation files
+- Examples: `user-authentication.md`, `api-integration-guide.md`
+- Avoid camelCase, PascalCase, or snake_case
+- Use descriptive names that clearly indicate the content
+
+### Directory Structure
+```
+docs/
+├── README.md                    # Main documentation index
+├── documentation-standards.md   # This file
+├── architecture/                # Architecture documentation
+├── development/                 # Development guides and processes
+├── features/                    # Feature-specific documentation
+│   ├── [feature-name]/
+│   │   ├── README.md          # Feature overview
+│   │   ├── implementation.md  # Implementation details
+│   │   └── testing.md         # Testing procedures
+├── deployment/                  # Deployment and infrastructure
+├── testing/                     # Testing documentation
+├── security/                    # Security guidelines
+└── archive/                     # Historical/outdated documents
+```
+
+## Content Guidelines
+
+### Feature-Based Documentation
+Each feature should have its own directory containing:
+- `README.md` - Feature overview and quick start
+- `implementation.md` - Technical implementation details
+- `testing.md` - Testing procedures and test cases
+- `api-reference.md` - API endpoints and usage (if applicable)
+
+### Documentation Quality
+- Keep documentation concise and focused
+- Use clear, professional language
+- Include practical examples where helpful
+- Maintain consistency in terminology
+- Update documentation when code changes
+- Remove outdated content promptly
+
+### Cross-References
+- Use relative links within the documentation
+- Update all references when moving/renaming files
+- Maintain a comprehensive index in each directory's README.md
+
+## Maintenance Procedures
+
+### Regular Review
+- Review documentation quarterly for accuracy
+- Remove redundant or outdated content
+- Consolidate similar documents
+- Update timestamps and version information
+
+### Change Management
+- Document all significant changes
+- Use meaningful commit messages for documentation updates
+- Maintain backward compatibility in links when possible
+- Archive rather than delete potentially valuable historical documents
+
+## Archive Policy
+
+Documents should be moved to the `archive/` directory when:
+- They contain historical information that may be referenced later
+- They document deprecated features or processes
+- They contain valuable lessons learned from past implementations
+
+Documents should be deleted when:
+- They contain completely outdated technical information
+- They duplicate information found elsewhere
+- They serve no future reference value
+
+## Integration with Development Workflow
+
+### Documentation Requirements
+- New features must include corresponding documentation
+- API changes require documentation updates
+- Deployment procedures must be documented
+- Security considerations should be documented
+
+### Review Process
+- Include documentation review in code review process
+- Verify documentation accuracy before releases
+- Test all documentation links and references
+- Ensure consistency with implementation
+
+## Tools and Automation
+
+Consider implementing:
+- Link checking tools for documentation
+- Automated documentation generation from code comments
+- Documentation linting for consistency
+- Integration with CI/CD for documentation validation
+
+---
+
+*Last updated: November 2025*

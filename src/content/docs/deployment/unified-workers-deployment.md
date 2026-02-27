@@ -1,0 +1,346 @@
+---
+title: "Unified Workers Deployment"
+---
+
+# Unified Cloudflare Workers Deployment Guide
+
+## 🎯 Overview
+
+The SJRS LMS now uses a **unified Cloudflare Workers deployment** with Static Assets, combining both frontend and backend into a single, powerful edge deployment. This architecture provides simplified management, enhanced performance, and cost optimization.
+
+## 🏗️ Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              Unified Workers Deployment                     │
+│                                                             │
+│  ┌─────────────────┐    ┌─────────────────────────────────┐ │
+│  │  Static Assets  │    │       API Functions            │ │
+│  │  (React App)    │    │     (Backend Logic)            │ │
+│  │                 │    │                                │ │
+│  │  - HTML/CSS/JS  │    │  - Authentication              │ │
+│  │  - Images       │    │  - Database Operations        │ │
+│  │  - Manifests    │    │  - Business Logic              │ │
+│  └─────────────────┘    └─────────────────────────────────┘ │
+└─────────────────────────────────────────────────────────────┘
+                                 │
+                                 ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   D1 Database   │    │   R2 Storage    │    │  KV + Analytics │
+│   (Serverless)  │    │   (Objects)     │    │    (Cache)      │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
+
+## 🔧 Configuration
+
+### **wrangler.toml**
+
+The project uses a comprehensive `wrangler.toml` configuration:
+
+```toml
+name = "sjrslms"
+main = "functions/index.ts"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+
+# Static Assets configuration for unified deployment
+[assets]
+directory = "./dist"
+html_handling = "auto-trailing-slash"
+binding = "ASSETS"
+
+# D1 Database configuration
+[[d1_databases]]
+binding = "DB"
+database_name = "your-database-name"
+database_id = "your-d1-database-id"
+
+# R2 Storage for file uploads
+[[r2_buckets]]
+binding = "STORAGE"
+bucket_name = "your-assets-bucket"
+preview_bucket_name = "your-assets-bucket-dev"
+
+# KV for caching and session management
+[[kv_namespaces]]
+binding = "CACHE"
+id = "your-kv-namespace-id"
+
+# Analytics for monitoring
+[[analytics_engine_datasets]]
+binding = "ANALYTICS"
+dataset = "your-analytics-dataset"
+```
+
+## 🚀 Deployment Process
+
+### **1. Automatic Deployment with Versioning**
+
+The project includes an intelligent auto-versioning system:
+
+```bash
+npm run release
+```
+
+This command:
+- ✅ Analyzes the last commit message
+- ✅ Automatically determines version bump (patch/minor/major)
+- ✅ Updates `package.json` version
+- ✅ Updates `CHANGELOG.md` with changes
+- ✅ Builds the project (`npm run build`)
+- ✅ Deploys to Cloudflare Workers (`wrangler deploy`)
+- ✅ Creates git tags for the release
+- ✅ Commits version changes
+
+#### **Version Bump Logic**
+
+Based on [Conventional Commits](https://www.conventionalcommits.org/):
+
+| Commit Message | Version Bump | Example |
+|----------------|--------------|---------|
+| `feat: add new feature` | **Minor** | 1.0.0 → 1.1.0 |
+| `fix: resolve bug` | **Patch** | 1.0.0 → 1.0.1 |
+| `BREAKING CHANGE: major update` | **Major** | 1.0.0 → 2.0.0 |
+| `chore: update dependencies` | **Patch** | 1.0.0 → 1.0.1 |
+
+### **2. Manual Deployment**
+
+For manual control over the deployment process:
+
+```bash
+# Build the project
+npm run build
+
+# Deploy to Workers
+wrangler deploy
+
+# Deploy to specific environment
+wrangler deploy --env production
+```
+
+### **3. Environment-Specific Deployment**
+
+```bash
+# Staging environment
+wrangler deploy --env staging
+
+# Production environment (default)
+wrangler deploy --env production
+```
+
+## 🏗️ How It Works
+
+### **Request Routing**
+
+The unified deployment intelligently routes requests:
+
+1. **API Requests** (`/api/*`) → Backend Functions
+2. **Static Assets** (`/*`) → Frontend Files
+3. **404 Handling** → React Router (SPA behavior)
+
+**Note**: This is a **Single Page Application (SPA)**, meaning all client-side routing is handled by React Router. The server serves the main `index.html` for all routes, and React Router manages navigation and page rendering on the client side.
+
+### **Static Asset Handling**
+
+```typescript
+// In functions/index.ts
+if (env.ASSETS) {
+  try {
+    const assetResponse = await env.ASSETS.fetch(request);
+    if (assetResponse.status !== 404) {
+      return addSecurityHeaders(assetResponse);
+    }
+  } catch (error) {
+    console.warn('Static asset fetch failed:', error);
+  }
+}
+```
+
+### **API Function Integration**
+
+```typescript
+// Route to appropriate API using registry
+const method = request.method;
+for (const route of routeRegistry) {
+  if (route.test(path, method)) {
+    const routeResponse = await route.handle(request, safeEnv, context);
+    return addCORSHeaders(routeResponse, origin, corsConfig);
+  }
+}
+```
+
+## 📊 Benefits of Unified Deployment
+
+### **Performance Benefits**
+- ✅ **Reduced Latency**: Static assets and API served from same edge location
+- ✅ **Faster Cold Starts**: Single Worker initialization
+- ✅ **Edge Computing**: Both frontend and backend at the edge
+- ✅ **Optimized Caching**: Unified caching strategy
+
+### **Operational Benefits**
+- ✅ **Simplified Deployment**: Single command deploys everything
+- ✅ **Unified Monitoring**: All logs and metrics in one place
+- ✅ **Easier Debugging**: Single deployment to troubleshoot
+- ✅ **Cost Optimization**: Unified billing and resource usage
+
+### **Development Benefits**
+- ✅ **Consistent Environment**: Same deployment model for dev/staging/prod
+- ✅ **Faster Iteration**: Single deployment cycle
+- ✅ **Better DX**: One configuration file to manage
+- ✅ **Simplified CI/CD**: Single deployment pipeline
+
+## 🔒 Security Features
+
+### **Built-in Security Headers**
+
+```typescript
+// Security headers added automatically
+const securityHeaders = {
+  'X-Frame-Options': 'DENY',
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'Permissions-Policy': 'camera=(), microphone=(), geolocation=()'
+};
+```
+
+### **CORS Configuration**
+
+```typescript
+// Environment-driven CORS configuration
+const corsConfig = {
+  allowedOrigins: env.ALLOWED_ORIGINS?.split(',') || [],
+  allowedMethods: env.ALLOWED_METHODS?.split(',') || ['GET', 'POST'],
+  allowedHeaders: env.ALLOWED_HEADERS?.split(',') || ['Content-Type'],
+  allowCredentials: env.ALLOW_CREDENTIALS === 'true'
+};
+```
+
+## 📈 Monitoring and Analytics
+
+### **Built-in Analytics**
+
+The deployment includes comprehensive monitoring:
+
+```typescript
+// Analytics tracking
+await env.ANALYTICS.writeDataPoint({
+  blobs: [
+    { name: 'event', value: 'api_request' },
+    { name: 'endpoint', value: endpoint },
+    { name: 'method', value: method }
+  ],
+  doubles: [
+    { name: 'response_time', value: responseTime }
+  ]
+});
+```
+
+### **Observability**
+
+```toml
+# Observability configuration
+[observability.logs]
+enabled = true
+```
+
+## 🛠️ Development Workflow
+
+### **Local Development**
+
+```bash
+# Start local development server
+npm run dev
+
+# The frontend runs on http://localhost:3000
+# API calls go to the remote Workers deployment
+```
+
+### **Testing Deployment**
+
+```bash
+# Preview the build locally
+npm run preview
+
+# Test the Workers deployment
+wrangler deploy --dry-run
+```
+
+## 🚧 Migration from Pages
+
+### **What Changed**
+
+1. **Deployment Model**: Pages + Workers → Unified Workers
+2. **Configuration**: `wrangler.toml` updated with `[assets]` section
+3. **Build Process**: Added static asset serving to Workers
+4. **Deploy Command**: `wrangler pages deploy` → `wrangler deploy`
+
+### **What Stayed the Same**
+
+1. **Frontend Code**: No changes required
+2. **Backend Code**: No changes required
+3. **Database**: Same D1 database
+4. **Environment Variables**: Same configuration
+
+## 📋 Deployment Checklist
+
+### **Pre-Deployment**
+- [ ] Environment variables configured
+- [ ] D1 database schema up to date
+- [ ] R2 buckets created
+- [ ] KV namespaces configured
+- [ ] Analytics datasets configured
+
+### **Deployment**
+- [ ] Code committed and pushed
+- [ ] Tests passing
+- [ ] Build successful (`npm run build`)
+- [ ] Deploy command executed (`npm run release` or `wrangler deploy`)
+
+### **Post-Deployment**
+- [ ] Application accessible
+- [ ] API endpoints responding
+- [ ] Static assets loading
+- [ ] Database operations working
+- [ ] Monitoring data flowing
+
+## 🔍 Troubleshooting
+
+### **Common Issues**
+
+**Static Assets Not Loading**
+```bash
+# Check assets configuration
+grep -A 5 "\[assets\]" wrangler.toml
+
+# Verify build output
+ls -la dist/
+```
+
+**API Routes Not Working**
+```bash
+# Check route registration
+grep -r "startsWith('/api/" functions/index.ts
+
+# Verify function exports
+grep -r "export.*function" functions/api/
+```
+
+**Deployment Failures**
+```bash
+# Check wrangler configuration
+wrangler whoami
+wrangler deploy --dry-run --verbose
+```
+
+## 📚 Related Documentation
+
+- **[Core Architecture](../architecture/core-architecture.md)** - System architecture overview
+- **[Cloudflare Products](../architecture/cloudflare-products.md)** - Cloudflare services integration
+- **[Setup Guide](../getting-started/setup.md)** - Initial project setup
+- **[Development Guide](../development/)** - Development workflows
+
+---
+
+**Live Deployment**: https://your-worker.your-subdomain.workers.dev  
+**Last Updated**: November 2025  
+**Version**: 3.41.25 (Unified Workers)

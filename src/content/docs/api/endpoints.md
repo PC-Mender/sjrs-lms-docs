@@ -1,0 +1,440 @@
+---
+title: "Endpoints"
+---
+
+# 📚 API Endpoints Documentation
+
+This document provides comprehensive documentation for all SJRS LMS API endpoints, organized by resource type and functionality.
+
+## 🔑 Authentication Endpoints
+
+### **User Authentication**
+- **POST** `/api/auth/login` - User login
+- **POST** `/api/auth/register` - User registration
+- **POST** `/api/auth/logout` - User logout
+- **GET** `/api/auth/me` - Get current user profile
+- **PUT** `/api/auth/profile` - Update user profile
+- **PUT** `/api/auth/change-password` - Change user password
+- **GET** `/api/auth/check-email` - Check if email is usable (enumeration-safe)
+
+### **Email Confirmation**
+- **POST** `/api/auth/confirm-email` - Confirm email address
+- **POST** `/api/auth/complete-profile` - Complete user profile setup
+- **POST** `/api/auth/resend-confirmation` - Resend confirmation email
+
+### **Password Management**
+- **POST** `/api/auth/password-reset` - Request password reset
+- **POST** `/api/auth/validate-reset-token` - Validate reset token
+- **POST** `/api/auth/confirm-reset-password` - Confirm password reset
+  - *Note: Requires `recoveryCode` if MFA is enabled on the account.*
+- **POST** `/api/auth/reset-user-password` - Admin reset user password
+
+### **Multi-Factor Authentication**
+- **POST** `/api/auth/mfa/setup` - Setup MFA for user
+- **POST** `/api/auth/mfa/verify` - Verify and enable MFA
+- **POST** `/api/auth/mfa/disable` - Disable MFA
+- **GET** `/api/auth/mfa/status` - Get MFA status
+- **POST** `/api/auth/mfa/challenge/verify` - Verify TOTP/Backup code
+- **POST** `/api/auth/mfa/backup-codes/regenerate` - Regenerate backup codes
+
+### **WebAuthn / Passkeys**
+- **POST** `/api/auth/webauthn/register/begin` - Start Passkey registration
+- **POST** `/api/auth/webauthn/register/finish` - Complete Passkey registration
+- **POST** `/api/auth/mfa/challenge/webauthn/begin` - Start Passkey authentication
+- **POST** `/api/auth/mfa/challenge/webauthn/finish` - Complete Passkey authentication
+- **POST** `/api/auth/webauthn/credentials/revoke` - Revoke a Passkey
+- **POST** `/api/auth/webauthn/credentials/revoke/send-otp` - Send OTP for revocation
+
+### **Session Management**
+- **GET** `/api/auth/sessions` - Get user sessions
+- **POST** `/api/auth/sessions/terminate` - Terminate specific session
+- **POST** `/api/auth/sessions/terminate-all` - Terminate all user sessions
+- **POST** `/api/auth/sessions/cleanup` - Cleanup expired sessions (admin)
+- **GET** `/api/auth/validate-session` - Validate current session
+- **POST** `/api/auth/force-deactivate-sessions` - Force deactivate sessions
+- **POST** `/api/auth/force-logout-other-sessions` - Force logout other sessions
+
+### **Public Status Check**
+- **POST** `/api/auth/check-status/send-otp` - Send OTP to check account status
+- **POST** `/api/auth/check-status/verify` - Verify OTP and return workflow status
+
+## 👥 User Management Endpoints
+
+### **User Operations**
+- **GET** `/api/users` - Get all users (admin/librarian)
+- **GET** `/api/users/:id` - Get specific user
+- **PUT** `/api/users/:id` - Update user
+- **DELETE** `/api/users/:id` - Delete user (admin)
+
+### **Student Management**
+- **GET** `/api/students` - Get all students
+- **GET** `/api/students/:id` - Get specific student
+- **POST** `/api/students` - Create student
+- **PUT** `/api/students/:id` - Update student
+- **DELETE** `/api/students/:id` - Delete student
+
+### **Professor Management**
+- **GET** `/api/professors` - Get all professors
+- **GET** `/api/professors/:id` - Get specific professor
+- **POST** `/api/professors` - Create professor
+- **PUT** `/api/professors/:id` - Update professor
+- **DELETE** `/api/professors/:id` - Delete professor
+
+## 📚 Book Management Endpoints
+
+### **Book Operations**
+- **GET** `/api/books` - Get all books
+- **GET** `/api/books/search` - Search books
+- **GET** `/api/books/:id` - Get specific book
+- **POST** `/api/books` - Create book (librarian)
+- **PUT** `/api/books/:id` - Update book (librarian)
+- **DELETE** `/api/books/:id` - Delete book (librarian)
+
+### **Book Copies**
+- **GET** `/api/book-copies` - Get book copies
+- **GET** `/api/book-copies/:id` - Get specific book copy
+- **POST** `/api/book-copies` - Create book copy
+- **PUT** `/api/book-copies/:id` - Update book copy
+- **DELETE** `/api/book-copies/:id` - Delete book copy
+
+### **Book Reviews**
+- **GET** `/api/book-reviews` - Get book reviews
+- **GET** `/api/book-reviews/:id` - Get specific review
+- **POST** `/api/book-reviews` - Create book review
+- **PUT** `/api/book-reviews/:id` - Update book review
+- **DELETE** `/api/book-reviews/:id` - Delete book review
+
+### **Authors**
+- **GET** `/api/authors` - Get all authors
+- **GET** `/api/authors/:id` - Get specific author
+- **POST** `/api/authors` - Create author
+- **PUT** `/api/authors/:id` - Update author
+- **DELETE** `/api/authors/:id` - Delete author
+
+### **Publications**
+- **GET** `/api/publications` - Get all publications
+- **GET** `/api/publications/:id` - Get specific publication
+- **POST** `/api/publications` - Create publication
+- **PUT** `/api/publications/:id` - Update publication
+- **DELETE** `/api/publications/:id` - Delete publication
+
+## 📖 Reference Material Endpoints
+
+### **Reference Books**
+- **GET** `/api/reference-books` - Get reference books
+- **GET** `/api/reference-books/:id` - Get specific reference book
+- **POST** `/api/reference-books` - Create reference book
+- **PUT** `/api/reference-books/:id` - Update reference book
+- **DELETE** `/api/reference-books/:id` - Delete reference book
+
+### **Reference Categories**
+- **GET** `/api/reference-categories` - Get reference categories
+- **GET** `/api/reference-categories/:id` - Get specific category
+- **POST** `/api/reference-categories` - Create category
+- **PUT** `/api/reference-categories/:id` - Update category
+- **DELETE** `/api/reference-categories/:id` - Delete category
+
+### **Reference Resources**
+- **GET** `/api/reference-resources` - Get reference resources
+- **GET** `/api/reference-resources/:id` - Get specific resource
+- **POST** `/api/reference-resources` - Create resource
+- **PUT** `/api/reference-resources/:id` - Update resource
+- **DELETE** `/api/reference-resources/:id` - Delete resource
+
+### **Reference Sections**
+- **GET** `/api/reference-sections` - Get reference sections
+- **GET** `/api/reference-sections/:id` - Get specific section
+- **POST** `/api/reference-sections` - Create section
+- **PUT** `/api/reference-sections/:id` - Update section
+- **DELETE** `/api/reference-sections/:id` - Delete section
+
+### **Sections**
+- **GET** `/api/sections` - Get sections
+- **GET** `/api/sections/:id` - Get specific section
+- **POST** `/api/sections` - Create section
+- **PUT** `/api/sections/:id` - Update section
+- **DELETE** `/api/sections/:id` - Delete section
+
+### **Resource Types**
+- **GET** `/api/resource-types` - Get resource types
+- **GET** `/api/resource-types/:id` - Get specific resource type
+- **POST** `/api/resource-types` - Create resource type
+- **PUT** `/api/resource-types/:id` - Update resource type
+- **DELETE** `/api/resource-types/:id` - Delete resource type
+
+### **Resources**
+- **GET** `/api/resources` - Get all resources
+- **GET** `/api/resources/:id` - Get specific resource
+- **POST** `/api/resources` - Create resource
+- **PUT** `/api/resources/:id` - Update resource
+- **DELETE** `/api/resources/:id` - Delete resource
+
+### **Journals**
+- **GET** `/api/journals` - Get journals
+- **GET** `/api/journals/:id` - Get specific journal
+- **POST** `/api/journals` - Create journal
+- **PUT** `/api/journals/:id` - Update journal
+- **DELETE** `/api/journals/:id` - Delete journal
+
+## 📚 Loan Management Endpoints
+
+### **Loan Operations**
+- **GET** `/api/loans` - Get all loans
+- **GET** `/api/loans/:id` - Get specific loan
+- **POST** `/api/loans` - Create loan (librarian)
+- **PUT** `/api/loans/:id` - Update loan (librarian)
+- **DELETE** `/api/loans/:id` - Delete loan (librarian)
+
+### **Borrow Limits**
+- **GET** `/api/borrow-limits` - Get borrow limits
+- **GET** `/api/borrow-limits/:id` - Get specific borrow limit
+- **POST** `/api/borrow-limits` - Create borrow limit
+- **PUT** `/api/borrow-limits/:id` - Update borrow limit
+- **DELETE** `/api/borrow-limits/:id` - Delete borrow limit
+
+### **Digital Book Reads**
+- **GET** `/api/digital-book-reads` - Get digital book reads
+- **GET** `/api/digital-book-reads/:id` - Get specific read record
+- **POST** `/api/digital-book-reads` - Create read record
+- **PUT** `/api/digital-book-reads/:id` - Update read record
+- **DELETE** `/api/digital-book-reads/:id` - Delete read record
+
+### **Book Views**
+- **GET** `/api/book-views` - Get book views
+- **GET** `/api/book-views/:id` - Get specific book view
+- **POST** `/api/book-views` - Create book view
+- **PUT** `/api/book-views/:id` - Update book view
+- **DELETE** `/api/book-views/:id` - Delete book view
+
+## 🛒 Order & Payment Endpoints
+
+### **Orders**
+- **GET** `/api/orders` - Get all orders
+- **GET** `/api/orders/:id` - Get specific order
+- **POST** `/api/orders` - Create order
+- **PUT** `/api/orders/:id` - Update order
+- **DELETE** `/api/orders/:id` - Delete order
+
+### **Payments**
+- **GET** `/api/payments` - Get payments
+- **GET** `/api/payments/:id` - Get specific payment
+- **POST** `/api/payments` - Process payment
+- **PUT** `/api/payments/:id` - Update payment
+- **DELETE** `/api/payments/:id` - Delete payment
+
+### **Receipts**
+- **GET** `/api/receipts` - Get receipts
+- **GET** `/api/receipts/:id` - Get specific receipt
+- **POST** `/api/receipts` - Generate receipt
+- **PUT** `/api/receipts/:id` - Update receipt
+- **DELETE** `/api/receipts/:id` - Delete receipt
+
+## ⚖️ System Management Endpoints
+
+### **Roles & Permissions**
+- **GET** `/api/roles` - Get all roles
+- **GET** `/api/roles/:id` - Get specific role
+- **POST** `/api/roles` - Create role
+- **PUT** `/api/roles/:id` - Update role
+- **DELETE** `/api/roles/:id` - Delete role
+
+### **Permissions**
+- **GET** `/api/permissions/check` - Check user permissions
+- **POST** `/api/permissions` - Manage permissions
+
+### **System Logs**
+- **GET** `/api/system_logs` - Get system logs
+- **GET** `/api/system_logs/:id` - Get specific log entry
+- **POST** `/api/system_logs` - Create log entry
+- **PUT** `/api/system_logs/:id` - Update log entry
+- **DELETE** `/api/system_logs/:id` - Delete log entry
+
+### **Action Logs**
+- **GET** `/api/action_logs` - Get action logs
+- **GET** `/api/action_logs/:id` - Get specific action log
+- **POST** `/api/action_logs` - Create action log
+- **PUT** `/api/action_logs/:id` - Update action log
+- **DELETE** `/api/action_logs/:id` - Delete action log
+
+### **Migrations**
+- **GET** `/api/migrations` - Get migration status
+- **POST** `/api/migrations` - Run migrations
+
+## 🔔 User Experience Endpoints
+
+### **Wishlist**
+- **GET** `/api/wishlist` - Get user wishlist
+- **GET** `/api/wishlist/:id` - Get specific wishlist item
+- **POST** `/api/wishlist` - Add to wishlist
+- **PUT** `/api/wishlist/:id` - Update wishlist item
+- **DELETE** `/api/wishlist/:id` - Remove from wishlist
+
+### **Notifications**
+- **GET** `/api/notifications` - Get user notifications
+- **GET** `/api/notifications/:id` - Get specific notification
+- **POST** `/api/notifications` - Create notification
+- **PUT** `/api/notifications/:id` - Update notification
+- **DELETE** `/api/notifications/:id` - Delete notification
+
+### **Penalties**
+- **GET** `/api/penalties` - Get penalties
+- **GET** `/api/penalties/:id` - Get specific penalty
+- **POST** `/api/penalties` - Create penalty
+- **PUT** `/api/penalties/:id` - Update penalty
+- **DELETE** `/api/penalties/:id` - Delete penalty
+
+## 🏆 Badge System Endpoints
+
+### **Badge Operations**
+- **GET** `/api/badges` - Get all badges (catalog) - Requires `badges:read` permission
+- **GET** `/api/badges/me` - Get current user's badges (includes role-based badges)
+- **GET** `/api/badges/granted` - Get all granted badges (admin view) - Requires `badges:read` permission
+  - Query parameters: `page`, `pageSize`, `status` (active/revoked/any), `user_id`, `badge_key`, `search`
+- **POST** `/api/badges/assign` - Assign badge to user - Requires `badges:create` permission
+  - Body: `user_id`, `badge_key`, `reason` (optional), `expires_at` (optional, ISO datetime)
+- **POST** `/api/badges/revoke` - Revoke badge from user - Requires `badges:delete` permission
+  - Body: `user_id`, `badge_key`, `reason` (optional)
+
+**Security Features:**
+- Prevents self-assignment
+- Blocks manual assignment/revocation of role-based badges
+- Requires superuser for badges with level >= 5
+- Validates expiration dates
+- Comprehensive audit logging
+
+## 📁 File Management Endpoints
+
+### **Upload**
+- **POST** `/api/upload` - Upload file
+- **GET** `/api/upload/:id` - Get uploaded file
+- **DELETE** `/api/upload/:id` - Delete uploaded file
+
+## 🆘 Help & Support Endpoints
+
+### **Help System**
+- **GET** `/api/help` - Get help content
+- **GET** `/api/help/:id` - Get specific help article
+- **POST** `/api/help` - Create help article
+- **PUT** `/api/help/:id` - Update help article
+- **DELETE** `/api/help/:id` - Delete help article
+
+## 🏥 Health & System Endpoints
+
+### **Health Check**
+- **GET** `/api/health` - System health status
+
+## 📧 Email Service Endpoints
+
+### **Email Management**
+- **GET** `/api/email` - Get email configuration
+- **POST** `/api/email` - Send email
+- **PUT** `/api/email` - Update email configuration
+
+## 🔐 Legacy Permission Endpoints
+
+### **Legacy Permission System**
+- **POST** `/api/role_permissions` - Manage role permissions
+- **POST** `/api/permission_resources` - Manage permission resources
+- **POST** `/api/permission_actions` - Manage permission actions
+- **POST** `/api/permission_audit_log` - Access permission audit log
+- **POST** `/api/update_role_permission` - Update role permissions
+
+### **🔐 RBAC Policy: Backend Permission Endpoint is Single Source of Truth**
+
+**The backend permissions endpoint (`GET /api/permissions/check`) is the single source of truth for all permission decisions.**
+
+- **Backend Authority**: All permission checks must ultimately be validated by the backend `/api/permissions/check` endpoint
+- **Client Fallbacks**: Client-side permission checks are for UI optimization only and **deny by default** when backend validation is unavailable
+- **Security First**: Never trust client-side permission checks alone - always validate on the backend
+- **Fail-Safe Design**: If the backend endpoint is unreachable or returns an error, the client should deny access
+
+---
+
+## 📋 Endpoint Summary by Resource Type
+
+| Resource Type | Endpoints | CRUD Operations | Admin Required |
+|---------------|-----------|-----------------|----------------|
+| **Authentication** | 20+ | Full | Partial |
+| **Users** | 4 | Full | Yes |
+| **Books** | 6 | Full | Librarian+ |
+| **Loans** | 5 | Full | Librarian+ |
+| **Reference Materials** | 25+ | Full | Librarian+ |
+| **Resources** | 5 | Full | Admin+ |
+| **Orders & Payments** | 15 | Full | Admin+ |
+| **System Management** | 20+ | Full | Admin+ |
+| **User Experience** | 15 | Full | Partial |
+| **Badge System** | 5 | Full | Admin+ |
+| **File Management** | 3 | Full | Admin+ |
+| **Help & Support** | 5 | Full | Admin+ |
+
+## 🎯 Quick Reference
+
+### **Public Endpoints** (No Authentication)
+- `GET /api/health` - Health check
+
+### **User Endpoints** (User Authentication Required)
+- `GET /api/auth/me` - Current user profile
+- `PUT /api/auth/profile` - Update own profile
+- `GET /api/books` - Browse books
+- `GET /api/books/search` - Search books
+- `GET /api/wishlist` - User wishlist
+
+### **Librarian Endpoints** (Librarian+ Required)
+- All book management operations
+- All loan management operations
+- User management (limited)
+
+### **Admin Endpoints** (Admin+ Required)
+- All system management operations
+- All user management operations
+- Badge assignment and management
+- System configuration
+
+### **Superuser Endpoints** (Superuser Only)
+- All operations
+- System migrations
+- Advanced system management
+
+---
+
+**Last Updated:** November 2025  
+**Version:** 3.41.25
+
+## 🎓 Academic Tools Endpoints
+
+### **Citation Generator**
+- **GET** `/api/citations` — List supported formats and source types
+  - Permissions: `citations:read`
+  - Implementation: `functions/api/citations/handlers/get-citation-formats.ts:7`
+- **POST** `/api/citations` — Generate a citation
+  - Body: `{ source_type, format, source_data }`
+  - Permissions: `citations:create`
+  - Validation: `functions/middleware/validation/schemas/citation-schemas.ts:8`
+  - Implementation: `functions/api/citations/handlers/generate-citation.ts:9`
+- **GET** `/api/citations/history` — Get saved citations for current user
+  - Permissions: `citations:read`
+  - Implementation: `functions/api/citations/handlers/get-citation-history.ts:7`
+- **POST** `/api/citations/save` — Save a generated citation
+  - Body: `{ citation_text, in_text_citation?, format, source_type, source_data? }`
+  - Permissions: `citations:create`
+  - Implementation: `functions/api/citations/handlers/save-citation.ts:7`
+- **DELETE** `/api/citations/:id` — Delete a saved citation
+  - Permissions: `citations:delete`
+  - Implementation: `functions/api/citations/handlers/delete-citation.ts:7`
+
+### **Plagiarism Checker**
+- **POST** `/api/plagiarism` — Check text for plagiarism
+  - Body: `{ text, title?, sensitivity? }`
+  - Permissions: `plagiarism:create`
+  - Validation: `functions/middleware/validation/schemas/plagiarism-schemas.ts:3`
+  - Implementation: `functions/api/plagiarism/handlers/check-plagiarism.ts:7`
+- **GET** `/api/plagiarism/history` — Get plagiarism checks for current user
+  - Query: `limit` (default 50)
+  - Permissions: `plagiarism:read`
+  - Implementation: `functions/api/plagiarism/handlers/get-plagiarism-history.ts:7`
+- **GET** `/api/plagiarism/:id` — Get a specific plagiarism check result
+  - Permissions: `plagiarism:read`
+  - Implementation: `functions/api/plagiarism/handlers/get-plagiarism-results.ts:7`
+- **DELETE** `/api/plagiarism/:id` — Delete a plagiarism check result
+  - Permissions: `plagiarism:delete`
+  - Implementation: `functions/api/plagiarism/handlers/delete-plagiarism-result.ts:7`

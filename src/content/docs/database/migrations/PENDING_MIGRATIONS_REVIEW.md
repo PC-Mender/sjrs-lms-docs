@@ -1,0 +1,184 @@
+---
+title: "PENDING MIGRATIONS REVIEW"
+---
+
+# Pending Migrations Review
+
+## Summary
+
+Based on review of migration files and schema, here are the pending migrations that need to be applied:
+
+---
+
+## 🕒 Confirmed Pending Migrations
+
+### 1. **Reservations System** (2025-01-15)
+**Files**:
+- `2025-01-15_add-reservations-table.sql` - Creates reservations table
+- `2025-01-15_add-reservations-permissions.sql` - Adds reservation permissions
+
+**Status**: ⚠️ **PENDING** - Reservations table not found in main schema
+
+**Impact**: 
+- Reservation system functionality requires these tables
+- Code references reservations table (functions/api/reservations/)
+- Scheduled jobs reference reservations (functions/scheduled/reservation-expiry.ts)
+
+**Action Required**: Apply both migrations
+
+---
+
+### 2. **Loan Renewal Tracking** 
+**File**: `add-renewed-count-to-loans.sql`
+
+**Status**: ⚠️ **PENDING** - `renewed_count` column not in loans table schema
+
+**Impact**:
+- Loan renewal feature requires this column
+- Code references `renewed_count` (functions/api/loans/handlers/renew-loan.ts)
+
+**Action Required**: Apply migration
+
+---
+
+### 3. **Penalty Calculation Indexes** (2025-01-15)
+**File**: `2025-01-15_add-penalty-calculation-indexes.sql`
+
+**Status**: ⚠️ **PENDING** - Performance indexes for penalty calculation
+
+**Impact**:
+- Improves performance of automatic penalty calculation
+- Used by scheduled job (functions/scheduled/calculate-overdue-penalties.ts)
+
+**Action Required**: Apply migration
+
+---
+
+### 4. **Announcements Table** (2025-01-15)
+**File**: `2025-01-15_create-announcements-table.sql`
+
+**Status**: ⚠️ **PENDING** - Announcements table not found in main schema
+
+**Impact**:
+- Announcements feature requires this table
+- May be referenced in frontend/admin features
+
+**Action Required**: Apply migration
+
+---
+
+### 5. **Badges System** (2025-11-06)
+**File**: `2025-11-06_add-badges-tables.sql`
+
+**Status**: ⚠️ **PENDING** - Listed in README as pending
+
+**Impact**:
+- Badge system functionality
+- Code references badges (functions/lib/badges/)
+
+**Action Required**: Apply migration
+
+---
+
+### 6. **Password Reset & Email Confirmation** (2025-11-12)
+**File**: `2025-11-12_add-password-reset-and-email-confirmation-tables.sql`
+
+**Status**: ⚠️ **PENDING** - Listed in README as pending
+
+**Impact**:
+- Authentication features
+- Password reset functionality
+- Email confirmation
+
+**Action Required**: Apply migration
+
+---
+
+## 📋 Migration Priority
+
+### **High Priority** (Required for Current Features)
+1. ✅ `add-renewed-count-to-loans.sql` - Required for loan renewal feature
+2. ✅ `2025-01-15_add-reservations-table.sql` - Required for reservation system
+3. ✅ `2025-01-15_add-reservations-permissions.sql` - Required for reservation system
+4. ✅ `2025-01-15_add-penalty-calculation-indexes.sql` - Performance optimization
+
+### **Medium Priority** (Feature Support)
+5. ✅ `2025-01-15_create-announcements-table.sql` - Announcements feature
+6. ✅ `2025-11-06_add-badges-tables.sql` - Badge system
+
+### **Low Priority** (Auth Enhancements)
+7. ✅ `2025-11-12_add-password-reset-and-email-confirmation-tables.sql` - Auth improvements
+
+---
+
+## 🔍 Verification Method
+
+To verify which migrations are actually pending, you can:
+
+1. **Check via API** (if you have superuser access):
+   ```
+   GET /api/migrations/status
+   GET /api/migrations/list
+   ```
+
+2. **Check database directly**:
+   ```sql
+   -- Check if reservations table exists
+   SELECT name FROM sqlite_master WHERE type='table' AND name='reservations';
+   
+   -- Check if loans table has renewed_count column
+   PRAGMA table_info(loans);
+   
+   -- Check if announcements table exists
+   SELECT name FROM sqlite_master WHERE type='table' AND name='announcements';
+   
+   -- Check if badges tables exist
+   SELECT name FROM sqlite_master WHERE type='table' AND name LIKE 'badges%';
+   ```
+
+3. **Check via migrations page**:
+   - Navigate to `/dashboard-superuser/migrations` (requires superuser access)
+
+---
+
+## ⚠️ Important Notes
+
+1. **Migration Order**: Some migrations may have dependencies. Check migration files for dependency notes.
+
+2. **Backup First**: Always backup the database before applying migrations.
+
+3. **Test Environment**: Test migrations in development environment first.
+
+4. **Idempotent**: Most migrations use `CREATE TABLE IF NOT EXISTS` and `CREATE INDEX IF NOT EXISTS`, making them safe to run multiple times.
+
+5. **Schema Sync**: After applying migrations, consider updating `d1-schema.sql` to reflect the current state.
+
+---
+
+## 📝 Recommended Action Plan
+
+1. **Immediate**: Apply high-priority migrations (1-4)
+2. **Next**: Apply medium-priority migrations (5-6)
+3. **Future**: Apply low-priority migrations (7)
+4. **After**: Update `d1-schema.sql` to include all applied migrations
+5. **Finally**: Update `sql/migrations/README.md` to reflect applied status
+
+---
+
+## Migration Files Summary
+
+| Migration File | Status | Priority | Feature |
+|---------------|--------|----------|---------|
+| `add-renewed-count-to-loans.sql` | PENDING | HIGH | Loan Renewal |
+| `2025-01-15_add-reservations-table.sql` | PENDING | HIGH | Reservations |
+| `2025-01-15_add-reservations-permissions.sql` | PENDING | HIGH | Reservations |
+| `2025-01-15_add-penalty-calculation-indexes.sql` | PENDING | HIGH | Penalties |
+| `2025-01-15_create-announcements-table.sql` | PENDING | MEDIUM | Announcements |
+| `2025-11-06_add-badges-tables.sql` | PENDING | MEDIUM | Badges |
+| `2025-11-12_add-password-reset-and-email-confirmation-tables.sql` | PENDING | LOW | Auth |
+
+---
+
+**Last Updated**: 2025-01-XX
+**Review Status**: ✅ Complete
+

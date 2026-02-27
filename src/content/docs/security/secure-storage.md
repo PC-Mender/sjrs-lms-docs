@@ -1,0 +1,69 @@
+---
+title: "Secure Storage"
+---
+
+# SecureStorage Utility
+
+Overview
+--------
+`SecureStorage` is a small front-end utility that centralizes storage in three modes:
+
+- `cookie` — writes to `document.cookie` using a `secure_` prefix. Use when you need
+  cross-tab persistence and to survive tab reloads. These cookies are NOT HttpOnly
+  (the backend must set true auth cookies). Do not store credentials here.
+
+- `session` — writes to `sessionStorage` with a `secure_` prefix. This storage is
+  per-tab (not shared across tabs) and is cleared when the tab/window is closed.
+  Prefer `session` for ephemeral UI state and non-sensitive registration flows
+  (e.g., `pendingUserEmail`, `pendingUserData`, `pendingUserId`).
+
+- `memory` — in-memory Map stored for the lifetime of the page. Use for values
+  that must never be persisted to disk or browser storage.
+
+Security Guidance
+-----------------
+- Authentication credentials (accessToken, refreshToken, authToken, csrfToken,
+  sessionToken, etc.) MUST NOT be stored in JS-accessible storage. These should
+  be handled by the backend using HttpOnly cookies.
+- `SecureStorage.set()` blocks known credential-like keys as a safety measure.
+- Prefer explicit storage selection in callers. Use `session` for non-sensitive
+  registration state to reduce accidental exposure via `document.cookie`.
+
+API
+---
+- `secureStorage.set(key, value, type?, ttl?)` — store a value. `type` can be
+  `'cookie'|'session'|'memory'|'auto'`. `ttl` is milliseconds.
+- `secureStorage.get(key, type?)` — retrieve a stored value. If `type` omitted,
+  `SecureStorage` tries `memory` -> `session` -> `cookie`.
+- `secureStorage.remove(key)` — removes key from all storage backends.
+- `secureStorage.clear()` — clears SecureStorage-managed entries.
+
+Examples
+--------
+Store registration state in `session` (recommended):
+
+```ts
+await secureStorage.set('pendingUserEmail', userEmail, 'session');
+await secureStorage.set('pendingUserData', JSON.stringify(userData), 'session');
+```
+
+Read registration state (explicit):
+
+```ts
+const email = await secureStorage.get<string>('pendingUserEmail', 'session');
+```
+
+Do NOT store tokens in JS storage:
+
+```ts
+// ❌ BAD
+await secureStorage.set('accessToken', token, 'session'); // blocked by SecureStorage
+```
+
+Notes
+-----
+- `getSecureData` convenience wrapper defaults to `'cookie'` for cross-tab
+  scenarios — prefer calling `secureStorage.get(..., 'session')` explicitly when
+  you know the data is non-sensitive and must be per-tab.
+- If you want stricter posture, remove localStorage fallbacks in callers that
+  currently fallback to `localStorage` and rely only on `session`.

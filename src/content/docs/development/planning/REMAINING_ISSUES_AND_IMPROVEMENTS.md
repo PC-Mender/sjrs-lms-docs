@@ -1,0 +1,185 @@
+---
+title: "REMAINING ISSUES AND IMPROVEMENTS"
+---
+
+# Remaining Issues & Improvements for Ordering & Borrowing Flow
+
+## 🔴 Critical Issues
+
+### 1. **Order List Shows All Orders to Regular Users**
+**Location**: `src/pages/orders/OrderList.tsx`
+
+**Issue**: The OrderList component doesn't filter orders by current user. Regular users (students, professors, guests) should only see their own orders, while admins/librarians should see all orders.
+
+**Current Code**:
+```typescript
+const { data: ordersData, isLoading: loading, error, refetch } = useD1OrdersQuery({});
+// No filtering by user_id
+```
+
+**Fix Needed**: 
+- Filter orders by `user_id` for non-admin users
+- Check user permissions to determine if they should see all orders
+- Update the query or add client-side filtering
+
+**Impact**: **HIGH** - Privacy/security issue. Users can see other users' orders.
+
+---
+
+### 2. **Wishlist Uses Inconsistent Order Flow**
+**Location**: `src/pages/wishlist/WishlistList.tsx`
+
+**Issue**: Wishlist has its own `handlePlaceOrder` that directly calls a mutation instead of using the request cart. This creates inconsistency:
+- Book catalog → uses request cart ✅
+- Wishlist → direct order creation ❌
+
+**Current Code**:
+```typescript
+const handlePlaceOrder = async (wishlistItem: WishlistItemWithDetails) => {
+  // ... validation ...
+  await placeOrderMutation.mutateAsync(wishlistItem.id);
+  // Direct mutation, not using request cart
+};
+```
+
+**Fix Needed**: 
+- Update wishlist to use request cart context
+- Add book to cart instead of directly creating order
+- Maintain consistency across the app
+
+**Impact**: **MEDIUM** - UX inconsistency, but functionally works.
+
+---
+
+### 3. **Cart Submission Uses Raw Fetch Instead of Unified API Client**
+**Location**: `src/contexts/request-cart-context.tsx`
+
+**Issue**: The `submitAllRequests` function uses raw `fetch()` instead of the unified API client used elsewhere in the app.
+
+**Current Code**:
+```typescript
+const res = await fetch('/api/orders', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ book_id: item.book_id, order_type: 'request' })
+});
+```
+
+**Fix Needed**: 
+- Use `unifiedAPIClient` or `d1Client` for consistency
+- Better error handling with unified error handler
+- Consistent authentication headers
+
+**Impact**: **MEDIUM** - Works but inconsistent with app patterns.
+
+---
+
+## ⚠️ Missing Features
+
+### 4. **No Order Status Change Notifications for Users**
+**Location**: `functions/api/orders/handlers/update-order.ts`
+
+**Issue**: When an order is approved or rejected, the user who created the order doesn't receive a notification. Only admins get notified when orders are created.
+
+**Current**: 
+- ✅ Admins get notified when order is created
+- ❌ Users don't get notified when order is approved/rejected
+
+**Fix Needed**: 
+- Add notification creation when order status changes to 'approved' or 'rejected'
+- Send notification to `order.user_id`
+- Include link to order details or loan (if approved)
+
+**Impact**: **MEDIUM** - Users don't know when their requests are processed.
+
+---
+
+### 5. **No Link from Approved Orders to Loans**
+**Location**: `src/pages/orders/OrderShow.tsx` and `OrderList.tsx`
+
+**Issue**: When an order is approved and a loan is created, there's no visible link between the order and the loan. Users can't easily navigate from order to loan.
+
+**Fix Needed**: 
+- Show loan ID/link when order status is 'completed' (approved)
+- Add "View Loan" button/link in OrderShow component
+- Display loan information in order details
+
+**Impact**: **LOW** - Nice-to-have UX improvement.
+
+---
+
+## 🧹 Code Cleanup
+
+### 6. **Unused BookCatalogService.placeOrder Method**
+**Location**: `src/pages/book-catalog/services/book-catalog.service.ts`
+
+**Issue**: The `placeOrder` method exists but is never used. The app now uses request cart instead.
+
+**Current Code**:
+```typescript
+static async placeOrder(
+  bookId: string | number,
+  userId: string,
+  copyId?: string
+): Promise<{ success: boolean; orderId?: string; message: string }> {
+  // ... implementation ...
+}
+```
+
+**Fix Needed**: 
+- Remove the method if truly unused
+- Or mark as deprecated with migration path
+
+**Impact**: **LOW** - Code cleanup, no functional impact.
+
+---
+
+### 7. **Cart Persistence Edge Cases**
+**Location**: `src/contexts/request-cart-context.tsx`
+
+**Issue**: Cart uses localStorage but doesn't handle:
+- Multiple tabs (cart changes in one tab don't sync to others)
+- Expired/invalid book IDs (books deleted after being added to cart)
+- User logout (cart should be cleared or user-specific)
+
+**Fix Needed**: 
+- Add storage event listener for cross-tab sync
+- Validate book IDs before submission
+- Clear cart on logout or make it user-specific
+
+**Impact**: **LOW** - Edge cases, but could cause confusion.
+
+---
+
+## 📊 Summary
+
+| Priority | Issue | Impact | Effort |
+|----------|-------|--------|--------|
+| 🔴 Critical | Order List User Filtering | HIGH | Medium |
+| ⚠️ Important | Wishlist Cart Integration | MEDIUM | Low |
+| ⚠️ Important | Unified API Client in Cart | MEDIUM | Low |
+| ⚠️ Important | Order Status Notifications | MEDIUM | Medium |
+| 🟡 Enhancement | Order → Loan Linking | LOW | Low |
+| 🧹 Cleanup | Remove Unused Method | LOW | Low |
+| 🧹 Cleanup | Cart Persistence Improvements | LOW | Medium |
+
+---
+
+## Recommended Fix Order
+
+1. **Order List User Filtering** (Security/Privacy - Do First)
+2. **Wishlist Cart Integration** (Consistency - Quick Win)
+3. **Unified API Client** (Code Quality - Quick Win)
+4. **Order Status Notifications** (UX - Important)
+5. **Order → Loan Linking** (UX Enhancement)
+6. **Code Cleanup** (Maintenance)
+
+---
+
+## Notes
+
+- All critical flow issues from the original analysis have been fixed ✅
+- These are additional improvements and edge cases
+- The system is functional but could be more polished
+- Security issue (#1) should be prioritized
+

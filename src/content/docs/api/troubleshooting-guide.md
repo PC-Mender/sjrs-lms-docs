@@ -1,0 +1,621 @@
+---
+title: "Troubleshooting Guide"
+---
+
+# 🔧 API Troubleshooting Guide
+
+This guide provides solutions to common issues you may encounter when using the SJRS LMS API.
+
+## 🚨 Quick Diagnosis
+
+### **Symptom: "Cannot connect to API"**
+- **Check:** Network connectivity, API URL
+- **Solution:** Verify `https://your-worker.your-subdomain.workers.dev` is accessible
+
+### **Symptom: "Authentication failed"**
+- **Check:** JWT token validity, expiration
+- **Solution:** Re-authenticate to get new token
+
+### **Symptom: "Permission denied"**
+- **Check:** User role, resource permissions
+- **Solution:** Verify user has required role/permissions
+
+## 🔐 Authentication Issues
+
+### **Issue: JWT Token Expired**
+
+#### **Symptoms**
+```json
+{
+  "success": false,
+  "error": "Invalid or expired token",
+  "code": "AUTH_TOKEN_INVALID"
+}
+```
+
+#### **Causes**
+- Token expired (24-hour lifetime)
+- User inactive for 15+ minutes
+- Multiple device login detected
+
+#### **Solutions**
+```bash
+# 1. Re-authenticate
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "password123"
+  }'
+
+# 2. Force logout other sessions if needed
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/force-logout-other-sessions" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "password123"
+  }'
+```
+
+#### **Prevention**
+```javascript
+// ⚠️ IMPORTANT: Always use tokenManager, never localStorage directly
+import { tokenManager } from '@/utilities/auth/token-manager';
+
+// Implement automatic token refresh
+const refreshTokenIfNeeded = async () => {
+  const token = await tokenManager.getToken('cookie');
+  if (token) {
+    // Decode token to check expiry (JWT tokens contain expiry in payload)
+    try {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      const tokenExpiry = payload.exp * 1000; // Convert to milliseconds
+      if (Date.now() > tokenExpiry - 300000) { // 5 minutes before expiry
+        await refreshToken();
+      }
+    } catch (error) {
+      // If token is invalid, clear auth and redirect to login
+      await tokenManager.clearAuth();
+    }
+  }
+};
+```
+
+### **Issue: CSRF Token Missing/Invalid**
+
+#### **Symptoms**
+```json
+{
+  "success": false,
+  "error": "CSRF token required",
+  "code": "CSRF_TOKEN_MISSING"
+}
+```
+
+#### **Solutions**
+```bash
+# Include CSRF token in headers
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "X-XSRF-TOKEN: YOUR_CSRF_TOKEN"
+```
+
+#### **Prevention**
+```javascript
+// ⚠️ IMPORTANT: Always use unifiedAPIClient - it automatically handles CSRF tokens
+import { unifiedAPIClient } from '@/utilities/api/unified-api-client';
+
+// CSRF token is automatically added via request interceptor
+// No manual header needed - unifiedAPIClient handles it automatically
+const response = await unifiedAPIClient.post('/api/books', bookData);
+
+// If you must use fetch directly, use addCSRFToHeaders:
+import { addCSRFToHeaders } from '@/utilities/security/csrf-protection';
+import { tokenManager } from '@/utilities/auth/token-manager';
+
+const makeRequest = async (endpoint, options = {}) => {
+  const token = await tokenManager.getToken('cookie');
+  const headers = await addCSRFToHeaders({
+    'Authorization': `Bearer ${token}`,
+    'Content-Type': 'application/json',
+    ...options.headers
+  });
+  
+  return fetch(`${baseUrl}${endpoint}`, { ...options, headers });
+};
+```
+
+**Note**: CSRF tokens are automatically added to all requests via the request interceptor in `src/utilities/api/unified-api-client.ts` (lines 735-743). Backend validation occurs in `functions/middleware/security/handlers/csrf-handler.ts` and is applied to all state-changing operations (POST, PUT, PATCH, DELETE) through the security middleware.
+
+### **Issue: Session Expired**
+
+#### **Symptoms**
+```json
+{
+  "success": false,
+  "error": "Session has expired",
+  "code": "SESSION_EXPIRED"
+}
+```
+
+#### **Solutions**
+```bash
+# Check session status
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/auth/validate-session" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Clean up expired sessions (admin only)
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/sessions/cleanup" \
+  -H "Authorization: Bearer ADMIN_JWT_TOKEN"
+```
+
+## 📝 Validation Issues
+
+### **Issue: Missing Required Fields**
+
+#### **Symptoms**
+```json
+{
+  "success": false,
+  "error": "Validation failed",
+  "code": "VALIDATION_ERROR",
+  "details": {
+    "field": "email",
+    "message": "Email is required"
+  }
+}
+```
+
+#### **Solutions**
+```bash
+# Ensure all required fields are included
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "password123",
+    "first_name": "John",
+    "last_name": "Doe",
+    "user_type": "student"
+  }'
+```
+
+#### **Required Fields Checklist**
+- ✅ `email` - Valid email format
+- ✅ `password` - Minimum 8 characters
+- ✅ `first_name` - Non-empty string
+- ✅ `last_name` - Non-empty string
+- ✅ `user_type` - One of: student, professor, guest
+
+### **Issue: Invalid Data Types**
+
+#### **Symptoms**
+```json
+{
+  "success": false,
+  "error": "Invalid data type",
+  "code": "TYPE_ERROR",
+  "details": {
+    "field": "publication_year",
+    "expected": "number",
+    "received": "string"
+  }
+}
+```
+
+#### **Solutions**
+```json
+// ❌ Wrong
+{
+  "publication_year": "2024"
+}
+
+// ✅ Correct
+{
+  "publication_year": 2024
+}
+```
+
+#### **Common Type Mismatches**
+- `publication_year`: number (not string)
+- `isbn`: string (not number)
+- `due_date`: ISO 8601 string (not Date object)
+- `status`: string from allowed enum values
+
+### **Issue: Invalid Format**
+
+#### **Symptoms**
+```json
+{
+  "success": false,
+  "error": "Invalid format",
+  "code": "FORMAT_ERROR",
+  "details": {
+    "field": "email",
+    "message": "Invalid email format"
+  }
+}
+```
+
+#### **Format Requirements**
+```bash
+# Email: user@domain.com
+# Phone: +1234567890
+# Date: 2024-01-15T10:30:00Z
+# ISBN: 978-1234567890 or 1234567890
+```
+
+#### **Solutions**
+```javascript
+// Validate before sending
+const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
+const validateDate = (date) => {
+  return !isNaN(Date.parse(date));
+};
+```
+
+## 🔒 Permission Issues
+
+### **🔐 RBAC Policy: Backend is Single Source of Truth**
+
+**The backend permissions endpoint (`/api/permissions/check`) is the single source of truth for all permission decisions.**
+
+- **Backend Authority**: All permission checks must ultimately be validated by the backend `/api/permissions/check` endpoint
+- **Client Fallbacks**: Client-side permission checks are for UI optimization only and **deny by default** when backend validation is unavailable
+- **Security First**: Never trust client-side permission checks alone - always validate on the backend
+- **Fail-Safe Design**: If the backend endpoint is unreachable or returns an error, the client should deny access
+
+### **Issue: Insufficient Permissions**
+
+#### **Symptoms**
+```json
+{
+  "success": false,
+  "error": "Insufficient permissions for this operation",
+  "code": "PERMISSION_DENIED",
+  "details": {
+    "required_role": "librarian",
+    "user_role": "student"
+  }
+}
+```
+
+#### **Role Hierarchy**
+```
+Superuser > Admin > Librarian > Student/Professor/Guest
+```
+
+#### **Solutions**
+```bash
+# Check user permissions (backend is authoritative)
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/permissions/check?resource=books&action=create" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Contact administrator for role upgrade
+# Or use appropriate role for the operation
+```
+
+#### **Common Permission Requirements**
+- **Create Books**: Librarian+
+- **Manage Users**: Admin+
+- **System Logs**: Admin+
+- **Migrations**: Superuser only
+
+### **Issue: Resource Access Denied**
+
+#### **Symptoms**
+```json
+{
+  "success": false,
+  "error": "Access denied to this resource",
+  "code": "RESOURCE_ACCESS_DENIED"
+}
+```
+
+#### **Solutions**
+```bash
+# Check resource ownership
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books/123" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Verify resource exists and is accessible
+# Contact resource owner or administrator
+```
+
+## 🔄 Rate Limiting Issues
+
+### **Issue: Too Many Requests**
+
+#### **Symptoms**
+```json
+{
+  "success": false,
+  "error": "Rate limit exceeded",
+  "code": "RATE_LIMIT_EXCEEDED",
+  "details": {
+    "limit": 100,
+    "window": "1 minute",
+    "retry_after": 30
+  }
+}
+```
+
+#### **Rate Limits**
+- **Authentication**: 10 requests/minute
+- **Search**: 100 requests/minute
+- **CRUD Operations**: 50 requests/minute
+- **File Uploads**: 20 requests/minute
+
+#### **Solutions**
+```javascript
+// Implement exponential backoff
+const retryWithBackoff = async (apiCall, maxRetries = 3) => {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await apiCall();
+    } catch (error) {
+      if (error.status === 429 && i < maxRetries - 1) {
+        const delay = Math.pow(2, i) * 1000; // 1s, 2s, 4s
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
+      }
+      throw error;
+    }
+  }
+};
+
+// Use bulk operations
+const bulkOperation = async (items) => {
+  const batchSize = 10;
+  const results = [];
+  
+  for (let i = 0; i < items.length; i += batchSize) {
+    const batch = items.slice(i, i + batchSize);
+    const batchResults = await processBatch(batch);
+    results.push(...batchResults);
+    
+    // Wait between batches to avoid rate limiting
+    if (i + batchSize < items.length) {
+      await new Promise(resolve => setTimeout(resolve, 1000));
+    }
+  }
+  
+  return results;
+};
+```
+
+## 🚫 Resource Not Found Issues
+
+### **Issue: Resource Doesn't Exist**
+
+#### **Symptoms**
+```json
+{
+  "success": false,
+  "error": "Resource not found",
+  "code": "RESOURCE_NOT_FOUND",
+  "details": {
+    "resource_type": "book",
+    "resource_id": 999
+  }
+}
+```
+
+#### **Solutions**
+```bash
+# 1. Verify resource ID
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# 2. Search for similar resources
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books/search?q=title" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# 3. Check if resource was deleted
+# 4. Contact administrator if resource should exist
+```
+
+### **Issue: Endpoint Not Found**
+
+#### **Symptoms**
+```json
+{
+  "success": false,
+  "error": "Endpoint not found",
+  "code": "ENDPOINT_NOT_FOUND"
+}
+```
+
+#### **Solutions**
+```bash
+# 1. Check URL spelling
+# 2. Verify endpoint exists in documentation
+# 3. Use correct HTTP method
+# 4. Check API version compatibility
+```
+
+## ⚠️ Server Errors
+
+### **Issue: Internal Server Error**
+
+#### **Symptoms**
+```json
+{
+  "success": false,
+  "error": "Internal server error",
+  "code": "INTERNAL_SERVER_ERROR",
+  "details": {
+    "error_id": "err_123456"
+  }
+}
+```
+
+#### **Solutions**
+```bash
+# 1. Retry request after delay
+# 2. Check system status
+# 3. Contact support with error ID
+# 4. Verify system configuration
+```
+
+### **Issue: Service Unavailable**
+
+#### **Symptoms**
+```json
+{
+  "success": false,
+  "error": "Service temporarily unavailable",
+  "code": "SERVICE_UNAVAILABLE"
+}
+```
+
+#### **Solutions**
+```bash
+# 1. Wait for service to resume
+# 2. Check maintenance schedule
+# 3. Use alternative endpoints if available
+# 4. Monitor system status
+```
+
+## 🔧 Debugging Techniques
+
+### **1. Enable Verbose Logging**
+
+#### **cURL Verbose Mode**
+```bash
+curl -v -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+#### **Check Response Headers**
+```bash
+curl -I -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+### **2. Test with Minimal Data**
+
+#### **Minimal Valid Request**
+```bash
+# Test with only required fields
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com",
+    "password": "test123",
+    "first_name": "Test",
+    "last_name": "User",
+    "user_type": "student"
+  }'
+```
+
+### **3. Check Authentication Step by Step**
+
+#### **Authentication Flow Test**
+```bash
+# 1. Test health endpoint (no auth required)
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/health"
+
+# 2. Test registration (no auth required)
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"test123","first_name":"Test","last_name":"User","user_type":"student"}'
+
+# 3. Test login (no auth required)
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"test@example.com","password":"test123"}'
+
+# 4. Test protected endpoint (auth required)
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+## 📊 Monitoring and Prevention
+
+### **Error Tracking**
+```javascript
+// Implement error monitoring
+const monitorAPIErrors = (error, context) => {
+  const errorReport = {
+    timestamp: new Date().toISOString(),
+    error_code: error.code,
+    error_message: error.error,
+    endpoint: context.endpoint,
+    user_id: context.userId,
+    request_details: context.requestDetails
+  };
+  
+  // Send to monitoring service
+  sendToMonitoringService(errorReport);
+  
+  // Log locally for debugging
+  console.error('API Error:', errorReport);
+};
+```
+
+### **Health Checks**
+```javascript
+// Regular health checks
+const checkAPIHealth = async () => {
+  try {
+    const response = await fetch('https://your-worker.your-subdomain.workers.dev/api/health');
+    const data = await response.json();
+    
+    if (data.status === 'ok') {
+      console.log('API is healthy');
+      return true;
+    } else {
+      console.warn('API health check failed:', data);
+      return false;
+    }
+  } catch (error) {
+    console.error('API health check error:', error);
+    return false;
+  }
+};
+
+// Check every 5 minutes
+setInterval(checkAPIHealth, 5 * 60 * 1000);
+```
+
+### **Preventive Measures**
+1. **Implement retry logic** for transient failures
+2. **Use exponential backoff** for rate limiting
+3. **Validate data** before sending requests
+4. **Handle token expiration** gracefully
+5. **Monitor error rates** and patterns
+6. **Test error scenarios** during development
+
+## 🆘 Getting Help
+
+### **Before Contacting Support**
+1. ✅ Check this troubleshooting guide
+2. ✅ Review [Error Codes Reference](./error-codes-reference.md)
+3. ✅ Test with [API Testing Collection](./api-testing-collection.md)
+4. ✅ Verify your setup with [Quick Start Guide](./quick-start-guide.md)
+
+### **Information to Provide**
+- **Error Code**: From response body
+- **Error ID**: If provided in error details
+- **Endpoint**: URL that failed
+- **Request Details**: Headers, body, method
+- **User Context**: Role, permissions
+- **Steps to Reproduce**: Exact sequence of actions
+- **Environment**: Development/production, client type
+
+### **Support Resources**
+- **[Error Codes Reference](./error-codes-reference.md)** - Detailed error information
+- **[API Testing Collection](./api-testing-collection.md)** - Test examples and procedures
+- **[Quick Start Guide](./quick-start-guide.md)** - Setup and basic usage
+- **[Complete Endpoints List](./endpoints.md)** - All available endpoints
+
+---
+
+**Last Updated:** November 2025  
+**Version:** 1.0.0  
+**Status:** ✅ Complete

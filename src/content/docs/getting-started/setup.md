@@ -1,0 +1,127 @@
+---
+title: "Setup"
+---
+
+# SJRS LMS Setup Guide
+
+## Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+- Cloudflare account
+- Wrangler CLI
+
+**Note**: This is a **Single Page Application (SPA)** built with React. All routing is handled client-side by React Router.
+
+## Quick Start
+
+### 1. Clone and Install
+```bash
+git clone https://github.com/PC-Mender/sjrslms.git
+cd sjrslms
+npm install
+```
+
+### 2. Cloudflare Configuration
+
+**Important**: Never commit your real `wrangler.toml` file to version control!
+
+1. Copy `wrangler.toml.example` to `wrangler.toml`
+2. Update with your actual Cloudflare credentials:
+
+```toml
+account_id = "your-actual-cloudflare-account-id"
+database_id = "your-actual-database-id"
+# JWT (choose single secret or rotation)
+# Single secret
+JWT_SECRET = "your-actual-jwt-secret"
+# Rotation-ready (recommended)
+# JWT_KEYS_JSON = "{\"key-2025-01\":\"super-secret-1\",\"key-2025-07\":\"super-secret-2\"}"
+# JWT_DEFAULT_KID = "key-2025-01"
+# JWT_ISS = "your-jwt-issuer"
+# JWT_AUD = "https://your-worker.your-subdomain.workers.dev"
+```
+
+### 3. Environment Variables
+
+Create a `.env` file in the root directory:
+
+```env
+VITE_API_BASE_URL=https://your-worker.workers.dev
+NODE_ENV=development
+```
+
+Remote-first API: the frontend points to the remote Worker even during local development. No local API server is required. The project now uses a unified Cloudflare Workers deployment with Static Assets.
+
+### 4. Database Setup (Remote-first)
+
+Remote-first policy: use the remote D1 database even during local development.
+
+```bash
+# Create D1 database (remote)
+wrangler d1 create your-database-name
+
+# Apply schema (remote)
+wrangler d1 execute your-database-name --file=sql/d1-schema.sql
+
+# Seed basic permissions (remote)
+wrangler d1 execute your-database-name --file=sql/setup/basic-permissions.sql
+```
+
+Optional: If you explicitly need a local preview, you may append `--local` to the execute commands.
+
+### 5. Start Development
+
+```bash
+npm run dev
+```
+
+Visit `http://localhost:3000` to see your application!
+
+## Deployment
+
+### Unified Workers Deployment
+The project now uses a single Cloudflare Workers deployment with Static Assets for both frontend and backend.
+
+### Automatic Deployment with Versioning
+```bash
+npm run release
+```
+This command:
+- Automatically determines version bump based on commit messages
+- Updates CHANGELOG.md
+- Builds the project
+- Deploys to Cloudflare Workers
+- Creates git tags
+
+### Manual Deployment
+```bash
+npm run build
+wrangler deploy
+```
+
+## Security Best Practices
+
+1. Use environment variables for sensitive data
+2. Never commit real API keys or secrets
+3. Use template files for configuration
+4. Regularly rotate JWT secrets and API keys
+5. Monitor your Cloudflare dashboard for unusual activity
+
+## Files to Never Commit
+
+- `wrangler.toml` (contains real credentials)
+- `.env*` files
+- `node_modules/`
+- Build artifacts (`dist/`, `build/`)
+- Log files
+- IDE-specific files
+
+## Troubleshooting
+
+If you encounter issues:
+
+1. Check that `wrangler.toml` is properly configured
+2. Verify your Cloudflare account has the necessary permissions
+3. Ensure your database is properly set up
+4. Check the Cloudflare Workers dashboard for deployment status

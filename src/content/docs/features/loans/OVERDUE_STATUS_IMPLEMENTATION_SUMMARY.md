@@ -1,0 +1,142 @@
+---
+title: "OVERDUE STATUS IMPLEMENTATION SUMMARY"
+---
+
+# Overdue Status Management - Root Level Implementation Summary
+
+## Overview
+
+A comprehensive root-level fix has been implemented to ensure consistent and automated overdue status management across all loan operations. This replaces ad-hoc status updates with a centralized, reliable system.
+
+## What Was Fixed
+
+### 1. Centralized Overdue Status Management ✅
+**New Module**: `functions/lib/loans/update-overdue-status.ts`
+
+This module provides:
+- **`updateLoanOverdueStatus()`**: Updates a single loan's overdue status based on due_date
+- **`updateMultipleLoansOverdueStatus()`**: Batch updates for multiple loans
+- **`updateAllLoansOverdueStatus()`**: Updates all loans that need status correction (for scheduled tasks)
+
+**Key Features**:
+- Idempotent and safe to call multiple times
+- Handles edge cases (returned loans, missing due dates, etc.)
+- Only processes 'active' and 'overdue' loans
+- Automatically corrects inconsistent states
+
+### 2. Loan Renewal Fixed ✅
+**File**: `functions/api/loans/handlers/renew-loan.ts`
+
+**Problem**: When a loan was renewed, the `due_date` was updated but the status remained `'overdue'` even if the new due date was in the future.
+
+**Solution**: After updating the due_date, the system now calls `updateLoanOverdueStatus()` to ensure the status is correctly set to `'active'` if the new due date is in the future.
+
+### 3. Loan Updates Fixed ✅
+**File**: `functions/api/loans/handlers/update-loan.ts`
+
+**Problem**: Manual updates to loan `due_date` didn't validate overdue status.
+
+**Solution**: After updating a loan's `due_date`, the system now validates and updates the overdue status accordingly.
+
+### 4. Scheduled Task Enhanced ✅
+**File**: `functions/lib/penalties/calculate-overdue-penalties.ts`
+
+**Problem**: 
+- Only marked loans as overdue, never corrected loans that were marked overdue but had future due dates
+- Used a separate function that only handled one direction
+
+**Solution**: 
+- Now calls `updateAllLoansOverdueStatus()` at the start of each scheduled run
+- This ensures all loans have correct status before penalty calculation
+- Corrects loans that are marked overdue but have future due dates (e.g., after renewal)
+
+### 5. Loan Creation Validated ✅
+**Files**:
+- `functions/api/loans/handlers/create-loan.ts`
+- `functions/api/orders/handlers/update-order.ts`
+- `functions/api/reservations/handlers/claim-reservation.ts`
+
+**Problem**: New loans weren't validated for overdue status at creation time.
+
+**Solution**: After creating a loan, the system now validates its overdue status. This handles edge cases where a loan might be created with a past due_date (shouldn't happen but could).
+
+## Implementation Details
+
+### Status Update Logic
+
+The centralized function follows these rules:
+
+1. **Returned loans**: Never marked overdue (status = 'returned' takes precedence)
+2. **Eligible statuses**: Only 'active' and 'overdue' loans are processed
+3. **Due date check**: 
+   - If `due_date < now` → Status should be `'overdue'`
+   - If `due_date >= now` → Status should be `'active'`
+4. **Idempotent**: Safe to call multiple times without side effects
+
+### Integration Points
+
+All loan operations now use the centralized function:
+
+1. **Loan Creation** → Validates status after creation
+2. **Loan Renewal** → Updates status after due_date change
+3. **Loan Update** → Validates status if due_date changed
+4. **Scheduled Task** → Updates all loans before penalty calculation
+
+### Error Handling
+
+- Status updates are non-blocking (errors are logged but don't fail the main operation)
+- Comprehensive error logging with context
+- Graceful degradation if status update fails
+
+## Benefits
+
+1. **Consistency**: Single source of truth for overdue status logic
+2. **Reliability**: Automatic correction of inconsistent states
+3. **Maintainability**: Changes to overdue logic only need to be made in one place
+4. **Correctness**: Handles all edge cases (renewal, manual updates, etc.)
+5. **Automation**: Scheduled task ensures all loans are checked daily
+
+## Testing Recommendations
+
+1. **Renewal Test**: 
+   - Create an overdue loan
+   - Renew it with a future due date
+   - Verify status changes from 'overdue' to 'active'
+
+2. **Update Test**:
+   - Update a loan's due_date to a past date
+   - Verify status changes to 'overdue'
+
+3. **Scheduled Task Test**:
+   - Create loans with various due dates
+   - Run scheduled task
+   - Verify all statuses are correct
+
+4. **Edge Cases**:
+   - Returned loans should never be marked overdue
+   - Loans without due_date should not be processed
+   - Loans with status other than 'active'/'overdue' should not be processed
+
+## Migration Notes
+
+- The old `markLoanAsOverdue()` function has been deprecated but kept for reference
+- All existing functionality is preserved
+- No database migrations required
+- No breaking changes to API contracts
+
+## Files Modified
+
+1. `functions/lib/loans/update-overdue-status.ts` (NEW)
+2. `functions/api/loans/handlers/renew-loan.ts`
+3. `functions/api/loans/handlers/update-loan.ts`
+4. `functions/lib/penalties/calculate-overdue-penalties.ts`
+5. `functions/api/loans/handlers/create-loan.ts`
+6. `functions/api/orders/handlers/update-order.ts`
+7. `functions/api/reservations/handlers/claim-reservation.ts`
+
+## Next Steps
+
+1. Monitor scheduled task logs to verify status updates are working correctly
+2. Check for any loans with inconsistent status (overdue but future due_date)
+3. Consider adding real-time status checks for better UX (optional enhancement)
+

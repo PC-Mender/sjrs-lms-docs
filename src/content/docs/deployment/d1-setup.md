@@ -1,0 +1,261 @@
+---
+title: "D1 Setup"
+---
+
+# D1 Database Setup Guide
+
+This guide will help you set up the D1 database for the SJRS Library Management System.
+
+## Prerequisites
+
+1. **Cloudflare Account**: You need a Cloudflare account with Workers enabled
+2. **Wrangler CLI**: Install the Cloudflare Wrangler CLI
+3. **Node.js**: Version 16 or higher
+
+## Installation Steps
+
+### 1. Install Wrangler CLI
+
+```bash
+# Install globally
+npm install -g wrangler
+
+# Or install as dev dependency
+npm install wrangler --save-dev
+```
+
+### 2. Login to Cloudflare
+
+```bash
+wrangler login
+```
+
+This will open your browser to authenticate with Cloudflare.
+
+### 3. Verify Configuration
+
+Make sure you have the following files in your project:
+
+- `wrangler.toml` - Wrangler configuration
+- `sql/d1-schema.sql` - Database schema
+- `scripts/setup-d1.js` - Setup script
+
+### 4. Run Database Setup (Remote-first)
+
+```bash
+# Make the script executable (Unix/Mac)
+chmod +x scripts/setup-d1.js
+
+# Run the setup script (targets remote by default)
+node scripts/setup-d1.js
+```
+
+The script will:
+- Create a new D1 database
+- Apply the complete schema
+- Insert sample data
+- Verify the setup
+
+### 5. Update Environment Variables
+
+After running the setup, you'll get a database ID. Update your `wrangler.toml`:
+
+```toml
+[vars]
+DB_ID = "your-database-id-here"
+```
+
+## Database Schema Overview
+
+The D1 database includes the following tables:
+
+### Core Tables
+- **roles** - User roles and permissions
+- **library_users** - Main user management
+- **authors** - Book authors
+- **books** - Book catalog
+- **book_copies** - Individual book copies
+- **loans** - Book borrowing records
+- **students** - Student-specific data
+
+### Features
+- **Full-text search** using FTS5
+- **Optimized indexes** for performance
+- **Data integrity triggers**
+- **Sample data** for testing
+- **Views** for common queries
+
+## Testing the Setup
+
+### 1. Test Database Connection (Remote-first)
+
+```bash
+# Test remote (recommended)
+wrangler d1 execute your-database-name --command="SELECT COUNT(*) as user_count FROM library_users;"
+
+# Optional: Test locally (if you explicitly use a local D1 preview)
+wrangler d1 execute your-database-name --local --command="SELECT COUNT(*) as user_count FROM library_users;"
+```
+
+### 2. Test Authentication
+
+Use the test users created in the schema:
+
+| Email | Password | Role |
+|-------|----------|------|
+| admin@yourdomain.com | password123 | Admin |
+| librarian@yourdomain.com | password123 | Librarian |
+| professor@yourdomain.com | password123 | Professor |
+| student@yourdomain.com | password123 | Student |
+
+### 3. Test Books API
+
+```bash
+# Get all books
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Search books
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books/search?q=harry" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Get specific book
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books/1" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+## Sample Data
+
+The setup script creates sample data including:
+
+### Users
+- Admin user with full access
+- Librarian for book management
+- Professor with extended privileges
+- Student for testing
+
+### Books
+- Harry Potter series
+- Game of Thrones
+- The Shining
+- Murder on the Orient Express
+- Hamlet
+
+### Authors
+- J.K. Rowling
+- George R.R. Martin
+- Stephen King
+- Agatha Christie
+- William Shakespeare
+
+## Database Queries
+
+### Common Queries
+
+```sql
+-- Get all books with author info
+SELECT * FROM books_with_authors;
+
+-- Get active loans
+SELECT * FROM active_loans;
+
+-- Get overdue books
+SELECT * FROM overdue_books;
+
+-- Search books
+SELECT * FROM books_fts WHERE books_fts MATCH 'harry potter';
+```
+
+### Performance Queries
+
+```sql
+-- Check table sizes
+SELECT 
+  name,
+  COUNT(*) as row_count
+FROM sqlite_master 
+WHERE type='table' 
+GROUP BY name;
+
+-- Check index usage
+SELECT * FROM sqlite_master WHERE type='index';
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Database not found**
+   ```bash
+   # Check available databases
+   wrangler d1 list
+   ```
+
+2. **Permission denied**
+   ```bash
+   # Make sure you're logged in
+   wrangler whoami
+   ```
+
+3. **Schema errors**
+   ```bash
+   # Check the schema file
+   cat sql/d1-schema.sql
+   ```
+
+4. **Connection issues**
+   ```bash
+   # Test connection
+   wrangler d1 execute your-database-name --command="SELECT 1;"
+   ```
+
+### Reset Database
+
+If you need to start fresh:
+
+```bash
+# Delete the database
+wrangler d1 delete your-database-name
+
+# Recreate it
+node scripts/setup-d1.js
+```
+
+## Next Steps
+
+After successful setup:
+
+1. **Deploy Workers**: Deploy your Cloudflare Workers
+2. **Test Authentication**: Test the login system
+3. **Test Books API**: Verify CRUD operations
+4. **Update Frontend**: Point your React app to the new API
+5. **Monitor Performance**: Check Cloudflare Analytics
+
+## Security Considerations
+
+- All passwords in sample data are hashed
+- JWT tokens are used for authentication
+- CORS is properly configured
+- Input validation is implemented
+- SQL injection protection is in place
+
+## Performance Tips
+
+- Use indexes for frequently queried columns
+- Implement pagination for large datasets
+- Use FTS5 for text search
+- Cache frequently accessed data
+- Monitor query performance
+
+## Support
+
+If you encounter issues:
+
+1. Check the Cloudflare Workers documentation
+2. Review the D1 database documentation
+3. Check the project's GitHub issues
+4. Contact the development team
+
+---
+
+**Note**: This setup creates a production-ready D1 database with all necessary tables, indexes, and sample data for the SJRS Library Management System.

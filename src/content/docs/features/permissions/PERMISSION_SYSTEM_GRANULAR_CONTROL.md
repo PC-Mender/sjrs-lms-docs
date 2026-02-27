@@ -1,0 +1,162 @@
+---
+title: "PERMISSION SYSTEM GRANULAR CONTROL"
+---
+
+# Permission System - Granular Control Documentation
+
+## Overview
+
+The permission system uses **separate, independent CRUD operations** for maximum flexibility. Each permission action is checked individually, allowing superusers to grant specific combinations based on user needs.
+
+## Available Permission Actions
+
+The system supports **9 separate permission actions**:
+
+1. **`create`** - Create new records
+2. **`read`** - View existing records  
+3. **`update`** - Modify existing records
+4. **`delete`** - Remove records
+5. **`approve`** - Approve pending requests
+6. **`reject`** - Reject pending requests
+7. **`export`** - Export data
+8. **`import`** - Import data (if implemented)
+9. **`bulk_operations`** - Perform bulk operations
+
+**Note**: The `manage` permission has been **removed** from the system. All CRUD operations are separate and independent.
+
+## Granular Permission Examples
+
+### Example 1: Admin with Create, Read, Update (No Delete)
+**Scenario**: Superuser wants admin to manage content but not delete records.
+
+**Permissions Granted**:
+- ✅ `create` - Can create new records
+- ✅ `read` - Can view records
+- ✅ `update` - Can modify records
+- ❌ `delete` - **NOT granted** - Cannot delete records
+
+**Result**: Admin can create, view, and edit records, but cannot delete them.
+
+### Example 2: Read-Only User
+**Scenario**: User should only view data, no modifications.
+
+**Permissions Granted**:
+- ✅ `read` - Can view records
+- ❌ `create` - Not granted
+- ❌ `update` - Not granted
+- ❌ `delete` - Not granted
+
+**Result**: User can only view data, cannot create, update, or delete.
+
+### Example 3: Content Creator
+**Scenario**: User can create and view content, but not modify or delete.
+
+**Permissions Granted**:
+- ✅ `create` - Can create new records
+- ✅ `read` - Can view records
+- ❌ `update` - Not granted
+- ❌ `delete` - Not granted
+
+**Result**: User can create and view, but cannot modify or delete existing records.
+
+### Example 4: Editor (No Create/Delete)
+**Scenario**: User can view and edit existing content, but cannot create new or delete.
+
+**Permissions Granted**:
+- ✅ `read` - Can view records
+- ✅ `update` - Can modify records
+- ❌ `create` - Not granted
+- ❌ `delete` - Not granted
+
+**Result**: User can view and edit existing records, but cannot create new ones or delete.
+
+### Example 5: Approver (No CRUD)
+**Scenario**: User can only approve/reject requests, cannot manage records directly.
+
+**Permissions Granted**:
+- ✅ `read` - Can view records (needed to see what to approve)
+- ✅ `approve` - Can approve requests
+- ✅ `reject` - Can reject requests
+- ❌ `create` - Not granted
+- ❌ `update` - Not granted
+- ❌ `delete` - Not granted
+
+**Result**: User can view and approve/reject requests, but cannot create, update, or delete records.
+
+### Example 6: Full Access
+**Scenario**: User needs complete control over a resource.
+
+**Permissions Granted**:
+- ✅ `create` - Can create new records
+- ✅ `read` - Can view records
+- ✅ `update` - Can modify records
+- ✅ `delete` - Can remove records
+- ✅ `approve` - Can approve requests
+- ✅ `reject` - Can reject requests
+- ✅ `export` - Can export data
+
+**Result**: User has full control over the resource.
+
+## How It Works
+
+### Permission Checking Flow
+
+1. **User attempts action** (e.g., create a book)
+2. **System checks specific permission** (e.g., `books:create`)
+3. **If granted**: Action proceeds
+4. **If not granted**: Action is denied with appropriate error message
+
+### Implementation
+
+```typescript
+// Example: Checking if user can create a book
+const canCreate = await hasPermission(env, {
+  user,
+  resource: 'books',
+  action: 'create'
+});
+
+if (!canCreate) {
+  return createForbiddenResponse('You do not have permission to create books', origin);
+}
+```
+
+### No Special "Manage" Permission
+
+- Each CRUD operation is checked **individually**
+- No single "manage" permission that implies others
+- Superusers must explicitly grant each permission needed
+- Maximum flexibility and control
+
+## Migration
+
+To remove 'manage' from existing databases, run:
+
+```sql
+-- See: sql/migrations/remove-manage-permission-action.sql
+```
+
+This migration will:
+1. Delete all `role_permissions` that reference 'manage'
+2. Delete the 'manage' action from `permission_actions` table
+3. Verify successful removal
+
+## Benefits
+
+✅ **Granular Control**: Grant exactly the permissions needed  
+✅ **Security**: Principle of least privilege - users only get what they need  
+✅ **Flexibility**: Support any permission combination  
+✅ **Clarity**: Each permission is explicit and independent  
+✅ **Auditability**: Clear record of what each user can do  
+
+## Use Cases Supported
+
+- **Read-only users**: Only `read`
+- **Content creators**: `create` + `read`
+- **Editors**: `read` + `update`
+- **Moderators**: `read` + `approve` + `reject`
+- **Full managers**: `create` + `read` + `update` + `delete` + `approve` + `reject`
+- **Custom combinations**: Any combination as needed
+
+The system is now fully granular and supports the exact scenario you described: **Superuser can grant create, read, update to admin but not delete or other options**.
+

@@ -1,0 +1,110 @@
+---
+title: Auto-Suspension Policies
+description: Auto-suspension policies
+---
+
+# Auto-Suspension Policies
+
+## Overview
+
+This system supports automatic suspension and automatic unsuspension of user accounts based on two policy groups:
+
+- Business-rule suspension (scheduled)
+- Security/abuse suspension (event-driven)
+
+Manual suspension remains available and is **not** automatically reversed.
+
+## Business-Rule Policy (Scheduled)
+
+### Execution
+
+- Runs daily via the Worker scheduled handler.
+
+### Suspend Conditions
+
+A user is automatically suspended when **either** of the following is true:
+
+1. Overdue threshold breach
+- Rule: Any loan overdue by more than **30 days**
+- Source table: `loans`
+- Condition:
+  - `returned_at IS NULL`
+  - `due_date IS NOT NULL`
+  - `julianday('now') - julianday(due_date) > 30`
+
+2. Unpaid penalties threshold breach
+- Rule: Total unpaid penalties is **>= 100**
+- Source table: `penalties`
+- Condition:
+  - `status = 'pending'`
+  - `SUM(amount) >= 100`
+
+### Unsuspend Conditions (Auto-Unsuspend)
+
+A user is automatically unsuspended when **both** are true:
+
+- The user was suspended by this business-rule system (`suspended_source = 'auto_business'`)
+- The user no longer matches *any* suspend condition:
+  - no loans overdue by > 30 days
+  - unpaid penalties total < 100
+
+### Safety Rule: Manual Suspensions
+
+If a user is suspended manually (or by a different mechanism), the system will not auto-unsuspend them.
+
+This is enforced by storing suspension metadata on the user record:
+
+- `suspended_source`
+- `suspended_reason`
+- `suspended_at`
+- `suspended_prev_status`
+
+## Security/Abuse Policy (Event-Driven)
+
+### Execution
+
+- Enforced during authentication flows.
+
+### Implemented trigger: repeated lockouts
+
+- Rule: Auto-suspend after **3 account lockouts within a 24-hour window**.
+- Enforcement point:
+  - `functions/api/auth/services/login-rate-limiting.ts` (`handleInvalidCredentials`)
+  - Lockout events are tracked in `env.CACHE` (KV) using a 24h TTL counter.
+- Suspension metadata written to `library_users`:
+  - `status = 'suspended'`
+  - `suspended_source = 'auto_security'`
+  - `suspended_reason` includes a JSON payload (policy + counts)
+  - `suspended_at = now`
+  - `suspended_prev_status = previous status`
+
+### Login behavior for suspended users
+
+- Suspended users are blocked at credential validation time.
+- The login endpoint returns a standardized error envelope with code:
+  - `AUTH_ACCOUNT_SUSPENDED`
+
+### Typical triggers
+
+Examples (thresholds configurable):
+
+- Repeated lockouts in a 24h window
+- Extremely high failed login attempt volume
+- Multi-IP credential stuffing patterns
+
+### Tuning knobs
+
+Current defaults (can be adjusted in code):
+
+- Lockout window: **24 hours**
+- Auto-suspend threshold: **3 lockouts**
+
+### Behavior
+
+- Suspend user
+- Deactivate all sessions
+- Record audit/action log entry
+
+## Audit Logging
+
+All automatic status transitions should write to `action_logs` with `user_id = 0` and include the policy details in the stored payload.

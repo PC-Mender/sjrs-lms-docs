@@ -1,0 +1,30 @@
+---
+title: "Url Normalization"
+---
+
+# Bookmark URL Normalization
+
+This application accepts only HTTP/HTTPS URLs or internal relative paths starting with `/`. Inputs are normalized consistently on both frontend and backend before validation.
+
+Normalization rules:
+- Trim surrounding whitespace.
+- Decode minimal HTML entities: `&amp;` → `&`, `&#x2F;` → `/`.
+- Collapse duplicated protocol prefixes: `https://https://` → `https://`, `http://http://` → `http://`.
+- Reject inputs that explicitly specify a non-HTTP(S) scheme (e.g., `javascript:`, `data:`, `vbscript:`, `file:`, `mailto:`). Such inputs are considered invalid.
+- Treat protocol-relative URLs (`//example.com/path`) as HTTPS by prefixing `https:`.
+- Keep internal paths (`/path/to/resource`) unchanged.
+- Keep explicit `http://` and `https://` URLs unchanged; the system does not automatically upgrade `http://` to `https://` because some sites may not support HTTPS.
+- For inputs without a scheme (naked domains like `example.com`), prefix `https://`.
+
+Validation:
+- Backend schemas permit only:
+  - External URLs that begin with `http://` or `https://` and include additional content.
+  - Internal URLs that begin with `/`.
+- Any other scheme or malformed input fails validation.
+
+Deduplication considerations:
+- `http://` and `https://` URLs are treated as distinct resources. If deduplication across protocols is desired, implement it at the business logic level (e.g., store a canonical comparison key or opt-in upgrade policy) rather than at normalization time.
+
+Rationale:
+- Rejecting non-HTTP(S) schemes prevents accidental acceptance of dangerous or unintended protocols.
+- Canonicalizing protocol-relative URLs to HTTPS improves consistency and security without breaking explicitly provided `http://` links.

@@ -1,0 +1,259 @@
+:root {
+  --sl-search-cancel-space: 0px;
+}
+
+/* Increase content width responsively to fill empty space without breaking sidebars */
+/* Default width for smaller screens (standard desktop) */
+:root {
+  --sl-content-width: 65rem; /* Increased from 50rem to give cards more room */
+}
+
+/* Widen content on larger screens (approx 1440px+) */
+@media (min-width: 90rem) {
+  :root {
+    --sl-content-width: 75rem;
+  }
+}
+
+/* Even wider on very large screens (approx 1600px+) */
+@media (min-width: 100rem) {
+  :root {
+    --sl-content-width: 85rem;
+  }
+}
+
+/* Maximize width on ultra-wide screens (approx 1920px+) */
+@media (min-width: 120rem) {
+  :root {
+    --sl-content-width: 95rem;
+  }
+}
+
+/* Force wider content specifically on the HOMEPAGE to make cards larger */
+/* We target the container broadly because Starlight's structure can vary */
+body[data-template="splash"] .sl-container,
+body[data-template="splash"] .content-panel,
+body[data-template="splash"] .main-frame {
+  max-width: 100% !important; /* Let it fill the screen first */
+  width: 95% !important; /* Then restrict slightly */
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Also target the hero and card grids directly */
+body[data-template="splash"] .hero,
+body[data-template="splash"] .card-grid {
+  max-width: 100rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 100% !important;
+}
+
+@media (min-width: 120rem) {
+  body[data-template="splash"] .hero,
+  body[data-template="splash"] .card-grid {
+    max-width: 110rem !important;
+  }
+}
+
+/* Ensure card grids respect the container width */
+.primary-card-grid, .secondary-card-grid, .card-grid {
+  max-width: 100% !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Widen the search bar on larger screens */
+@media (min-width: 50rem) {
+  site-search {
+    flex-grow: 1;
+    max-width: 600px !important; /* Increase max-width */
+  }
+  
+  site-search > button {
+    width: 100% !important;
+  }
+}
+
+/* Custom Footer Styling */
+.custom-footer {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  /* border-top: 1px solid var(--sl-color-hairline); */
+  text-align: center;
+  font-size: var(--sl-text-sm);
+  color: var(--sl-color-gray-3);
+}
+
+/* Center Hero Content */
+.hero {
+  /* Ensure hero takes up vertical space if needed and aligns center */
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  margin: 0 auto !important;
+  padding: 4rem 1rem !important;
+  max-width: 100% !important;
+}
+
+/* Target all direct children and nested stacks */
+.hero > *, .hero .stack {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-align: center !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 100% !important;
+}
+
+/* Title Styling */
+.hero h1 {
+  text-align: center !important;
+  white-space: nowrap !important;
+  margin-bottom: 1rem !important;
+  line-height: 1.2 !important;
+  width: 100% !important;
+}
+
+/* Tagline Styling - Target generic paragraphs too as Starlight might use p tag */
+.hero .tagline, .hero p {
+  text-align: center !important;
+  margin-bottom: 2rem !important;
+  max-width: 700px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  display: block !important;
+}
+
+/* Action Buttons */
+.hero .actions {
+  justify-content: center !important;
+  margin-top: 2rem !important;
+  width: 100% !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 1rem !important;
+}
+
+/* Welcome Text Styling */
+.hero-welcome-text {
+  text-align: center;
+  max-width: 800px;
+  margin: 2rem auto;
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+/* Centered Title Styling */
+.centered-title {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.centered-title h3 {
+  display: inline-block;
+  border-bottom: 2px solid var(--sl-color-accent); /* Optional: add underline */
+  padding-bottom: 0.5rem;
+}
+
+/* Force Primary Card Grid to be Single Row and Use Full Width */
+@media (min-width: 72rem) {
+  .primary-card-grid .card-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 2rem !important; /* Increased gap for better spacing */
+  }
+}
+
+/* Secondary Card Grid - Use 3 columns for better balance with fewer items */
+@media (min-width: 72rem) {
+  .secondary-card-grid .card-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 2rem !important;
+    max-width: 70rem !important; /* Slightly narrower for 3 items */
+    margin: 0 auto !important;
+  }
+}
+
+/* Improve Card Content Spacing and Ensure Text Wrapping */
+.card-grid .card {
+  height: 100% !important; /* Ensure equal height */
+  display: flex !important;
+  flex-direction: column !important;
+  /* Force text wrapping - Common Flexbox Fix */
+  min-width: 0 !important;
+  max-width: 100% !important;
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+}
+
+.card-grid .card .title,
+.card-grid .card p,
+.card-grid .card li,
+.card-grid .card a,
+.card-grid .card span {
+  /* Ensure children also wrap */
+  white-space: normal !important;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  /* Flexbox children need this sometimes */
+  min-width: 0 !important;
+  max-width: 100% !important;
+}
+
+.card-grid .card .title {
+  margin-bottom: 1rem !important;
+}
+
+.card-grid .card p {
+  margin-bottom: 1rem !important;
+  line-height: 1.6 !important;
+  color: var(--sl-color-gray-2);
+}
+
+.card-grid .card ul {
+  padding-left: 1.2rem !important;
+  margin-top: 0.5rem !important;
+  flex-grow: 1; /* Push bottom content down if needed */
+}
+
+.card-grid .card li {
+  margin-bottom: 0.6rem !important;
+  line-height: 1.5 !important;
+}
+
+/* Hide theme select label text but keep icon */
+starlight-theme-select label {
+  font-size: 0 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  padding: 0.5rem;
+  border-radius: 9999px;
+}
+
+starlight-theme-select label:hover {
+  background-color: var(--sl-color-gray-6);
+}
+
+starlight-theme-select label svg {
+  font-size: 1.25rem !important; /* Restore icon size */
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+  display: block !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 50rem) {
+  .hero h1 {
+    white-space: normal !important;
+    font-size: 2.5rem !important;
+  }
+}

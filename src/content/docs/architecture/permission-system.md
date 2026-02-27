@@ -1,0 +1,407 @@
+---
+title: "Permission System"
+---
+
+# Permission System Guide
+
+## Overview
+
+The library management system now uses a comprehensive **role-based permission system** instead of complex RLS policies. This provides better security, easier management, and more granular control over user access.
+
+## 🎯 Key Benefits
+
+- **✅ Granular Control**: Each role has specific permissions for each resource and action
+- **✅ Easy Management**: Visual interface to manage permissions
+- **✅ Audit Trail**: All permission changes are logged
+- **✅ No RLS Complexity**: Avoids infinite recursion and complex database policies
+- **✅ Frontend Integration**: React hooks and components for easy permission checking
+
+## 📋 System Resources
+
+### User Management
+- `users` - User Management
+- `guests` - Guest Management  
+- `students` - Student Management
+- `professors` - Professor Management
+- `roles` - Role Management
+
+### Book Management
+- `books` - Book Management
+- `book_copies` - Book Copies
+- `authors` - Author Management
+- `publications` - Publication Management
+- `sections` - Section Management
+- `subcategories` - Subcategory Management
+- `resources` - Resource Management
+
+### Circulation
+- `loans` - Loan Management
+- `borrow_limits` - Borrow Limits
+- `borrow_records` - Borrow Records
+- `penalties` - Penalty Management
+
+### User Features
+- `wishlist` - Wishlist Management
+- `book_reviews` - Book Reviews
+- `book_searches` - Book Searches
+- `book_views` - Book Views
+- `digital_book_reads` - Digital Book Reads
+
+### Analytics
+- `analytics` - Analytics
+- `system_logs` - System Logs
+- `action_logs` - Action Logs
+
+### Notifications
+- `notifications` - Notification Management
+
+### System
+- `permissions` - Permission Management
+- `orders` - Order Management
+- `system_settings` - System Settings
+
+## 🔐 Permission Actions
+
+- **create** - Create new records
+- **read** - View and read records
+- **update** - Modify existing records
+- **delete** - Remove records
+
+## 👥 Role Permissions
+
+### Superuser
+- **Full access** to everything
+- Can manage all permissions
+- Can access system settings
+
+### Admin
+- **Full access** except delete permissions for critical resources
+- Cannot delete users, roles, permissions, or system settings
+- Can manage most system operations
+
+### Librarian
+- **Full access** to book management and circulation
+- **Read access** to user management (except guests)
+- **Full access** to guest management
+- **Read access** to analytics and notifications
+- **No access** to system settings
+
+### Professor
+- **Read access** to books, authors, publications, etc.
+- **Full access** to own loans and user features
+- **Read access** to own borrow records and penalties
+- **No access** to management features
+
+### Student
+- **Read access** to books and catalog
+- **Read access** to own loans, borrow records, penalties
+- **Full access** to user features (wishlist, reviews, etc.)
+- **No access** to management features
+
+### Guest
+- **Read access** to books and catalog only
+- **No access** to any management features
+- **No access** to user features
+
+## 🛠️ Using Permission System
+
+### 1. Permission Management Interface
+
+Access via: **System → Permission Management**
+
+Features:
+- **Permission Matrix**: Visual grid showing all role permissions
+- **Quick Setup**: Preset configurations for common scenarios
+- **Audit Log**: History of all permission changes
+- **Resource Management**: Add new resources to the system
+
+### 2. Frontend Permission Checks
+
+#### Using Permission Hooks
+
+```typescript
+import { useCanCreate, useCanUpdate, useCanDelete, useCanRead } from '../utilities/permission-checks';
+
+// In your component
+const { canCreate, loading: createLoading } = useCanCreate('books');
+const { canUpdate, loading: updateLoading } = useCanUpdate('books');
+const { canDelete, loading: deleteLoading } = useCanDelete('books');
+const { canRead, loading: readLoading } = useCanRead('books');
+```
+
+#### Using Permission Components
+
+```typescript
+import { CreateButton, EditButton, DeleteButton, PermissionGuard } from '../utilities/permission-checks';
+
+// Create button (only shows if user has create permission)
+<CreateButton
+  resourceName="books"
+  onClick={handleCreate}
+>
+  Add Book
+</CreateButton>
+
+// Edit button (only shows if user has update permission)
+<EditButton
+  resourceName="books"
+  onClick={() => handleEdit(record)}
+>
+  Edit
+</EditButton>
+
+// Delete button (only shows if user has delete permission)
+<DeleteButton
+  resourceName="books"
+  onDelete={() => handleDelete(record.id)}
+/>
+
+// Permission guard (only renders children if user has permission)
+<PermissionGuard
+  resourceName="books"
+  actionName="read"
+  fallback={<div>Access Denied</div>}
+>
+  <BookList />
+</PermissionGuard>
+```
+
+#### Using Table Actions Hook
+
+```typescript
+import { useTableActions } from '../utilities/permission-checks';
+
+// Get all table action permissions at once
+const { canCreate, canUpdate, canDelete, loading } = useTableActions('books');
+```
+
+### 3. Adding Permission Checks to Components
+
+#### Example: Book List Component
+
+```typescript
+import { usePageAccess, useTableActions, CreateButton, EditButton, DeleteButton } from '../utilities/permission-checks';
+
+export const BookList: React.FC = () => {
+  // Check page access
+  const { canAccess, loading: pageAccessLoading } = usePageAccess('books');
+  
+  // Check table actions
+  const { canCreate, canUpdate, canDelete, loading: actionsLoading } = useTableActions('books');
+
+  // Show loading or access denied
+  if (pageAccessLoading) return <div>Loading...</div>;
+  if (!canAccess) return <Alert message="Access Denied" type="error" />;
+
+  return (
+    <div>
+      <Card
+        title="Books"
+        extra={
+          <CreateButton resourceName="books" onClick={handleCreate}>
+            Add Book
+          </CreateButton>
+        }
+      >
+        <Table
+          columns={[
+            // ... other columns
+            {
+              title: 'Actions',
+              render: (_, record) => (
+                <Space>
+                  <EditButton
+                    resourceName="books"
+                    onClick={() => handleEdit(record)}
+                  />
+                  <DeleteButton
+                    resourceName="books"
+                    onDelete={() => handleDelete(record.id)}
+                  />
+                </Space>
+              )
+            }
+          ]}
+        />
+      </Card>
+    </div>
+  );
+};
+```
+
+## 🔧 Setting Up Permissions
+
+### 1. Run the Migration
+
+Execute the comprehensive permission setup migration:
+
+```sql
+-- Run sql/migrations/setup-comprehensive-permission-system.sql
+```
+
+This will:
+- Create all system resources
+- Create all permission actions
+- Set up role-based permissions
+- Provide verification queries
+
+### 2. Configure via UI
+
+1. **Login as Superuser**
+2. **Navigate to**: System → Permission Management
+3. **Use the interface** to:
+   - Review current permissions
+   - Modify role permissions
+   - Add new resources
+   - View audit logs
+
+### 3. Add Permission Checks to Components
+
+1. **Import permission utilities**:
+   ```typescript
+   import { useCanCreate, CreateButton, PermissionGuard } from '../utilities/permission-checks';
+   ```
+
+2. **Add permission checks** to your components
+3. **Test with different user roles**
+
+## 📊 Monitoring and Auditing
+
+### Audit Log
+
+All permission changes are logged in `permission_audit_log` table:
+- Who made the change
+- What was changed
+- When it was changed
+- Reason for the change
+
+### Permission Summary
+
+View permission statistics:
+- Total permissions per role
+- Granted vs denied permissions
+- Resource access by category
+
+## 🚀 Best Practices
+
+### 0. RBAC Policy: Backend is Single Source of Truth
+
+**The backend permissions endpoint (`/api/permissions/check`) is the single source of truth for all permission decisions.**
+
+- **Backend Authority**: All permission checks must ultimately be validated by the backend `/api/permissions/check` endpoint
+- **Client Fallbacks**: Client-side permission checks are for UI optimization only and **deny by default** when backend validation is unavailable
+- **Security First**: Never trust client-side permission checks alone - always validate on the backend
+- **Fail-Safe Design**: If the backend endpoint is unreachable or returns an error, the client should deny access
+
+### 1. Always Check Permissions
+
+```typescript
+// ✅ Good: Check permissions before showing actions
+const { canDelete } = useCanDelete('books');
+if (canDelete) {
+  // Show delete button
+}
+
+// ❌ Bad: Show actions without permission checks
+<Button onClick={handleDelete}>Delete</Button>
+```
+
+### 2. Use Permission Components
+
+```typescript
+// ✅ Good: Use permission-aware components
+<CreateButton resourceName="books" onClick={handleCreate}>
+  Add Book
+</CreateButton>
+
+// ❌ Bad: Manual permission checking
+{canCreate && <Button onClick={handleCreate}>Add Book</Button>}
+```
+
+### 3. Provide Fallbacks
+
+```typescript
+// ✅ Good: Provide meaningful fallbacks
+<PermissionGuard
+  resourceName="books"
+  actionName="read"
+  fallback={<Alert message="Access Denied" type="error" />}
+>
+  <BookList />
+</PermissionGuard>
+```
+
+### 4. Cache Permission Results
+
+The permission system automatically caches results for performance. Clear cache when needed:
+
+```typescript
+import { clearPermissionCache } from '../utilities/permissions';
+
+// Clear cache after permission changes
+clearPermissionCache();
+```
+
+## 🔒 Security Considerations
+
+### 1. Backend Validation
+
+Always validate permissions on the backend as well:
+
+```typescript
+// In your API endpoints
+const hasPermission = await checkUserPermission(userId, 'books', 'delete');
+if (!hasPermission) {
+  throw new Error('Access denied');
+}
+```
+
+### 2. Audit Logging
+
+All permission changes are automatically logged for security auditing.
+
+### 3. Role-Based Access
+
+Users can only access features they have permission for, preventing unauthorized access.
+
+## 🐛 Troubleshooting
+
+### Common Issues
+
+1. **Permission not working**: Check if the resource name matches exactly
+2. **Component not showing**: Verify the user has the required permission
+3. **Loading forever**: Check if the permission check is failing
+
+### Debug Commands
+
+```sql
+-- Check user permissions
+SELECT * FROM role_permissions 
+WHERE role_id = (SELECT id FROM roles WHERE name = 'Admin');
+
+-- Check specific permission
+SELECT rp.*, pr.resource_name, pa.action_name, r.name as role_name
+FROM role_permissions rp
+JOIN permission_resources pr ON rp.resource_id = pr.id
+JOIN permission_actions pa ON rp.action_id = pa.id
+JOIN roles r ON rp.role_id = r.id
+WHERE pr.resource_name = 'books' AND pa.action_name = 'create';
+```
+
+## 📈 Performance
+
+- Permission checks are cached for performance
+- Batch permission checks when possible
+- Use `useTableActions` for multiple permission checks
+- Clear cache when permissions change
+
+## 🎉 Conclusion
+
+The permission system provides:
+- **Granular control** over user access
+- **Easy management** through the UI
+- **Comprehensive auditing** of changes
+- **Simple integration** with React components
+- **Better security** than complex RLS policies
+
+This system makes it easy to manage permissions and ensures users only have access to the features they need. 

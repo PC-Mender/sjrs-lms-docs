@@ -1,0 +1,33 @@
+---
+title: "Unified Permission Migration"
+---
+
+# Unified Permission System Migration
+
+This guide documents the supported path for moving legacy permission checks to the unified, backend-driven RBAC client. It supplements the existing architecture notes and clarifies recent guard rails added to the codebase.
+
+## Deprecations
+
+- `UnifiedPermissionSystem.hasPermission(...)` now throws intentionally. The class remains for role metadata and hierarchy utilities only.
+- Direct, client-side permission matrices are deprecated. UI components must delegate to the backend-driven `usePermissions` hook or `rbacClient.hasPermission(...)`.
+- Console logging in permission fallbacks is disallowed in production builds. Route warnings through `handleError(...)` to capture breadcrumbs and Sentry events.
+
+## Recommended Client Usage
+
+- Prefer the `usePermissions` hook for bulk UI gating. It hydrates via `/api/role_permissions`, falls back gracefully when the bulk path fails, and keeps caches tidy through `refreshPermissions()` and event emitters.
+- Use `rbacClient.hasPermission({ resource, action })` for targeted checks (e.g., button-level guards). It already applies caching, retry logic, and consistent error surfaces.
+- Decode the active role via `resolveRoleName(...)` and detect elevated accounts with `isSuperuserUser(...)` so that edge-case payloads (legacy JWTs, partial objects) keep working.
+
+## Migration Steps
+
+1. Replace any direct calls to `UnifiedPermissionSystem.hasPermission` or legacy role matrices with `rbacClient.hasPermission`.
+2. Swap ad-hoc role comparisons (`user?.role?.toLowerCase() === 'superuser'`, `user?.user_type === 'Superuser'`, etc.) with the shared `isSuperuserUser` helper.
+3. When converting components that need synchronous flags, inject the `usePermissions` hook and read from its `hasPermission` or `canRead` helpers instead of duplicating resource/action arrays.
+4. Ensure new fallbacks (timeouts, degraded states) call `handleError` with a low severity so that we capture telemetry without flooding production logs.
+
+## Additional Notes
+
+- The backend `requireReadPermission` / `requireUpdatePermission` middleware is authoritative. Avoid layering redundant `hasPermission` checks in handlers unless you need custom error responses.
+- Permission metadata (resources/actions) is available via `/api/permission_resources` and `/api/permission_actions`; the updated client fallbacks rely on those endpoints to prevent drift.
+
+

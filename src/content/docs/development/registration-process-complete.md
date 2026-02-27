@@ -1,0 +1,410 @@
+---
+title: "Registration Process Complete"
+---
+
+# Registration Process - Complete Documentation
+
+**Last Updated:** 2025-01-XX  
+**Status:** ✅ Production Ready  
+**Version:** 2.0 (Multi-Step UX)
+
+---
+
+## Executive Summary
+
+The SJRS LMS registration process is a **secure, three-stage workflow** with progressive disclosure UX. The process ensures proper verification, profile completion, and administrative oversight while providing an excellent user experience.
+
+---
+
+## 🎯 Complete Registration Flow
+
+### Overview
+
+The registration process consists of **4 main stages**:
+
+1. **Multi-Step Registration Form** (New UX)
+2. **Email Confirmation**
+3. **Profile Completion**
+4. **Admin Approval**
+
+---
+
+## Stage 1: Multi-Step Registration Form
+
+### UI/UX Implementation
+
+**Location:** `src/pages/register.tsx`
+
+**Design:** Progressive disclosure with 3 steps
+
+#### Step 1: Personal Information 👤
+- **Fields:**
+  - Email Address
+  - First Name (auto-capitalized)
+  - Last Name (auto-capitalized)
+- **Validation:**
+  - Email format validation
+  - Name format: 2-50 characters, letters/spaces/hyphens/apostrophes only
+  - Auto-capitalization on input
+- **Navigation:** "Next: Account Type" button
+
+#### Step 2: Account Type 🎯
+- **Fields:**
+  - User Type (Student/Professor/Guest)
+- **Validation:**
+  - Required field
+- **Navigation:** "Back" + "Next: Security" buttons
+
+#### Step 3: Security & Verification 🔒✅
+- **Fields:**
+  - Password
+  - Confirm Password
+  - Turnstile CAPTCHA
+- **Validation:**
+  - Password strength (see Security section)
+  - Password cannot contain first/last name (3+ chars)
+  - Password match validation
+  - CAPTCHA verification
+- **Navigation:** "Back" + "Create Account" button
+
+### Backend Registration Endpoint
+
+**Endpoint:** `POST /api/auth/register`  
+**Location:** `functions/api/auth/registration.ts`
+
+**Request Payload:**
+```typescript
+{
+  email: string;
+  password: string;
+  firstName: string;
+  lastName: string;
+  userType: 'student' | 'professor' | 'guest';
+  turnstileToken?: string;
+}
+```
+
+**Security Validations:**
+1. ✅ **Name Validation:** 2-50 chars, alphanumeric + spaces/hyphens/apostrophes
+2. ✅ **Email Format:** Regex validation
+3. ✅ **Disposable Email Blocking:** 40+ providers blocked
+4. ✅ **Password Strength:** 
+   - 8-128 characters
+   - Uppercase, lowercase, number, special character
+   - Not common password
+   - No sequential/repeated patterns
+   - Cannot contain email username or name (3+ chars)
+5. ✅ **Turnstile CAPTCHA:** Bot prevention
+6. ✅ **Rate Limiting:** 3 attempts per 15 minutes per email
+7. ✅ **Email Enumeration Prevention:** Generic success message
+
+**Process:**
+1. Validate all inputs
+2. Check for existing user (prevent duplicates)
+3. Hash password (PBKDF2, 100,000 iterations, SHA-256)
+4. Create user with `status: 'pending'`, `email_verified: false`
+5. Generate email confirmation token (24-hour expiration)
+6. Send confirmation email
+7. Return success response
+
+**Database State:**
+```sql
+library_users: {
+  status: 'pending',
+  email_verified: 0,
+  created_at: NOW()
+}
+email_confirmation_tokens: {
+  token: <hashed_token>,
+  expires_at: NOW() + 24 hours,
+  used_at: NULL
+}
+```
+
+---
+
+## Stage 2: Email Confirmation
+
+**Endpoint:** `POST /api/auth/confirm-email`  
+**Location:** `functions/api/auth/email-confirmation.ts`
+
+**Process:**
+1. User clicks confirmation link in email
+2. Token validation:
+   - Token exists and not expired (24 hours)
+   - Token not already used (atomic check)
+3. Mark token as used (atomic operation - prevents reuse)
+4. Update user: `email_verified = 1`
+5. User can now login to complete profile
+
+**Database State:**
+```sql
+library_users: {
+  status: 'pending',
+  email_verified: 1  // Changed
+}
+email_confirmation_tokens: {
+  used_at: NOW()  // Marked as used
+}
+```
+
+**Rate Limiting:** 5 attempts per 15 minutes per token
+
+**Resend Functionality:**
+- Endpoint: `POST /api/auth/resend-confirmation`
+- Limit: 3 resends per hour
+- Generates new token and sends email
+
+---
+
+## Stage 3: Profile Completion
+
+**Endpoint:** `POST /api/auth/complete-profile`  
+**Location:** `functions/api/auth/email-confirmation.ts` (via `processProfileUpdate`)
+
+**Prerequisites:**
+- Email must be verified (`email_verified = 1`)
+- User status must be `pending`
+- User must be authenticated (login required)
+
+**Required Fields by User Type:**
+
+### Student
+- Phone Number (India +91 format, validated)
+- Registration Number (exactly 4 digits, unique)
+- Year of Study (number)
+
+### Professor
+- Phone Number (India +91 format, validated)
+- Stream/Department (string)
+
+### Guest
+- Phone Number (India +91 format, validated)
+- About (description, max 500 chars)
+- City (string)
+- State (string)
+- Country (string)
+
+**Process:**
+1. Validate authenticated user exists and email verified
+2. Validate type-specific required fields
+3. Validate phone number format (defaults to India +91)
+4. Check registration number uniqueness (students only)
+5. Update user profile with type-specific data
+6. Status remains `pending` (awaiting admin approval)
+7. Send profile completion notification email
+
+**Database Updates:**
+- `library_users`: Phone number updated
+- `students`: Registration number, year of study
+- `professors`: Stream
+- `guests`: About, city, state, country
+
+---
+
+## Stage 4: Admin Approval
+
+**Process:**
+1. Admin/Superuser reviews user profile
+2. Admin can approve or reject
+3. Status changes:
+   - **Approved:** `status: 'active'` → User can access dashboard
+   - **Rejected:** `status: 'inactive'` → User can resubmit profile
+
+**Resubmission Flow:**
+- Rejected users can edit and resubmit profile
+- Endpoint: `POST /api/auth/resubmit-profile`
+- Status changes from `inactive` → `pending`
+- Requires email verification
+
+**Audit Logging:**
+- All status changes logged with:
+  - Admin ID
+  - Timestamp
+  - Reason (if provided)
+  - Old status → New status
+
+---
+
+## 🔒 Security Features
+
+### Password Policy
+- **Minimum:** 8 characters
+- **Maximum:** 128 characters
+- **Required:** Uppercase, lowercase, number, special character
+- **Blocked:** Common passwords, sequential patterns, repeated characters
+- **Personal Info Check:** Cannot contain email username or name (3+ chars)
+
+### Rate Limiting
+- **Registration:** 3 attempts per 15 minutes per email
+- **Email Confirmation:** 5 attempts per 15 minutes per token
+- **Email Resend:** 3 resends per hour
+- **Status Check OTP:** 5 attempts per OTP
+
+### CAPTCHA
+- **Type:** Cloudflare Turnstile
+- **Location:** Step 3 of registration form
+- **Backend Validation:** Required if configured
+
+### Account Security
+- **Account Lockout:** 5 failed login attempts → 30-minute lockout
+- **Token Security:** Atomic operations prevent reuse
+- **Token Cleanup:** Automated daily cleanup (2 AM UTC cron job)
+
+### Email Security
+- **Disposable Email Blocking:** 40+ providers
+- **Email Enumeration Prevention:** Generic error messages
+- **OTP Security:** 8-character alphanumeric (36^8 combinations)
+
+---
+
+## 📱 User Experience Features
+
+### Multi-Step Form
+- **Progressive Disclosure:** Fields revealed step-by-step
+- **Progress Indicator:** Shows current step (e.g., "Step 1 of 3")
+- **Step Icons:** Visual icons for each step
+- **Smooth Animations:** Fade-in transitions between steps
+- **Form Persistence:** Data saved when navigating between steps
+- **Mobile Responsive:** Optimized for all screen sizes
+
+### Auto-Capitalization
+- First and last names automatically capitalized
+- Handles spaces, hyphens, and apostrophes correctly
+
+### Validation Feedback
+- Real-time validation errors
+- Per-step validation before progression
+- Clear error messages
+
+---
+
+## 🔄 Status Check (Public)
+
+**Endpoint:** `POST /api/auth/check-status`  
+**Location:** `functions/api/auth/check-status.ts`
+
+**Process:**
+1. User enters: Email, First Name, Last Name
+2. System sends 8-character alphanumeric OTP to email
+3. User enters OTP
+4. System shows: Current status, next steps
+
+**Security:**
+- Case-sensitive name matching
+- OTP expires in 10 minutes
+- 5 attempt limit per OTP
+- Always returns success (prevents enumeration)
+
+---
+
+## 📊 Database Schema
+
+### library_users
+```sql
+- id (INTEGER PRIMARY KEY)
+- email (TEXT UNIQUE)
+- password_hash (TEXT)
+- first_name (TEXT)
+- last_name (TEXT)
+- user_type (TEXT) -- 'student', 'professor', 'guest'
+- status (TEXT) -- 'pending', 'active', 'inactive'
+- email_verified (BOOLEAN)
+- phone (TEXT)
+- created_at (DATETIME)
+- updated_at (DATETIME)
+```
+
+### email_confirmation_tokens
+```sql
+- id (INTEGER PRIMARY KEY)
+- user_id (INTEGER)
+- token (TEXT UNIQUE)
+- expires_at (DATETIME)
+- used_at (DATETIME NULL)
+- created_at (DATETIME)
+```
+
+### students, professors, guests
+- Type-specific profile data tables
+
+---
+
+## 🎯 User Journey
+
+1. **User visits `/register`**
+   - Sees multi-step form
+   - Completes Step 1: Personal Info
+   - Completes Step 2: Account Type
+   - Completes Step 3: Security & Verification
+   - Submits registration
+
+2. **Email Confirmation**
+   - Receives confirmation email
+   - Clicks link → Email verified
+   - Redirected to login
+
+3. **Profile Completion**
+   - Logs in
+   - Automatically redirected to profile completion if profile is incomplete
+   - Fills type-specific fields
+   - Submits profile
+   - Status: `pending` (awaiting approval)
+
+4. **Admin Approval**
+   - Admin reviews and approves/rejects
+   - If approved: Status → `active`, user can access dashboard
+   - If rejected: Status → `inactive`, user can resubmit
+
+---
+
+## 📝 Key Files
+
+### Frontend
+- `src/pages/register.tsx` - Multi-step registration form
+- `src/pages/email-confirmation.tsx` - Email verification UI
+- `src/pages/profile-completion.tsx` - Profile completion form
+- `src/pages/pending-approval.tsx` - Status tracking
+- `src/pages/check-status.tsx` - Public status check
+
+### Backend
+- `functions/api/auth/registration.ts` - Registration endpoint
+- `functions/api/auth/email-confirmation.ts` - Email & profile handlers
+- `functions/api/auth/check-status.ts` - Status check handlers
+- `functions/api/auth/shared/profile-handlers.ts` - Shared profile logic
+
+### Middleware
+- `functions/middleware/auth/password/validation.ts` - Password policy
+- `functions/middleware/auth/users/profile-update.ts` - Profile validation
+- `functions/middleware/validation/email-domain-validation.ts` - Disposable email blocking
+- `functions/middleware/security/turnstile-validation.ts` - CAPTCHA validation
+
+---
+
+## ✅ Production Readiness
+
+**Status:** ✅ **PRODUCTION READY**
+
+- ✅ All security measures implemented
+- ✅ Multi-step UX implemented
+- ✅ Comprehensive validation
+- ✅ Rate limiting configured
+- ✅ CAPTCHA protection active
+- ✅ Token security ensured
+- ✅ Audit logging enabled
+- ✅ Mobile responsive
+- ✅ Error handling complete
+
+---
+
+## 📚 Related Documentation
+
+- `registration-security-audit.md` - Security assessment
+- `registration-ux-improvement-proposal.md` - UX design rationale
+- `turnstile-configuration-guide.md` - CAPTCHA setup
+
+---
+
+**Last Reviewed:** 2025-01-XX  
+**Next Review:** As needed
+

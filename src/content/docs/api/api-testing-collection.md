@@ -1,0 +1,432 @@
+---
+title: "Api Testing Collection"
+---
+
+# 🧪 API Testing Collection
+
+This document provides comprehensive testing resources for the SJRS LMS API, including Postman collection, cURL examples, and testing procedures.
+
+## 📦 Postman Collection
+
+### **Import Instructions**
+1. Download the [SJRS LMS API Collection](./sjrs-lms-api.postman_collection.json)
+2. Import into Postman
+3. Set up environment variables (see Environment Setup below)
+
+### **Environment Variables**
+```json
+{
+  "base_url": "https://your-worker.your-subdomain.workers.dev",
+  "auth_token": "",
+  "csrf_token": "",
+  "user_email": "test@example.com",
+  "user_password": "testpassword123",
+  "admin_email": "admin@example.com",
+  "admin_password": "adminpass123"
+}
+```
+
+### **Collection Structure**
+```
+SJRS LMS API
+├── 🔑 Authentication
+│   ├── Login
+│   ├── Register
+│   ├── Logout
+│   └── Profile Management
+├── 👥 User Management
+│   ├── Get Users
+│   ├── Create User
+│   └── Update User
+├── 📚 Book Management
+│   ├── Get Books
+│   ├── Search Books
+│   └── Create Book
+├── 📖 Loan Management
+│   ├── Get Loans
+│   ├── Create Loan
+│   └── Return Book
+└── ⚖️ System Management
+    ├── Permissions Check
+    └── System Logs
+```
+
+## 🖥️ cURL Examples
+
+### **Authentication Endpoints**
+
+#### **User Login**
+```bash
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "user@example.com",
+    "password": "password123"
+  }'
+```
+
+#### **User Registration**
+```bash
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "newuser@example.com",
+    "password": "password123",
+    "first_name": "John",
+    "last_name": "Doe",
+    "user_type": "student"
+  }'
+```
+
+#### **Get Current User Profile**
+```bash
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/auth/me" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "X-XSRF-TOKEN: YOUR_CSRF_TOKEN"
+```
+
+### **Book Management Endpoints**
+
+#### **Get All Books**
+```bash
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books?page=1&limit=20" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "X-XSRF-TOKEN: YOUR_CSRF_TOKEN"
+```
+
+#### **Search Books**
+```bash
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books/search?q=harry&category=fiction" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "X-XSRF-TOKEN: YOUR_CSRF_TOKEN"
+```
+
+#### **Create Book (Librarian+)**
+```bash
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/books" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "X-XSRF-TOKEN: YOUR_CSRF_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Test Book",
+    "author": "Test Author",
+    "isbn": "978-1234567890",
+    "category": "fiction",
+    "description": "A test book for API testing",
+    "publication_year": 2024
+  }'
+```
+
+### **Loan Management Endpoints**
+
+#### **Get All Loans**
+```bash
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/loans?status=active" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "X-XSRF-TOKEN: YOUR_CSRF_TOKEN"
+```
+
+#### **Create Loan (Librarian+)**
+```bash
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/loans" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "X-XSRF-TOKEN: YOUR_CSRF_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "user_id": 123,
+    "book_copy_id": 456,
+    "due_date": "2024-02-01T10:00:00Z"
+  }'
+```
+
+### **User Management Endpoints**
+
+#### **Get All Users (Admin/Librarian)**
+```bash
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/users?role=student&status=active" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "X-XSRF-TOKEN: YOUR_CSRF_TOKEN"
+```
+
+#### **Get Specific User**
+```bash
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/users/123" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "X-XSRF-TOKEN: YOUR_CSRF_TOKEN"
+```
+
+### **System Management Endpoints**
+
+#### **Check Permissions**
+```bash
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/permissions/check?resource=books&action=create" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "X-XSRF-TOKEN: YOUR_CSRF_TOKEN"
+```
+
+#### **Get System Logs (Admin+)**
+```bash
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/system_logs?level=error&component=auth" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -H "X-XSRF-TOKEN: YOUR_CSRF_TOKEN"
+```
+
+## 🧪 Testing Procedures
+
+### **1. Authentication Testing**
+
+#### **Test User Registration**
+```bash
+# 1. Register new user
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "testuser@example.com",
+    "password": "testpass123",
+    "first_name": "Test",
+    "last_name": "User",
+    "user_type": "student"
+  }'
+
+# Expected: 201 Created with user data
+```
+
+#### **Test User Login**
+```bash
+# 2. Login with registered user
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "testuser@example.com",
+    "password": "testpass123"
+  }'
+
+# Expected: 200 OK with JWT token and user data
+# Save the JWT token for subsequent requests
+```
+
+#### **Test Protected Endpoint**
+```bash
+# 3. Test protected endpoint with token
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/auth/me" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN_HERE"
+
+# Expected: 200 OK with user profile data
+```
+
+### **2. Book Management Testing**
+
+#### **Test Book Creation (Librarian+)**
+```bash
+# 1. Create book (requires librarian role)
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/books" \
+  -H "Authorization: Bearer LIBRARIAN_JWT_TOKEN" \
+  -H "X-XSRF-TOKEN: LIBRARIAN_CSRF_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "API Testing Book",
+    "author": "Test Author",
+    "isbn": "978-9999999999",
+    "category": "testing",
+    "description": "Book for API testing purposes"
+  }'
+
+# Expected: 201 Created with book data
+```
+
+#### **Test Book Retrieval**
+```bash
+# 2. Get created book
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books/BOOK_ID_HERE" \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+
+# Expected: 200 OK with book details
+```
+
+### **3. Error Handling Testing**
+
+#### **Test Invalid Authentication**
+```bash
+# Test with invalid token
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/auth/me" \
+  -H "Authorization: Bearer invalid_token_here"
+
+# Expected: 401 Unauthorized
+```
+
+#### **Test Missing Required Fields**
+```bash
+# Test registration without required fields
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "incomplete@example.com"
+  }'
+
+# Expected: 400 Bad Request with validation errors
+```
+
+#### **Test Insufficient Permissions**
+```bash
+# Test creating book as regular user
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/books" \
+  -H "Authorization: Bearer STUDENT_JWT_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Unauthorized Book",
+    "author": "Test Author"
+  }'
+
+# Expected: 403 Forbidden
+```
+
+## 🔧 Testing Tools Setup
+
+### **Postman Environment Setup**
+
+1. **Create Environment**
+   - Name: `SJRS LMS API - Development`
+   - Base URL: `https://your-worker.your-subdomain.workers.dev`
+
+2. **Set Variables**
+   ```
+   base_url: https://your-worker.your-subdomain.workers.dev
+   auth_token: (leave empty initially)
+   csrf_token: (leave empty initially)
+   user_email: test@example.com
+   user_password: testpass123
+   ```
+
+3. **Pre-request Scripts**
+   ```javascript
+   // Auto-set CSRF token from login response
+   if (pm.response.code === 200 && pm.response.json().csrf_token) {
+       pm.environment.set("csrf_token", pm.response.json().csrf_token);
+   }
+   ```
+
+### **Automated Testing with Newman**
+
+```bash
+# Install Newman
+npm install -g newman
+
+# Run collection
+newman run sjrs-lms-api.postman_collection.json \
+  -e sjrs-lms-dev.postman_environment.json \
+  --reporters cli,json \
+  --reporter-json-export results.json
+```
+
+### **Continuous Integration Testing**
+
+```yaml
+# GitHub Actions example
+name: API Tests
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Newman
+        run: npm install -g newman
+      - name: Run API Tests
+        run: |
+          newman run docs/api/sjrs-lms-api.postman_collection.json \
+            -e docs/api/sjrs-lms-dev.postman_environment.json \
+            --reporters cli,json \
+            --reporter-json-export test-results.json
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v2
+        with:
+          name: api-test-results
+          path: test-results.json
+```
+
+## 📊 Test Results Analysis
+
+### **Success Criteria**
+- **Authentication**: All auth endpoints return correct status codes
+- **Authorization**: Permission checks work correctly
+- **Data Validation**: Required fields are properly validated
+- **Error Handling**: Appropriate error codes and messages
+- **Response Format**: Consistent JSON response structure
+
+### **Performance Benchmarks**
+- **Response Time**: < 500ms for simple operations
+- **Throughput**: Handle 100+ concurrent requests
+- **Error Rate**: < 1% for valid requests
+
+### **Common Issues & Solutions**
+
+#### **CORS Errors**
+```bash
+# Check if CORS headers are present
+curl -H "Origin: https://example.com" \
+  -X GET "https://your-worker.your-subdomain.workers.dev/api/health" \
+  -v
+```
+
+#### **Token Expiration**
+```bash
+# Check token validity
+curl -X GET "https://your-worker.your-subdomain.workers.dev/api/auth/me" \
+  -H "Authorization: Bearer EXPIRED_TOKEN" \
+  -v
+```
+
+#### **Rate Limiting**
+```bash
+# Test rate limiting
+for i in {1..10}; do
+  curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
+    -H "Authorization: Bearer YOUR_TOKEN"
+  sleep 0.1
+done
+```
+
+## 🎯 Testing Checklist
+
+### **Pre-Testing Setup**
+- [ ] Environment variables configured
+- [ ] Test database available
+- [ ] Test users created
+- [ ] Postman collection imported
+
+### **Authentication Testing**
+- [ ] User registration
+- [ ] User login
+- [ ] Token validation
+- [ ] Logout functionality
+- [ ] Password reset flow
+
+### **Authorization Testing**
+- [ ] Student permissions
+- [ ] Librarian permissions
+- [ ] Admin permissions
+- [ ] Permission escalation prevention
+
+### **Data Validation Testing**
+- [ ] Required field validation
+- [ ] Data type validation
+- [ ] Business rule validation
+- [ ] SQL injection prevention
+
+### **Error Handling Testing**
+- [ ] Invalid input handling
+- [ ] Authentication errors
+- [ ] Authorization errors
+- [ ] Server error handling
+
+### **Performance Testing**
+- [ ] Response time measurement
+- [ ] Concurrent request handling
+- [ ] Database query optimization
+- [ ] Memory usage monitoring
+
+---
+
+**Last Updated:** November 2025  
+**Version:** 1.0.0  
+**Status:** ✅ Complete

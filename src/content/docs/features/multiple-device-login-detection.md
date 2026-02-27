@@ -1,0 +1,344 @@
+---
+title: "Multiple Device Login Detection"
+---
+
+# Single Session Policy with Force Logout
+
+## Overview
+
+The SJRS LMS implements a **Single Session Policy** that ensures only one active session per user at any time. This feature prevents account abuse, enhances security, and provides users with control over their sessions through a force logout mechanism.
+
+## 🎯 Key Features
+
+### 1. **Single Session Enforcement**
+- **One Session Per User**: Only 1 active session per user account (prevents account abuse)
+- **Activity-Based Detection**: 15-minute activity threshold for session validity
+- **Automatic Prevention**: Blocks new logins when active session exists
+- **Graceful Handling**: Offers force logout option instead of hard blocking
+
+### 2. **Force Logout Mechanism**
+- **User Choice**: Users can choose to force logout existing sessions
+- **Seamless Transition**: Deactivates old sessions and creates new ones
+- **Audit Logging**: Complete logging of force logout actions for security
+- **Clear Communication**: User-friendly prompts and success messages
+
+### 3. **Device Detection & Tracking**
+- **Device Type Detection**: Mobile, Tablet, Desktop (Windows/Mac/Linux)
+- **IP Address Logging**: Tracks login locations
+- **User Agent Analysis**: Browser and device information
+- **Location Tracking**: Optional geographic location data
+
+### 4. **Session Management UI**
+- **Session Overview**: View all active sessions
+- **Device Information**: See device types and IP addresses
+- **Session Control**: Terminate individual or all sessions
+- **Real-time Updates**: Live session status updates
+
+### 5. **Security Features**
+- **Session Expiration**: Automatic session cleanup after 24 hours
+- **Activity Tracking**: Monitor last activity timestamps
+- **Audit Logging**: Complete session lifecycle logging
+- **Cross-tab Synchronization**: Consistent session state across browser tabs
+
+## 🏗️ Technical Implementation
+
+### Database Schema
+
+#### `user_sessions` Table
+```sql
+CREATE TABLE user_sessions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL,
+  session_token TEXT UNIQUE NOT NULL,
+  ip_address TEXT NOT NULL,
+  user_agent TEXT NOT NULL,
+  device_info TEXT, -- Mobile, Desktop, Tablet, etc.
+  location_info TEXT, -- Country, city if available
+  is_active BOOLEAN DEFAULT TRUE,
+  last_activity DATETIME DEFAULT CURRENT_TIMESTAMP,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  expires_at DATETIME NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES library_users(id) ON DELETE CASCADE
+);
+```
+
+#### Indexes for Performance
+```sql
+CREATE INDEX idx_user_sessions_user_id ON user_sessions(user_id);
+CREATE INDEX idx_user_sessions_session_token ON user_sessions(session_token);
+CREATE INDEX idx_user_sessions_is_active ON user_sessions(is_active);
+CREATE INDEX idx_user_sessions_expires_at ON user_sessions(expires_at);
+```
+
+### API Endpoints
+
+#### POST `/api/auth/force-logout-other-sessions`
+Force logout all existing sessions and create a new session.
+
+**Request:**
+```json
+{
+  "email": "user@example.com",
+  "password": "userpassword"
+}
+```
+
+**Response:**
+```json
+{
+  "success": true,
+  "message": "Other sessions have been logged out successfully",
+  "user": {
+    "id": 123,
+    "email": "user@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "role": "student",
+    "status": "active",
+    "user_type": "student"
+  },
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "sessionInfo": {
+    "id": 456,
+    "device_info": "Desktop - Windows",
+    "ip_address": "192.168.1.100"
+  },
+  "sessionsDeactivated": 2
+}
+```
+
+#### GET `/api/auth/sessions`
+Retrieve user's active sessions.
+
+**Response:**
+```json
+{
+  "success": true,
+  "sessions": [
+    {
+      "id": 1,
+      "session_token": "jwt_token_here",
+      "ip_address": "192.168.1.100",
+      "user_agent": "Mozilla/5.0...",
+      "device_info": "Desktop (Windows)",
+      "location_info": "New York, US",
+      "is_active": true,
+      "last_activity": "2024-01-15T10:30:00Z",
+      "created_at": "2024-01-15T09:00:00Z",
+      "expires_at": "2024-01-16T09:00:00Z"
+    }
+  ],
+  "totalSessions": 1
+}
+```
+
+#### DELETE `/api/auth/sessions`
+Terminate a specific session.
+
+**Request:**
+```json
+{
+  "sessionId": 1
+}
+```
+
+#### DELETE `/api/auth/sessions/all`
+Terminate all sessions except current.
+
+### Session Management Component
+
+The `SessionManagement` component provides a comprehensive UI for users to:
+
+- **View Active Sessions**: See all current sessions with device details
+- **Session Statistics**: Overview of session count and device breakdown
+- **Terminate Sessions**: Remove individual or all other sessions
+- **Real-time Updates**: Live session status monitoring
+
+## 🔧 Configuration
+
+### Default Settings
+```typescript
+const DEFAULT_CONFIG = {
+  maxSessionsPerUser: 1, // Single session policy
+  sessionTimeoutHours: 24,
+  allowMultipleSessions: false, // Enforce single session
+  autoTerminateOldSessions: true,
+  activityThresholdMinutes: 15 // Activity threshold for session validity
+};
+```
+
+### Customization Options
+- **Session Limits**: Fixed at 1 session per user (single session policy)
+- **Timeout Duration**: Configure session expiration time
+- **Activity Threshold**: Adjust the 15-minute activity window
+- **Device Detection**: Enable/disable device type detection
+- **Location Tracking**: Optional geographic location logging
+
+## 🚀 User Experience
+
+### Login Flow
+1. **Normal Login**: User logs in successfully (no active sessions)
+2. **Active Session Detected**: System detects existing active session
+3. **Force Logout Prompt**: User is offered force logout option
+4. **User Choice**: User can choose to force logout or cancel
+5. **Successful Login**: After force logout, new session is created
+
+### Force Logout Flow
+1. **Session Detection**: System detects active session with recent activity
+2. **User Prompt**: Clear message about active session
+3. **User Decision**: User chooses to force logout or cancel
+4. **Session Cleanup**: All existing sessions are deactivated
+5. **New Session**: Fresh session is created for the user
+6. **Success Message**: Confirmation that other sessions were logged out
+
+### Session Management
+1. **Access**: Via user menu → "Session Management"
+2. **Overview**: See all active sessions with device information
+3. **Control**: Terminate individual or all other sessions
+4. **Monitoring**: Real-time session status updates
+
+### Error Handling
+- **Clear Messages**: User-friendly error descriptions
+- **Actionable Solutions**: Guidance on how to resolve issues
+- **Session Details**: Information about existing sessions
+- **Graceful Degradation**: Fallback behavior for edge cases
+
+## 🔒 Security Considerations
+
+### Session Security
+- **Token Validation**: JWT-based session authentication
+- **IP Tracking**: Monitor login locations for suspicious activity
+- **Device Fingerprinting**: Track device characteristics
+- **Activity Monitoring**: Log session lifecycle events
+- **Credential Validation**: Force logout requires valid email/password
+
+### Privacy Protection
+- **Minimal Data Collection**: Only essential session information
+- **User Control**: Users can terminate their own sessions
+- **Data Retention**: Automatic cleanup of expired sessions
+- **Audit Trail**: Complete logging for security monitoring
+
+### Force Logout Security
+- **Authentication Required**: Force logout requires valid credentials
+- **Comprehensive Cleanup**: All sessions properly deactivated
+- **Audit Logging**: All force logout actions logged
+- **New Session Creation**: Fresh session with new token
+
+## 📊 Monitoring & Analytics
+
+### Session Metrics
+- **Active Sessions**: Count of current user sessions (max 1)
+- **Device Breakdown**: Distribution of device types
+- **Geographic Distribution**: Login location patterns
+- **Session Duration**: Average session length
+- **Force Logout Events**: Track force logout frequency
+
+### Security Monitoring
+- **Failed Login Attempts**: Track authentication failures
+- **Session Anomalies**: Detect unusual session patterns
+- **Geographic Anomalies**: Flag suspicious login locations
+- **Device Changes**: Monitor device switching patterns
+- **Force Logout Patterns**: Monitor force logout usage
+
+## 🛠️ Implementation Guide
+
+### 1. Database Migration
+Run the migration script to create the `user_sessions` table:
+```sql
+-- Execute sql/migrations/add-user-sessions-table.sql
+```
+
+### 2. API Integration
+The login handler automatically checks for active sessions and offers force logout:
+
+```typescript
+// Check for existing active sessions
+const existingSessions = await env.DB.prepare(`
+  SELECT id, ip_address, user_agent, device_info, created_at, expires_at, is_active, session_token, last_activity
+  FROM user_sessions 
+  WHERE user_id = ? AND is_active = 1 AND expires_at > datetime('now', '+5.5 hours')
+  ORDER BY last_activity DESC
+`).bind(user.id).all();
+
+// Check activity threshold
+const timeDiffMinutes = (now.getTime() - lastActivity.getTime()) / (1000 * 60);
+if (timeDiffMinutes <= 15) {
+  // Offer force logout option
+  return { requiresForceLogout: true };
+}
+```
+
+### 3. UI Integration
+Add the force logout prompt to the login page:
+
+```tsx
+// Force Logout Prompt Modal
+{showForceLogoutPrompt && (
+  <div style={{ /* overlay styles */ }}>
+    <Card>
+      <Title>Another Session is Active</Title>
+      <Text>Your account is currently logged in on another device. Do you want to force logout the other session and continue with this login?</Text>
+      <Button onClick={handleCancelForceLogout}>Cancel</Button>
+      <Button type="primary" onClick={handleForceLogout}>Force Logout</Button>
+    </Card>
+  </div>
+)}
+```
+
+### 4. Configuration
+The single session policy is enforced by default:
+
+```typescript
+const sessionConfig = {
+  maxSessionsPerUser: 1, // Single session policy
+  sessionTimeoutHours: 24,
+  allowMultipleSessions: false, // Enforce single session
+  autoTerminateOldSessions: true,
+  activityThresholdMinutes: 15 // Activity threshold
+};
+```
+
+## 🎯 Benefits
+
+### For Users
+- **Security Awareness**: Know when and where they're logged in
+- **Session Control**: Force logout from other devices easily
+- **Device Management**: See all devices accessing their account
+- **Privacy Protection**: Terminate sessions from other devices
+- **Clear Choices**: Understand what happens when force logging out
+
+### For Administrators
+- **Security Monitoring**: Track user session patterns
+- **Anomaly Detection**: Identify suspicious login activity
+- **Resource Management**: Prevent session abuse
+- **Audit Compliance**: Complete session lifecycle logging
+- **Force Logout Tracking**: Monitor force logout usage patterns
+
+### For System
+- **Performance**: Prevent excessive session overhead
+- **Security**: Reduce unauthorized access risk
+- **Scalability**: Manage session resources efficiently
+- **Compliance**: Meet security and audit requirements
+- **User Experience**: Clear, predictable session behavior
+
+## 🔄 Future Enhancements
+
+### Planned Features
+- **Geographic Blocking**: Prevent logins from specific regions
+- **Device Whitelisting**: Allow only trusted devices
+- **Session Scheduling**: Automatic session termination at specific times
+- **Advanced Analytics**: Detailed session behavior analysis
+- **Force Logout Notifications**: Notify users when sessions are force logged out
+
+### Integration Opportunities
+- **Two-Factor Authentication**: Enhanced security with session management
+- **Single Sign-On**: Integration with external identity providers
+- **Mobile App Support**: Native session management for mobile apps
+- **API Rate Limiting**: Session-based API access control
+- **Real-time Notifications**: Alert users of session changes
+
+---
+
+**Last Updated:** November 2025  
+**Version:** 2.0.0  
+**Status:** Production Ready 

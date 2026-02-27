@@ -1,0 +1,468 @@
+---
+title: "Logging System"
+---
+
+# Logging System Documentation
+
+## Overview
+
+The SJRS LMS logging system provides production-safe logging for both client-side and server-side operations. It gates all logs to Sentry in production and allows console logs in development, ensuring no sensitive information is exposed in production builds.
+
+## Features
+
+- **Multi-level Logging**: DEBUG, INFO, WARN, ERROR
+- **Structured Logging**: Context-rich logs with component/operation tracking
+- **Sentry Integration**: Production logs automatically sent to Sentry
+- **Environment-aware**: Console logs in development, Sentry in production
+- **Security Logging**: Security events logged with appropriate severity
+- **Performance Monitoring**: Built-in timing and context tracking
+- **No Console in Production**: Console logs stripped in production builds
+
+### Observability Guards
+- Frontend and backend Sentry initializers are gated by DSN so missing credentials never break builds
+- Development events are dropped unless `VITE_SENTRY_DEBUG` or `SENTRY_DEBUG` is explicitly enabled
+- Breadcrumb helpers automatically redact sensitive keys; keep metadata high-level and avoid payloads
+
+## Setup
+
+### 1. Environment Variables
+
+Add these to your Cloudflare Worker environment variables:
+
+```bash
+# Sentry Configuration (required for production logging)
+VITE_SENTRY_DSN=your-sentry-dsn-here  # Frontend Sentry DSN
+SENTRY_DSN=your-sentry-dsn-here       # Backend/Workers Sentry DSN
+
+# Environment
+NODE_ENV=development  # or 'production'
+ENVIRONMENT=development  # Workers environment variable
+
+# JWT Configuration (already set in CF dashboard)
+## Choose single secret or rotation
+# Single secret
+JWT_SECRET=your-secret-here      # JWT signing secret
+# Rotation-ready (recommended)
+# JWT_KEYS_JSON={"key-2025-01":"super-secret-1","key-2025-07":"super-secret-2"}
+# JWT_DEFAULT_KID=key-2025-01
+# JWT_ISS=your-jwt-issuer
+# JWT_AUD=https://your-worker.your-subdomain.workers.dev
+```
+
+**Note**: The logger automatically detects the environment and routes logs accordingly:
+- **Development**: Logs to console
+- **Production**: Logs to Sentry (no console output)
+
+## Usage
+
+### Basic Logging
+
+```typescript
+import { createLogger } from '../utilities/logging/logger';
+
+// Get logger instance (backend/Workers)
+const logger = createLogger(env);
+
+// Basic logging
+await logger.info('User logged in', { userId: 123, email: 'user@example.com' });
+await logger.error('Database connection failed', { operation: 'database_connect' }, error);
+await logger.warn('Rate limit approaching', { ip: '192.168.1.1' });
+await logger.debug('Query executed', { query: 'SELECT * FROM users', duration: 45 });
+logger.error('Security violation detected', new Error('Security violation'), { ip: '192.168.1.1', action: 'suspicious_login' });
+```
+
+### Request/Response Logging
+
+```typescript
+// Log incoming request
+logger.debug('Incoming request', {
+  component: 'API',
+  operation: 'user_login',
+  method: request.method,
+  url: request.url,
+  userId: user?.id
+});
+
+// Log response with timing
+const startTime = Date.now();
+// ... handle request ...
+const duration = Date.now() - startTime;
+logger.info('Request completed', {
+  component: 'API',
+  operation: 'user_login',
+  duration,
+  userId: user?.id
+});
+```
+
+### Security Event Logging
+
+```typescript
+// Log security events
+logger.warn('Failed login attempt', {
+  component: 'Security',
+  operation: 'login',
+  ip: request.headers.get('CF-Connecting-IP'),
+  email: 'user@example.com',
+  reason: 'invalid_password'
+});
+
+logger.error('Suspicious activity detected', new Error('Multiple failed logins'), {
+  component: 'Security',
+  operation: 'security_monitoring',
+  ip: '192.168.1.1',
+  action: 'multiple_failed_logins',
+  count: 5
+});
+```
+
+### Performance Logging
+
+```typescript
+// Log database operations
+logger.debug('Database query executed', {
+  component: 'Database',
+  operation: 'SELECT',
+  table: 'users',
+  duration: 45,
+  userId: 123
+});
+
+// Log performance metrics
+logger.info('Operation completed', {
+  component: 'Performance',
+  operation: 'get_user_profile',
+  duration: 150,
+  userId: 123
+});
+```
+
+## Error Handling Integration
+
+### Server-Side Error Handling
+
+```typescript
+import { handleServerError, handleAPIError, handleAuthError } from '../utilities/error/server-error-handler';
+
+// Basic error handling
+try {
+  // ... your code ...
+} catch (error) {
+  await handleServerError(error, {
+    operation: 'user_login',
+    userId: user?.id,
+    path: request.url,
+    method: request.method,
+    env
+  });
+}
+
+// Specialized error handling
+try {
+  // ... API operation ...
+} catch (error) {
+  await handleAPIError(error, 'get_user_data', env);
+}
+
+try {
+  // ... authentication ...
+} catch (error) {
+  await handleAuthError(error, 'validate_token', env);
+}
+```
+
+### Client-Side Error Handling
+
+```typescript
+import { handleError, handleAPIError, handleValidationError } from '../utilities/error/unified-error-handler';
+
+// Basic error handling
+try {
+  // ... your code ...
+} catch (error) {
+  await handleError(error, {
+    operation: 'user_login',
+    component: 'LoginForm'
+  });
+}
+
+// Specialized error handling
+try {
+  // ... API call ...
+} catch (error) {
+  await handleAPIError(error, 'fetch_user_data');
+}
+
+try {
+  // ... form validation ...
+} catch (error) {
+  await handleValidationError(error, 'email');
+}
+```
+
+## Log Levels
+
+### DEBUG
+- Detailed information for debugging
+- Database queries, performance metrics
+- Development environment only
+
+### INFO
+- General application flow
+- User actions, successful operations
+- Request/response logging
+
+### WARN
+- Potential issues that don't break functionality
+- Rate limit warnings, deprecated feature usage
+- Security events
+
+### ERROR
+- Errors that affect functionality
+- Database errors, API failures
+- Authentication/authorization failures
+
+### CRITICAL
+- System-breaking errors
+- Security violations, data corruption
+- Requires immediate attention
+
+## Log Context
+
+All logs include structured context:
+
+```typescript
+interface LogContext {
+  operation?: string;        // Operation being performed
+  userId?: number;          // User ID if applicable
+  requestId?: string;       // Unique request identifier
+  path?: string;           // Request path
+  method?: string;         // HTTP method
+  userAgent?: string;      // User agent string
+  ip?: string;            // Client IP address
+  duration?: number;       // Operation duration in ms
+  [key: string]: any;     // Additional context
+}
+```
+
+## Database Schema
+
+### system_logs Table
+
+```sql
+CREATE TABLE system_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    timestamp TEXT NOT NULL,           -- ISO timestamp
+    level TEXT NOT NULL,               -- DEBUG, INFO, WARN, ERROR, CRITICAL
+    message TEXT NOT NULL,             -- Log message
+    context TEXT,                      -- JSON context object
+    error_details TEXT,                -- JSON error details
+    data TEXT,                         -- JSON additional data
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+## Analytics Integration
+
+Logs are automatically sent to Cloudflare Analytics with the following structure:
+
+```typescript
+{
+  blobs: [
+    logLevel,           // DEBUG, INFO, WARN, ERROR, CRITICAL
+    message,            // Log message
+    operation,          // Operation name
+    path               // Request path
+  ],
+  doubles: [
+    duration,          // Operation duration
+    userId            // User ID
+  ],
+  indexes: [
+    'log_level',       // Index for filtering
+    'operation',       // Index for filtering
+    'path'            // Index for filtering
+  ]
+}
+```
+
+## Best Practices
+
+### 1. Context-Rich Logging
+
+```typescript
+// Good
+await logger.info('User logged in', {
+  userId: user.id,
+  email: user.email,
+  ip: request.headers.get('CF-Connecting-IP'),
+  userAgent: request.headers.get('User-Agent')
+});
+
+// Avoid
+await logger.info('User logged in');
+```
+
+### 2. Appropriate Log Levels
+
+```typescript
+// DEBUG: Detailed debugging info
+await logger.debug('Database query executed', { query, duration });
+
+// INFO: Normal application flow
+await logger.info('User created account', { userId, email });
+
+// WARN: Potential issues
+await logger.warn('Rate limit approaching', { ip, count });
+
+// ERROR: Actual errors
+await logger.error('Database connection failed', { operation }, error);
+
+// ERROR: System-breaking issues (use error with high severity)
+logger.error('Security violation', error, { ip, action, severity: 'critical' });
+```
+
+### 3. Error Handling
+
+```typescript
+// Always include context
+try {
+  // ... operation ...
+} catch (error) {
+  await handleServerError(error, {
+    operation: 'create_user',
+    userId: user?.id,
+    env
+  });
+}
+```
+
+### 4. Performance Monitoring
+
+```typescript
+const startTime = Date.now();
+try {
+  // ... operation ...
+} finally {
+  const duration = Date.now() - startTime;
+  logger.info('Database query completed', {
+    component: 'Database',
+    operation: 'get_user_data',
+    duration,
+    userId: user?.id
+  });
+}
+```
+
+## Monitoring and Alerting
+
+### 1. Log Analysis Queries
+
+```sql
+-- Recent errors
+SELECT * FROM system_logs 
+WHERE level = 'ERROR' 
+ORDER BY created_at DESC 
+LIMIT 10;
+
+-- Security events
+SELECT * FROM system_logs 
+WHERE level = 'CRITICAL' 
+AND context LIKE '%security%'
+ORDER BY created_at DESC;
+
+-- Performance issues
+SELECT * FROM system_logs 
+WHERE level = 'WARN' 
+AND context LIKE '%performance%'
+ORDER BY created_at DESC;
+```
+
+### 2. Cloudflare Analytics
+
+Monitor logs in Cloudflare Analytics dashboard:
+- Filter by log level
+- Track operation performance
+- Monitor error rates
+- Security event tracking
+
+## Configuration
+
+### Development Environment
+
+```bash
+LOG_LEVEL=DEBUG
+LOG_CONSOLE=true
+LOG_ANALYTICS=false
+```
+
+### Production Environment
+
+```bash
+LOG_LEVEL=INFO
+LOG_CONSOLE=false
+LOG_ANALYTICS=true
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Logs not appearing in database**
+   - Check database connection
+   - Verify table exists
+   - Check environment variables
+
+2. **Performance impact**
+   - Reduce log level in production
+   - Use async logging
+   - Implement log rotation
+
+3. **Analytics not working**
+   - Verify ANALYTICS binding
+   - Check environment variables
+   - Validate data format
+
+### Debug Mode
+
+Enable debug logging to troubleshoot:
+
+```bash
+LOG_LEVEL=DEBUG
+LOG_CONSOLE=true
+```
+
+## Migration from Console.log
+
+Replace console.log statements:
+
+```typescript
+// Before
+console.log('User logged in:', user);
+
+// After
+await logger.info('User logged in', { userId: user.id, email: user.email });
+```
+
+## Security Considerations
+
+1. **Sensitive Data**: Never log passwords, tokens, or sensitive information
+2. **PII**: Be careful with personal identifiable information
+3. **Rate Limiting**: Implement log rate limiting for high-volume operations
+4. **Retention**: Implement log retention policies
+5. **Access Control**: Restrict access to log data
+
+## Performance Impact
+
+- **Minimal**: Logging is asynchronous and non-blocking
+- **Database**: Logs are written to database in background
+- **Analytics**: Cloudflare Analytics handles high volume
+- **Memory**: Log entries are kept in memory temporarily
+
+## Future Enhancements
+
+1. **Log Rotation**: Automatic cleanup of old logs
+2. **Alerting**: Integration with monitoring systems
+3. **Search**: Full-text search capabilities
+4. **Dashboards**: Real-time log visualization
+5. **Correlation**: Request tracing across services

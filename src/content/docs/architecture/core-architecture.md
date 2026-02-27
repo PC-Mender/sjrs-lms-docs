@@ -1,0 +1,385 @@
+---
+title: "Core Architecture"
+---
+
+# Core Architecture Documentation
+
+## Overview
+
+The SJRS LMS (Library Management System) is a modern, cloud-native **Single Page Application (SPA)** built with React/TypeScript frontend and Cloudflare Workers backend, using D1 database for persistence. This document outlines the core architecture and key components after the comprehensive refactoring work.
+
+## 🏗️ System Architecture
+
+### Technology Stack
+- **Frontend**: React 18 + TypeScript + Vite + Ant Design (Single Page Application)
+- **Backend**: Cloudflare Workers (Direct Function APIs)
+- **Database**: Cloudflare D1 (SQLite)
+- **Storage**: Cloudflare R2 for file uploads
+- **Caching**: Cloudflare KV
+- **Real-time**: Durable Objects
+- **Analytics**: Cloudflare Analytics Engine
+- **Deployment**: Cloudflare Workers with Static Assets (Unified)
+
+### Architecture Layers
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│              Frontend (React/TS) + Static Assets           │
+├─────────────────────────────────────────────────────────────┤
+│                 Unified Workers Deployment                 │
+│              (API Layer + Asset Serving)                   │
+├─────────────────────────────────────────────────────────────┤
+│    D1 Database  │   R2 Storage   │  KV Cache  │ Analytics  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## 📁 Core File Structure
+
+### Root Configuration Files
+```
+├── package.json              # Dependencies and scripts
+├── wrangler.toml            # Cloudflare Workers config
+├── vite.config.ts           # Build configuration
+├── tsconfig.json            # TypeScript configuration
+└── index.html               # Entry HTML
+```
+
+### Backend Core (`functions/`)
+```
+functions/
+├── index.ts                 # Main entry point and router
+├── api/                     # Direct Function API endpoints (modular folders)
+│   ├── auth/              # Authentication & authorization
+│   ├── users/             # User management
+│   ├── books/             # Book management
+│   ├── loans/             # Loan management
+│   ├── permissions/       # Permission system (legacy endpoints supported)
+│   ├── migrations/        # Database migrations
+│   ├── action-logs/       # Audit logging
+│   ├── system-logs/       # System logs
+│   ├── payments/          # Payment processing
+│   ├── receipts/          # Receipt generation
+│   ├── authors/           # Author management
+│   ├── book-copies/       # Book copy management
+│   ├── book-reviews/      # Book review system
+│   ├── borrow-limits/     # Borrowing limits
+│   ├── notifications/     # Notification system
+│   ├── orders/            # Order management
+│   ├── penalties/         # Penalty system
+│   ├── publications/      # Publication management
+│   ├── roles/             # Role management
+│   ├── students/          # Student-specific operations
+│   ├── upload/            # File upload handling
+│   └── wishlist/          # Wishlist management
+├── middleware/              # Request processing
+│   ├── auth/              # Authentication middleware
+│   ├── cors/              # CORS handling
+│   └── kv-utils.ts         # KV utilities
+├── durable-objects/         # Real-time features
+├── queue-handlers/          # Background jobs (planned)
+└── email-templates/         # Email system
+```
+
+### Frontend Core (`src/`)
+```
+src/
+├── App.tsx                  # Main application component
+├── index.tsx                # Application entry point
+├── index.css                # Global styles
+├── components/              # Reusable UI components
+│   ├── layout.tsx          # Main layout wrapper
+│   ├── auth-guard.tsx      # Authentication protection
+│   ├── session-management.tsx # Session handling
+│   └── security-alert.tsx  # Security notifications
+├── pages/                   # Route components (SPA routing)
+│   ├── login.tsx           # Authentication
+│   ├── dashboard-*.tsx     # Role-specific dashboards
+│   ├── profile.tsx         # User profile
+│   └── [feature]/          # Feature-specific pages
+├── services/                # API service layer
+├── hooks/                   # Custom React hooks
+├── contexts/                # React context providers
+├── utilities/               # Helper functions
+├── constants/               # Application constants
+├── types/                   # TypeScript definitions
+└── middleware/              # Client-side middleware
+```
+
+**Note**: The frontend is a **Single Page Application (SPA)**. All routing is handled client-side by React Router, meaning the server serves a single `index.html` file and React Router manages all navigation and page rendering on the client side.
+
+### Database (`sql/`)
+```
+sql/
+├── d1-schema.sql           # Main database schema
+├── migrations/              # Database migration files
+└── setup/                  # Initial setup scripts
+```
+
+## 🔧 Key Components
+
+### 1. Authentication System
+- **Multi-factor authentication (MFA)**
+- **Session management** with automatic timeout
+- **Role-based access control (RBAC)**
+- **JWT-based authentication**
+- **CSRF protection**
+
+### 2. Permission System
+- **Granular permissions** per resource/action
+- **Dynamic role assignment**
+- **Permission inheritance**
+- **Audit logging** for all actions
+
+### 3. User Management
+- **Three user types**: Student, Professor, Guest
+- **Role-based dashboards**
+- **Profile management**
+- **Account suspension handling**
+
+### 4. Book Management
+- **Comprehensive book catalog**
+- **Copy management**
+- **Digital and physical books**
+- **Reference materials**
+
+### 5. Loan System
+- **Borrowing limits**
+- **Due date management**
+- **Penalty system**
+- **Return tracking**
+
+## 🏗️ API Architecture
+
+### **Direct Function API Pattern**
+The SJRS LMS uses a **direct function API pattern** optimized for Cloudflare Workers, providing:
+- **Better Performance** - Native Cloudflare Workers functions without framework overhead
+- **Simpler Debugging** - Direct function calls with clear stack traces
+- **Consistent Patterns** - Standardized routing and error handling across all endpoints
+- **Type Safety** - Full TypeScript support throughout the API layer
+
+### **API Structure**
+```typescript
+// Standard API function pattern
+export async function resourceName(request: Request, env: any) {
+  const url = new URL(request.url);
+  const path = url.pathname.replace('/api/resourceName', '');
+  
+  // Authentication middleware
+  const user = await getAuthenticatedUser(request, env);
+  if (!user) {
+    const response = new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { 'Content-Type': 'application/json' }
+    });
+    return addCORSHeaders(response, request.headers.get('Origin'));
+  }
+  
+  // Route handling with consistent patterns
+  if (request.method === 'GET' && (path === '' || path === '/')) {
+    // Handle GET /api/resourceName
+  } else if (request.method === 'POST' && (path === '' || path === '/')) {
+    // Handle POST /api/resourceName
+  } else if (path.startsWith('/')) {
+    const id = path.substring(1);
+    // Handle /api/resourceName/:id
+  }
+}
+```
+
+### **Standardized Routing Pattern**
+All APIs follow a consistent routing pattern:
+```typescript
+const path = url.pathname.replace('/api/resourceName', '');
+
+// Root endpoint: /api/resourceName
+if (path === '' || path === '/') {
+  // Handle collection operations (GET, POST)
+}
+
+// Specific resource: /api/resourceName/:id
+if (path.startsWith('/')) {
+  const id = path.substring(1);
+  // Handle individual resource operations (GET, PUT, DELETE)
+}
+```
+
+### Legacy Permissions Compatibility
+Legacy permission endpoints are preserved for backward compatibility and internally routed to the unified `/api/permissions` service.
+
+### **Error Handling & CORS**
+All APIs use unified error handling with automatic CORS headers:
+```typescript
+import { handleError } from '../../utilities/error/unified-error-handler';
+import { addCORSHeaders } from '../../middleware/cors';
+
+try {
+  // API logic
+} catch (error) {
+  return await handleError(error, {
+    operation: 'api_operation',
+    component: 'APIComponent',
+    context: { endpoint: '/api/resourceName' }
+  });
+}
+```
+
+### **Main Router**
+The main router (`functions/index.ts`) directs requests to appropriate API functions:
+```typescript
+// Direct function calls (no .fetch() needed)
+if (path.startsWith('/api/books')) {
+  return await books(request, env);
+} else if (path.startsWith('/api/users')) {
+  return await users(request, env);
+}
+// ... other routes
+```
+
+## 🚀 Development Workflow
+
+### Scripts Available
+```bash
+# Development
+npm run dev                 # Start development server
+npm run build              # Build for production
+npm run preview            # Preview production build
+
+# Refactoring (completed)
+npm run migrate-error-handling
+npm run migrate-hooks
+npm run migrate-components
+
+# Testing
+npm run test:app-functionality
+```
+
+### Environment Configuration
+- **Remote-first**: Always uses remote database even in local development
+- **Consistent environment**: No local database dependencies
+- **Production-like**: Local development mirrors production behavior
+
+## 🔒 Security Features
+
+### Authentication & Authorization
+- **JWT tokens** with configurable expiration
+- **Session timeout** (15 minutes default)
+- **Secure cookies** with proper flags
+- **CSRF protection** on all state-changing operations
+
+### Data Protection
+- **Input validation** on all endpoints
+- **SQL injection prevention** through parameterized queries
+- **XSS protection** through proper escaping
+- **Rate limiting** to prevent abuse
+
+### Audit & Logging
+- **Action logging** for all user activities
+- **Security event tracking**
+- **Session monitoring**
+- **Error tracking and reporting**
+
+## 📊 Database Schema
+
+### Core Tables
+- **users**: User accounts and profiles
+- **roles**: Role definitions and permissions
+- **books**: Book catalog and metadata
+- **book_copies**: Physical copy management
+- **loans**: Borrowing records
+- **penalties**: Overdue and violation tracking
+- **action_logs**: Audit trail
+
+### Key Relationships
+- **User-Role**: Many-to-many with permissions
+- **Book-Copy**: One-to-many for physical copies
+- **User-Loan**: One-to-many for borrowing history
+- **Loan-Copy**: Many-to-one for specific copy tracking
+
+## 🎯 Performance Optimizations
+
+### Frontend
+- **Code splitting** for route-based loading
+- **Optimized components** with React.memo
+- **Efficient state management** with React Query
+- **Lazy loading** for large datasets
+
+### Backend
+- **Connection pooling** for database access
+- **Caching layer** with KV storage
+- **Background job processing** with queues
+- **Real-time updates** with Durable Objects
+
+### Database
+- **Indexed queries** for fast lookups
+- **Efficient joins** for complex queries
+- **Pagination** for large result sets
+- **Optimized schema** for common operations
+
+## 🔄 Deployment Strategy
+
+### Unified Cloudflare Workers Deployment
+- **Workers with Static Assets**: Unified backend API, business logic, and frontend hosting
+- **Global Edge Network**: Single deployment serving both API and static assets
+- **D1**: Database with automatic scaling
+- **R2**: File storage with global distribution
+- **KV**: Caching and session storage
+- **Analytics Engine**: Real-time monitoring and logging
+
+### Environment Management
+- **Unified deployment**: Single Workers deployment for frontend and backend
+- **Remote-first**: Always uses remote database even in local development
+- **Automatic versioning**: Commit-message-based version bumping
+- **Single release command**: `npm run release` deploys everything
+- **Built-in monitoring**: Analytics Engine and observability
+
+## 📈 Scalability Considerations
+
+### Horizontal Scaling
+- **Stateless workers** for easy scaling
+- **Global distribution** through Cloudflare network
+- **Automatic load balancing**
+- **Database sharding** ready architecture
+
+### Performance Monitoring
+- **Built-in analytics** and logging
+- **Error tracking** and alerting
+- **Performance metrics** collection
+- **User behavior** analytics
+
+## 🛠️ Maintenance & Operations
+
+### Database Migrations
+- **Version-controlled** schema changes
+- **Rollback capabilities** for failed migrations
+- **Data integrity** checks
+- **Backup and recovery** procedures
+
+### Code Quality
+- **TypeScript** for type safety
+- **ESLint** for code quality
+- **Prettier** for consistent formatting
+- **Comprehensive testing** strategy
+
+### Monitoring & Alerting
+- **Error tracking** with detailed logs
+- **Performance monitoring** with metrics
+- **Security monitoring** for threats
+- **User experience** tracking
+
+## 🔮 Future Enhancements
+
+### Planned Features
+- **Advanced analytics** and reporting
+- **Mobile application** development
+- **Integration APIs** for third-party systems
+- **Advanced search** with full-text indexing
+
+### Technical Improvements
+- **GraphQL API** for flexible data fetching
+- **Microservices** architecture evolution
+- **Advanced caching** strategies
+- **Machine learning** integration
+
+---
+
+*This documentation serves as a comprehensive reference for the SJRS LMS architecture after the refactoring work. It should be updated as the system evolves.*

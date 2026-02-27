@@ -1,0 +1,213 @@
+---
+title: "Quick Reference"
+---
+
+# Deployment Quick Reference
+
+## 🚀 Quick Start
+
+### Recommended Workflow
+
+```bash
+# 1. Make changes and commit
+git add .
+git commit -m "feat: add new feature"
+
+# 2. Prepare version (bumps version, updates changelog, commits, tags, pushes)
+npm run version:prepare
+
+# 3. GitHub Actions automatically deploys
+# Check status: https://github.com/PC-Mender/sjrslms/actions
+```
+
+### Legacy Workflow (Still Supported)
+
+```bash
+# Single command does everything (version, build, deploy, notify)
+npm run release
+```
+
+---
+
+## 📋 Workflow Comparison
+
+| Aspect | Legacy (`npm run release`) | New (`npm run version:prepare`) |
+|--------|---------------------------|--------------------------------|
+| **Version Bump** | ✅ Yes | ✅ Yes |
+| **Changelog Update** | ✅ Yes | ✅ Yes |
+| **Quality Gates** | ✅ Local | ✅ CI/CD |
+| **Build** | ✅ Local | ✅ CI/CD |
+| **Deploy** | ✅ Local | ✅ CI/CD |
+| **Git Operations** | ✅ Yes | ✅ Yes |
+| **Notifications** | ✅ Local script | ✅ CI/CD |
+| **Deployment Tracking** | ❌ No | ✅ GitHub Actions |
+| **Rollback** | ❌ Difficult | ✅ Easier |
+| **Credentials** | ❌ Local required | ✅ GitHub Secrets |
+
+---
+
+## 🔑 Required Secrets
+
+| Secret Name | Purpose | Where to Get |
+|------------|---------|--------------|
+| `NOTIFICATION_INGEST_TOKEN_RELEASE` | Notification auth | Cloudflare Workers env vars |
+| `CLOUDFLARE_API_TOKEN` | Deploy to Workers | Cloudflare Dashboard |
+| `CLOUDFLARE_ACCOUNT_ID` | Cloudflare account | Cloudflare Dashboard |
+
+**Location**: GitHub → Settings → Secrets and variables → Actions
+
+---
+
+## 📋 Commit Types
+
+| Type | Version Bump | Example |
+|------|-------------|---------|
+| `feat:` | Minor (3.40.27 → 3.41.0) | `feat: add user dashboard` |
+| `fix:` | Patch (3.40.27 → 3.40.28) | `fix: resolve login bug` |
+| `BREAKING CHANGE:` | Major (3.40.27 → 4.0.0) | `BREAKING CHANGE: API redesign` |
+
+---
+
+## 🔄 Workflow Steps
+
+### New Workflow (Recommended)
+
+#### Step 1: Version Preparation (Local)
+
+```bash
+npm run version:prepare
+```
+
+**What it does:**
+- Analyzes commit messages
+- Determines version bump type (patch/minor/major)
+- Bumps version in `package.json`
+- Updates `CHANGELOG.md`
+- Commits changes
+- Creates git tag
+- Pushes to GitHub
+
+**What it does NOT do:**
+- ❌ Build the project
+- ❌ Deploy to Cloudflare Workers
+- ❌ Send notifications
+- ❌ Run quality gates
+
+#### Step 2: Automated Deployment (CI/CD)
+
+**Triggered automatically by:**
+- Push to `main` branch
+- Tag creation (`v*`)
+- Manual workflow dispatch
+
+**GitHub Actions workflow:**
+1. **Quality Gates** - Linting, type-checking, tests
+2. **Build** - Create production build
+3. **Deploy** - Deploy to Cloudflare Workers
+4. **Notify** - Send deployment notifications
+5. **Release** - Create GitHub release (if tag)
+
+---
+
+## 📊 Deployment Status
+
+### Check Deployment Status
+
+**GitHub Actions:**
+```
+https://github.com/PC-Mender/sjrslms/actions
+```
+
+**Deployment URL:**
+```
+https://your-worker.your-subdomain.workers.dev
+```
+
+**Health Check:**
+```bash
+curl https://your-worker.your-subdomain.workers.dev/api/health
+```
+
+---
+
+## 🔍 Troubleshooting
+
+### Version Preparation Fails
+
+**Issue**: Git push fails
+```bash
+# Check git authentication
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+
+# Check remote configuration
+git remote -v
+```
+
+### Deployment Fails in CI/CD
+
+**Issue**: Quality gates fail
+- Check GitHub Actions logs
+- Fix linting/type errors
+- Ensure tests pass
+
+**Issue**: Build fails
+- Check build logs in GitHub Actions
+- Verify all dependencies are installed
+- Check for build errors
+
+**Issue**: Deployment fails
+- Verify Cloudflare credentials in GitHub Secrets
+- Check wrangler.toml configuration
+- Review deployment logs
+
+### Notifications Not Appearing?
+
+1. Check token: GitHub Actions logs should show `🔑 Token configured: Yes`
+2. Verify secret: `NOTIFICATION_INGEST_TOKEN_RELEASE` in GitHub Secrets
+3. Check status: Notification must be `'active'` to appear
+4. View in app: Notification Center → Filter by "deployment"
+
+### Wrong Version in Release?
+
+1. Check `package.json` has correct version
+2. Verify `create-release` job fetches latest code
+3. Check GitHub Actions logs for version read
+
+---
+
+## 📍 Key Locations
+
+- **Workflow**: `.github/workflows/deploy.yml`
+- **Notification Script**: `scripts/notify-deployment.js`
+- **Version Config**: `.versionrc`
+- **Notification UI**: `src/pages/dashboard-superuser/notification-center.tsx`
+- **Full Docs**: `docs/deployment/deployment-and-notification-process.md`
+
+---
+
+## ✅ Verification Checklist
+
+After deployment, verify:
+
+- [ ] Version updated in `package.json`
+- [ ] Changelog updated in `CHANGELOG.md`
+- [ ] Git tag created (e.g., `v3.40.27`)
+- [ ] GitHub release created/updated
+- [ ] App footer shows new version
+- [ ] Notification appears in Notification Center
+- [ ] Deployment successful in Cloudflare
+
+---
+
+## 📚 Related Documentation
+
+- **[Deployment Flow Explained](./deployment-flow-explained.md)** - How deployment works
+- **[Unified Workers Deployment](./unified-workers-deployment.md)** - Deployment architecture
+- **[Deployment and Notification Process](./deployment-and-notification-process.md)** - Complete process documentation
+
+---
+
+**Last Updated**: November 2025  
+**Status**: Active
+

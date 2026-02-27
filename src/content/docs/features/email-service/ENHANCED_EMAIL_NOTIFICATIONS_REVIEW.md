@@ -1,0 +1,345 @@
+---
+title: "ENHANCED EMAIL NOTIFICATIONS REVIEW"
+---
+
+# Enhanced Email Notifications - Implementation Review
+
+## Executive Summary
+
+The email notification system is **partially implemented**. While the core infrastructure (email service, templates, API endpoints) exists and works well, several critical notification types are missing or incomplete.
+
+**Status**: 🟡 **PARTIAL** (6/10 features implemented)
+
+---
+
+## ✅ What's Currently Implemented
+
+### 1. **Core Email Infrastructure** ✅
+- **Location**: `functions/utilities/email-service.ts`
+- **Status**: Fully functional
+- **Features**:
+  - Unified EmailService class with Mailjet integration
+  - Retry logic with configurable attempts
+  - Email validation and security checks
+  - Bulk email sending with rate limiting
+  - Analytics integration
+
+### 2. **Email Templates** ✅
+- **Location**: `functions/email-templates/`
+- **Status**: Comprehensive template library
+- **Available Templates**:
+  - ✅ Authentication: `email-confirmation`, `password-reset`, `login-alert`, `status-check-otp`
+  - ✅ Loan notifications: `borrow-notification`, `return-reminder`, `overdue-notification`
+  - ✅ System notifications: `system-notification`
+  - ✅ Payment: `payment-success`
+  - ✅ Orders: `order-notification`
+  - ✅ Profile: `admin-approval`, `profile-completion`
+
+### 3. **Transaction Notifications** ✅
+- **Location**: `functions/lib/notifications/transaction-notifications.ts`
+- **Status**: Fully implemented
+- **Features**:
+  - ✅ Loan created notifications (email + in-app)
+  - ✅ Loan status change notifications (returned, overdue, approved, rejected)
+  - ✅ Loan renewal notifications (email + in-app)
+  - ✅ Payment receipt notifications (email + in-app)
+  - Respects user notification preferences
+
+### 4. **Email API Endpoints** ✅
+- **Location**: `functions/api/email/index.ts`
+- **Status**: Fully functional with permission checks
+- **Endpoints**:
+  - ✅ `/api/email/send-loan-notification`
+  - ✅ `/api/email/send-order-notification`
+  - ✅ `/api/email/send-system-notification`
+  - ✅ `/api/email/send-payment-notification`
+  - ✅ `/api/email/send-auth-email`
+  - ✅ `/api/email/send-template-email`
+
+### 5. **User Preferences Support** ✅
+- **Location**: `user_notification_preferences` table
+- **Status**: Database schema exists
+- **Fields**: `email_notifications`, `loan_notifications`, `order_notifications`
+- **Usage**: Partially checked in some notification functions
+
+---
+
+## ❌ Missing Features
+
+### 1. **Penalty Email Notifications** ❌ CRITICAL
+
+**Current Status**: 
+- Penalty notifications only create **in-app notifications**
+- **No email notifications** are sent when penalties are created
+
+**Location**: `functions/lib/penalties/calculate-overdue-penalties.ts:348-394`
+
+**Issue**:
+```typescript
+async function sendPenaltyNotification(...) {
+  // Only creates in-app notification
+  await createAppNotification(env, { ... });
+  // ❌ Missing: Email notification
+}
+```
+
+**What's Needed**:
+- Add email notification when penalty is automatically created
+- Use `sendSystemNotification` with penalty-specific template data
+- Respect user's `email_notifications` preference
+- Include penalty amount, days overdue, book title, payment link
+
+**Priority**: 🔴 **HIGH** - Users need email notifications for financial penalties
+
+---
+
+### 2. **Automated Due Date Reminders** ❌ CRITICAL
+
+**Current Status**: 
+- **Not implemented** - No scheduled task exists
+- Documentation mentions it but no code exists
+
+**What's Needed**:
+- **Scheduled Task**: Create `functions/scheduled/send-due-date-reminders.ts`
+- **Timing**: Run daily, check loans due in 3 days, 1 day, and on due date
+- **Email Template**: Use `return-reminder` template or create dedicated template
+- **Query**: Find active loans with due dates approaching
+- **User Preferences**: Check `email_notifications` and `loan_notifications`
+- **Prevent Duplicates**: Track which reminders have been sent
+
+**Expected Behavior**:
+- Send reminder 3 days before due date
+- Send reminder 1 day before due date
+- Send reminder on due date (if not returned)
+
+**Priority**: 🔴 **HIGH** - Proactive reminders reduce overdue loans
+
+---
+
+### 3. **Automated Overdue Reminders** ❌ HIGH
+
+**Current Status**: 
+- Overdue status change notifications exist (when loan status changes to overdue)
+- **No proactive reminders** for loans that are already overdue
+
+**What's Needed**:
+- **Scheduled Task**: Create `functions/scheduled/send-overdue-reminders.ts`
+- **Timing**: Run daily, check loans overdue by 7 days, 14 days, 30 days
+- **Email Template**: Use `overdue-notification` template
+- **Escalation**: Increase urgency based on days overdue
+- **User Preferences**: Check `email_notifications` and `loan_notifications`
+
+**Expected Behavior**:
+- Send reminder after 7 days overdue
+- Send reminder after 14 days overdue (urgent)
+- Send reminder after 30 days overdue (critical)
+
+**Priority**: 🟡 **MEDIUM** - Helps reduce long-overdue items
+
+---
+
+### 4. **Reservation Email Notifications** ⚠️ BUG
+
+**Current Status**: 
+- Code exists but **incorrect function signature**
+- Will fail at runtime
+
+**Location**: `functions/lib/notifications/reservation-notifications.ts:117, 186`
+
+**Issue**:
+```typescript
+// ❌ WRONG: Function called with wrong parameters
+await sendSystemNotification(env, {
+  to: user.email,
+  subject: `...`,
+  html: `...`
+});
+
+// ✅ CORRECT: Should be
+await sendSystemNotification(user.email, {
+  recipientName: recipientName,
+  subject: `...`,
+  message: `...`,  // Not 'html'
+  type: 'info',
+  frontendUrl: frontendUrl
+}, env);
+```
+
+**What's Needed**:
+- Fix function calls to use correct signature
+- Convert HTML content to plain text message format
+- Use proper template data structure
+
+**Priority**: 🔴 **HIGH** - Currently broken, will cause errors
+
+---
+
+### 5. **Reservation Expiry Warnings** ❌ MEDIUM
+
+**Current Status**: 
+- Reservation expiry scheduled task exists (`functions/scheduled/reservation-expiry.ts`)
+- **No email warnings** sent before expiry
+
+**What's Needed**:
+- Add email notification 24 hours before reservation expires
+- Use reservation-ready notification template or create new one
+- Send warning when reservation is about to expire
+
+**Priority**: 🟡 **MEDIUM** - Helps users claim reservations in time
+
+---
+
+### 6. **Order Status Change Notifications** ❌ MEDIUM
+
+**Current Status**: 
+- Order creation notifications exist (to admins)
+- **No email notifications** when order status changes (approved/rejected/cancelled)
+
+**Location**: `functions/api/orders/handlers/update-order.ts`
+
+**What's Needed**:
+- Add email notification when order is approved
+- Add email notification when order is rejected
+- Add email notification when order is cancelled
+- Use `sendOrderNotification` or `sendSystemNotification`
+- Respect user's `email_notifications` and `order_notifications` preferences
+
+**Priority**: 🟡 **MEDIUM** - Users should know order status changes
+
+---
+
+### 7. **Borrow Limit Warnings** ❌ LOW
+
+**Current Status**: 
+- In-app notifications may exist
+- **No email notifications** when user reaches borrow limit
+
+**What's Needed**:
+- Send email when user tries to borrow but has reached limit
+- Include current loan count and maximum allowed
+- Suggest returning books to borrow more
+
+**Priority**: 🟢 **LOW** - Nice to have feature
+
+---
+
+### 8. **Wishlist Availability Notifications** ❌ LOW
+
+**Current Status**: 
+- **Not implemented**
+
+**What's Needed**:
+- Trigger when book copy status changes to 'available'
+- Check if book is in any user's wishlist
+- Send email notification to wishlist users
+- Include link to borrow/order the book
+
+**Priority**: 🟢 **LOW** - Nice to have feature
+
+---
+
+## 🔧 Technical Issues
+
+### 1. **Inconsistent User Preference Checking**
+
+**Issue**: Some notification functions check user preferences, others don't.
+
+**Examples**:
+- ✅ `reservation-notifications.ts` checks preferences
+- ❌ `transaction-notifications.ts` doesn't check preferences before sending emails
+- ❌ `calculate-overdue-penalties.ts` doesn't check preferences
+
+**Fix Needed**: 
+- Add preference checking to all email notification functions
+- Create utility function: `shouldSendEmailNotification(userId, notificationType)`
+
+### 2. **Missing Email Template for Penalties**
+
+**Issue**: No dedicated penalty notification email template exists.
+
+**Fix Needed**:
+- Create `functions/email-templates/notifications/penalty-notification.ts`
+- Include: penalty amount, days overdue, book title, payment link, due date
+
+### 3. **Missing Email Template for Due Date Reminders**
+
+**Issue**: `return-reminder` template exists but may not be suitable for due date reminders.
+
+**Fix Needed**:
+- Review `return-reminder` template
+- Create dedicated `due-date-reminder` template if needed
+- Include: book title, due date, days remaining, return link
+
+---
+
+## 📋 Implementation Checklist
+
+### High Priority (Critical)
+- [ ] **Fix reservation notification function calls** (bug fix)
+- [ ] **Add penalty email notifications** (financial importance)
+- [ ] **Implement due date reminder scheduled task** (proactive reminders)
+- [ ] **Add user preference checking utility** (consistency)
+
+### Medium Priority
+- [ ] **Implement overdue reminder scheduled task** (reduces long-overdue items)
+- [ ] **Add reservation expiry warning emails** (user experience)
+- [ ] **Add order status change email notifications** (user communication)
+- [ ] **Create penalty notification email template** (if needed)
+
+### Low Priority
+- [ ] **Add borrow limit warning emails** (nice to have)
+- [ ] **Implement wishlist availability notifications** (nice to have)
+
+---
+
+## 📊 Current Coverage
+
+| Notification Type | In-App | Email | Scheduled | Status |
+|------------------|--------|-------|-----------|--------|
+| Loan Created | ✅ | ✅ | N/A | ✅ Complete |
+| Loan Status Change | ✅ | ✅ | N/A | ✅ Complete |
+| Loan Renewed | ✅ | ✅ | N/A | ✅ Complete |
+| Payment Receipt | ✅ | ✅ | N/A | ✅ Complete |
+| Order Created (Admin) | ✅ | ✅ | N/A | ✅ Complete |
+| **Penalty Created** | ✅ | ❌ | ✅ | ⚠️ Missing Email |
+| **Due Date Reminder** | ❌ | ❌ | ❌ | ❌ Not Implemented |
+| **Overdue Reminder** | ❌ | ❌ | ❌ | ❌ Not Implemented |
+| Reservation Created | ✅ | ⚠️ | N/A | ⚠️ Bug |
+| Reservation Ready | ✅ | ⚠️ | N/A | ⚠️ Bug |
+| **Reservation Expiry Warning** | ❌ | ❌ | ✅ | ⚠️ Missing Email |
+| **Order Status Change** | ❌ | ❌ | N/A | ❌ Not Implemented |
+
+---
+
+## 🎯 Recommended Implementation Order
+
+1. **Fix reservation notification bug** (quick fix, prevents errors)
+2. **Add penalty email notifications** (high impact, financial)
+3. **Implement due date reminders** (proactive, reduces overdue)
+4. **Add user preference utility** (foundation for consistency)
+5. **Implement overdue reminders** (follow-up on overdue items)
+6. **Add order status notifications** (user communication)
+7. **Add reservation expiry warnings** (user experience)
+
+---
+
+## 📝 Notes
+
+- The email service infrastructure is solid and well-designed
+- Most missing features are about **adding email notifications** to existing in-app notifications
+- Scheduled tasks need to be added to `functions/index.ts` scheduled handler
+- User preference checking should be standardized across all notification functions
+- Consider creating a notification utility library to reduce code duplication
+
+---
+
+## 🔗 Related Files
+
+- Email Service: `functions/utilities/email-service.ts`
+- Email Templates: `functions/email-templates/`
+- Transaction Notifications: `functions/lib/notifications/transaction-notifications.ts`
+- Reservation Notifications: `functions/lib/notifications/reservation-notifications.ts`
+- Penalty Calculation: `functions/lib/penalties/calculate-overdue-penalties.ts`
+- Scheduled Tasks: `functions/scheduled/`
+- Email API: `functions/api/email/index.ts`
+

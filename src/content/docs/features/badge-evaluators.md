@@ -1,0 +1,490 @@
+---
+title: "Badge Evaluators"
+---
+
+# Badge Evaluators Documentation
+
+## Overview
+
+Badge evaluators are automatic badge awarding systems that run on specific triggers throughout the application. They analyze user activity and award badges when users meet certain milestones or achievements.
+
+## Architecture
+
+### Evaluator Pattern
+
+```typescript
+interface BadgeEvaluator {
+  /**
+   * Evaluate if a badge should be awarded
+   * @param env - Cloudflare Environment (DB, secrets)
+   * @param userId - User to evaluate
+   * @param context - Optional context data (loan, review, etc.)
+   * @returns Promise<void>
+   */
+  evaluate(env: Environment, userId: number, context?: any): Promise<void>;
+}
+```
+
+### Integration Points
+
+Evaluators should be called from:
+1. **Auth handlers** - After login (welcome, visits)
+2. **Loan handlers** - After loan creation/approval (loan milestones)
+3. **Review handlers** - After review submission/approval (review milestones)
+4. **User handlers** - After status change to active (approval badge)
+
+## Evaluator Specifications
+
+### 1. Welcome Badge Evaluator
+
+**File:** `functions/api/badges/evaluators/welcome.ts`  
+**Trigger:** First successful login  
+**Badge Key:** `welcome`
+
+#### Logic
+```typescript
+/**
+ * Awards welcome badge on first login
+ * 
+ * @description Checks if user already has the welcome badge.
+ * If not, awards it automatically with reason "Automatic award on first login".
+ * 
+ * @integration Call from: POST /api/auth/login (after successful authentication)
+ */
+export async function evaluateWelcomeBadge(env: Environment, userId: number): Promise<void> {
+  // 1. Check if user already has welcome badge
+  const existingBadge = await getUserBadgeByKey(env, userId, 'welcome');
+  if (existingBadge && !existingBadge.is_revoked) {
+    return; // Already has badge
+  }
+
+  // 2. Award badge
+  await awardBadge(env, {
+    user_id: userId,
+    badge_key: 'welcome',
+    reason: 'Automatic award on first login',
+    expires_at: null,
+  });
+}
+```
+
+#### Database Queries
+- `getUserBadgeByKey(userId, 'welcome')` - Check existing assignment
+- `awardBadge(...)` - Create badge assignment
+
+---
+
+### 2. Loan Milestone Badges Evaluator
+
+**File:** `functions/api/badges/evaluators/loans.ts`  
+**Trigger:** Loan creation/approval  
+**Badge Keys:** `first_loan`, `loan_explorer`, `loan_enthusiast`, `loan_master`
+
+#### Milestones
+
+| Badge Key | Name | Condition | Level |
+|-----------|------|-----------|-------|
+| `first_loan` | First Loan | 1 approved loan | 1 |
+| `loan_explorer` | Loan Explorer | 5 approved loans | 2 |
+| `loan_enthusiast` | Loan Enthusiast | 10 approved loans | 3 |
+| `loan_master` | Loan Master | 25 approved loans | 4 |
+
+#### Logic
+```typescript
+/**
+ * Awards loan milestone badges based on total approved loans
+ * 
+ * @description Counts user's approved loans and awards badges at milestones.
+ * Only awards badges user doesn't already have.
+ * 
+ * @integration Call from: 
+ * - POST /api/loans/create (after approval)
+ * - PATCH /api/loans/:id/approve (after status change)
+ */
+export async function evaluateLoanBadges(env: Environment, userId: number): Promise<void> {
+  // 1. Count approved loans for user
+  const loanCount = await countApprovedLoans(env, userId);
+
+  // 2. Determine which badges user should have
+  const milestones = [
+    { count: 1, key: 'first_loan', name: 'First Loan' },
+    { count: 5, key: 'loan_explorer', name: 'Loan Explorer' },
+    { count: 10, key: 'loan_enthusiast', name: 'Loan Enthusiast' },
+    { count: 25, key: 'loan_master', name: 'Loan Master' },
+  ];
+
+  // 3. Award badges for reached milestones
+  for (const milestone of milestones) {
+    if (loanCount >= milestone.count) {
+      const existingBadge = await getUserBadgeByKey(env, userId, milestone.key);
+      if (!existingBadge || existingBadge.is_revoked) {
+        await awardBadge(env, {
+          user_id: userId,
+          badge_key: milestone.key,
+          reason: `Automatic award for reaching ${milestone.count} approved loans`,
+          expires_at: null,
+        });
+      }
+    }
+  }
+}
+```
+
+#### Database Queries
+- `SELECT COUNT(*) FROM loans WHERE user_id = ? AND status = 'approved'`
+- `getUserBadgeByKey(userId, badgeKey)` for each milestone
+- `awardBadge(...)` for earned milestones
+
+---
+
+### 3. Review Contributor Badges Evaluator
+
+**File:** `functions/api/badges/evaluators/reviews.ts`  
+**Trigger:** Review submission/approval  
+**Badge Keys:** `first_review`, `review_contributor`, `review_expert`
+
+#### Milestones
+
+| Badge Key | Name | Condition | Level |
+|-----------|------|-----------|-------|
+| `first_review` | First Review | 1 approved review | 1 |
+| `review_contributor` | Review Contributor | 5 approved reviews | 2 |
+| `review_expert` | Review Expert | 10 approved reviews | 3 |
+
+#### Logic
+```typescript
+/**
+ * Awards review milestone badges based on total approved reviews
+ * 
+ * @description Counts user's approved reviews and awards badges at milestones.
+ * 
+ * @integration Call from:
+ * - POST /api/reviews (after approval)
+ * - PATCH /api/reviews/:id/approve (after status change)
+ */
+export async function evaluateReviewBadges(env: Environment, userId: number): Promise<void> {
+  // 1. Count approved reviews for user
+  const reviewCount = await countApprovedReviews(env, userId);
+
+  // 2. Define milestones
+  const milestones = [
+    { count: 1, key: 'first_review', name: 'First Review' },
+    { count: 5, key: 'review_contributor', name: 'Review Contributor' },
+    { count: 10, key: 'review_expert', name: 'Review Expert' },
+  ];
+
+  // 3. Award badges for reached milestones
+  for (const milestone of milestones) {
+    if (reviewCount >= milestone.count) {
+      const existingBadge = await getUserBadgeByKey(env, userId, milestone.key);
+      if (!existingBadge || existingBadge.is_revoked) {
+        await awardBadge(env, {
+          user_id: userId,
+          badge_key: milestone.key,
+          reason: `Automatic award for ${milestone.count} approved reviews`,
+          expires_at: null,
+        });
+      }
+    }
+  }
+}
+```
+
+---
+
+### 4. Visit Milestone Badges Evaluator
+
+**File:** `functions/api/badges/evaluators/visits.ts`  
+**Trigger:** User login  
+**Badge Keys:** `regular_visitor`, `frequent_visitor`, `dedicated_member`
+
+#### Milestones
+
+| Badge Key | Name | Condition | Level |
+|-----------|------|-----------|-------|
+| `regular_visitor` | Regular Visitor | 5 logins | 1 |
+| `frequent_visitor` | Frequent Visitor | 10 logins | 2 |
+| `dedicated_member` | Dedicated Member | 25 logins | 3 |
+
+#### Logic
+```typescript
+/**
+ * Awards visit milestone badges based on total login count
+ * 
+ * @description Tracks user logins and awards badges at milestones.
+ * 
+ * @integration Call from: POST /api/auth/login (after successful authentication)
+ * 
+ * @note Requires login tracking (e.g., incrementing login_count in users table)
+ */
+export async function evaluateVisitBadges(env: Environment, userId: number): Promise<void> {
+  // 1. Get user's login count
+  const user = await getUserById(env, userId);
+  const loginCount = user.login_count || 0;
+
+  // 2. Define milestones
+  const milestones = [
+    { count: 5, key: 'regular_visitor', name: 'Regular Visitor' },
+    { count: 10, key: 'frequent_visitor', name: 'Frequent Visitor' },
+    { count: 25, key: 'dedicated_member', name: 'Dedicated Member' },
+  ];
+
+  // 3. Award badges for reached milestones
+  for (const milestone of milestones) {
+    if (loginCount >= milestone.count) {
+      const existingBadge = await getUserBadgeByKey(env, userId, milestone.key);
+      if (!existingBadge || existingBadge.is_revoked) {
+        await awardBadge(env, {
+          user_id: userId,
+          badge_key: milestone.key,
+          reason: `Automatic award for ${milestone.count} visits`,
+          expires_at: null,
+        });
+      }
+    }
+  }
+}
+```
+
+#### Database Schema Requirement
+```sql
+-- Add login_count to users table
+ALTER TABLE users ADD COLUMN login_count INTEGER DEFAULT 0;
+
+-- Increment on each login
+UPDATE users SET login_count = login_count + 1 WHERE id = ?;
+```
+
+---
+
+### 5. Approval Badge Evaluator
+
+**File:** `functions/api/badges/evaluators/approval.ts`  
+**Trigger:** User status change to 'active'  
+**Badge Key:** `approved`
+
+#### Logic
+```typescript
+/**
+ * Awards approval badge when user account is activated
+ * 
+ * @description Awards badge when user.status changes to 'active'.
+ * 
+ * @integration Call from:
+ * - PATCH /api/users/:id/approve (after status change)
+ * - Any admin endpoint that activates users
+ */
+export async function evaluateApprovalBadge(env: Environment, userId: number): Promise<void> {
+  // 1. Check if user already has approval badge
+  const existingBadge = await getUserBadgeByKey(env, userId, 'approved');
+  if (existingBadge && !existingBadge.is_revoked) {
+    return; // Already has badge
+  }
+
+  // 2. Award badge
+  await awardBadge(env, {
+    user_id: userId,
+    badge_key: 'approved',
+    reason: 'Automatic award on account activation',
+    expires_at: null,
+  });
+}
+```
+
+---
+
+## Implementation Guide
+
+### Step 1: Create Evaluator Files
+
+Create the evaluator files in `functions/api/badges/evaluators/`:
+- `welcome.ts`
+- `loans.ts`
+- `reviews.ts`
+- `visits.ts`
+- `approval.ts`
+
+### Step 2: Create Helper Functions
+
+Create `functions/api/badges/repositories/badge-repository/automatic-awards.ts`:
+
+```typescript
+/**
+ * Award a badge automatically (internal use)
+ */
+export async function awardBadge(
+  env: Environment,
+  data: {
+    user_id: number;
+    badge_key: string;
+    reason: string;
+    expires_at: string | null;
+  }
+): Promise<void> {
+  // Get badge
+  const badge = await getBadgeByKey(env, data.badge_key);
+  if (!badge) {
+    throw new Error(`Badge not found: ${data.badge_key}`);
+  }
+
+  // Check existing assignment
+  const existing = await getUserBadgeAssignment(env, data.user_id, badge.id);
+  
+  if (existing && !existing.is_revoked) {
+    return; // Already has active badge
+  }
+
+  if (existing && existing.is_revoked) {
+    // Reactivate revoked badge
+    await reactivateBadge(env, existing.user_badge_id, data.reason);
+  } else {
+    // Create new assignment
+    await assignBadgeToUser(env, {
+      user_id: data.user_id,
+      badge_id: badge.id,
+      awarded_by: null, // System award
+      reason: data.reason,
+      expires_at: data.expires_at,
+    });
+  }
+}
+```
+
+### Step 3: Integrate Evaluators
+
+#### In Auth Login Handler
+```typescript
+// functions/api/auth/handlers/login.ts
+import { evaluateWelcomeBadge } from '../../badges/evaluators/welcome';
+import { evaluateVisitBadges } from '../../badges/evaluators/visits';
+
+// After successful login
+await evaluateWelcomeBadge(env, user.id);
+await evaluateVisitBadges(env, user.id);
+```
+
+#### In Loan Handlers
+```typescript
+// functions/api/loans/handlers/create-loan.ts
+import { evaluateLoanBadges } from '../../badges/evaluators/loans';
+
+// After loan approval
+if (loan.status === 'approved') {
+  await evaluateLoanBadges(env, loan.user_id);
+}
+```
+
+#### In Review Handlers
+```typescript
+// functions/api/reviews/handlers/submit-review.ts
+import { evaluateReviewBadges } from '../../badges/evaluators/reviews';
+
+// After review approval
+if (review.status === 'approved') {
+  await evaluateReviewBadges(env, review.user_id);
+}
+```
+
+#### In User Approval Handler
+```typescript
+// functions/api/users/handlers/approve-user.ts
+import { evaluateApprovalBadge } from '../../badges/evaluators/approval';
+
+// After status change to 'active'
+if (user.status === 'active') {
+  await evaluateApprovalBadge(env, user.id);
+}
+```
+
+### Step 4: Add Required Database Columns
+
+```sql
+-- Add login_count to users table (if not exists)
+ALTER TABLE users ADD COLUMN login_count INTEGER DEFAULT 0;
+
+-- Add awarded_by nullable column (if not exists)
+-- This allows system awards (awarded_by = NULL)
+ALTER TABLE user_badges MODIFY COLUMN awarded_by INTEGER NULL;
+```
+
+### Step 5: Error Handling
+
+All evaluators should be wrapped in try-catch to prevent badge award failures from breaking main functionality:
+
+```typescript
+try {
+  await evaluateWelcomeBadge(env, user.id);
+} catch (error) {
+  // Log error but don't fail login
+  console.error('Failed to evaluate welcome badge:', error);
+}
+```
+
+## Testing Evaluators
+
+### Unit Tests
+
+Create tests in `functions/api/badges/evaluators/__tests__/`:
+
+```typescript
+// welcome.test.ts
+describe('evaluateWelcomeBadge', () => {
+  it('should award welcome badge on first login', async () => {
+    // Mock: User has no welcome badge
+    // Execute: evaluateWelcomeBadge
+    // Assert: awardBadge called with correct parameters
+  });
+
+  it('should not award if user already has badge', async () => {
+    // Mock: User already has active welcome badge
+    // Execute: evaluateWelcomeBadge
+    // Assert: awardBadge not called
+  });
+});
+```
+
+### Integration Tests
+
+Test evaluator calls from actual handlers to ensure proper integration.
+
+## Performance Considerations
+
+1. **Async/Background Processing**: For high-traffic endpoints (login), consider queuing badge evaluations for background processing
+2. **Caching**: Cache milestone thresholds to avoid repeated calculations
+3. **Debouncing**: For rapid actions (multiple loans), debounce evaluator calls
+4. **Batch Awards**: If awarding multiple badges, batch database operations
+
+## Monitoring & Observability
+
+### Audit Logging
+
+All automatic badge awards are logged in `action_logs`:
+```typescript
+await insertActionLog(env, {
+  user_id: null, // System action
+  action: 'badge_auto_awarded',
+  target_type: 'user_badge',
+  target_id: userId,
+  details: JSON.stringify({ badge_key, reason }),
+});
+```
+
+### Metrics (Future Enhancement)
+
+Track evaluator performance:
+- Evaluation execution time
+- Award success/failure rate
+- Milestone distribution (how many users at each level)
+
+## Future Enhancements
+
+1. **Conditional Badges**: Time-limited challenges (e.g., "Read 5 books in December")
+2. **Composite Badges**: Require multiple conditions (e.g., "5 loans + 5 reviews")
+3. **Leaderboard Integration**: Top contributors get special badges
+4. **Notification System**: Notify users when they earn badges
+5. **Badge Revocation on Downgrade**: Auto-revoke if conditions no longer met
+
+---
+
+**Last Updated:** February 7, 2026  
+**Status:** Specification Complete - Implementation Pending

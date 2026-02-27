@@ -1,0 +1,234 @@
+---
+title: "User Types And Roles Update"
+---
+
+# User Types and Roles System Update
+
+## Overview
+
+This document describes the comprehensive update to the SJRS LMS user types and roles system to achieve clear separation between registration requirements and permission management.
+
+## 🎯 **Changes Made**
+
+### **1. User Types (Registration Only)**
+- **Before**: 6 user types (Student, Professor, Guest, Librarian, Admin, Superuser)
+- **After**: 3 user types (Student, Professor, Guest)
+- **Purpose**: Registration requirements and profile fields only
+
+### **2. Roles (Permissions Only)**
+- **Before**: 6 roles (superuser, admin, librarian, student, professor, guest)
+- **After**: 7 roles (superuser, admin, librarian, student, professor, guest, dean)
+- **Purpose**: Permission management and access control
+
+### **3. Role Management Restrictions**
+- **Before**: Admin and Superuser could manage roles
+- **After**: Only Superuser can manage roles
+- **Purpose**: Enhanced security and clear hierarchy
+
+## 📋 **System Structure**
+
+### **Registration User Types (3)**
+```typescript
+const USER_TYPES = {
+  STUDENT: 'Student',    // Academic students
+  PROFESSOR: 'Professor', // Faculty members  
+  GUEST: 'Guest',        // Temporary users
+};
+```
+
+### **All Roles (7)**
+```typescript
+const ROLES = {
+  SUPERUSER: 'superuser', // Full system control
+  ADMIN: 'admin',         // Administrative access
+  LIBRARIAN: 'librarian', // Library management
+  PROFESSOR: 'professor', // Faculty access
+  STUDENT: 'student',     // Student access
+  GUEST: 'guest',         // Limited access
+  DEAN: 'dean',          // Administrative oversight
+};
+```
+
+### **Default Role Mapping**
+```typescript
+const USER_TYPE_TO_DEFAULT_ROLE = {
+  'Student': 'student',
+  'Professor': 'professor', 
+  'Guest': 'guest',
+};
+```
+
+## 🔐 **Role Management Permissions**
+
+### **Superuser**
+- ✅ Can manage all roles
+- ✅ Can assign administrative roles
+- ✅ Can delete roles
+- ✅ Full system access
+
+### **Admin**
+- ❌ Cannot manage roles
+- ❌ Cannot assign administrative roles
+- ❌ Cannot delete roles
+- ✅ Can manage users and most features
+
+### **Other Roles**
+- ❌ Cannot manage roles
+- ❌ Cannot assign administrative roles
+- ❌ Cannot delete roles
+- ✅ Limited to their specific permissions
+
+## 🗄️ **Database Changes**
+
+### **1. User Type Constraint Update**
+```sql
+-- Before
+user_type TEXT NOT NULL CHECK (user_type IN ('Student', 'Professor', 'Librarian', 'Admin', 'Superuser'))
+
+-- After  
+user_type TEXT NOT NULL CHECK (user_type IN ('Student', 'Professor', 'Guest'))
+```
+
+### **2. Role Management Tables**
+```sql
+-- New table for role management permissions
+CREATE TABLE role_management_permissions (
+  role_name TEXT PRIMARY KEY,
+  can_manage_roles BOOLEAN DEFAULT FALSE,
+  can_assign_administrative_roles BOOLEAN DEFAULT FALSE,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- New table for user type to role mapping
+CREATE TABLE user_type_role_mapping (
+  user_type TEXT PRIMARY KEY,
+  default_role_id INTEGER REFERENCES roles(id)
+);
+```
+
+### **3. Updated Roles**
+```sql
+-- All 7 roles ensured
+INSERT OR IGNORE INTO roles (name, description) VALUES
+  ('superuser', 'Full system access and control'),
+  ('admin', 'Administrative access to all features'),
+  ('librarian', 'Library management and book operations'),
+  ('professor', 'Faculty member with extended borrowing privileges'),
+  ('student', 'Standard student access'),
+  ('guest', 'Limited guest access'),
+  ('dean', 'Administrative oversight and management');
+```
+
+## 🔧 **Code Changes**
+
+### **1. Updated Constants**
+- `src/constants/user-types.ts`: Only 3 user types
+- `src/types/users.ts`: Updated UserType definition
+- `src/utilities/role-management.ts`: New role management utilities
+
+### **2. Updated APIs**
+- `functions/api/roles/index.ts`: Only superusers can access
+- `functions/middleware/auth/index.ts`: Updated role permissions
+
+### **3. Updated Components**
+- `src/pages/members/MemberEditModal.tsx`: Uses new role management utilities
+- Registration form: Already correctly shows only 3 user types
+
+## 🚀 **Migration Process**
+
+### **1. Run Migration Script**
+```bash
+node scripts/run-migration.js
+```
+
+### **2. Migration Steps**
+1. **Backup existing data**
+2. **Update user type constraint**
+3. **Ensure all 7 roles exist**
+4. **Create role management restrictions**
+5. **Update existing administrative users**
+6. **Verify data integrity**
+
+### **3. Verification Queries**
+```sql
+-- Check user types
+SELECT DISTINCT user_type FROM library_users;
+
+-- Check roles
+SELECT name, description FROM roles ORDER BY name;
+
+-- Check role mappings
+SELECT utrm.user_type, r.name as default_role
+FROM user_type_role_mapping utrm
+JOIN roles r ON utrm.default_role_id = r.id;
+```
+
+## 🎯 **Benefits Achieved**
+
+### **1. Clear Separation**
+- **User types** = Registration requirements only
+- **Roles** = Permissions only
+- **No confusion** between the two concepts
+
+### **2. Enhanced Security**
+- **Only superusers** can manage roles
+- **Clear hierarchy** of permissions
+- **Reduced attack surface**
+
+### **3. Simplified Registration**
+- **Only 3 options** during registration
+- **Clear user experience**
+- **Reduced complexity**
+
+### **4. Flexible Role Management**
+- **Any user type** can have any role
+- **Admin can change roles** without affecting user types
+- **Future-proof** for new roles
+
+## 📋 **Testing Checklist**
+
+### **✅ Registration Testing**
+- [ ] Registration form shows only 3 user types
+- [ ] All 3 user types work correctly
+- [ ] Default roles are assigned properly
+- [ ] Profile completion works for all types
+
+### **✅ Role Management Testing**
+- [ ] Only superusers can access role management
+- [ ] Admin cannot manage roles
+- [ ] Role assignments work correctly
+- [ ] Permission changes take effect immediately
+
+### **✅ User Management Testing**
+- [ ] Existing users still work
+- [ ] User editing works correctly
+- [ ] Role changes are preserved
+- [ ] Approval workflow functions
+
+### **✅ Permission Testing**
+- [ ] All 7 roles have correct permissions
+- [ ] Role-based access control works
+- [ ] Permission checks are enforced
+- [ ] No unauthorized access
+
+## 🔄 **Rollback Plan**
+
+If issues arise, the system can be rolled back by:
+
+1. **Restoring database backup**
+2. **Reverting code changes**
+3. **Running rollback migration**
+
+## 📞 **Support**
+
+For questions or issues:
+1. Check the migration logs
+2. Verify database constraints
+3. Test with different user types
+4. Contact the development team
+
+---
+
+**Last Updated**: November 2025  
+**Version**: 2.1.0  
+**Status**: ✅ Implemented 

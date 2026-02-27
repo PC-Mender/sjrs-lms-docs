@@ -1,0 +1,560 @@
+---
+title: "USER PREFERENCES PLAN"
+---
+
+# User Preferences System - Comprehensive Plan
+
+## Executive Summary
+
+This document outlines a comprehensive plan for implementing a centralized user preferences system in the SJRS LMS application. The system will consolidate existing preferences (notifications, MFA) and add new preference categories (UI/UX, display, accessibility) to provide a unified, cross-device user experience.
+
+---
+
+## 1. Current State Analysis
+
+### 1.1 Existing Preferences Systems
+
+#### ✅ Notification Preferences (Already Implemented)
+- **Database**: `user_notification_preferences` table
+- **API**: `/api/notifications/preferences` (GET, PUT)
+- **Frontend**: `src/components/features/notifications/notification-preferences.tsx`
+- **Route**: `/notification-preferences`
+- **Fields**:
+  - `order_notifications` (boolean)
+  - `system_notifications` (boolean)
+  - `loan_notifications` (boolean)
+  - `email_notifications` (boolean)
+  - `in_app_notifications` (boolean)
+
+#### ✅ MFA Settings (Already Implemented)
+- **Database**: `user_mfa_settings` table
+- **Frontend**: `src/pages/mfa-settings.tsx`
+- **Route**: `/mfa-settings`
+- **Fields**: MFA method, TOTP secret, backup codes, etc.
+
+#### ⚠️ Theme/Color Mode (Partially Implemented)
+- **Storage**: Currently in `localStorage` only
+- **Context**: `src/contexts/color-mode.tsx`
+- **Issue**: Not synced across devices, lost on browser clear
+- **Fields**:
+  - `colorMode` ('light' | 'dark')
+  - `isSystemTheme` (boolean)
+
+### 1.2 Missing Preferences Areas
+
+1. **UI/Display Preferences**
+   - Font size
+   - Compact/Comfortable density
+   - Sidebar collapsed state
+   - Dashboard layout preferences
+
+2. **Data Display Preferences**
+   - Default pagination size
+   - Table column visibility
+   - Sort preferences
+   - Filter defaults
+
+3. **Accessibility Preferences**
+   - High contrast mode
+   - Reduced motion
+   - Screen reader optimizations
+
+4. **Language/Locale Preferences**
+   - Language selection
+   - Date format
+   - Time format
+   - Number format
+
+5. **Search & Discovery Preferences**
+   - Default search filters
+   - Saved search queries
+   - Book recommendation preferences
+
+---
+
+## 2. Proposed Database Schema
+
+### 2.1 New Table: `user_preferences`
+
+```sql
+CREATE TABLE user_preferences (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id INTEGER NOT NULL UNIQUE,
+  
+  -- UI/Display Preferences
+  theme_mode TEXT DEFAULT 'system' CHECK (theme_mode IN ('light', 'dark', 'system')),
+  font_size TEXT DEFAULT 'medium' CHECK (font_size IN ('small', 'medium', 'large', 'xlarge')),
+  density TEXT DEFAULT 'comfortable' CHECK (density IN ('compact', 'comfortable', 'spacious')),
+  sidebar_collapsed BOOLEAN DEFAULT FALSE,
+  sidebar_width INTEGER DEFAULT 200,
+  
+  -- Data Display Preferences
+  default_page_size INTEGER DEFAULT 20,
+  table_column_visibility TEXT, -- JSON object: { "table_name": { "column": true/false } }
+  default_sort_preferences TEXT, -- JSON object: { "table_name": { "field": "asc/desc" } }
+  
+  -- Accessibility Preferences
+  high_contrast BOOLEAN DEFAULT FALSE,
+  reduced_motion BOOLEAN DEFAULT FALSE,
+  screen_reader_optimized BOOLEAN DEFAULT FALSE,
+  
+  -- Language/Locale Preferences
+  language TEXT DEFAULT 'en',
+  date_format TEXT DEFAULT 'MM/DD/YYYY',
+  time_format TEXT DEFAULT '12h', -- '12h' or '24h'
+  timezone TEXT DEFAULT 'UTC',
+  
+  -- Dashboard Preferences
+  dashboard_layout TEXT, -- JSON: widget positions, visibility
+  dashboard_widgets TEXT, -- JSON: enabled/disabled widgets
+  
+  -- Search Preferences
+  default_search_filters TEXT, -- JSON: saved filter presets
+  search_history_enabled BOOLEAN DEFAULT TRUE,
+  
+  -- Metadata
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  
+  FOREIGN KEY (user_id) REFERENCES library_users(id) ON DELETE CASCADE
+);
+
+CREATE INDEX idx_user_preferences_user_id ON user_preferences(user_id);
+CREATE TRIGGER update_user_preferences_timestamp 
+  AFTER UPDATE ON user_preferences
+  FOR EACH ROW
+BEGIN
+  UPDATE user_preferences SET updated_at = CURRENT_TIMESTAMP WHERE id = NEW.id;
+END;
+```
+
+### 2.2 Migration Strategy
+
+**Option A: Extend Existing Tables** (Not Recommended)
+- Would fragment preferences across multiple tables
+- Harder to manage and query
+
+**Option B: Unified Preferences Table** (Recommended)
+- Single source of truth for all user preferences
+- Easier to extend and maintain
+- Better performance (single query)
+- Can migrate existing preferences gradually
+
+**Migration Steps:**
+1. Create `user_preferences` table
+2. Migrate theme preferences from localStorage to database
+3. Keep notification preferences in separate table (already well-established)
+4. Keep MFA settings separate (security-sensitive, different update frequency)
+
+---
+
+## 3. API Design
+
+### 3.1 Endpoint Structure
+
+```
+GET    /api/user/preferences           - Get all user preferences
+PUT    /api/user/preferences           - Update preferences (partial update supported)
+PATCH  /api/user/preferences           - Partial update (alias for PUT)
+GET    /api/user/preferences/theme     - Get theme preferences only
+PUT    /api/user/preferences/theme      - Update theme preferences
+GET    /api/user/preferences/display   - Get display preferences only
+PUT    /api/user/preferences/display   - Update display preferences
+GET    /api/user/preferences/accessibility - Get accessibility preferences
+PUT    /api/user/preferences/accessibility - Update accessibility preferences
+```
+
+### 3.2 Request/Response Format
+
+**GET /api/user/preferences**
+```json
+{
+  "success": true,
+  "data": {
+    "theme_mode": "dark",
+    "font_size": "medium",
+    "density": "comfortable",
+    "sidebar_collapsed": false,
+    "default_page_size": 20,
+    "language": "en",
+    "date_format": "MM/DD/YYYY",
+    "time_format": "12h",
+    "high_contrast": false,
+    "reduced_motion": false,
+    "dashboard_layout": { ... },
+    "table_column_visibility": { ... }
+  }
+}
+```
+
+**PUT /api/user/preferences**
+```json
+// Request body (partial updates supported)
+{
+  "theme_mode": "dark",
+  "default_page_size": 50
+}
+
+// Response
+{
+  "success": true,
+  "data": {
+    "message": "Preferences updated successfully",
+    "preferences": { ... }
+  }
+}
+```
+
+### 3.3 Implementation Location
+
+- **Handler**: `functions/api/user/preferences.ts`
+- **Repository**: `functions/api/user/repositories/user-preferences-repository.ts`
+- **Validation**: `functions/middleware/validation/schemas/user-preferences-schemas.ts`
+
+---
+
+## 4. Frontend Implementation
+
+### 4.1 Preferences Context
+
+Create a centralized preferences context that:
+- Loads preferences on app initialization
+- Syncs with backend
+- Provides reactive updates across components
+- Falls back to localStorage for offline support
+
+**File**: `src/contexts/user-preferences-context.tsx`
+
+```typescript
+interface UserPreferencesContextType {
+  preferences: UserPreferences;
+  loading: boolean;
+  updatePreference: <K extends keyof UserPreferences>(
+    key: K,
+    value: UserPreferences[K]
+  ) => Promise<void>;
+  updatePreferences: (updates: Partial<UserPreferences>) => Promise<void>;
+  resetToDefaults: () => Promise<void>;
+}
+```
+
+### 4.2 Preferences Service
+
+**File**: `src/services/user-preferences.service.ts`
+
+- Handles API communication
+- Caches preferences in memory
+- Syncs with localStorage as backup
+- Provides type-safe preference access
+
+### 4.3 Settings Page Structure
+
+**Main Settings Page**: `src/pages/settings/index.tsx`
+
+Organized into tabs/sections:
+1. **General**
+   - Theme
+   - Language
+   - Date/Time format
+   
+2. **Display**
+   - Font size
+   - Density
+   - Sidebar preferences
+   
+3. **Data Tables**
+   - Default page size
+   - Column visibility
+   - Sort preferences
+   
+4. **Accessibility**
+   - High contrast
+   - Reduced motion
+   - Screen reader options
+   
+5. **Notifications** (Link to existing page)
+   - Redirects to `/notification-preferences`
+   
+6. **Security** (Link to existing page)
+   - Redirects to `/mfa-settings`
+
+### 4.4 Integration Points
+
+#### Theme Integration
+- **Current**: `src/contexts/color-mode.tsx` uses localStorage
+- **Update**: Load from `user_preferences` table on login
+- **Sync**: Save to database when user changes theme
+- **Fallback**: Use localStorage if database unavailable
+
+#### Pagination Integration
+- **Current**: Hardcoded defaults in `src/constants/config.ts`
+- **Update**: Use `default_page_size` from preferences
+- **Components**: Update `usePagination` hook to read from preferences
+
+#### Table Column Visibility
+- **New Feature**: Allow users to show/hide columns
+- **Storage**: JSON in `table_column_visibility` field
+- **Components**: Update table components to respect preferences
+
+#### Dashboard Layout
+- **New Feature**: Allow users to customize dashboard widgets
+- **Storage**: JSON in `dashboard_layout` and `dashboard_widgets`
+- **Components**: Update dashboard components to use preferences
+
+---
+
+## 5. Integration with Existing Features
+
+### 5.1 Notification Preferences
+- **Keep Separate**: Notification preferences remain in `user_notification_preferences` table
+- **Link from Settings**: Add navigation link in main settings page
+- **Reason**: Well-established, different update frequency, different access patterns
+
+### 5.2 MFA Settings
+- **Keep Separate**: MFA settings remain in `user_mfa_settings` table
+- **Link from Settings**: Add navigation link in main settings page
+- **Reason**: Security-sensitive, different update frequency
+
+### 5.3 Profile Page
+- **Current**: `src/pages/profile.tsx` handles basic profile info
+- **Integration**: Add "Settings" link/button that navigates to preferences page
+- **Separation**: Profile = identity data, Settings = preferences/behavior
+
+### 5.4 Color Mode Context
+- **Migration**: Update `src/contexts/color-mode.tsx` to:
+  1. Load theme from `user_preferences` on mount
+  2. Save to database when changed
+  3. Fallback to localStorage if database unavailable
+  4. Sync across tabs using storage events
+
+---
+
+## 6. User Experience Flow
+
+### 6.1 First-Time User
+1. User registers/logs in
+2. Default preferences created automatically
+3. User sees system theme (if available) or light theme
+4. User can customize preferences anytime from Settings
+
+### 6.2 Returning User
+1. User logs in
+2. Preferences loaded from database
+3. UI applies preferences immediately
+4. Theme, language, display settings active
+
+### 6.3 Cross-Device Sync
+1. User changes preference on Device A
+2. Preference saved to database
+3. User logs in on Device B
+4. Preferences automatically loaded and applied
+
+### 6.4 Offline Support
+1. Preferences cached in localStorage
+2. Changes queued if offline
+3. Sync when connection restored
+
+---
+
+## 7. Implementation Phases
+
+### Phase 1: Foundation (Week 1)
+- [ ] Create `user_preferences` table migration
+- [ ] Create API endpoints (GET, PUT)
+- [ ] Create preferences context and service
+- [ ] Create basic settings page structure
+
+### Phase 2: Theme Migration (Week 1-2)
+- [ ] Migrate theme preferences from localStorage to database
+- [ ] Update `ColorModeContext` to use database
+- [ ] Test cross-device theme sync
+- [ ] Add theme selector to settings page
+
+### Phase 3: Display Preferences (Week 2)
+- [ ] Implement font size preferences
+- [ ] Implement density preferences
+- [ ] Implement sidebar preferences
+- [ ] Update UI components to respect preferences
+
+### Phase 4: Data Display Preferences (Week 3)
+- [ ] Implement default page size preference
+- [ ] Implement table column visibility
+- [ ] Implement sort preferences
+- [ ] Update table components
+
+### Phase 5: Advanced Features (Week 4)
+- [ ] Implement accessibility preferences
+- [ ] Implement language/locale preferences
+- [ ] Implement dashboard layout preferences
+- [ ] Implement search preferences
+
+### Phase 6: Polish & Testing (Week 5)
+- [ ] Add settings page navigation links
+- [ ] Add preference reset functionality
+- [ ] Add preference export/import (optional)
+- [ ] Comprehensive testing
+- [ ] Documentation
+
+---
+
+## 8. File Structure
+
+```
+functions/
+  api/
+    user/
+      preferences.ts                    # Main preferences handler
+      repositories/
+        user-preferences-repository.ts  # Database operations
+  middleware/
+    validation/
+      schemas/
+        user-preferences-schemas.ts     # Validation schemas
+
+src/
+  contexts/
+    user-preferences-context.tsx        # Preferences context
+  services/
+    user-preferences.service.ts         # Preferences API service
+  pages/
+    settings/
+      index.tsx                        # Main settings page
+      components/
+        ThemeSettings.tsx              # Theme preferences
+        DisplaySettings.tsx            # Display preferences
+        DataTableSettings.tsx           # Table preferences
+        AccessibilitySettings.tsx      # Accessibility preferences
+  hooks/
+    useUserPreferences.ts              # Preferences hook
+  types/
+    user-preferences.ts                # TypeScript types
+
+sql/
+  migrations/
+    create-user-preferences-table.sql   # Migration script
+```
+
+---
+
+## 9. TypeScript Types
+
+```typescript
+export interface UserPreferences {
+  // UI/Display
+  theme_mode: 'light' | 'dark' | 'system';
+  font_size: 'small' | 'medium' | 'large' | 'xlarge';
+  density: 'compact' | 'comfortable' | 'spacious';
+  sidebar_collapsed: boolean;
+  sidebar_width: number;
+  
+  // Data Display
+  default_page_size: number;
+  table_column_visibility: Record<string, Record<string, boolean>>;
+  default_sort_preferences: Record<string, { field: string; order: 'asc' | 'desc' }>;
+  
+  // Accessibility
+  high_contrast: boolean;
+  reduced_motion: boolean;
+  screen_reader_optimized: boolean;
+  
+  // Language/Locale
+  language: string;
+  date_format: string;
+  time_format: '12h' | '24h';
+  timezone: string;
+  
+  // Dashboard
+  dashboard_layout: DashboardLayout;
+  dashboard_widgets: DashboardWidgets;
+  
+  // Search
+  default_search_filters: Record<string, any>;
+  search_history_enabled: boolean;
+}
+
+export interface DashboardLayout {
+  widgets: Array<{
+    id: string;
+    position: { x: number; y: number };
+    size: { width: number; height: number };
+    visible: boolean;
+  }>;
+}
+
+export interface DashboardWidgets {
+  [widgetId: string]: boolean;
+}
+```
+
+---
+
+## 10. Security Considerations
+
+1. **Authentication Required**: All preferences endpoints require authentication
+2. **User Isolation**: Users can only access/modify their own preferences
+3. **Validation**: All preference values validated on backend
+4. **Rate Limiting**: Prevent abuse of preference update endpoints
+5. **Sanitization**: JSON fields (table_column_visibility, etc.) validated and sanitized
+
+---
+
+## 11. Performance Considerations
+
+1. **Caching**: Preferences cached in context after first load
+2. **Lazy Loading**: Load preferences only when needed
+3. **Batch Updates**: Support partial updates to minimize API calls
+4. **Indexing**: Index on `user_id` for fast lookups
+5. **Default Values**: Use database defaults to minimize storage
+
+---
+
+## 12. Testing Strategy
+
+1. **Unit Tests**: Test preference service, repository, validation
+2. **Integration Tests**: Test API endpoints
+3. **E2E Tests**: Test settings page, preference persistence
+4. **Cross-Device Tests**: Verify sync across devices
+5. **Migration Tests**: Test theme migration from localStorage
+
+---
+
+## 13. Documentation Requirements
+
+1. **API Documentation**: Document all preferences endpoints
+2. **User Guide**: How to use settings page
+3. **Developer Guide**: How to integrate preferences in new components
+4. **Migration Guide**: How to migrate existing localStorage preferences
+
+---
+
+## 14. Future Enhancements
+
+1. **Preference Presets**: Allow users to save/load preference presets
+2. **Preference Export/Import**: Export preferences as JSON
+3. **Role-Based Defaults**: Different defaults for different user roles
+4. **Preference Analytics**: Track which preferences are most used
+5. **A/B Testing**: Test different default preferences
+
+---
+
+## 15. Success Metrics
+
+1. **Adoption Rate**: % of users who customize preferences
+2. **Cross-Device Usage**: % of users who use app on multiple devices
+3. **Performance**: API response time for preferences endpoints
+4. **User Satisfaction**: Feedback on settings page usability
+
+---
+
+## Conclusion
+
+This comprehensive user preferences system will:
+- ✅ Consolidate existing preferences (theme, notifications, MFA)
+- ✅ Add new preference categories (display, accessibility, locale)
+- ✅ Provide cross-device synchronization
+- ✅ Improve user experience and personalization
+- ✅ Maintain security and performance
+- ✅ Follow existing codebase patterns
+
+The phased implementation approach allows for incremental development and testing, ensuring a stable and reliable preferences system.
+

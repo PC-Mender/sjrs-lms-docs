@@ -1,0 +1,312 @@
+---
+title: "System Guide"
+---
+
+# Reference Book System Guide
+
+## 📚 Overview
+
+The Reference Book System is a specialized module within the Library Management System designed to manage non-circulating reference materials. Unlike regular books that can be borrowed, reference books are typically used within the library premises and require a different classification and management approach.
+
+## 🏗️ Database Architecture
+
+### Core Tables
+
+#### 1. `reference_book_categories`
+Classification categories for reference materials.
+
+```sql
+CREATE TABLE reference_book_categories (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name VARCHAR(100) UNIQUE NOT NULL,
+  description TEXT,
+  color_code VARCHAR(7) DEFAULT '#1890ff',
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 2. `reference_sections`
+Organizational sections for reference materials.
+
+```sql
+CREATE TABLE reference_sections (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name VARCHAR(100) UNIQUE NOT NULL,
+  description TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 3. `reference_resources`
+Resource types within sections.
+
+```sql
+CREATE TABLE reference_resources (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name VARCHAR(100) NOT NULL,
+  description TEXT,
+  section_id UUID NOT NULL REFERENCES reference_sections(id) ON DELETE CASCADE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### 4. `reference_books`
+The actual reference materials.
+
+```sql
+CREATE TABLE reference_books (
+  reference_id VARCHAR(50) PRIMARY KEY,
+  title VARCHAR(255) NOT NULL,
+  subtitle VARCHAR(255),
+  author_id INTEGER NOT NULL REFERENCES authors(id) ON DELETE RESTRICT,
+  volume INTEGER CHECK (volume >= 1 AND volume <= 100),
+  language VARCHAR(50) NOT NULL DEFAULT 'English',
+  book_status VARCHAR(20) NOT NULL DEFAULT 'available' 
+    CHECK (book_status IN ('available', 'in_use', 'under_maintenance', 'lost', 'deprecated')),
+  resource_type_id INTEGER NOT NULL REFERENCES reference_resources(id) ON DELETE RESTRICT,
+  section_id INTEGER NOT NULL REFERENCES reference_sections(id) ON DELETE RESTRICT,
+  category_id INTEGER REFERENCES reference_book_categories(id) ON DELETE SET NULL,
+  
+  -- Additional metadata
+  isbn VARCHAR(20),
+  publisher VARCHAR(255),
+  published_year INTEGER CHECK (published_year > 0),
+  edition VARCHAR(50),
+  pages INTEGER CHECK (pages > 0),
+  location_details TEXT,
+  
+  -- Maintenance fields
+  maintenance_notes TEXT,
+  maintenance_start_date TIMESTAMP,
+  maintenance_expected_completion TIMESTAMP,
+  maintenance_completed_date TIMESTAMP,
+  
+  -- Audit fields
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  created_by INTEGER REFERENCES library_users(id) ON DELETE SET NULL,
+  updated_by INTEGER REFERENCES library_users(id) ON DELETE SET NULL
+);
+```
+
+### Table Relationships
+
+```
+reference_books
+├── category_id → reference_book_categories (optional)
+├── section_id → reference_sections (required)
+├── resource_type_id → reference_resources (required)
+├── author_id → authors (required)
+├── created_by → library_users (audit)
+└── updated_by → library_users (audit)
+
+reference_resources
+└── section_id → reference_sections (required)
+```
+
+## 🎯 User Workflow
+
+### Phase 1: System Setup (Admin/Superuser)
+
+#### 1.1 Create Reference Categories
+- **Route**: `/dashboard-superuser/reference-categories`
+- **Purpose**: Define classification categories (Dictionaries, Encyclopedias, Manuals, etc.)
+- **Fields**: Name, Description, Color Code
+- **Features**: Real-time search, relevance sorting, CRUD operations
+
+#### 1.2 Create Reference Sections
+- **Route**: `/dashboard-superuser/reference-sections`
+- **Purpose**: Organize reference materials by department/area
+- **Fields**: Name, Description
+- **Features**: Real-time search, relevance sorting, CRUD operations
+
+#### 1.3 Create Reference Resources
+- **Route**: `/dashboard-superuser/reference-resources`
+- **Purpose**: Define resource types within sections
+- **Fields**: Name, Description, Section (dropdown)
+- **Features**: Real-time search, relevance sorting, CRUD operations
+
+### Phase 2: Reference Book Management
+
+#### 2.1 Create Reference Books
+- **Route**: `/dashboard-superuser/reference-books`
+- **Method**: Modal form (no separate create page)
+- **Required Fields**:
+  - Basic Info: Title, Author, ISBN, Language
+  - Classification: Section, Resource Type, Category
+  - Metadata: Publisher, Published Year, Edition, Pages
+- **Features**: Dynamic dropdowns, validation, real-time feedback
+
+#### 2.2 Manage Reference Books
+- **Features**: Edit, Delete, Status Management
+- **Status Options**: Available, In Use, Under Maintenance, Lost, Deprecated
+
+## 🔍 Search & Management Features
+
+### Real-time Search System
+All reference management pages feature:
+
+- **Instant Search**: Results update as you type (no Enter required)
+- **Multi-field Search**: Name, description, dates, IDs
+- **Relevance Sorting**: Exact matches → Starts with → Contains → ID match
+- **Case-insensitive**: Search works regardless of case
+
+### Search Priority (Relevance Score)
+1. **Exact Match** (100 points): Perfect name/description match
+2. **Starts With** (50 points): Name/description starts with search term
+3. **Contains** (25 points): Search term appears anywhere
+4. **ID Match** (10 points): Search term matches ID
+
+### Table Features
+- **Consistent Columns**: Name, Description, Created Date, Updated Date, Actions
+- **Responsive Design**: Horizontal scrolling for wide tables
+- **Pagination**: Configurable page sizes with quick jumper
+- **Loading States**: Visual feedback during operations
+
+## 🎨 UI/UX Features
+
+### Enhanced User Experience
+- **Modal Forms**: Create/edit operations in modals for better UX
+- **Real-time Updates**: Changes reflect immediately across all users
+- **Consistent Interface**: Standardized layout across all reference pages
+- **Clear Visual Hierarchy**: Proper spacing, typography, and color coding
+
+### Responsive Design
+- **Mobile-friendly**: Tables scroll horizontally on smaller screens
+- **Flexible Layout**: Adapts to different screen sizes
+- **Touch-friendly**: Appropriate button sizes for mobile interaction
+
+## 🔐 Permissions & Security
+
+### Role-based Access
+- **Superuser/Admin**: Full CRUD access to all reference entities
+- **Librarian**: Can manage reference books and classifications
+- **Students/Professors**: Read-only access to browse reference materials
+
+### Row Level Security (RLS)
+```sql
+-- Reference books are viewable by everyone
+CREATE POLICY "Reference books are viewable by everyone" ON reference_books 
+FOR SELECT USING (true);
+
+-- Only staff can manage reference books
+CREATE POLICY "Reference books are manageable by staff only" ON reference_books 
+FOR ALL USING (
+  EXISTS (
+    SELECT 1 FROM library_users lu
+    JOIN roles r ON lu.role_id = r.id
+    WHERE lu.id::text = auth.uid()::text
+    AND r.name IN ('Superuser', 'Admin', 'Librarian')
+  )
+);
+```
+
+## 📊 Data Flow
+
+```
+1. Setup Phase
+   ├── Create Categories (Dictionaries, Encyclopedias, etc.)
+   ├── Create Sections (Academic, Research, General)
+   └── Create Resources (Textbooks, Manuals, Guides)
+
+2. Reference Book Creation
+   ├── Select Section (determines available resource types)
+   ├── Select Resource Type (filtered by section)
+   ├── Select Category (optional classification)
+   └── Fill in book details
+
+3. Management
+   ├── Browse/Search reference books
+   ├── Update book information
+   ├── Manage book status
+   └── Track usage and maintenance
+```
+
+## 🚀 Key Features
+
+### 1. Hierarchical Classification
+- **Categories**: What type (Dictionary, Encyclopedia, Manual)
+- **Sections**: Where located (Academic, Research, General)
+- **Resources**: Format/Type (Textbook, Manual, Guide)
+
+### 2. Dynamic Dropdowns
+- Resource types are filtered based on selected section
+- Ensures data integrity and logical organization
+
+### 3. Comprehensive Search
+- Search across multiple fields simultaneously
+- Relevance-based result sorting
+- Real-time filtering without page refresh
+
+### 4. Audit Trail
+- Track creation and modification dates
+- Record who created/modified records
+- Maintain data integrity and accountability
+
+### 5. Status Management
+- Track book availability and condition
+- Manage maintenance schedules
+- Handle lost/deprecated materials
+
+## 🔧 Technical Implementation
+
+### Frontend Technologies
+- **React**: Component-based architecture
+- **TypeScript**: Type safety and better development experience
+- **Ant Design**: Consistent UI components
+- **Cloudflare Workers**: API endpoints and serverless functions
+
+### Backend Integration
+- **D1 Database**: SQLite-based database for data storage
+- **Cloudflare Workers**: Serverless API endpoints
+- **JWT Authentication**: Custom authentication system
+- **Role-based Permissions**: Granular access control
+
+### Performance Optimizations
+- **Indexed Queries**: Fast search and filtering
+- **Pagination**: Handle large datasets efficiently
+- **Lazy Loading**: Load data as needed
+- **Caching**: Reduce database calls
+
+## 📝 Best Practices
+
+### For Administrators
+1. **Plan Your Classification**: Design categories and sections before adding books
+2. **Consistent Naming**: Use clear, descriptive names for all entities
+3. **Regular Maintenance**: Update book statuses and track usage
+4. **Data Validation**: Ensure all required fields are completed
+
+### For Developers
+1. **Follow the Hierarchy**: Always create sections before resources
+2. **Use UUIDs**: Reference sections and resources use UUID primary keys
+3. **Handle Errors**: Implement proper error handling for all operations
+4. **Test Thoroughly**: Verify search and filtering work correctly
+
+## 🔄 Migration History
+
+### Recent Updates
+- **UUID Migration**: Updated reference_sections and reference_resources to use UUIDs
+- **Real-time Search**: Implemented instant search across all reference pages
+- **Relevance Sorting**: Added intelligent result ranking
+- **Enhanced UI**: Improved table layouts and user experience
+
+### Database Changes
+- Added `updated_at` columns to all reference tables
+- Implemented automatic timestamp triggers
+- Updated foreign key relationships to use UUIDs
+- Added comprehensive indexes for performance
+
+## 📚 Related Documentation
+
+- **Permission System**: Role-based access control
+- **Security Guide**: Data protection and RLS policies
+- **User Guides**: Step-by-step instructions for different roles
+- **API Documentation**: Backend integration details
+
+---
+
+*This documentation is maintained as part of the Library Management System project. For questions or updates, please refer to the development team.* 

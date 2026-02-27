@@ -1,0 +1,12 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import DefaultFooter from '@astrojs/starlight/components/Footer.astro';
+
+const currentYear = new Date().getFullYear();
+---
+
+<DefaultFooter {...Astro.props} />
+
+<div class="custom-footer">
+  <p>&copy; {currentYear} SJRS Library Management System. All rights reserved.</p>
+</div>

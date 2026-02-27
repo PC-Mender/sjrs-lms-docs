@@ -1,0 +1,138 @@
+---
+title: "RESERVATION ROLE BASED ROUTING"
+---
+
+# Reservation System - Role-Based Routing & Access
+
+## Route Configuration
+
+### Routes Available Per Dashboard Type
+
+The reservation routes are **automatically generated** for all dashboard types through the dynamic route generation system:
+
+1. **Base Dashboard** (`/dashboard/reservations`)
+   - Available to: All authenticated users
+   - Users see: Only their own reservations
+
+2. **Admin Dashboard** (`/dashboard-admin/reservations`)
+   - Available to: Admin, Superuser roles
+   - Users see: All reservations (can filter by user)
+
+3. **Librarian Dashboard** (`/dashboard-librarian/reservations`)
+   - Available to: Librarian, Admin, Superuser roles
+   - Users see: All reservations (can filter by user)
+
+4. **Superuser Dashboard** (`/dashboard-superuser/reservations`)
+   - Available to: Superuser role only
+   - Users see: All reservations (can filter by user)
+
+5. **Dean Dashboard** (`/dashboard-dean/reservations`)
+   - Available to: Dean, Admin, Superuser roles
+   - Users see: All reservations (read-only access)
+
+### How Routes Are Generated
+
+Routes are defined in `src/router/route-definitions.ts`:
+
+```typescript
+const ADDITIONAL_ROUTES: FeatureRoute[] = [
+  // Reservations
+  { path: 'reservations', component: ReservationsPage },
+];
+```
+
+These routes are added to `ALL_FEATURE_ROUTES`, which are then dynamically generated for each dashboard type via `generateDashboardRoutes()`. Since reservations route doesn't have `requiresSpecificRoles: true`, it's generated for **all dashboard types**.
+
+## Permission-Based Access Control
+
+### Menu Visibility
+
+Reservations appear in the **Circulation** menu section when:
+- User has `reservations:read` permission
+- Menu item is added in `useMenuItems.tsx`:
+  ```typescript
+  ...(canAccessReservations() ? [{
+    key: "reservations",
+    label: "Reservations",
+  }] : []),
+  ```
+
+### API Access Control
+
+The API enforces permissions:
+- **Read**: `reservations:read` - Required to view reservations
+- **Create**: `reservations:create` - Required to create reservations
+- **Update**: `reservations:update` - Required to claim/cancel reservations
+- **Delete**: `reservations:delete` - Required to delete reservations
+
+### Data Filtering
+
+In `ReservationList.tsx`:
+- **Admin users** (superuser, admin, librarian, dean): See all reservations
+- **Regular users**: See only their own reservations
+- Filtering is done via `user_id` parameter in API query
+
+## Default Permissions (from Migration)
+
+From `sql/migrations/2025-01-15_add-reservations-permissions.sql`:
+
+- **Superuser/Admin/Librarian**: Full access (create, read, update, delete)
+- **Dean**: Read-only access
+- **Students/Professors/Guests**: Create/Read/Update on their own reservations
+
+## Navigation
+
+### Menu Navigation
+
+When users click "Reservations" in the menu:
+1. `handleMenuClick` checks `ROUTE_MAP` for key `"reservations"`
+2. Gets dashboard path based on user role (`getDashboardPath`)
+3. Navigates to: `{dashboardPath}/reservations`
+
+Example:
+- Admin user → `/dashboard-admin/reservations`
+- Librarian → `/dashboard-librarian/reservations`
+- Student → `/dashboard/reservations`
+
+### Route Constants
+
+Route constants are defined in `src/constants/config.ts`:
+- `RESERVATIONS: '/dashboard/reservations'`
+- `ADMIN_RESERVATIONS: '/dashboard-admin/reservations'`
+- `LIBRARIAN_RESERVATIONS: '/dashboard-librarian/reservations'`
+- `SUPERUSER_RESERVATIONS: '/dashboard-superuser/reservations'`
+
+## Verification Checklist
+
+✅ **Routes Generated for All Dashboards**
+- Routes are in `ADDITIONAL_ROUTES` without `requiresSpecificRoles`
+- `generateDashboardRoutes()` creates routes for all dashboard types
+
+✅ **Menu Items Visible to Admins**
+- `canAccessReservations()` checks `reservations:read` permission
+- Menu item added to Circulation section
+- `ROUTE_MAP` includes `'reservations': 'reservations'`
+
+✅ **Admin Users Can See All Reservations**
+- `ReservationList.tsx` checks if user is admin
+- If admin, `user_id` filter is not applied to API query
+- API returns all reservations for admin users
+
+✅ **Permission System Integration**
+- `canAccessReservations` added to `usePermissions` hook
+- Permission checks use `reservations:read` resource
+- Default permissions granted via migration
+
+## Summary
+
+**Routes are role-based** - Each dashboard type has its own route:
+- `/dashboard/reservations` - Regular users
+- `/dashboard-admin/reservations` - Admins
+- `/dashboard-librarian/reservations` - Librarians
+- `/dashboard-superuser/reservations` - Superusers
+- `/dashboard-dean/reservations` - Deans
+
+**Admin users can see all reservations** - The `ReservationList` component filters by `user_id` only for non-admin users. Admin users (superuser, admin, librarian, dean) see all reservations.
+
+**Menu visibility is permission-based** - Reservations menu item appears when user has `reservations:read` permission, which is granted to admin roles by default.
+

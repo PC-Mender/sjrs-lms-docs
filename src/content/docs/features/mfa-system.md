@@ -1,0 +1,197 @@
+---
+title: "Mfa System"
+---
+
+# Multi-Factor Authentication (MFA) System
+
+## Overview
+
+The SJRS LMS includes a Multi-Factor Authentication (MFA) system that provides an additional layer of security for user accounts. The system now supports **Time-based One-Time Passwords (TOTP)**, **Backup Codes**, **Session Persistence**, and comprehensive **security logging**.
+
+## Features
+
+### ✅ **Implemented Features**
+
+1. **TOTP (Time-based One-Time Password) Support**
+   - Compatible with authenticator apps (Google Authenticator, Authy, etc.)
+   - Server-side QR code generation (no external dependencies)
+   - 30-second time-based codes
+
+2. **MFA Enforcement**
+   - **Login Flow**: MFA is strictly enforced during login. Users with MFA enabled *must* provide a valid code to obtain a session.
+   - **Session Security**: MFA verification is required before a session token is issued.
+
+3. **Passkeys (WebAuthn) Support**
+   - **Modern Security**: Support for FIDO2/WebAuthn passkeys (FaceID, TouchID, Windows Hello, YubiKey).
+   - **Seamless Login**: Use biometric or hardware keys instead of typing 6-digit codes.
+   - **Multiple Keys**: Users can register multiple passkeys (e.g., phone + laptop).
+
+4. **Backup Codes System**
+   - **Generation**: Users can generate a set of 10 one-time use backup codes.
+   - **Recovery**: These codes can be used to log in if the authenticator device is lost.
+   - **Secure Storage**: Codes are hashed (salted SHA-256) before storage; raw codes are never stored.
+   - **Regeneration**: Users can invalidate old codes and generate new ones (requires password confirmation).
+   - **Password Reset Integration**: Recovery codes are required to reset a forgotten password if MFA is enabled.
+
+5. **Session Persistence (Remember Me)**
+   - **Functionality**: Users can choose to "Remember this device" during login.
+   - **Policy**:
+     - **Standard Session**: Expires in 24 hours.
+     - **Remembered Session**: Expires in 30 days.
+   - **Implementation**: Handled via `user_sessions` table with a dedicated `remember` flag and authoritative server-side TTL.
+
+6. **Security Logging**
+   - All MFA verification attempts (success and failure) are logged to `mfa_verification_logs`.
+   - Logs include IP address, user agent, and method used (TOTP vs Backup Code).
+   - Recent activity is displayed to the user in their security settings.
+
+7. **Secure Secret Storage**
+   - TOTP secrets are stored encrypted in the database.
+   - Secrets are decrypted only when needed for verification.
+
+8. **User Self-Management**
+   - Users can enable/disable MFA from their profile.
+   - Password verification is required to disable MFA.
+   - Email OTP verification is required to disable MFA (double verification).
+
+9. **Trusted Devices (MFA Bypass)**
+   - **Functionality**: Users can mark a device as "trusted" for 30 days during MFA verification.
+   - **Mechanism**: A secure, long-lived `trusted_device_token` cookie allows bypassing the MFA challenge on subsequent logins from the same device.
+   - **Expiration**: Trusted status expires after 30 days.
+   - **Implementation**: Uses `trusted_devices` table and signed device binding cookies.
+
+### 🚧 **Pending Implementation** (Future Enhancements)
+
+*None*
+
+### 🔄 **Planned Features**
+
+1. **SMS/Email MFA**
+   - SMS-based verification codes
+   - Email-based verification codes (as primary MFA method)
+
+## User Guide
+
+### Enabling MFA
+
+1. **Access MFA Settings**
+   - Log into your account
+   - Click on your profile menu (top-right)
+   - Select "Two-Factor Authentication"
+
+2. **Setup Process**
+   - Click "Enable Two-Factor Authentication"
+   - Scan the QR code with your authenticator app
+   - Enter the 6-digit code from your app
+
+### Backup Codes
+
+- After enabling MFA, you should generate backup codes.
+- Click "Generate Backup Codes" in the MFA settings.
+- **Save these codes immediately** (print them or save to a password manager).
+- If you lose your device, use a backup code instead of the 6-digit TOTP code during login.
+
+### Using MFA
+
+1. **Normal Login**
+   - Enter your username and password
+   - If credentials are valid, you will be prompted for the MFA code
+   - **Method 1 (TOTP)**: Enter the 6-digit code from your authenticator app.
+   - **Method 2 (Passkey)**: Click "Use Passkey" and authenticate with your device (fingerprint, face, etc.).
+   - **Method 3 (Backup Code)**: Click "Use Backup Code" and enter one of your saved codes.
+   - **Optional**: Check "Remember this device" to stay logged in for 30 days.
+   - Upon successful verification, you will be logged in.
+
+### Account Recovery (Password Reset)
+
+If you forget your password and have MFA enabled:
+1. Request a password reset via email.
+2. Click the link in the email.
+3. You will be required to enter your **New Password** AND a **Backup Code**.
+   - *Note: Standard TOTP codes cannot be used for password reset recovery; you must use a backup code.*
+
+### Passkeys
+
+1. **Adding a Passkey**
+   - Go to "Two-Factor Authentication".
+   - Under "Passkeys", click "Add Passkey".
+   - Follow your browser/device instructions to register (e.g., touch ID, face ID).
+   - The new passkey will appear in your list.
+
+2. **Revoking a Passkey**
+   - Click the "Revoke" (trash icon) next to a passkey.
+   - You will need to verify your password and an email OTP to confirm deletion.
+
+### Disabling MFA
+
+1. **From MFA Settings**
+   - Go to "Two-Factor Authentication" in your profile
+   - Click "Disable Two-Factor Authentication"
+   - Enter your password to confirm
+   - Enter the OTP sent to your email address
+
+## Technical Implementation
+
+### Database Schema
+
+The MFA system uses the following tables:
+
+1. **`user_mfa_settings`** - Stores user MFA preferences, encrypted secrets, and backup code metadata.
+2. **`mfa_backup_codes`** - Stores hashed backup codes for each user.
+3. **`mfa_challenge_tokens`** - Manages temporary tokens during the login MFA challenge phase.
+4. **`mfa_verification_logs`** - Logs all verification attempts for security auditing.
+5. **`user_sessions`** - Stores session data, including the `remember` flag and expiration.
+6. **`trusted_devices`** - (Reserved) Future use for granular device trust management.
+
+### API Endpoints
+
+- `POST /api/auth/mfa/setup` - Initialize MFA setup (returns QR code)
+- `POST /api/auth/mfa/verify` - Verify and enable MFA
+- `GET /api/auth/mfa/status` - Get MFA status (includes recent activity logs)
+- `POST /api/auth/mfa/disable` - Disable MFA (requires password & email OTP)
+- `POST /api/auth/mfa/challenge/verify` - Verify MFA code during login (supports TOTP & Backup Codes)
+- `POST /api/auth/mfa/backup-codes/regenerate` - Generate new backup codes (requires password)
+
+### Security Considerations
+
+1. **Enforcement**
+   - The login endpoint (`/api/auth/login`) checks `user_mfa_settings`.
+   - If enabled, it returns `401 Unauthorized` with `code: AUTH_MFA_REQUIRED` and a temporary `mfaChallengeToken`.
+   - No session is created until the challenge is verified.
+
+2. **Challenge Token Security**
+   - `mfaChallengeToken` is a short-lived JWT.
+   - It is single-use and tracked in `mfa_challenge_tokens` to prevent replay attacks.
+   - Rate limiting is applied to verification attempts.
+
+3. **Secret Storage**
+   - TOTP secrets are encrypted at rest.
+   - Backup codes are hashed (Salted SHA-256) at rest.
+
+4. **Session Security**
+   - Sessions are strictly bound to `remember` preference.
+   - Non-remembered sessions are short-lived (24h).
+   - Remembered sessions are long-lived (30d) but can be revoked remotely.
+
+## Deployment Status
+
+✅ **Database Schema**: Applied to remote D1 database
+✅ **Backend API**: Fully Implemented (Core + Backup Codes + Logging + Session Persistence)
+✅ **Frontend UI**: Fully Implemented (Setup, Login, Backup Codes Modal, History)
+✅ **Documentation**: Up to date
+
+## Migration History
+
+- **2024-08-06**: MFA tables created in remote D1 database
+- **2024-08-06**: Core MFA API endpoints implemented
+- **2025-01-27**: Security review identified enforcement issues (resolved)
+- **2025-02-12**: Backup Codes and Logging features implemented
+- **2025-12-19**: Session Persistence ("Remember Me") implemented with schema migration
+- **2025-12-20**: Trusted Devices (MFA Bypass) implemented
+- **2025-12-21**: WebAuthn/Passkey support added
+- **Current**: MFA enforcement, backup codes, logging, session persistence, trusted devices, and Passkeys are fully active.
+
+## Next Steps
+
+1. Implement Email/SMS as primary MFA methods.
+2. Add granular device management UI for users to revoke specific trusted devices.

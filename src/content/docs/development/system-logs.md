@@ -1,0 +1,246 @@
+---
+title: "System Logs"
+---
+
+# System Logs Implementation for Superusers
+
+## Overview
+
+The System Logs page provides comprehensive system monitoring and audit capabilities for Superusers in the SJRS LMS. This feature allows Superusers to monitor all system activities, track superuser actions, manage emergency access requests, and view system health metrics.
+
+## 🎯 Features Implemented
+
+### 1. Comprehensive Log Monitoring
+- **Action Logs**: View all system actions performed by users
+- **Superuser Actions**: Track all superuser-specific activities
+- **Emergency Access**: Monitor emergency access requests and approvals
+- **System Health**: Real-time system performance metrics
+
+### 2. Security & Audit Features
+- **IP Address Tracking**: Monitor access locations
+- **User Agent Logging**: Track device and browser information
+- **Detailed Action Records**: JSONB storage for comprehensive logging
+- **Approval Workflow**: Emergency access requires approval
+- **Time-limited Access**: Automatic expiration for security
+
+### 3. User Interface
+- **Tabbed Interface**: Organized view of different log types
+- **Advanced Filtering**: Filter by date range, action type, table name
+- **Search Functionality**: Full-text search across all logs
+- **Detailed View**: Modal popup for complete log details
+- **Statistics Dashboard**: Overview of system activity
+
+## 🔧 Database Structure
+
+### Tables Created
+
+#### `superuser_actions`
+```sql
+CREATE TABLE superuser_actions (
+  id SERIAL PRIMARY KEY,
+  superuser_id INTEGER NOT NULL REFERENCES library_users(id),
+  action_type VARCHAR(100) NOT NULL,
+  target_user_id INTEGER REFERENCES library_users(id),
+  target_table VARCHAR(100),
+  action_details JSONB,
+  ip_address INET,
+  user_agent TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### `emergency_access`
+```sql
+CREATE TABLE emergency_access (
+  id SERIAL PRIMARY KEY,
+  requester_id INTEGER NOT NULL REFERENCES library_users(id),
+  target_user_id INTEGER NOT NULL REFERENCES library_users(id),
+  reason TEXT NOT NULL,
+  approved_by INTEGER REFERENCES library_users(id),
+  approved_at TIMESTAMP,
+  expires_at TIMESTAMP NOT NULL,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### `superuser_permissions`
+```sql
+CREATE TABLE superuser_permissions (
+  id SERIAL PRIMARY KEY,
+  permission_name VARCHAR(100) UNIQUE NOT NULL,
+  description TEXT,
+  is_active BOOLEAN DEFAULT TRUE,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+## 🛡️ Security Implementation
+
+### Row Level Security (RLS)
+- All tables have RLS enabled
+- Only Superusers can view system logs
+- Proper policies for data access control
+
+### Access Control
+```sql
+-- Superuser actions viewable by Superuser only
+CREATE POLICY "Superuser actions are viewable by Superuser only" 
+ON superuser_actions FOR SELECT 
+USING (
+  EXISTS (
+    SELECT 1 FROM library_users lu 
+    JOIN roles r ON lu.role_id = r.id 
+    WHERE lu.id = auth.uid()::integer 
+    AND r.name = 'Superuser'
+  )
+);
+```
+
+## 📊 System Health Monitoring
+
+### Metrics Tracked
+- **Database Connections**: Active connection count
+- **Active Users**: Current logged-in users
+- **System Load**: CPU and memory usage
+- **Memory Usage**: RAM utilization percentage
+- **Disk Usage**: Storage space utilization
+- **Security Alerts**: Number of security warnings
+- **Last Backup**: System backup timestamp
+
+### Health Indicators
+- 🟢 **Healthy**: All systems operational
+- 🟡 **Warning**: Elevated resource usage
+- 🔴 **Critical**: System issues detected
+
+## 🚀 Usage Guide
+
+### For Superusers
+
+#### Accessing System Logs
+1. Login as Superuser (`dev@yourdomain.com` / `dev123`)
+2. Navigate to "System" → "System Logs"
+3. View different log types using tabs
+
+#### Monitoring System Health
+- **System Health Overview**: Real-time metrics
+- **Statistics Dashboard**: Activity summaries
+- **Performance Indicators**: Visual progress bars
+
+#### Managing Emergency Access
+- **View Requests**: All emergency access requests
+- **Approve/Reject**: Manage pending requests
+- **Track Expiration**: Monitor time-limited access
+- **Audit Trail**: Complete history of approvals
+
+#### Filtering and Searching
+- **Date Range**: Filter by specific time periods
+- **Action Type**: Filter by operation type
+- **Table Name**: Filter by affected database table
+- **Search**: Full-text search across all fields
+
+### For Developers
+
+#### Adding New Log Types
+1. Create new table with proper structure
+2. Add RLS policies for Superuser access
+3. Update the System Logs page to include new tab
+4. Add appropriate TypeScript interfaces
+
+#### Extending System Health
+1. Add new metrics to `SystemHealth` interface
+2. Update `fetchSystemHealth` function
+3. Add visual indicators in the UI
+
+## 🔄 Integration Points
+
+### Navigation
+- Added to Superuser menu: "System" → "System Logs"
+- Route: `/dashboard-superuser/system-logs`
+- Key: `system-logs`
+
+### Routing
+```typescript
+// App.tsx
+const SystemLogs = lazy(() => import("./pages/system-logs/index.tsx"));
+
+// Route definition
+<Route path="system-logs" element={<SystemLogs />} />
+```
+
+### Constants
+```typescript
+// config.ts
+SUPERUSER_SYSTEM_LOGS: '/dashboard-superuser/system-logs',
+```
+
+## 📈 Performance Considerations
+
+### Database Optimization
+- **Indexes**: Created on frequently queried columns
+- **Pagination**: Large datasets handled efficiently
+- **Caching**: 5-minute cache for performance
+- **Lazy Loading**: Components loaded on demand
+
+### Query Optimization
+```sql
+-- Performance indexes
+CREATE INDEX idx_superuser_actions_superuser_id ON superuser_actions(superuser_id);
+CREATE INDEX idx_superuser_actions_created_at ON superuser_actions(created_at);
+CREATE INDEX idx_superuser_actions_action_type ON superuser_actions(action_type);
+```
+
+## 🧪 Testing
+
+### Sample Data
+The setup script includes sample data for testing:
+- Sample superuser actions
+- Test emergency access requests
+- Mock system health metrics
+
+### Test Scenarios
+1. **Superuser Access**: Verify only Superusers can access
+2. **Data Filtering**: Test all filter combinations
+3. **Search Functionality**: Test search across all fields
+4. **Detail View**: Verify modal popup works correctly
+5. **System Health**: Check real-time metrics display
+
+## 🔮 Future Enhancements
+
+### Planned Features
+- **Real-time Updates**: WebSocket integration for live data
+- **Export Functionality**: CSV/PDF export of logs
+- **Alert System**: Email notifications for critical events
+- **Advanced Analytics**: Machine learning for anomaly detection
+- **API Integration**: REST API for external monitoring tools
+
+### Performance Improvements
+- **Virtual Scrolling**: Handle millions of log entries
+- **Database Partitioning**: Time-based table partitioning
+- **Caching Layer**: Redis integration for faster queries
+- **Compression**: Archive old logs for storage efficiency
+
+## 📋 Maintenance
+
+### Regular Tasks
+- **Log Rotation**: Archive old logs monthly
+- **Performance Monitoring**: Check query performance
+- **Security Audits**: Review access patterns
+- **Backup Verification**: Ensure log data is backed up
+
+### Troubleshooting
+- **Empty Logs**: Check RLS policies
+- **Performance Issues**: Verify indexes exist
+- **Access Denied**: Confirm user has Superuser role
+- **Missing Data**: Check database connection
+
+## 🎯 Conclusion
+
+The System Logs implementation provides Superusers with comprehensive system monitoring capabilities while maintaining strict security controls. The feature is designed to be scalable, performant, and user-friendly while providing the detailed audit trail necessary for system administration and security compliance.
+
+**Key Benefits:**
+- ✅ **Complete Visibility**: All system activities tracked
+- ✅ **Security Compliance**: Detailed audit trail
+- ✅ **Performance Monitoring**: Real-time system health
+- ✅ **Emergency Management**: Controlled access procedures
+- ✅ **User-Friendly**: Intuitive interface for complex data 

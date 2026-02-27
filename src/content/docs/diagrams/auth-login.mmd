@@ -1,0 +1,52 @@
+flowchart TD
+  subgraph "Frontend"
+    A["Login page (src/pages/login.tsx)"]
+    B["Auth context (src/contexts/auth-context-d1.tsx)"]
+    C["unified-api-client (src/utilities/api/unified-api-client.ts)"]
+    D["tokenManager (secure storage)"]
+    G["AuthGuard/redirect to dashboards"]
+  end
+
+  subgraph "Backend (Cloudflare Worker)"
+    E["Worker router (functions/index.ts)"]
+    F["Auth router (functions/api/auth/index.ts) + security middleware"]
+    H["handleLogin (functions/api/auth/login.ts)"]
+    I["validateUserCredentials + generateUserToken (functions/middleware/auth)"]
+    J["D1 database (env.DB)"]
+    K["CORS + response"]
+  end
+
+  %% Login flow
+  A -->|"onFinish(email, password)"| B
+  B -->|"POST /api/auth/login"| C
+  C --> E
+  E -->|"/api/auth/*"| F
+  F --> H
+  H --> I
+  I --> J
+  I -->|"JWT token + user"| K
+  K --> C
+  C -->|"HTTP 200 JSON"| B
+  B -->|"tokenManager.setToken()"| D
+  B -->|"set state isAuthenticated"| G
+
+  %% Session check on mount
+  B -->|"GET /api/auth/me with Authorization: Bearer token"| C
+  C --> E --> F -->|"me handler"| K --> C --> B
+
+  %% Token refresh
+  B -->|"POST /api/auth/refresh with Bearer token"| C
+  C --> E --> F -->|"refresh handler"| K --> C --> B -->|"update"| D
+
+  %% Force logout other sessions
+  B -->|"POST /api/auth/force-logout-other-sessions"| C
+  C --> E --> F -->|"force logout handler"| K --> C --> B -->|"update"| D
+
+  %% Login alert email (essential data passed, no extra DB query)
+  H -->|"queue login_alert with essential data"| L["Email templates (functions/email-templates/index.ts)"]
+  L -->|"generateLoginAlertTemplate()"| K
+
+  %% Logout
+  B -->|"clear"| D
+  B -->|"navigate /login"| A
+
