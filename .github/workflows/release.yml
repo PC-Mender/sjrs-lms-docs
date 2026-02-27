@@ -16,6 +16,8 @@ jobs:
   version-changelog:
     name: Version & Changelog
     runs-on: ubuntu-latest
+    outputs:
+      version_changed: ${{ steps.version_check.outputs.version_changed }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
