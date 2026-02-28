@@ -16,18 +16,20 @@ title: "Superuser Features Guide"
 2. [Action Logging](#action-logging)
 3. [Emergency Access](#emergency-access)
 4. [User Impersonation](#user-impersonation)
-5. [Best Practices](#best-practices)
-6. [Common Scenarios](#common-scenarios)
-7. [Troubleshooting](#troubleshooting)
+5. [Badge Management](#badge-management)
+6. [Best Practices](#best-practices)
+7. [Common Scenarios](#common-scenarios)
+8. [Troubleshooting](#troubleshooting)
 
 ---
 
 ## Overview
 
-This guide explains how to use the three main superuser features:
+This guide explains how to use the main superuser features:
 - **Action Logging** - Track all privileged actions
 - **Emergency Access** - Request/approve temporary account access
 - **User Impersonation** - View system as another user
+- **Badge Management** - Recognize user achievements
 
 ### Prerequisites
 
@@ -320,6 +322,37 @@ Temporarily log in as another user to:
    - Take screenshots of issues found
    - Blur sensitive information
    - Include in support documentation
+
+---
+
+## 🏅 Badge Management
+
+### What are Badges?
+Badges are digital awards used to recognize user achievements, roles, or contributions. Superusers can manage the badge catalog and manually assign badges to users.
+
+### Managing the Catalog
+1. Navigate to **"Badge Management"**.
+2. View the **"Badge Catalog"** tab to see all available badges.
+3. Use the search bar to find specific badges by name or key.
+4. Available badges include:
+   - **Roles**: `superuser_crown`, `librarian_book`, etc.
+   - **Achievements**: `top_reader`, `early_bird`.
+   - **Special**: `bug_hunter`, `contributor`.
+
+### Assigning Badges
+1. Go to the **"Badge Management"** page.
+2. In the assignment section:
+   - **User**: Search for the user by name or email.
+   - **Badge Key**: Enter the key (e.g., `superuser_crown`) or click a badge in the catalog to auto-fill.
+   - **Reason**: (Optional) Add a note explaining why the badge is being awarded.
+3. Click **"Assign"**.
+4. The user will receive the badge immediately.
+
+### Revoking Badges
+1. Switch to the **"Granted Badges"** tab.
+2. Search for the user or badge.
+3. Click **"Revoke"** next to the badge you want to remove.
+4. Confirm the action.
 
 ---
 

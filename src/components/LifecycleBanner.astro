@@ -1,0 +1,70 @@
+---
+import DefaultBanner from '@astrojs/starlight/components/Banner.astro';
+
+const entry = (Astro.locals as any).starlightRoute?.entry;
+const pagePath = Astro.url?.pathname;
+const inferredArchived = typeof pagePath === 'string' && pagePath.startsWith('/archive/');
+
+const lifecycle = inferredArchived ? 'Archived' : (entry?.data?.lifecycle ?? 'Active');
+
+const shouldShowLifecycleBanner = lifecycle && lifecycle !== 'Active';
+
+const lifecycleLabel = String(lifecycle);
+const lifecycleTone = lifecycleLabel === 'Archived'
+  ? 'danger'
+  : lifecycleLabel === 'Deprecated'
+    ? 'caution'
+    : 'note';
+---
+
+{shouldShowLifecycleBanner ? (
+  <div class={`lifecycle-banner lifecycle-banner--${lifecycleTone}`} role="note" aria-label="Content lifecycle notice">
+    <strong class="lifecycle-banner__title">{lifecycleLabel}</strong>
+    <span class="lifecycle-banner__text">
+      {lifecycleLabel === 'Archived'
+        ? 'This page is historical reference and may not reflect current behavior.'
+        : lifecycleLabel === 'Deprecated'
+          ? 'This page describes deprecated behavior. Prefer current guidance where available.'
+          : 'This page may be stale and needs review.'}
+    </span>
+  </div>
+) : null}
+
+<DefaultBanner {...Astro.props} />
+
+<style>
+  .lifecycle-banner {
+    margin: 1rem 0;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--sl-color-hairline);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: baseline;
+  }
+
+  .lifecycle-banner__title {
+    font-family: var(--sl-font-mono);
+    font-size: var(--sl-text-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .lifecycle-banner__text {
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-2);
+  }
+
+  .lifecycle-banner--note {
+    background: color-mix(in srgb, var(--sl-color-accent-low) 20%, transparent);
+  }
+
+  .lifecycle-banner--caution {
+    background: color-mix(in srgb, #f59e0b 18%, transparent);
+  }
+
+  .lifecycle-banner--danger {
+    background: color-mix(in srgb, #ef4444 14%, transparent);
+  }
+</style>

@@ -1,0 +1,120 @@
+---
+title: "Administrator Guide"
+description: "Getting started guide for Librarians, Admins, and Superusers."
+---
+
+# 🛡️ Getting Started for Administrators
+
+This guide provides an overview for **Librarians**, **Admins**, and **Superusers** managing the SJRS Library Management System.
+
+## 👥 Roles & Responsibilities
+
+### **Librarian**
+*   **Focus**: Daily library operations.
+*   **Key Tasks**:
+    *   Check-in / Check-out of books.
+    *   Managing book inventory (Add/Edit books).
+    *   Handling user registrations and inquiries.
+
+### **Admin**
+*   **Focus**: System configuration and team management.
+*   **Key Tasks**:
+    *   All Librarian tasks.
+    *   User role management.
+    *   **Configuration**: Manage global settings (e.g., borrow limits, fine amounts).
+    *   **System Logs**: View detailed audit logs of all user actions for security and troubleshooting.
+
+### **Superuser**
+*   **Focus**: Full system control and maintenance.
+*   **Key Tasks**:
+    *   Database management.
+    *   Advanced security settings.
+    *   Critical data recovery.
+
+## 🚀 Operational Workflows
+
+### **1. Book Management**
+*   **Adding Books**: Ensure you have the ISBN and verified author details.
+*   **Managing Copies**: Track the status of individual physical copies (`available`, `borrowed`, `lost`, `damaged`).
+*   **Weeding**: Mark outdated or damaged books as `unavailable` or remove them if necessary.
+
+### **2. User Management**
+*   **Registration**: Approve new user accounts if manual approval is required.
+*   **Permissions**: Assign appropriate roles to staff and users.
+*   **Account Recovery**: Assist users with password resets and account lockouts.
+
+### **3. Circulation Desk**
+*   **Loans**: Process book issues efficiently using the scanner or ID search.
+*   **Returns**: Process returns and collect fines if applicable.
+*   **Reservations**: Manage the hold queue and notify users when books are available.
+
+### **4. Analytics & Reporting**
+*   **Admin Dashboard**: View real-time statistics on book circulation, active users, and system health.
+*   **Reports**: Generate detailed reports on fines collected, overdue books, and user activity.
+*   **Digital Usage**: Monitor digital book consumption and reading trends.
+
+### **5. Bulk Operations**
+*   **Import Books**: Upload CSV files to add multiple books or bookmarks at once.
+*   **Import Bookmarks**: Upload CSV files to import bookmarks in bulk.
+*   **System Logs Export**: Download action logs as CSV for external analysis.
+
+### **6. Content Management**
+*   **Journals**: Manage journal subscriptions, issues, and articles.
+*   **Book Reviews**: Moderate user-submitted reviews (Approve/Reject).
+*   **Badges**: Configure and award achievement badges to users.
+
+### **7. Communication**
+*   **Announcements**: Send bulk notifications (Email/In-App) to specific user groups (e.g., "All Students", "Faculty") about library closures, new arrivals, or events.
+
+### **8. Academic & Community Features**
+
+*   **Journals**: Manage academic publications.
+    *   Create and edit journals and articles.
+    *   Organize content by sections and categories.
+*   **Book Reviews**: Moderate user submissions.
+    *   Approve or reject pending reviews.
+    *   Delete inappropriate content.
+*   **Badges**: Recognize user achievements.
+    *   **Catalog**: View available badges.
+    *   **Assign**: Manually grant badges to users for specific accomplishments.
+    *   **Revoke**: Remove badges if necessary.
+
+## 📊 Monitoring & Security
+
+*   **Action Logs**: Regularly review the [Action Logs](../user-guides/action-logs-guide.md) to monitor system activity.
+*   **User Sessions**: View active sessions for any user to investigate suspicious activity or help them secure their account.
+*   **System Notifications**: Ensure automated emails (Welcome, Overdue, Reservation) are functioning correctly via **System Notifications**.
+*   **Security Alerts**: Pay attention to automated security alerts regarding failed logins or suspicious activity.
+
+### **9. System Configuration**
+Configure global settings for the institution.
+*   **Institution Settings**:
+    *   **Academic Year**: Set the current academic year.
+    *   **Semester Dates**: Define start and end dates for semesters.
+    *   **UPI Payment**: Configure UPI details for fine payments.
+
+### **10. Acquisitions & Resources**
+Manage library acquisitions and digital assets.
+*   **Orders**: Track book requests and acquisitions.
+    *   Create and manage purchase orders.
+    *   Approve or reject user requests.
+    *   Set priorities and estimated costs.
+*   **Reference Materials**: Manage non-circulating items.
+    *   Catalog reference books (e.g., encyclopedias, rare books).
+    *   Track status (Available, In Use, Maintenance).
+*   **Digital Resources**: Manage digital files.
+    *   Upload research papers, past exams, and other documents.
+    *   Organize by resource type.
+    *   Track file metadata (size, format).
+
+### **11. Guest Management**
+Manage temporary access for visitors.
+*   **Guest List**: View and manage all guest accounts.
+*   **Create Guest**:
+    *   Add new guests with name, email, and password.
+    *   Assign specific roles (default: Guest).
+    *   Set account status (Active, Inactive).
+
+## 🔗 Quick Links
+*   [Task Index](../user-guides/task-index.md): Step-by-step instructions for common tasks.
+*   [Glossary](../glossary.md): Definition of system terms and roles.

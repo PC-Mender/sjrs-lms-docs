@@ -1,0 +1,281 @@
+---
+title: "Task Index"
+description: "A task-oriented guide to help you quickly find instructions for common operations."
+---
+
+# ⚡ Task Index: How Do I...?
+
+Find quick answers and step-by-step guides for common tasks in the SJRS Library Management System.
+
+## 🔐 Account & Security
+
+### **How do I reset my password?**
+If you have forgotten your password or need to change it:
+1.  Go to the **Login Page**.
+2.  Click the **"Forgot Password?"** link.
+3.  Enter your registered **email address**.
+4.  Check your email for a **password reset link**.
+5.  Click the link and enter your new password.
+    *   *Note: Passwords must be at least 8 characters long.*
+
+### **How do I troubleshoot login issues?**
+If you cannot log in:
+1.  **Check Credentials**: Ensure your email and password are correct.
+2.  **Session Limit**: You may have too many active sessions. The system limits concurrent sessions for security. Try logging out from other devices.
+3.  **Account Lockout**: After 5 failed attempts, your account may be temporarily locked. Wait 30 minutes and try again.
+4.  **Browser Issues**: Clear your browser cache or try a different browser.
+5.  **Contact Support**: If the issue persists, contact a Librarian or Admin.
+
+### **How do I view my login history?**
+1.  Open your **Profile Menu** (top right).
+2.  Select **"Session Details"**.
+3.  Review **Session History** for device, IP address, location, and start/end times.
+
+### **How do I secure my account with MFA?**
+1.  Open your **Profile Menu** (top right).
+2.  Select **"Two-Factor Authentication"**.
+3.  Click **"Enable Two-Factor Authentication"**.
+4.  Choose your method:
+    *   **Authenticator App**: Scan the QR code with Google Authenticator or Authy.
+    *   **Email**: Verify your email address for OTPs.
+    *   **Passkey**: Register your device (FaceID, TouchID) for passwordless login.
+5.  Save your **Backup Codes** in a safe place.
+
+### **How do I manage my active sessions?**
+If you suspect unauthorized access or forgot to logout:
+1.  Open your **Profile Menu** (top right).
+2.  Select **"Session Details"**.
+3.  Review the list of devices logged into your account.
+4.  Click **"Revoke"** next to any session you want to end immediately.
+
+---
+
+## 👤 Account & Profile
+
+### **How do I switch between my roles?**
+If you have multiple roles (e.g., Student and Library Assistant):
+1.  Click your **Profile Avatar** in the top right.
+2.  Select **"Switch Role"**.
+3.  Choose the role you want to use. The dashboard will update automatically.
+
+### **How do I change my notification settings?**
+1.  Go to **"Settings"** > **"Notification Preferences"**.
+2.  Toggle the switches for **Email** and **In-App** notifications.
+3.  Customize alerts for **Loans**, **Orders**, and **System** updates.
+4.  Click **"Save Preferences"**.
+
+### **How do I update my profile?**
+1.  Click on your **Avatar/Name** in the top right corner.
+2.  Select **"Profile"** or **"Settings"**.
+3.  Update your details (Phone, Address, etc.).
+4.  Click **"Save Changes"**.
+    *   *Note: Some fields like Email or User ID cannot be changed.*
+
+### **How do I pay a fine?**
+1.  Go to the **"Fines"** or **"Penalties"** section.
+2.  Select the outstanding fines.
+3.  Click **"Pay Now"**.
+4.  Complete the payment via **UPI** and enter the **Transaction ID**.
+
+## 📖 My Library (End Users)
+
+### **How do I request a book?**
+1.  Go to the **"Wishlist"** section.
+2.  Click **"Add Request"**.
+3.  Fill in the book details.
+4.  You'll be notified when it's available.
+
+### **How do I request multiple books at once? (Request Cart)**
+1.  While browsing the catalog, click the **"Add to Cart"** icon on books you want.
+2.  Open the **Cart Drawer** (usually an icon in the header).
+3.  Review your list.
+4.  Click **"Submit Requests"** to process them all.
+
+### **How do I track my digital reading?**
+1.  Open a **Digital Book**.
+2.  Your progress is saved automatically.
+3.  View stats in the **"My Reading"** tab.
+
+## 🎓 Academic & Community
+
+### **How do I generate a citation?**
+1.  Navigate to **"Academic Tools"** > **"Citation Generator"**.
+2.  Select the **Style** (APA, MLA, Chicago).
+3.  Enter the source details (Book, Journal, Website).
+4.  Click **"Generate"** and copy the result.
+
+### **How do I check for plagiarism?**
+1.  Navigate to **"Academic Tools"** > **"Plagiarism Checker"**.
+2.  Paste your text.
+3.  Click **"Check"**.
+4.  Review the **Similarity Report**.
+    *   *Note: This is a heuristic tool and not a definitive verdict.*
+
+### **How do I write a book review?**
+1.  Go to the **Book Details** page.
+2.  Scroll to the **"Reviews"** section.
+3.  Click **"Write a Review"**.
+4.  Select a **Rating** (1-5 stars) and write your comment.
+5.  Click **"Submit"**.
+    *   *Note: Reviews require approval before being published.*
+
+### **How do I manage bookmarks?**
+1.  Navigate to **"Academic Tools"** > **"Bookmarks"**.
+2.  **Add**: Click **"Add Bookmark"**, enter the URL/Title, and save.
+3.  **Organize**: Use folders and tags to categorize your links.
+4.  **Import**: Click **"Bulk Add"** or **"Import"** to upload a CSV of bookmarks.
+5.  **Access**: Use the search bar or filters (Favorites, Pinned) to find links quickly.
+
+### **How do I assign a badge? (Admin/Superuser)**
+1.  Navigate to **"Badges"** in the dashboard.
+2.  Click the **"Assign Badge"** button (or select a user first).
+3.  Choose the **Badge** from the catalog.
+4.  Select the **User**.
+5.  (Optional) Add a reason or note.
+6.  Click **"Assign"**.
+
+### **How do I add a journal article? (Admin)**
+1.  Navigate to **"Journals"**.
+2.  Select the **Journal** issue.
+3.  Click **"Add Article"**.
+4.  Enter the title, author, and content (or upload PDF).
+5.  Select the appropriate **Section** (e.g., Research, Review).
+6.  Click **"Publish"**.
+
+## 📚 Book Management (Librarians/Admins)
+
+### **How do I add a new book?**
+1.  Navigate to the **Librarian Dashboard**.
+2.  Click on **"Book Management"** or **"Add Book"**.
+3.  Enter the book details (Title, Author, ISBN, etc.).
+    *   *Tip: Use the ISBN lookup feature if available to auto-fill details.*
+4.  Click **"Save"** or **"Create Book"**.
+
+### **How do I bulk import books?**
+To add multiple books at once using a CSV file:
+1.  Navigate to **"Book Management"**.
+2.  Click the **"Import"** or **"Bulk Upload"** button.
+3.  Download the **CSV Template** if needed.
+4.  Upload your filled CSV file.
+5.  The system will process the file and report any errors or duplicates.
+
+### **How do I "restore" a lost book?**
+If a book copy was previously marked as "Lost" or "Damaged" but has been found or repaired:
+1.  Go to the **Book Details** page for the specific book.
+2.  Locate the **"Copies"** section.
+3.  Find the specific copy (by Copy Number) marked as `lost` or `damaged`.
+4.  Click the **"Edit"** icon/button for that copy.
+5.  Change the **Status** dropdown back to **`available`**.
+6.  Save your changes. The book is now back in circulation.
+
+### **How do I weed (delete) books?**
+To remove books from the catalog permanently (weeding):
+1.  Go to the **"Books"** management page.
+2.  Select the book(s) you wish to remove.
+3.  Click the **"Delete"** or **"Trash"** icon.
+4.  **Confirm** the action.
+    *   *Note: Books with active loans cannot be deleted until the loans are closed.*
+
+---
+
+## 🔄 Circulation (Loans & Returns)
+
+### **How do I check out a book to a student?**
+1.  Go to the **"Circulation"** or **"Issue Book"** section.
+2.  Search for the **Student** by name or ID.
+3.  Scan or enter the **Book Copy Number**.
+4.  Confirm the due date.
+5.  Click **"Issue"** or **"Check Out"**.
+
+### **How do I return a book?**
+1.  Go to the **"Returns"** section.
+2.  Scan or enter the **Book Copy Number**.
+3.  The system will automatically identify the loan and calculate any fines.
+4.  Click **"Confirm Return"**.
+
+### **How do I renew a loan?**
+1.  Find the active loan in the **"Circulation"** or User's profile.
+2.  Click the **"Renew"** button.
+3.  The system will extend the due date based on the user's role limits (if no reservations exist).
+
+---
+
+## 📦 Acquisitions & Resources
+
+### **How do I manage book orders?**
+1.  Navigate to **"Orders"** or **"Acquisitions"**.
+2.  View the list of pending requests.
+3.  Click on an order to view details (User, Book, Estimated Cost).
+4.  **Approve** or **Reject** the request.
+    *   *Note: Orders move through statuses like Pending, Approved, Rejected, Completed, or Cancelled.*
+
+### **How do I add a reference book?**
+1.  Navigate to **"Reference Books"**.
+2.  Click **"Add Reference Book"**.
+3.  Enter the book details (Title, Author, Call Number).
+4.  Set the status to **"Available"** or **"In Use"**.
+5.  Click **"Save"**.
+
+### **How do I upload a digital resource?**
+1.  Navigate to **"Digital Resources"**.
+2.  Click **"Create Resource"**.
+3.  Select the **Resource Type** (e.g., Past Exam, Research Paper).
+4.  Upload the file (PDF, DOCX).
+5.  Add a title and description.
+6.  Click **"Create Resource"**.
+
+## ⚙️ System & Config (Admin)
+
+### **How do I configure institution settings?**
+1.  Navigate to **"System Administration"** > **"Institution Settings"**.
+2.  Select the tab you want to configure:
+    *   **Academic Year**: Set the current active year.
+    *   **Semester Dates**: Define start/end dates.
+    *   **UPI Payment**: Update payment gateway details.
+3.  Click **"Save Changes"**.
+
+### **How do I view system logs?**
+To monitor system activity and audit user actions:
+1.  Navigate to **"System Logs"** in the admin sidebar.
+2.  Use the filters to search by:
+    *   **Action Type** (e.g., Login, Create, Update).
+    *   **Table Name** (e.g., Books, Users).
+    *   **Date Range**.
+    *   **User ID**.
+3.  Click **"Export"** to download the logs as a CSV file for external analysis.
+    *   For more details, see the [Action Logs Guide](../user-guides/action-logs-guide.md).
+
+### **How do I manage users?**
+1.  Go to the **Admin Dashboard**.
+2.  Select **"User Management"**.
+3.  Click **"Add User"**.
+4.  Fill in the user details (Name, Email, Role).
+5.  The user will receive an email to set their password.
+
+### **How do I send a system-wide announcement?**
+1.  Navigate to **"Communication"** > **"Announcements"**.
+2.  Click **"New Announcement"**.
+3.  Enter the **Title** and **Message**.
+4.  Select the target audience (e.g., "All Students", "Faculty").
+5.  Choose the delivery method (**In-App**, **Email**, or both).
+6.  Click **"Send"**.
+
+### **How do I change a user's role?**
+1.  Navigate to **"User Management"**.
+2.  Search for and select the user.
+3.  Edit their profile and select the new **Role** from the dropdown.
+4.  Save changes.
+
+### **How do I manage guest access?**
+1.  Navigate to **"Guest Management"**.
+2.  **View Guests**: Check the list for names, emails, roles, and statuses.
+3.  **Add Guest**:
+    *   Click the **"Create Guest"** tab.
+    *   Enter the guest's **Name**, **Email**, and **Password**.
+    *   Set the **Status** (Active/Inactive).
+    *   Click **"Create Guest"**.
+4.  **Edit Guest**:
+    *   Click the **"Edit"** icon for a guest.
+    *   Update details and click **"Save"**.
+5.  **Delete Guest**:
+    *   Click the **"Delete"** icon and confirm.

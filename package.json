@@ -8,6 +8,8 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
+    "lint": "astro check",
+    "check:lifecycle": "node scripts/check-doc-lifecycle.js",
     "release": "standard-version"
   },
   "dependencies": {

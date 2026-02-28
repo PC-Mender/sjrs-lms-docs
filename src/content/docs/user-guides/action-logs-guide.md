@@ -67,7 +67,7 @@ Use the filters to narrow down the results:
 
 ### Action Buttons
 - **Refresh**: Reload the current data
-- **Export**: Download logs as CSV (feature coming soon)
+- **Export**: Download logs as CSV
 
 ## 📋 Understanding the Logs Table
 

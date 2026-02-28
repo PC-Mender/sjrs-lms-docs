@@ -10,7 +10,15 @@ export default defineConfig({
     starlight({
       title: 'SJRS LMS Docs',
       customCss: ['./src/styles/custom.css'],
+      editLink: {
+        baseUrl: 'https://github.com/PC-Mender/sjrs-lms-docs/edit/main/',
+      },
+      tableOfContents: {
+        minHeadingLevel: 2,
+        maxHeadingLevel: 4,
+      },
       components: {
+        Banner: './src/components/LifecycleBanner.astro',
         Footer: './src/components/CustomFooter.astro',
       },
       social: [

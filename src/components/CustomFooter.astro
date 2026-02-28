@@ -5,9 +5,47 @@ import { readFileSync } from 'node:fs';
 const currentYear = new Date().getFullYear();
 const pkg = JSON.parse(readFileSync('package.json', 'utf-8'));
 const version = pkg.version;
+
+const title = (Astro.locals as any).starlightRoute?.entry?.data?.title;
+const editUrl = (Astro.locals as any).starlightRoute?.editUrl;
+const pagePath = Astro.url?.pathname;
+const pageUrl = Astro.site && pagePath ? new URL(pagePath, Astro.site).toString() : pagePath;
+
+const isHomePage = pagePath === '/' || (Astro.locals as any).starlightRoute?.entry?.data?.template === 'splash';
+
+const issueTitle = title ? `Docs feedback: ${title}` : 'Docs feedback';
+const issueBodyLines = [
+  pageUrl ? `Page: ${pageUrl}` : undefined,
+  editUrl ? `Edit: ${editUrl.toString()}` : undefined,
+  '',
+  'Feedback:',
+  '',
+  '- Was this page helpful? ',
+].filter((line) => line !== undefined);
+const issueBody = issueBodyLines.join('\n');
+const reportIssueUrl = `https://github.com/PC-Mender/sjrs-lms-docs/issues/new?title=${encodeURIComponent(issueTitle)}&body=${encodeURIComponent(issueBody)}`;
+
+const helpfulYesUrl = `https://github.com/PC-Mender/sjrs-lms-docs/issues/new?title=${encodeURIComponent(issueTitle)}&body=${encodeURIComponent(issueBody.replace('- Was this page helpful? ', '- Was this page helpful? Yes'))}`;
+const helpfulNoUrl = `https://github.com/PC-Mender/sjrs-lms-docs/issues/new?title=${encodeURIComponent(issueTitle)}&body=${encodeURIComponent(issueBody.replace('- Was this page helpful? ', '- Was this page helpful? No'))}`;
 ---
 
-<DefaultFooter {...Astro.props} />
+{!isHomePage ? <DefaultFooter {...Astro.props} /> : null}
+
+{!isHomePage ? (
+  <div class="page-feedback" aria-label="Page feedback">
+    <div class="page-feedback__row">
+      <span class="page-feedback__prompt">Was this page helpful?</span>
+      <div class="page-feedback__actions">
+        <a class="page-feedback__button" href={helpfulYesUrl} target="_blank" rel="noreferrer">Yes</a>
+        <a class="page-feedback__button" href={helpfulNoUrl} target="_blank" rel="noreferrer">No</a>
+      </div>
+    </div>
+    <div class="page-feedback__row page-feedback__links">
+      {editUrl ? <a href={editUrl.toString()} target="_blank" rel="noreferrer">Edit this page</a> : null}
+      <a href={reportIssueUrl} target="_blank" rel="noreferrer">Report an issue</a>
+    </div>
+  </div>
+) : null}
 
 <div class="custom-footer">
   <div class="footer-content">
@@ -35,5 +73,58 @@ const version = pkg.version;
   .version-tag {
     opacity: 0.8;
     font-family: var(--sl-font-mono);
+  }
+
+  .page-feedback {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--sl-color-hairline);
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .page-feedback__row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .page-feedback__prompt {
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-2);
+  }
+
+  .page-feedback__actions {
+    display: inline-flex;
+    gap: 0.5rem;
+  }
+
+  .page-feedback__button {
+    padding: 0.3rem 0.6rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--sl-color-hairline);
+    font-size: var(--sl-text-sm);
+    text-decoration: none;
+    color: var(--sl-color-text);
+  }
+
+  .page-feedback__button:hover {
+    background: var(--sl-color-gray-6);
+    text-decoration: none;
+  }
+
+  .page-feedback__links {
+    font-size: var(--sl-text-sm);
+  }
+
+  .page-feedback__links a {
+    color: var(--sl-color-accent);
+    text-decoration: none;
+  }
+
+  .page-feedback__links a:hover {
+    text-decoration: underline;
   }
 </style>

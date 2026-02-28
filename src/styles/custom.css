@@ -4,27 +4,36 @@
 
 /* Increase content width responsively to fill empty space without breaking sidebars */
 /* Default width for smaller screens (standard desktop) */
-:root {
-  --sl-content-width: 65rem; /* Increased from 50rem to give cards more room */
-}
+/* Keep Starlight defaults for docs pages to avoid clipping the right sidebar/TOC. */
 
 /* Widen content on larger screens (approx 1440px+) */
+@media (min-width: 90rem) {}
+
+/* Even wider on very large screens (approx 1600px+) */
+@media (min-width: 100rem) {}
+
+/* Maximize width on ultra-wide screens (approx 1920px+) */
+@media (min-width: 120rem) {}
+
+/* Wider content only for the HOMEPAGE (splash template) to make card grids larger. */
+body[data-template="splash"] {
+  --sl-content-width: 65rem; /* Increased from Starlight default */
+}
+
 @media (min-width: 90rem) {
-  :root {
+  body[data-template="splash"] {
     --sl-content-width: 75rem;
   }
 }
 
-/* Even wider on very large screens (approx 1600px+) */
 @media (min-width: 100rem) {
-  :root {
+  body[data-template="splash"] {
     --sl-content-width: 85rem;
   }
 }
 
-/* Maximize width on ultra-wide screens (approx 1920px+) */
 @media (min-width: 120rem) {
-  :root {
+  body[data-template="splash"] {
     --sl-content-width: 95rem;
   }
 }
