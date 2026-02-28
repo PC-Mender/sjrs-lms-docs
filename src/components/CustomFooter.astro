@@ -1,11 +1,39 @@
 ---
 import DefaultFooter from '@astrojs/starlight/components/Footer.astro';
+import { readFileSync } from 'node:fs';
 
 const currentYear = new Date().getFullYear();
+const pkg = JSON.parse(readFileSync('package.json', 'utf-8'));
+const version = pkg.version;
 ---
 
 <DefaultFooter {...Astro.props} />
 
 <div class="custom-footer">
-  <p>&copy; {currentYear} SJRS Library Management System. All rights reserved.</p>
+  <div class="footer-content">
+    <span>&copy; {currentYear} SJRS Library Management System. All rights reserved.</span>
+    <span class="version-tag">v{version}</span>
+  </div>
 </div>
+
+<style>
+  .footer-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media (min-width: 50rem) {
+    .footer-content {
+      flex-direction: row;
+      gap: 1.5rem;
+    }
+  }
+
+  .version-tag {
+    opacity: 0.8;
+    font-family: var(--sl-font-mono);
+  }
+</style>
