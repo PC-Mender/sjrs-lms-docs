@@ -119,6 +119,11 @@ body[data-template="splash"] .card-grid {
   width: 100% !important;
 }
 
+/* Reduce homepage hero title size for better balance on wide screens */
+body[data-template="splash"] .hero h1 {
+  font-size: clamp(2rem, 2.4vw, 2.5rem) !important;
+}
+
 /* Tagline Styling - Target generic paragraphs too as Starlight might use p tag */
 .hero .tagline, .hero p {
   text-align: center !important;
@@ -163,8 +168,8 @@ body[data-template="splash"] .card-grid {
 /* Force Primary Card Grid to be Single Row and Use Full Width */
 @media (min-width: 72rem) {
   .primary-card-grid .card-grid {
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 2rem !important; /* Increased gap for better spacing */
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 2rem !important;
   }
 }
 
@@ -255,5 +260,37 @@ starlight-theme-select label svg {
   .hero h1 {
     white-space: normal !important;
     font-size: 2.5rem !important;
+  }
+}
+
+/* removed custom floating header button in favor of built-in social icons */
+
+/* Show labels next to social icons on desktop and add spacing */
+@media (min-width: 50rem) {
+  .right-group .social-icons {
+    gap: 0.75rem !important;
+    margin-right: 0.75rem !important;
+  }
+  .right-group .social-icons a,
+  .mobile-preferences .social-icons a {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.375rem !important;
+    text-decoration: none !important;
+  }
+  .right-group .social-icons a:hover,
+  .mobile-preferences .social-icons a:hover {
+    text-decoration: none !important;
+  }
+  .right-group .social-icons a .sr-only {
+    position: static !important;
+    width: auto !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 0 0 0.25rem !important;
+    clip: auto !important;
+    clip-path: none !important;
+    overflow: visible !important;
+    white-space: nowrap !important;
   }
 }

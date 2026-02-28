@@ -1,5 +1,5 @@
 ---
-title: "Project Rules"
+title: "Project Rules (Application)"
 ---
 
 # Architecture & Design Principles

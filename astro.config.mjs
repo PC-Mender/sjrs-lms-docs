@@ -4,16 +4,18 @@ import react from '@astrojs/react';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://docs.sjrslms.in',
   output: 'static',
   integrations: [
     starlight({
-      title: 'SJRS LMS Documentation',
+      title: 'SJRS LMS Docs',
       customCss: ['./src/styles/custom.css'],
       components: {
         Footer: './src/components/CustomFooter.astro',
       },
       social: [
-        { label: 'GitHub', href: 'https://github.com/PC-Mender/sjrslms', icon: 'github' },
+        { label: 'Open App', href: 'https://sjrslms.in', icon: 'external' },
+        { label: 'GitHub', href: 'https://github.com/PC-Mender/sjrs-lms-docs', icon: 'github' },
       ],
       sidebar: [
         {
