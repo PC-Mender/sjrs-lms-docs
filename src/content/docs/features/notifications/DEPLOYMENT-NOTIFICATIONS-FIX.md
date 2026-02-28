@@ -32,10 +32,10 @@ Or manually:
 
 ```powershell
 # Get the token from setup-notification-tokens.md or use the one from Cloudflare Workers
-$env:NOTIFICATION_INGEST_TOKEN = "36a8e15d439bff37c67e9d67e43876241c87b1ac81ab485b61eb671e6719fb4f"
+$env:NOTIFICATION_INGEST_TOKEN = "YOUR_NOTIFICATION_INGEST_TOKEN"
 
 # Or add to .env file for persistence
-Add-Content .env "NOTIFICATION_INGEST_TOKEN=36a8e15d439bff37c67e9d67e43876241c87b1ac81ab485b61eb671e6719fb4f"
+Add-Content .env "NOTIFICATION_INGEST_TOKEN=YOUR_NOTIFICATION_INGEST_TOKEN"
 ```
 
 ### Quick Fix (Linux/Mac)
@@ -49,18 +49,18 @@ Or manually:
 
 ```bash
 # Get the token from setup-notification-tokens.md or use the one from Cloudflare Workers
-export NOTIFICATION_INGEST_TOKEN="36a8e15d439bff37c67e9d67e43876241c87b1ac81ab485b61eb671e6719fb4f"
+export NOTIFICATION_INGEST_TOKEN="YOUR_NOTIFICATION_INGEST_TOKEN"
 
 # Or add to .env file for persistence
-echo "NOTIFICATION_INGEST_TOKEN=36a8e15d439bff37c67e9d67e43876241c87b1ac81ab485b61eb671e6719fb4f" >> .env
+echo "NOTIFICATION_INGEST_TOKEN=YOUR_NOTIFICATION_INGEST_TOKEN" >> .env
 ```
 
 ## Token Values
 
 The token values are stored in `scripts/setup-notification-tokens.md`:
 
-- **Global Token**: `36a8e15d439bff37c67e9d67e43876241c87b1ac81ab485b61eb671e6719fb4f`
-- **Release Token**: `3ce4b025fcf630eae2bdd7f26e05210ec53f3df027db121ca3cc6c1950648464`
+- **Global Token**: `YOUR_NOTIFICATION_INGEST_TOKEN`
+- **Release Token**: `YOUR_NOTIFICATION_INGEST_TOKEN_RELEASE`
 
 You can use either token - the deployment script checks for `NOTIFICATION_INGEST_TOKEN_RELEASE` first, then falls back to `NOTIFICATION_INGEST_TOKEN`.
 

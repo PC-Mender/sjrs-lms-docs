@@ -34,7 +34,7 @@ https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest
 
 **Authentication Header:**
 - **Header Name**: `x-notification-ingest-token`
-- **Header Value**: `eca83a2bd34858142bac0a17fce8378b63bf8973d68be6077e1a4d274070b6fc`
+- **Header Value**: `YOUR_NOTIFICATION_INGEST_TOKEN`
 
 **Note**: If Sentry doesn't support custom headers directly, you may need to:
 - Use Sentry's webhook secret feature (if available)
@@ -84,7 +84,7 @@ If Sentry doesn't have direct webhook support, use Alert Rules:
    - Action Type: **Send a notification via webhook**
    - Webhook URL: `https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
    - Custom Headers:
-     - `x-notification-ingest-token: eca83a2bd34858142bac0a17fce8378b63bf8973d68be6077e1a4d274070b6fc`
+   - `x-notification-ingest-token: YOUR_NOTIFICATION_INGEST_TOKEN`
 
 4. **Save Rule**
 
@@ -144,7 +144,7 @@ Test the webhook manually using curl:
 ```bash
 curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
   -H "Content-Type: application/json" \
-  -H "x-notification-ingest-token: eca83a2bd34858142bac0a17fce8378b63bf8973d68be6077e1a4d274070b6fc" \
+   -H "x-notification-ingest-token: YOUR_NOTIFICATION_INGEST_TOKEN" \
   -d '{
     "source": "monitoring:sentry",
     "title": "Test Sentry Alert",

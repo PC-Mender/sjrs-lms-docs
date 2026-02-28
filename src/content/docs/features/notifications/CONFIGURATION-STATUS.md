@@ -64,7 +64,7 @@ npm run release
    - **Webhook URL**: `https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
    - **Custom Header**:
      - Name: `x-notification-ingest-token`
-     - Value: `eca83a2bd34858142bac0a17fce8378b63bf8973d68be6077e1a4d274070b6fc`
+   - Value: `YOUR_NOTIFICATION_INGEST_TOKEN`
 
 4. **Select Events**
    - ✅ Issue Created
@@ -132,7 +132,7 @@ Test the ingest endpoint manually:
 ```bash
 curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
   -H "Content-Type: application/json" \
-  -H "x-notification-ingest-token: 36a8e15d439bff37c67e9d67e43876241c87b1ac81ab485b61eb671e6719fb4f" \
+   -H "x-notification-ingest-token: YOUR_NOTIFICATION_INGEST_TOKEN" \
   -d '{
     "source": "release:pipeline",
     "title": "Test Deployment",
