@@ -12,9 +12,9 @@ export default defineConfig({
       components: {
         Footer: './src/components/CustomFooter.astro',
       },
-      social: {
-        github: 'https://github.com/PC-Mender/sjrslms',
-      },
+      social: [
+        { label: 'GitHub', href: 'https://github.com/PC-Mender/sjrslms', icon: 'github' },
+      ],
       sidebar: [
         {
           label: 'Getting Started',
