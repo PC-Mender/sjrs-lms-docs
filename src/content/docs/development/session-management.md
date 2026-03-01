@@ -18,7 +18,7 @@ src/utilities/session/
 ├── hooks/
 │   └── use-session-engine.ts   # React hook wrapper (214 lines)
 ├── index.ts                    # Clean exports + legacy compatibility (84 lines)
-└── README.md                   # Documentation
+└── index.md                   # Documentation
 ```
 
 ### **Legacy Compatibility**

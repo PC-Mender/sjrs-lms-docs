@@ -360,8 +360,8 @@ if (version === 'v2') {
 - [Durable Objects](https://developers.cloudflare.com/durable-objects/)
 
 ### **Implementation Examples:**
-- [File Upload Service](functions/api/upload/index.ts)
-- [Email Templates](functions/email-templates/index.ts)
+- `functions/api/upload/index.ts`
+- `functions/email-templates/index.ts`
 - Live Counters (Durable Objects - planned)
 - Real-time Sessions (Durable Objects - planned)
 

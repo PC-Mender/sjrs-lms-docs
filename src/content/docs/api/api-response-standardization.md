@@ -456,13 +456,14 @@ Update existing handlers incrementally to use more specific response functions:
 
 ## 🔗 **Related Documentation**
 
-- **[API Documentation](../api/README.md)** - API endpoints and usage
-- **[Frontend Hooks](../../src/hooks/useStandardizedAPI.ts)** - React integration
-- **[Error Handling](../development/error-handling.md)** - Error handling patterns
-- **[Testing Guide](../development/testing.md)** - API testing strategies
+- **[API Documentation](../api/index.md)** - API endpoints and usage
+- **`src/hooks/useStandardizedAPI.ts`** - React integration
+- **[Error Handling](../development/error-mapping.md)** - Error handling patterns
+- **[Testing Guide](../development/testing-guide.md)** - API testing strategies
 
 ---
 
 **Last Updated:** November 2025  
 **Status:** ✅ Production Ready  
 **Next Review:** January 2026
+

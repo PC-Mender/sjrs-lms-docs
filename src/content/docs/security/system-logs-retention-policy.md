@@ -160,10 +160,10 @@ This retention policy should be reviewed:
 
 ## Related Documentation
 
-- [Security Logging Standards](./security/logging-standards.md)
-- [Audit Log Policy](./security/audit-log-policy.md)
-- [Data Privacy Policy](./data-privacy-policy.md)
-- [Scheduled Tasks](./deployment/scheduled-tasks.md)
+- [Security Logging Standards](../development/logging-system.md)
+- [Audit Log Policy](../features/action-logging.md)
+- [Data Privacy Policy](../policies/index.md)
+- [Scheduled Tasks](../deployment/index.md)
 
 ## Change Log
 

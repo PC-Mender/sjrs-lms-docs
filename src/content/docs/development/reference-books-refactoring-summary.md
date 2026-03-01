@@ -196,9 +196,9 @@ if (error) {
 
 ## 📚 **Related Documentation**
 
-- [API Reference Books Documentation](../api/reference-books.md)
+- [API Reference Books Documentation](../features/reference-books/index.md)
 - [Frontend Architecture Guide](../architecture/core-architecture.md)
-- [D1 Database Schema](../sql/d1-schema.sql)
+- [D1 Database Schema](../database/d1-schema.sql)
 - [Permission System Guide](../architecture/permission-system.md)
 
 ---

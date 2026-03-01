@@ -1,0 +1,160 @@
+---
+title: "Overview"
+---
+
+# Guests Module - Refactored Architecture
+
+## Overview
+
+The guests module has been refactored into a well-structured, modular system that aligns with the backend architecture and removes redundancy. This new structure provides better separation of concerns, improved maintainability, and consistent patterns.
+
+## 🏗️ New Architecture
+
+### Directory Structure
+```
+src/pages/guests/
+├── components/           # Modular UI components
+│   ├── GuestActionsDrawer.tsx    # Main actions container
+│   ├── GuestViewTab.tsx          # View guest details
+│   ├── GuestEditTab.tsx          # Edit guest information
+│   ├── GuestCreateTab.tsx        # Create new guest
+│   └── GuestDeleteTab.tsx        # Delete guest confirmation
+├── constants/            # Shared constants
+│   └── guest.constants.ts
+├── types/               # TypeScript type definitions
+│   └── guest.types.ts
+├── utilities/           # Helper functions
+│   └── guest.utils.ts
+├── GuestListPage.tsx    # Main list page
+└── index.tsx            # Module entry point
+```
+
+## 🔧 Key Improvements
+
+### 1. **Modular Component Architecture**
+- **GuestActionsDrawer**: Central container with tabbed interface
+- **Individual Tab Components**: Each action (view, edit, create, delete) is a separate component
+- **Reusable Logic**: Common functionality extracted into utilities
+
+### 2. **Consistent Data Structure**
+- **Unified GuestData Interface**: Single source of truth for guest data
+- **Form Validation**: Centralized validation rules and utilities
+- **API Integration**: Consistent pattern for CRUD operations
+
+### 3. **Better Separation of Concerns**
+- **UI Components**: Focus only on presentation and user interaction
+- **Business Logic**: Extracted into utility functions
+- **Data Management**: Consistent API integration patterns
+
+### 4. **Improved User Experience**
+- **Tabbed Interface**: Better organization of actions
+- **Consistent Forms**: Standardized form layouts and validation
+- **Better Feedback**: Improved error handling and success messages
+
+## 📋 Component Details
+
+### GuestActionsDrawer
+- **Purpose**: Main container for all guest actions
+- **Features**: 
+  - Tabbed interface for different actions
+  - Permission-based tab visibility
+  - Handles both new and existing guests
+  - Responsive design with proper spacing
+
+### GuestViewTab
+- **Purpose**: Display guest information in read-only format
+- **Features**:
+  - Clean, organized information display
+  - Consistent icon usage
+  - Proper data formatting
+
+### GuestEditTab
+- **Purpose**: Edit existing guest information
+- **Features**:
+  - Form validation with consistent rules
+  - API integration for updates
+  - Success/error feedback
+
+### GuestCreateTab
+- **Purpose**: Create new guest accounts
+- **Features**:
+  - Permission checking
+  - Form validation
+  - API integration for creation
+
+### GuestDeleteTab
+- **Purpose**: Delete guest accounts with confirmation
+- **Features**:
+  - Confirmation dialog
+  - Warning messages
+  - API integration for deletion
+
+## 🎯 Usage Examples
+
+### Basic Usage
+```tsx
+import { GuestActionsDrawer } from './components/GuestActionsDrawer';
+
+<GuestActionsDrawer
+  visible={drawerVisible}
+  onClose={handleClose}
+  guest={selectedGuest}
+  onSuccess={handleSuccess}
+/>
+```
+
+### Permission-Based Rendering
+```tsx
+const { hasPermission } = usePermissions();
+const canCreateGuest = hasPermission('guests', 'create');
+
+{canCreateGuest && (
+  <Button onClick={() => handleOpenDrawer({})}>
+    Add Guest
+  </Button>
+)}
+```
+
+## 🔒 Permission System
+
+The module integrates with the existing permission system:
+- **Read**: View guest details
+- **Create**: Add new guests
+- **Update**: Edit guest information
+- **Delete**: Remove guest accounts
+
+## 🚀 Future Enhancements
+
+### Backend Integration
+- **Dedicated Guests API**: Create specific endpoints for guest operations
+- **Bulk Operations**: Support for multiple guest operations
+- **Audit Logging**: Track all guest-related changes
+
+### Frontend Improvements
+- **Advanced Filtering**: More sophisticated search and filter options
+- **Export Functionality**: Export guest data in various formats
+- **Bulk Actions**: Select and modify multiple guests at once
+
+## 📚 Related Documentation
+
+- [API Patterns](../../api/api-patterns.md)
+- [Permission System](../../development/roles-and-permissions.md)
+- [User Management](../users/index.md)
+- [Database Schema](../../database/d1-schema.sql)
+
+## 🐛 Troubleshooting
+
+### Common Issues
+1. **Permission Errors**: Ensure user has appropriate role and permissions
+2. **Form Validation**: Check that all required fields are filled
+3. **API Errors**: Verify backend connectivity and data format
+
+### Debug Tips
+- Check browser console for JavaScript errors
+- Verify API responses in Network tab
+- Confirm permission settings in user context
+
+---
+
+**Source**: Moved from `src/pages/guests/index.md` during documentation consolidation
+

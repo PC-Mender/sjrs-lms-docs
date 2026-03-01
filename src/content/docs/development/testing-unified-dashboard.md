@@ -164,10 +164,11 @@ If pilot succeeds:
 
 ## Questions?
 
-See: `src/components/features/dashboard/unified/README.md`
+See: `src/components/features/dashboard/unified/index.md`
 
 ---
 
 **Current Status:** Pilot implementation ready for testing  
 **Affected Dashboard:** Admin only  
 **Risk Level:** Low (feature flag allows instant rollback)
+

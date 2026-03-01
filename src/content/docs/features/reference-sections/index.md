@@ -1,0 +1,159 @@
+---
+title: "Overview"
+---
+
+# Reference Sections Module
+
+## 📁 Structure
+
+```
+src/pages/reference-sections/
+├── components/
+│   └── ReferenceSectionsManager.tsx    # Main consolidated component with all CRUD operations
+├── index.tsx                           # Module exports
+└── index.md                           # This documentation
+```
+
+## 🏗️ Architecture
+
+### Backend Alignment
+- **API Endpoint**: `/api/reference-sections`
+- **Database Table**: `reference_sections`
+- **Schema Fields**:
+  - `id` (INTEGER PRIMARY KEY)
+  - `name` (TEXT NOT NULL UNIQUE)
+  - `description` (TEXT)
+  - `created_at` (DATETIME)
+  - `updated_at` (DATETIME)
+
+### Frontend Components
+- **ReferenceSectionsManager**: Main component handling all CRUD operations
+- **Types**: Proper TypeScript interfaces in `src/types/d1/reference-sections.ts`
+- **Service**: API service layer in `src/services/reference-sections.service.ts`
+
+## 🔧 Features
+
+### CRUD Operations
+- ✅ **Create**: Modal form for new sections
+- ✅ **Read**: Paginated table with search functionality
+- ✅ **Update**: Inline edit modal
+- ✅ **Delete**: Confirmation modal with validation
+
+### Search & Filtering
+- Real-time search across name and description
+- Pagination support
+- Sortable columns (name, created_at)
+
+### Validation
+- Required field validation
+- Duplicate name prevention
+- Deletion constraints (no referenced resources)
+- Input sanitization and length limits
+
+### Component Props
+The `ReferenceSectionsManager` component accepts these props:
+
+```tsx
+interface ReferenceSectionsManagerProps {
+  showCreateButton?: boolean;        // Show/hide create button
+  showActions?: boolean;             // Show/hide action buttons
+  onSectionSelect?: (section: D1ReferenceSection) => void;  // Selection callback
+  selectable?: boolean;              // Make rows selectable
+}
+```
+
+## 🚀 Usage
+
+### Basic Usage
+```tsx
+import { ReferenceSectionsManager } from './components/ReferenceSectionsManager';
+
+// Full management interface
+<ReferenceSectionsManager />
+```
+
+### Read-only View
+```tsx
+// Hide create button and actions
+<ReferenceSectionsManager 
+  showCreateButton={false} 
+  showActions={false} 
+/>
+```
+
+### Selectable Interface
+```tsx
+// For use in forms or other components
+<ReferenceSectionsManager 
+  selectable={true}
+  onSectionSelect={(section) => console.log('Selected:', section)}
+/>
+```
+
+## 🔒 Security
+
+- Admin/Superuser/Librarian access required for mutations
+- Proper permission checks on backend
+- Input validation and sanitization
+- SQL injection protection
+- Rate limiting support
+
+## 📊 Data Flow
+
+1. **List**: `GET /api/reference-sections` → Display in table
+2. **Create**: Form submission → `POST /api/reference-sections` → Refresh list
+3. **Update**: Form submission → `PUT /api/reference-sections/:id` → Refresh list
+4. **Delete**: Confirmation → `DELETE /api/reference-sections/:id` → Refresh list
+
+## 🧪 Testing
+
+### Backend Testing
+```bash
+# Test API endpoints
+curl -X GET http://localhost:8787/api/reference-sections
+curl -X POST http://localhost:8787/api/reference-sections \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test Section","description":"Test description"}'
+```
+
+### Frontend Testing
+- Test all CRUD operations
+- Test search functionality
+- Test pagination
+- Test error handling
+- Test loading states
+
+## 🔄 Migration from Old System
+
+The old system had multiple separate components that have been consolidated:
+
+- ❌ `ReferenceSectionList` → ✅ `ReferenceSectionsManager`
+- ❌ `ReferenceSectionCreate` → ✅ Integrated into main component
+- ❌ `ReferenceSectionEdit` → ✅ Integrated into main component  
+- ❌ `ReferenceSectionShow` → ✅ Integrated into main component
+
+### Backward Compatibility
+Legacy exports are maintained for backward compatibility but are deprecated:
+
+```tsx
+// ❌ Deprecated - use ReferenceSectionsManager instead
+import { ReferenceSectionList } from './index';
+
+// ✅ Recommended
+import { ReferenceSectionsManager } from './components/ReferenceSectionsManager';
+```
+
+## 🎯 Benefits of New Structure
+
+1. **Single Source of Truth**: One component handles all operations
+2. **Better Performance**: Reduced bundle size, no redundant code
+3. **Easier Maintenance**: Single file to update for all functionality
+4. **Consistent UX**: Unified interface across all operations
+5. **Better Error Handling**: Centralized error management
+6. **Type Safety**: Full TypeScript implementation
+7. **Reusability**: Configurable props for different use cases
+
+---
+
+**Source**: Moved from `src/pages/reference-sections/index.md` during documentation consolidation
+

@@ -241,9 +241,9 @@ await sendAdminApprovalEmail(
 ## 📚 Related Documentation
 
 - [Email Templates Overview](./email-templates.md)
-- [User Management Guide](../user-management/README.md)
-- [Admin Dashboard Guide](../admin-dashboard/README.md)
-- [Security Best Practices](../security/README.md)
+- [User Management Guide](../../features/users/index.md)
+- [Admin Dashboard Guide](../../features/superuser/index.md)
+- [Security Best Practices](../../security/index.md)
 
 ---
 

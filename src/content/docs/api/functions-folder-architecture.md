@@ -429,12 +429,13 @@ await handleError(error, {
 ## 🔗 **Related Documentation**
 
 - **[API Response Standardization](./api-response-standardization.md)** - Response format details
-- **[API Documentation](../api/README.md)** - API endpoint reference
-- **[Security Implementation](../security/README.md)** - Security features
-- **[Database Schema](../../sql/README.md)** - Database structure
+- **[API Documentation](../api/index.md)** - API endpoint reference
+- **[Security Implementation](../security/index.md)** - Security features
+- **[Database Schema](../database/index.md)** - Database structure
 
 ---
 
 **Last Updated:** January 2025  
 **Status:** ✅ Production Ready  
 **Architecture Version:** 2.2.0 (Standardized Functions)
+

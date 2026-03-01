@@ -471,7 +471,7 @@ VITE_API_BASE_URL=https://your-worker.your-subdomain.workers.dev
 
 ## Related Documentation
 
-- [Authentication System Guide](./development/ENHANCED_PERMISSION_SYSTEM.md)
-- [Security Documentation](./security/README.md)
-- [Deployment Guide](./deployment/D1_SETUP_GUIDE.md)
-- [Permission System Guide](./PERMISSION_SYSTEM_GUIDE.md) 
+- [Authentication System Guide](../development/enhanced-permissions.md)
+- [Security Documentation](../security/index.md)
+- [Deployment Guide](../deployment/d1-setup.md)
+- [Permission System Guide](../architecture/permission-system.md) 

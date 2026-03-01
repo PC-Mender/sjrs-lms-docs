@@ -28,7 +28,7 @@ The SJRS LMS routing system has been **completely refactored** with a revolution
 - ✅ **Type Safe**: Full TypeScript support throughout
 
 **Documentation:**
-- **[Routing System](/architecture/routing-system/)** - Complete routing architecture overview
+- **[Routing System](/architecture/routing-system)** - Complete routing architecture overview
 - Archived routing refactor docs → [Archive](/archive/)
 
 ### **API Response Standardization** ⭐ **NEW**
@@ -44,8 +44,8 @@ The SJRS LMS now features a **standardized API response system** that ensures co
 - ✅ **Automatic CORS**: CORS headers added automatically
 
 **Documentation:**
-- **[API Response Standardization](/api/api-response-standardization/)** - Complete implementation guide
-- **[Functions Folder Architecture](/api/functions-folder-architecture/)** - Backend architecture overview
+- **[API Response Standardization](/api/api-response-standardization)** - Complete implementation guide
+- **[Functions Folder Architecture](/api/functions-folder-architecture)** - Backend architecture overview
 
 ### **Dynamic Role System** ⭐ **NEW**
 The SJRS LMS now features a **hybrid role management system** that combines exact role matching for routing with dynamic role inheritance for permissions.
@@ -76,8 +76,8 @@ The SJRS LMS features a **comprehensive session management system** with cross-t
 - ✅ **Audit Logging**: Complete logging of force logout actions for security
 
 **Documentation:**
-- **[Session Management](/development/session-management/)** - Comprehensive session management guide
-- **[Single Session Policy](/features/multiple-device-login-detection/)** - Force logout and session control
+- **[Session Management](/development/session-management)** - Comprehensive session management guide
+- **[Single Session Policy](/features/multiple-device-login-detection)** - Force logout and session control
 
 ### **Recent Improvements**
 - ✅ **Enhanced Session Management**: Industry-standard session handling with cross-tab sync

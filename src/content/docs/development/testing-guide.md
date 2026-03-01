@@ -264,7 +264,7 @@ const apiTestReport = {
 
 - **[Session Management](./session-management.md)** - Session system implementation
 - **[API Response Standardization](../api/api-response-standardization.md)** - API testing guidelines
-- **[Security Documentation](../security/README.md)** - Security testing procedures
+- **[Security Documentation](../security/index.md)** - Security testing procedures
 - **[Functions Folder Architecture](../api/functions-folder-architecture.md)** - Backend testing
 
 ## 📝 Notes
@@ -279,3 +279,4 @@ const apiTestReport = {
 **Last Updated:** November 2025  
 **Status:** ✅ Active  
 **Next Review:** January 2026
+

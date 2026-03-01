@@ -466,9 +466,9 @@ System notifications
 
 ## 📚 Related Documentation
 
-- **[Unified Workers Deployment](./unified-workers-deployment.md)** - Current deployment guide
-- **[CI/CD Pipeline Guide](./ci-cd-pipeline.md)** - Proposed CI/CD guide (to be created)
-- **[Local Development Guide](./local-development.md)** - Proposed local dev guide (to be created)
+- **[Unified Workers Deployment](../deployment/unified-workers-deployment.md)** - Current deployment guide
+- **[CI/CD Pipeline Guide](../deployment/version-and-release-management.md)** - Proposed CI/CD guide (to be created)
+- **[Local Development Guide](../getting-started/setup.md)** - Proposed local dev guide (to be created)
 - **[Notification System](../features/notifications/)** - Notification system documentation
 
 ---

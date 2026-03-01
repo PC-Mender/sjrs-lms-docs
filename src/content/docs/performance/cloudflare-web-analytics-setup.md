@@ -25,7 +25,7 @@ Cloudflare Web Analytics provides automatic Core Web Vitals tracking with zero c
 
 ### 2. Add Token to index.html
 
-Replace `CLOUDFLARE_WEB_ANALYTICS_TOKEN` in [index.html](../../index.html):
+Replace `CLOUDFLARE_WEB_ANALYTICS_TOKEN` in `index.html`:
 
 ```html
 <!-- Current placeholder -->

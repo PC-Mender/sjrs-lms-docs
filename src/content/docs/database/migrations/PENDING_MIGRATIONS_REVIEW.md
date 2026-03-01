@@ -161,7 +161,7 @@ To verify which migrations are actually pending, you can:
 2. **Next**: Apply medium-priority migrations (5-6)
 3. **Future**: Apply low-priority migrations (7)
 4. **After**: Update `d1-schema.sql` to include all applied migrations
-5. **Finally**: Update `sql/migrations/README.md` to reflect applied status
+5. **Finally**: Update `sql/migrations/index.md` to reflect applied status
 
 ---
 
@@ -181,4 +181,5 @@ To verify which migrations are actually pending, you can:
 
 **Last Updated**: 2025-01-XX
 **Review Status**: ✅ Complete
+
 

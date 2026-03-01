@@ -499,7 +499,7 @@ await tokenManager.setToken(result.impersonation_token, 'cookie');
 
 - [Superuser Guide](../user-guides/superuser-guide.md) - Role overview and capabilities
 - [Superuser Features Guide](../user-guides/superuser-features-guide.md) - How to use features
-- [Implementation Summary](../features/superuser-features-implementation.md) - Technical details
+- [Implementation Summary](../features/superuser/superuser-features-implementation.md) - Technical details
 - [Action Logging](../features/action-logging.md) - Action logging system
 - [API Patterns](./api-patterns.md) - General API guidelines
 

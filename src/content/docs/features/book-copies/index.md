@@ -1,0 +1,155 @@
+---
+title: "Overview"
+---
+
+# Book Copies Module
+
+## Overview
+The book-copies module manages individual copies of books in the library system. Each book can have multiple copies with different statuses and locations.
+
+## Structure
+
+### Files
+- `index.tsx` - Main component file containing all book copy components
+- `types/index.ts` - TypeScript type definitions
+- `utils/book-copy-constants.ts` - Constants and configuration
+- `utils/book-copy-helpers.ts` - Utility functions
+- `index.md` - This documentation
+
+### Components
+- `BookCopyList` - Displays all book copies in a table format
+- `BookCopyCreate` - Form to create new book copies
+- `BookCopyEdit` - Form to edit existing book copies
+- `BookCopyShow` - Detailed view of a book copy with borrow history
+
+## Backend Alignment
+
+### Database Schema
+The module aligns with the current `book_copies` table structure:
+
+```sql
+CREATE TABLE book_copies (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  book_id INTEGER REFERENCES books(id),
+  section_id INTEGER REFERENCES sections(id),
+  copy_number INTEGER,
+  copy_code TEXT UNIQUE,
+  status TEXT DEFAULT 'available' CHECK (
+    status IN ('available', 'borrowed', 'lost', 'damaged')
+  ),
+  location TEXT,
+  condition TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX idx_book_copies_section_id ON book_copies(section_id);
+```
+
+> **Why the change?**
+> - `section_id` powers shelf-capacity checks and future heat-map dashboards.
+> - `copy_code` stores the printable identifier that patrons scan/lookup.
+> - `condition` lets librarians flag damaged items without inventing ad-hoc columns.
+
+### Base-Code & Copy-Code Workflow
+1. **Stable base codes**  
+   When a book is created we now stitch together a deterministic `base_code` using the section short code, subcategory code, author initials, and normalized title (e.g., `B13/ROL/HAR`). Collisions append a numeric suffix.
+2. **Automatic copy code for copy #1**  
+   The first copy that is auto-inserted during book creation reuses the `base_code`.
+3. **Predictable copy codes for additional copies**  
+   Subsequent copies inherit the `base_code` and append `-C{copy_number}` (e.g., `B13/ROL/HAR-C2`). Updates to copy numbers will also regenerate `copy_code` so labels stay accurate.
+4. **Operational benefit**  
+   Inventory scanners, shelf checklists, and print labels all use `copy_code`, while analytics dashboards roll up metrics by `base_code`.
+
+### API Response Structure
+The backend returns book copy data with flat fields so the UI can render tables without nested lookups:
+
+```typescript
+{
+  id: number;
+  book_id: number;
+  section_id: number | null;
+  copy_number: number;
+  copy_code: string | null;
+  status: string;
+  location?: string;
+  condition?: string | null;
+  created_at: string;
+  updated_at: string;
+  book_title?: string;   // Flat field from JOIN
+  book_author?: string;  // Flat field from JOIN
+}
+```
+
+> **Heads-up:** The D1 hooks still coerce both historic `{ data: [...] }` payloads and newer `{ book_copies: [...] }` responses, so older clients keep working during the rollout.
+
+### Status Values & Validation Guardrails
+- `available` - Copy is available for borrowing
+- `borrowed` - Copy is currently borrowed
+- `lost` - Copy has been lost
+- `damaged` - Copy is damaged and unavailable
+- `under_maintenance` - Copy is under maintenance
+
+Additional runtime rules:
+- Inputs go through `validateBookCopyInput`, which now enforces sanitized locations, alphanumeric copy numbers, and the consolidated status list.
+- Section assignments run capacity checks (`countBookCopiesInSection` + `getSectionCapacityById`) before saves so high-density shelves cannot exceed fire-code limits.
+
+## Key Features
+
+### Copy Number & Section Management
+- Automatic copy number generation per book with the ability to override manually.
+- Duplicate copy number prevention during create **and** update flows.
+- Optional section assignment stored on each copy; changing sections re-runs capacity validation.
+
+### Status Management
+- Status changes trigger appropriate actions (notifications, borrow sync).
+- Available status changes send wishlist notifications.
+- Validation guarantees status conforms to the database CHECK constraint before SQL execution.
+
+### Location & Condition Tracking
+- Optional location field for storage tracking (UI keeps it optional to mirror schema).
+- `condition` is persisted so staff can flag “minor damage” or “needs cleaning” without extra spreadsheets.
+- Both fields are editable independently to reduce noise in audit logs.
+
+### Real-time Refresh & Caching
+- React Query mutations invalidate all `d1-book-copies` queries (non-exact) and immediately call `refetch`, so tables refresh as soon as create/update/delete resolves.
+- The D1 hooks now call `d1Request` with `skipCache: true` and `cacheTTL: 0`, bypassing the Unified API Client cache for book copies endpoints.
+- `handleGetBookCopies` sends `Cache-Control: no-store` + related headers, ensuring Cloudflare/edge layers never serve stale data.
+
+### Borrow History & Telemetry
+- Integration with borrow records system for historical context.
+- Display of loan history for each copy, including highlighting overdue entries.
+- Status synchronization with active loans plus telemetry hooks (`ActionLogger`) for create/update/delete.
+
+## Usage
+
+### Routing
+- List: `/dashboard/book-copies`
+- Create: `/dashboard/book-copies/create`
+- Edit: `/dashboard/book-copies/edit/:id`
+- Show: `/dashboard/book-copies/show/:id`
+- API: `/api/book-copies` (supports `page`, `limit`, `book_id`, `status`, `location`, `search`)
+
+### Permissions & Auditing
+- View: All authenticated users
+- Create/Edit: Admin, Librarian, Superuser
+- Delete: Based on user permissions (configurable)
+- Every mutation funnels through `auditLog`, so downstream compliance reports can trace who moved copies between sections.
+
+## Dependencies
+- React Query for data fetching (poll + refetch support for the live dashboard)
+- Ant Design for UI components
+- Zod for schema validation (D1 hook schemas match the backend response)
+- D1 client for database operations
+- Audit logger utilities for security reviews
+
+## Notes
+- Removed references to non-existent legacy fields (condition/maintenance_notes cleanup already shipped).
+- Added section-aware capacity messaging to the Create/Edit flows.
+- Aligned documentation with repository-driven schema (section + copy codes + condition).
+- Simplified page structure by removing redundant re-export files.
+- Updated types to match backend schema exactly, including the flat `book_title` / `book_author` fields.
+
+---
+
+**Source**: Moved from `src/pages/book-copies/index.md` during documentation consolidation
+

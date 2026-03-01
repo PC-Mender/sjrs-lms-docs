@@ -21,7 +21,7 @@ This document provides evidence that CSRF protection is **fully implemented and 
 ### Client-Side (Frontend)
 
 #### 1. Automatic CSRF Header Injection
-**File**: [`src/utilities/api/api-interceptors-setup.ts`](../../src/utilities/api/api-interceptors-setup.ts#L19-L26)
+**File**: `src/utilities/api/api-interceptors-setup.ts#L19-L26`
 
 ```typescript
 // Add default request interceptor for CSRF header
@@ -39,7 +39,7 @@ client.addRequestInterceptor(async (config) => {
 **Behavior**: This interceptor runs on **EVERY** request made through `unifiedAPIClient`, automatically adding the `X-XSRF-TOKEN` header.
 
 #### 2. CSRF Token Management
-**File**: [`src/utilities/security/csrf-protection.core.ts`](../../src/utilities/security/csrf-protection.core.ts)
+**File**: `src/utilities/security/csrf-protection.core.ts`
 
 ```typescript
 // Lines 238-248: Add CSRF token to request headers
@@ -85,12 +85,12 @@ async getToken(): Promise<string> {
 
 #### 3. Usage Across All API Clients
 
-**Primary Client**: [`src/utilities/api/unified-api-client.ts`](../../src/utilities/api/unified-api-client.ts)
+**Primary Client**: `src/utilities/api/unified-api-client.ts`
 - All HTTP methods (GET, POST, PUT, DELETE, PATCH) use `request()` method
 - Request interceptors run automatically on every request
 - CSRF header is added transparently
 
-**D1 Client**: [`src/utilities/api/d1Client.ts`](../../src/utilities/api/d1Client.ts#L37)
+**D1 Client**: `src/utilities/api/d1Client.ts#L37`
 ```typescript
 const response = await unifiedAPIClient.request<TResponse>(url.pathname + url.search, {
   headers: {
@@ -109,7 +109,7 @@ const response = await unifiedAPIClient.request<TResponse>(url.pathname + url.se
 ### Server-Side (Backend)
 
 #### 1. CSRF Validation Handler
-**File**: [`functions/middleware/security/handlers/csrf-handler.ts`](../../functions/middleware/security/handlers/csrf-handler.ts)
+**File**: `functions/middleware/security/handlers/csrf-handler.ts`
 
 ```typescript
 // Lines 88-103: Validate CSRF tokens
@@ -162,7 +162,7 @@ export async function handleCSRF(
 - ✅ Development fallback (`ALLOW_CSRF_DEV_FALLBACK` for local testing)
 
 #### 2. CSRF Enabled in Security Config
-**File**: [`functions/middleware/security/config/security-configs.ts`](../../functions/middleware/security/config/security-configs.ts#L48)
+**File**: `functions/middleware/security/config/security-configs.ts#L48`
 
 ```typescript
 export const SECURITY_CONFIGS = {
@@ -182,7 +182,7 @@ export const SECURITY_CONFIGS = {
 ```
 
 #### 3. Applied to All Protected Endpoints
-**File**: [`functions/middleware/security/convenience/security-levels.ts`](../../functions/middleware/security/convenience/security-levels.ts#L11)
+**File**: `functions/middleware/security/convenience/security-levels.ts#L11`
 
 ```typescript
 export async function standardSecurityAPI(request: Request, env: Environment) {
@@ -227,8 +227,8 @@ export default {
 - [x] Returns 403 Forbidden on validation failure
 
 ### ✅ Integration Points
-- [x] CORS allows `X-XSRF-TOKEN` header ([`cors-configs.ts`](../../functions/middleware/cors/config/cors-configs.ts#L33))
-- [x] CORS utils include `X-XSRF-TOKEN` in exposed headers ([`cors-utils.ts`](../../functions/middleware/cors/utils/cors-utils.ts#L53))
+- [x] CORS allows `X-XSRF-TOKEN` header (`functions/middleware/cors/config/cors-configs.ts#L33`)
+- [x] CORS utils include `X-XSRF-TOKEN` in exposed headers (`functions/middleware/cors/utils/cors-utils.ts#L53`)
 - [x] Development fallback for local testing (`ALLOW_CSRF_DEV_FALLBACK=true`)
 
 ---
@@ -346,9 +346,9 @@ With this implementation, the application is protected against:
 - [OWASP CSRF Prevention Cheat Sheet](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
 - [Double Submit Cookie Pattern](https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html#double-submit-cookie)
 - Project Implementation Files:
-  - [`api-interceptors-setup.ts`](../../src/utilities/api/api-interceptors-setup.ts) - Client request interceptor
-  - [`csrf-protection.core.ts`](../../src/utilities/security/csrf-protection.core.ts) - Token management
-  - [`csrf-handler.ts`](../../functions/middleware/security/handlers/csrf-handler.ts) - Server validation
+  - `src/utilities/api/api-interceptors-setup.ts` - Client request interceptor
+  - `src/utilities/security/csrf-protection.core.ts` - Token management
+  - `functions/middleware/security/handlers/csrf-handler.ts` - Server validation
 
 ---
 

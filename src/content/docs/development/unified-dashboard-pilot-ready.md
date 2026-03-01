@@ -15,7 +15,7 @@ src/components/features/dashboard/unified/
 ├── LayoutEngine.tsx                  # Config renderer
 ├── types.ts                          # TypeScript definitions
 ├── index.ts                          # Public exports
-├── README.md                         # Full documentation
+├── index.md                         # Full documentation
 ├── registry/
 │   └── widget-registry.ts            # Widget catalog (17 widgets)
 └── configs/
@@ -127,7 +127,7 @@ These are **goals to validate**, not promises:
 
 ## Support
 
-- **Full docs**: `src/components/features/dashboard/unified/README.md`
+- **Full docs**: `src/components/features/dashboard/unified/index.md`
 - **Testing guide**: `docs/development/testing-unified-dashboard.md`
 - **Questions**: Review the comprehensive README first
 
@@ -136,3 +136,4 @@ These are **goals to validate**, not promises:
 **Status**: ✅ **READY FOR TESTING**  
 **Risk Level**: 🟢 **LOW** (feature flag + preserved legacy code)  
 **Next Action**: Create `.env.local` with `VITE_USE_UNIFIED_DASHBOARD=true` and test
+

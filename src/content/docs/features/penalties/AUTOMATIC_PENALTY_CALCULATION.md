@@ -318,13 +318,14 @@ To test the penalty calculation manually:
 
 ## Related Documentation
 
-- [Penalties Module README](./README.md)
+- [Penalties Module README](./index.md)
 - [Penalty System Integrations](../../integrations/penalty-system-integrations.md)
-- [Scheduled Tasks Guide](../../development/scheduled-tasks.md)
-- [Notification System](../../features/notifications/README.md)
+- [Scheduled Tasks Guide](../../deployment/index.md)
+- [Notification System](../../features/notifications/index.md)
 
 ---
 
 **Last Updated**: 2025-01-15  
 **Status**: ✅ Production Ready
+
 

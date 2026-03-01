@@ -292,8 +292,8 @@ export async function handleNewEndpoint(request: Request, env: any): Promise<Res
 
 - **[API Response Standardization](../api/api-response-standardization.md)** - Complete response system guide
 - **[Functions Folder Architecture](../api/functions-folder-architecture.md)** - Backend architecture overview
-- **[API Documentation](../api/README.md)** - API endpoint reference
-- **[Frontend Integration](../../src/hooks/useStandardizedAPI.ts)** - React hooks usage
+- **[API Documentation](../api/index.md)** - API endpoint reference
+- **`src/hooks/useStandardizedAPI.ts`** - React hooks usage
 
 ## ❓ **Need Help?**
 
@@ -314,3 +314,4 @@ export async function handleNewEndpoint(request: Request, env: any): Promise<Res
 **Last Updated:** January 2025  
 **Migration Status:** ✅ Complete  
 **Breaking Changes:** ❌ None
+

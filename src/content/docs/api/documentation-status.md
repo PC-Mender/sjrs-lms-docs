@@ -70,7 +70,7 @@ This document provides a comprehensive overview of the current status of SJRS LM
 
 ```
 docs/api/
-├── README.md                    # Main API documentation index
+├── index.md                    # Main API documentation index
 ├── token-requirements.md        # JWT and authentication setup
 ├── token-quick-reference.md    # Quick reference guide
 ├── api-patterns.md             # Architecture patterns
@@ -186,3 +186,4 @@ The API documentation now provides everything needed for successful integration 
 **Last Updated:** November 2025  
 **Status:** ✅ Complete  
 **Version:** 3.41.25
+

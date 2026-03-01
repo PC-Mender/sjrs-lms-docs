@@ -180,7 +180,7 @@ docs/
 - Common scenarios reference both API and user guides
 
 ### External Documentation Links
-- **Security Guide:** `docs/security/README.md`
+- **Security Guide:** `docs/security/index.md`
 - **Permission System:** `docs/architecture/permission-system.md`
 - **Action Logging:** `docs/features/action-logging.md`
 - **API Patterns:** `docs/api/api-patterns.md`
@@ -331,4 +331,5 @@ If/when advanced features are added:
 - Contact: SJRS LMS Development Team
 - Documentation Source: `/docs/` directory
 - Last Review: January 6, 2025
+
 

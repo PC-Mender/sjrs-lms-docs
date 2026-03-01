@@ -241,7 +241,7 @@ These modules have pages but **NO** feature components in `src/components/featur
     - **Action:** Extract components to `src/components/features/students/`
 
 17. **wishlist** ❌
-    - Pages: `src/pages/wishlist/` (has multiple files, README.md)
+    - Pages: `src/pages/wishlist/` (has multiple files, index.md)
     - Backend: `functions/api/wishlist/`
     - **Status:** Has page structure but no feature components
     - **Action:** Extract components to `src/components/features/wishlist/`
@@ -379,7 +379,7 @@ For each module, complete:
 - [ ] Create `types/` subdirectory (if needed)
 - [ ] Create `utils/` subdirectory (if needed)
 - [ ] Create `index.ts` barrel export
-- [ ] Create `README.md` documentation
+- [ ] Create `index.md` documentation
 - [ ] Update page imports to use feature components
 - [ ] Verify backend API structure matches pattern
 - [ ] Test all functionality
@@ -388,4 +388,5 @@ For each module, complete:
 ---
 
 *Last Updated: 2025-01-XX*
+
 

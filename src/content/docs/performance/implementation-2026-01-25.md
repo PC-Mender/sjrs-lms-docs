@@ -6,7 +6,7 @@ title: "Implementation 2026 01 25"
 
 ## ✅ Completed Changes (January 25, 2026)
 
-All changes implement industry-standard performance patterns from [docs/project-rules.md](../project-rules.md).
+All changes implement industry-standard performance patterns from [docs/project-rules.md](../project-rules-app.md).
 
 ### Summary
 - ✅ Implemented stale-while-revalidate pattern (instant perceived performance)
@@ -20,7 +20,7 @@ All changes implement industry-standard performance patterns from [docs/project-
 
 ## 1. **Stale-While-Revalidate Pattern** ✅
 
-**File:** [src/lib/query-client.ts](../src/lib/query-client.ts)
+**File:** `src/lib/query-client.ts`
 
 **Changes:**
 - Changed global `staleTime` from `5 * 60 * 1000` (5 minutes) to `0` (always revalidate)
@@ -41,7 +41,7 @@ All changes implement industry-standard performance patterns from [docs/project-
 
 ## 2. **Pagination UX Improvement** ✅
 
-**File:** [src/hooks/useServerSideTable.ts](../src/hooks/useServerSideTable.ts)
+**File:** `src/hooks/useServerSideTable.ts`
 
 **Changes:**
 - Added `import { keepPreviousData } from '@tanstack/react-query'`
@@ -62,10 +62,10 @@ All changes implement industry-standard performance patterns from [docs/project-
 ## 3. **Core Web Vitals Monitoring (Cloudflare Web Analytics)** ✅
 
 **Updated Files:**
-- [index.html](../../index.html) - Added Cloudflare Web Analytics beacon script
-- [src/utilities/performance/web-vitals-tracker.ts](../src/utilities/performance/web-vitals-tracker.ts) - Simplified (Cloudflare handles tracking)
-- [src/components/dashboard/superuser/PerformanceWidget.tsx](../src/components/dashboard/superuser/PerformanceWidget.tsx) - Links to Cloudflare dashboard
-- [src/index.tsx](../src/index.tsx) - Kept initialization call (for future custom metrics)
+- `index.html` - Added Cloudflare Web Analytics beacon script
+- `src/utilities/performance/web-vitals-tracker.ts` - Simplified (Cloudflare handles tracking)
+- `src/components/dashboard/superuser/PerformanceWidget.tsx` - Links to Cloudflare dashboard
+- `src/index.tsx` - Kept initialization call (for future custom metrics)
 
 **New Files:**
 - [docs/performance/cloudflare-web-analytics-setup.md](./cloudflare-web-analytics-setup.md) - Setup guide
@@ -106,10 +106,10 @@ All changes implement industry-standard performance patterns from [docs/project-
 ## 4. **Skeleton Screen Components** ✅
 
 **New Files:**
-- [src/components/ui/atoms/indicators/Skeleton.tsx](../src/components/ui/atoms/indicators/Skeleton.tsx)
+- `src/components/ui/atoms/indicators/Skeleton.tsx`
 
 **Updated Files:**
-- [src/components/ui/atoms/indicators/index.ts](../src/components/ui/atoms/indicators/index.ts) - Added exports
+- `src/components/ui/atoms/indicators/index.ts` - Added exports
 
 **Components:**
 - `TableSkeleton` - For table loading states
@@ -143,7 +143,7 @@ import { TableSkeleton } from '@/components/ui/atoms/indicators';
 
 ## 5. **Query Config Alignment** ✅
 
-**File:** [src/hooks/shared/queryConfig.ts](../src/hooks/shared/queryConfig.ts)
+**File:** `src/hooks/shared/queryConfig.ts`
 
 **Changes:**
 - Updated all configs to use `staleTime: 0` by default
@@ -161,10 +161,10 @@ import { TableSkeleton } from '@/components/ui/atoms/indicators';
 ## 6. **Performance Dashboard Widget** ✅
 
 **New Files:**
-- [src/components/dashboard/superuser/PerformanceWidget.tsx](../src/components/dashboard/superuser/PerformanceWidget.tsx)
+- `src/components/dashboard/superuser/PerformanceWidget.tsx`
 
 **Updated Files:**
-- [src/registry/dashboard-widgets.ts](../src/registry/dashboard-widgets.ts) - Added Performance widget
+- `src/registry/dashboard-widgets.ts` - Added Performance widget
 
 **Features:**
 - Displays Core Web Vitals (LCP, INP, CLS, FCP, TTFB)
@@ -270,7 +270,7 @@ onMouseEnter={() => {
 
 ## ✅ Compliance Check
 
-All changes align with [docs/project-rules.md](../project-rules.md):
+All changes align with [docs/project-rules.md](../project-rules-app.md):
 
 - ✅ Stale-while-revalidate pattern (industry standard)
 - ✅ keepPreviousData for pagination (React Query best practice)

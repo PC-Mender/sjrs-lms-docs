@@ -17,13 +17,13 @@ This document outlines the standards and guidelines for maintaining documentatio
 ### Directory Structure
 ```
 docs/
-├── README.md                    # Main documentation index
+├── index.md                    # Main documentation index
 ├── documentation-standards.md   # This file
 ├── architecture/                # Architecture documentation
 ├── development/                 # Development guides and processes
 ├── features/                    # Feature-specific documentation
 │   ├── [feature-name]/
-│   │   ├── README.md          # Feature overview
+│   │   ├── index.md          # Feature overview
 │   │   ├── implementation.md  # Implementation details
 │   │   └── testing.md         # Testing procedures
 ├── deployment/                  # Deployment and infrastructure
@@ -36,7 +36,7 @@ docs/
 
 ### Feature-Based Documentation
 Each feature should have its own directory containing:
-- `README.md` - Feature overview and quick start
+- `index.md` - Feature overview and quick start
 - `implementation.md` - Technical implementation details
 - `testing.md` - Testing procedures and test cases
 - `api-reference.md` - API endpoints and usage (if applicable)
@@ -52,7 +52,7 @@ Each feature should have its own directory containing:
 ### Cross-References
 - Use relative links within the documentation
 - Update all references when moving/renaming files
-- Maintain a comprehensive index in each directory's README.md
+- Maintain a comprehensive index in each directory's index.md
 
 ## Maintenance Procedures
 

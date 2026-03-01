@@ -48,7 +48,7 @@ src/pages/guests/
 │   └── guest.utils.ts            # Validation, formatting, etc.
 ├── GuestListPage.tsx    # Main list page (simplified)
 ├── index.tsx            # Module entry point
-├── README.md            # Comprehensive documentation
+├── index.md            # Comprehensive documentation
 └── REFACTORING_SUMMARY.md       # This file
 ```
 
@@ -114,7 +114,7 @@ src/pages/guests/
 - `types/guest.types.ts`
 - `constants/guest.constants.ts`
 - `utilities/guest.utils.ts`
-- `README.md`
+- `index.md`
 - `REFACTORING_SUMMARY.md`
 
 ## 🎯 Next Steps
@@ -150,10 +150,10 @@ src/pages/guests/
 
 ## 📚 Related Documentation
 
-- [README.md](./README.md) - Comprehensive module documentation
+- [index.md](./index.md) - Comprehensive module documentation
 - [API Patterns](../../api/api-patterns.md) - Backend API structure
 - [Permission System](../../architecture/permission-system.md) - Access control
-- [Database Schema](../../../sql/d1-schema.sql) - Data structure
+- [Database Schema](../../database/d1-schema.sql) - Data structure
 
 ---
 
@@ -162,3 +162,4 @@ src/pages/guests/
 ---
 
 **Source**: Moved from `src/pages/guests/REFACTORING_SUMMARY.md`
+

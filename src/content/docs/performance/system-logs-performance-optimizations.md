@@ -14,7 +14,7 @@ title: "System Logs Performance Optimizations"
 
 ### 1. **Table Rendering (Large Datasets)** ✅ FIXED
 **Problem**: Tables rendered plain rows without virtualization, causing heavy DOM load for page sizes up to 200  
-**Location**: [`src/pages/system-logs/index.tsx`](x:\GitHub\sjrslms\src\pages\system-logs\index.tsx)
+**Location**: `src/pages/system-logs/index.tsx`
 
 **Solution**: Dynamic virtualization based on page size threshold
 
@@ -49,8 +49,8 @@ title: "System Logs Performance Optimizations"
 ### 2. **Search Input Debouncing** ✅ FIXED
 **Problem**: Search/operation inputs fired API requests on every keystroke, causing excessive request volume  
 **Locations**: 
-- [`src/components/features/system-logs/SystemLogFilters.tsx`](x:\GitHub\sjrslms\src\components\features\system-logs\SystemLogFilters.tsx)
-- [`src/components/features/system-logs/ActionLogFilters.tsx`](x:\GitHub\sjrslms\src\components\features\system-logs\ActionLogFilters.tsx)
+- `src/components/features/system-logs/SystemLogFilters.tsx`
+- `src/components/features/system-logs/ActionLogFilters.tsx`
 
 **Solution**: 300ms debounce on search and operation inputs
 
@@ -104,9 +104,9 @@ useEffect(() => {
 ### 3. **Export Safety & Progress** ✅ FIXED
 **Problem**: Export downloaded full filtered dataset without size warnings, progress indicators, or client-side safety checks  
 **Locations**:
-- [`src/hooks/useSystemLogs.ts`](x:\GitHub\sjrslms\src\hooks\useSystemLogs.ts)
-- [`src/services/system-log.service.ts`](x:\GitHub\sjrslms\src\services\system-log.service.ts)
-- [`functions/api/system-logs/handlers/export-system-logs.ts`](x:\GitHub\sjrslms\functions\api\system-logs\handlers\export-system-logs.ts)
+- `src/hooks/useSystemLogs.ts`
+- `src/services/system-log.service.ts`
+- `functions/api/system-logs/handlers/export-system-logs.ts`
 
 **Solution**: Multi-layered safety and progress system
 
@@ -314,24 +314,24 @@ useEffect(() => {
 
 ## 📝 Files Modified
 
-1. ✅ **[src/pages/system-logs/index.tsx](src/pages/system-logs/index.tsx)**
+1. ✅ **`src/pages/system-logs/index.tsx`**
    - Added `virtual` prop to both tables (dynamic: pageSize > 100)
 
-2. ✅ **[src/components/features/system-logs/SystemLogFilters.tsx](src/components/features/system-logs/SystemLogFilters.tsx)**
+2. ✅ **`src/components/features/system-logs/SystemLogFilters.tsx`**
    - Added debounce for `search` and `operation` inputs (300ms)
    - Local state management for immediate UI updates
 
-3. ✅ **[src/components/features/system-logs/ActionLogFilters.tsx](src/components/features/system-logs/ActionLogFilters.tsx)**
+3. ✅ **`src/components/features/system-logs/ActionLogFilters.tsx`**
    - Added debounce for `search` input (300ms)
 
-4. ✅ **[src/hooks/useSystemLogs.ts](src/hooks/useSystemLogs.ts)**
+4. ✅ **`src/hooks/useSystemLogs.ts`**
    - Added three-tier export warning system (1k, 5k thresholds)
    - Includes statistics.totalLogs in dependency array
 
-5. ✅ **[src/services/system-log.service.ts](src/services/system-log.service.ts)**
+5. ✅ **`src/services/system-log.service.ts`**
    - Updated documentation about backend limits and safety
 
-6. ✅ **[functions/api/system-logs/handlers/export-system-logs.ts](functions/api/system-logs/handlers/export-system-logs.ts)**
+6. ✅ **`functions/api/system-logs/handlers/export-system-logs.ts`**
    - Enhanced documentation about performance/safety measures
    - Already enforces 10k limit, rate limiting, audit logging
 
@@ -373,9 +373,9 @@ useEffect(() => {
 
 ## 📚 Related Documentation
 
-- [Performance Engineering Guidelines](../.github/copilot-instructions.md#performance-engineering-blazing-fast-data-pages) - Core Web Vitals targets
+- `Performance Engineering Guidelines` (.github/copilot-instructions.md#performance-engineering-blazing-fast-data-pages) - Core Web Vitals targets
 - [React Query Caching](./system-logs-architecture-improvements.md) - Caching strategy
-- [System Logs Defense-in-Depth](./security/system-logs-defense-in-depth.md) - Security architecture
+- [System Logs Defense-in-Depth](../security/system-logs-defense-in-depth.md) - Security architecture
 - [Ant Design Virtual Table Docs](https://ant.design/components/table#components-table-demo-virtual-list) - Official virtualization guide
 
 ---

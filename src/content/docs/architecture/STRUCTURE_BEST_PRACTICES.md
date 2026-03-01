@@ -108,7 +108,7 @@ export * from './components';
 
 #### 4. **Document the Feature**
 
-Add a `README.md` for complex features:
+Add a `index.md` for complex features:
 
 ```markdown
 # [Feature Name]
@@ -352,7 +352,7 @@ const BooksPage = lazy(() => import('../pages/books'));
 
 Each feature should have:
 
-1. **README.md** (for complex features)
+1. **index.md** (for complex features)
    - Overview
    - Structure
    - Usage examples
@@ -589,4 +589,5 @@ Before committing code:
 ---
 
 *Following these guidelines will help maintain the excellent structure you've built!*
+
 

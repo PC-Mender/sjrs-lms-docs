@@ -13,7 +13,7 @@ title: "System Logs Project Principles Compliance"
 
 ## 📋 Review Summary
 
-This document verifies the system logs feature's compliance with project principles defined in [.github/copilot-instructions.md](../../.github/copilot-instructions.md).
+This document verifies the system logs feature's compliance with project principles defined in `.github/copilot-instructions.md` (.github/copilot-instructions.md).
 
 ### Overall Assessment:
 - ✅ **Backend-First Architecture**: Fully compliant
@@ -535,7 +535,7 @@ All concerns raised in the review are either:
 - [Architecture Improvements](../performance/system-logs-architecture-improvements.md) - React Query migration
 - [Defense-in-Depth Security](../security/system-logs-defense-in-depth.md) - 5-layer security model
 - [Performance Optimizations](../performance/system-logs-performance-optimizations.md) - Virtualization, debouncing, caching
-- [Project Principles](../../.github/copilot-instructions.md) - Full principles document
+- `Project Principles` (.github/copilot-instructions.md) - Full principles document
 
 ---
 

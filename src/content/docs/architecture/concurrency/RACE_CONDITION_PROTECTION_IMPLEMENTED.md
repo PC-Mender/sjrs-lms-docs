@@ -112,7 +112,7 @@ WHERE transaction_id IS NOT NULL;
 
 ✅ **Added to Main Schema:** `sql/d1-schema.sql` (line 954-957)
 ✅ **Migration File Created:** `sql/migrations/add-unique-transaction-id-constraint.sql`
-✅ **Documentation Updated:** `sql/migrations/README.md`
+✅ **Documentation Updated:** `sql/migrations/index.md`
 ✅ **Error Handling Added:** Catches unique constraint violations
 
 ---
@@ -236,7 +236,7 @@ AND name='idx_payments_transaction_id_unique';
   - Includes documentation and test queries
 
 ### Documentation
-- ✅ `sql/migrations/README.md`
+- ✅ `sql/migrations/index.md`
   - Added migration to pending list
   - Marked as HIGH PRIORITY security fix
 
@@ -282,4 +282,5 @@ AND name='idx_payments_transaction_id_unique';
 4. **Monitor:** Watch for any constraint violations in logs
 
 **The UPI payment feature now has comprehensive race condition protection!** 🎉
+
 

@@ -291,8 +291,8 @@ export default {
 
 ## References
 
-- [Ingest Endpoint Handler](../functions/api/notifications/handlers/ingest-notification-event.ts)
-- [Deployment Script](../scripts/auto-version.js)
-- [Environment Variables Example](../../env.example)
+- `functions/api/notifications/handlers/ingest-notification-event.ts`
+- `scripts/auto-version.js` (Deployment Script)
+- `env.example` (Environment Variables Example)
 - [System Notifications Root Analysis](./SYSTEM-NOTIFICATIONS-ROOT-ANALYSIS.md)
 

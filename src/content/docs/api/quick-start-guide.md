@@ -281,7 +281,7 @@ curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
 ### **2. Understand Authentication**
 - Read [Token Requirements](./token-requirements.md)
 - Use [Token Quick Reference](./token-quick-reference.md)
-- Learn about [Session Management](../README.md#session-management-api)
+- Learn about [Session Management](../development/session-management.md)
 
 ### **3. Build Your Application**
 - Follow [API Patterns](./api-patterns.md)
@@ -306,7 +306,7 @@ curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
 ## 📞 Need Help?
 
 ### **Documentation**
-- **[API README](./README.md)** - Main documentation index
+- **[API README](./index.md)** - Main documentation index
 - **[Error Codes](./error-codes-reference.md)** - Troubleshooting guide
 - **[Testing Collection](./api-testing-collection.md)** - Test examples
 
@@ -323,3 +323,4 @@ curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
 **Last Updated:** November 2025  
 **Version:** 1.0.0  
 **Status:** ✅ Complete
+

@@ -65,6 +65,7 @@ The frontend will be available at `http://localhost:5173` (or similar).
 
 ## 📚 Technical Documentation
 For deep dives into specific modules, refer to the **Development** section in the sidebar:
-*   [API Documentation](../api/README.md)
-*   [Database Schema](../database/README.md)
-*   [Security Architecture](../security/README.md)
+*   [API Documentation](../api/index.md)
+*   [Database Schema](../database/index.md)
+*   [Security Architecture](../security/index.md)
+

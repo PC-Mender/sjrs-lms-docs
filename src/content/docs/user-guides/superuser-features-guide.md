@@ -589,7 +589,7 @@ Total time: 15-20 minutes
 
 - **Documentation:** [docs/user-guides/](../user-guides/)
 - **API Reference:** [docs/api/superuser-endpoints.md](../api/superuser-endpoints.md)
-- **Technical Guide:** [docs/features/superuser-features-implementation.md](../features/superuser-features-implementation.md)
+- **Technical Guide:** [docs/features/superuser-features-implementation.md](../features/superuser/superuser-features-implementation.md)
 
 ### Contact Information
 
@@ -604,11 +604,12 @@ Total time: 15-20 minutes
 - [Superuser Guide](./superuser-guide.md) - Role overview and capabilities
 - [API Endpoints Reference](../api/superuser-endpoints.md) - API documentation
 - [Action Logging System](../features/action-logging.md) - Technical details
-- [Security Best Practices](../security/README.md) - Security guidelines
+- [Security Best Practices](../security/index.md) - Security guidelines
 
 ---
 
 **Last Updated:** January 6, 2025  
 **Version:** 1.0  
 **Maintained by:** SJRS LMS Development Team
+
 

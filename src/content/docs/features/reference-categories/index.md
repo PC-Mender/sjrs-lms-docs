@@ -1,0 +1,88 @@
+---
+title: "Overview"
+---
+
+# Reference Categories Module
+
+## 📁 Structure
+
+```
+src/pages/reference-categories/
+├── components/
+│   └── CategoryList.tsx          # Main list component with CRUD operations
+├── index.tsx                     # Module exports
+└── index.md                     # This documentation
+```
+
+## 🏗️ Architecture
+
+### Backend Alignment
+- **API Endpoint**: `/api/reference-categories`
+- **Database Table**: `reference_categories`
+- **Schema Fields**:
+  - `id` (INTEGER PRIMARY KEY)
+  - `name` (TEXT NOT NULL)
+  - `description` (TEXT)
+  - `parent_id` (INTEGER, nullable)
+  - `created_at` (DATETIME)
+  - `updated_at` (DATETIME)
+
+### Frontend Components
+- **CategoryList**: Main component handling all CRUD operations
+- **Types**: Proper TypeScript interfaces in `src/types/d1/reference-categories.ts`
+
+## 🔧 Features
+
+### CRUD Operations
+- ✅ **Create**: Modal form for new categories
+- ✅ **Read**: Paginated table with search functionality
+- ✅ **Update**: Inline edit modal
+- ✅ **Delete**: Confirmation modal with validation
+
+### Search & Filtering
+- Real-time search across name and description
+- Pagination support
+- Sortable columns
+
+### Validation
+- Required field validation
+- Duplicate name prevention
+- Parent category validation
+- Deletion constraints (no children, no referenced books)
+
+## 🚀 Usage
+
+```tsx
+import { CategoryList } from './components/CategoryList';
+
+// Use in any page
+<CategoryList />
+```
+
+## 🔒 Security
+
+- Admin/Superuser/Librarian access required for mutations
+- Proper permission checks on backend
+- Input validation and sanitization
+- SQL injection protection
+
+## 📊 Data Flow
+
+1. **List**: `GET /api/reference-categories` → Display in table
+2. **Create**: Form submission → `POST /api/reference-categories` → Refresh list
+3. **Update**: Form submission → `PUT /api/reference-categories/:id` → Refresh list
+4. **Delete**: Confirmation → `DELETE /api/reference-categories/:id` → Refresh list
+
+## 🎯 Benefits of New Structure
+
+- **Modular**: Clean separation of concerns
+- **Type-safe**: Proper TypeScript interfaces
+- **Backend-aligned**: Matches actual database schema
+- **Maintainable**: Single responsibility components
+- **Reusable**: Components can be imported elsewhere
+- **No redundancy**: Removed duplicate code and files
+
+---
+
+**Source**: Moved from `src/pages/reference-categories/index.md` during documentation consolidation
+

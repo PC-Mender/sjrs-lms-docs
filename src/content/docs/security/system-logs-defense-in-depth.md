@@ -13,7 +13,7 @@ title: "System Logs Defense In Depth"
 ## Security Architecture (Layered Defense)
 
 ### Layer 1: Frontend Route Guard
-**Location**: [`src/router/config/feature-routes.ts:262`](x:\GitHub\sjrslms\src\router\config\feature-routes.ts#L262)
+**Location**: `src/router/config/feature-routes.ts#L262`
 
 ```typescript
 { 
@@ -30,7 +30,7 @@ title: "System Logs Defense In Depth"
 ---
 
 ### Layer 2: Client-Side Permission Check
-**Location**: [`src/hooks/useSystemLogs.ts:113-125`](x:\GitHub\sjrslms\src\hooks\useSystemLogs.ts#L113-L125)
+**Location**: `src/hooks/useSystemLogs.ts#L113-L125`
 
 ```typescript
 // Defense-in-depth: Check permission before fetching
@@ -56,8 +56,8 @@ if (!permissionCheck.allowed) {
 ---
 
 ### Layer 3: Client-Side Input Validation
-**Location**: [`src/hooks/useSystemLogs.ts:127-140`](x:\GitHub\sjrslms\src\hooks\useSystemLogs.ts#L127-L140)  
-**Schema**: [`src/types/schemas/system-log-filters.schema.ts`](x:\GitHub\sjrslms\src\types\schemas\system-log-filters.schema.ts)
+**Location**: `src/hooks/useSystemLogs.ts#L127-L140`  
+**Schema**: `src/types/schemas/system-log-filters.schema.ts`
 
 ```typescript
 // Zod validation for filters
@@ -83,7 +83,7 @@ if (!validationResult.success) {
 ---
 
 ### Layer 4: Backend Security Middleware ⚠️ PRIMARY SECURITY BOUNDARY
-**Location**: [`functions/middleware/permissions/security-middleware.ts`](x:\GitHub\sjrslms\functions\middleware\permissions\security-middleware.ts)
+**Location**: `functions/middleware/permissions/security-middleware.ts`
 
 ```typescript
 // Applied to ALL /api/system_logs/* routes
@@ -104,8 +104,8 @@ securityMiddleware({
 
 ### Layer 5: Backend Input Validation
 **Location**: 
-- [`functions/api/system-logs/handlers/get-system-logs.ts:48-83`](x:\GitHub\sjrslms\functions\api\system-logs\handlers\get-system-logs.ts#L48-L83)
-- [`functions/api/system-logs/handlers/export-system-logs.ts:120-160`](x:\GitHub\sjrslms\functions\api\system-logs\handlers\export-system-logs.ts#L120-L160)
+- `functions/api/system-logs/handlers/get-system-logs.ts#L48-L83`
+- `functions/api/system-logs/handlers/export-system-logs.ts#L120-L160`
 
 **Validates**:
 - `level`: Must be valid log level (uses `isValidLogLevel()`)
@@ -121,7 +121,7 @@ securityMiddleware({
 ## Enhanced Error Handling (403 Responses)
 
 ### Improved User Feedback
-**Location**: [`src/hooks/useSystemLogs.ts:159-167`](x:\GitHub\sjrslms\src\hooks\useSystemLogs.ts#L159-L167)
+**Location**: `src/hooks/useSystemLogs.ts#L159-L167`
 
 ```typescript
 // Improved 403 error handling with clearer "no permission" states
@@ -139,7 +139,7 @@ if ((err as any).code === 'PERMISSION_DENIED' || (err as any).status === 403) {
 
 ## Rate Limiting (Abuse Prevention)
 
-**Location**: [`functions/middleware/rate-limiting.ts`](x:\GitHub\sjrslms\functions\middleware\rate-limiting.ts)
+**Location**: `functions/middleware/rate-limiting.ts`
 
 | Endpoint | Rate Limit | Bucket |
 |----------|-----------|--------|
@@ -152,7 +152,7 @@ if ((err as any).code === 'PERMISSION_DENIED' || (err as any).status === 403) {
 
 ## Audit Logging (Compliance)
 
-**Location**: [`functions/api/system-logs/handlers/export-system-logs.ts:181-192`](x:\GitHub\sjrslms\functions\api\system-logs\handlers\export-system-logs.ts#L181-L192)
+**Location**: `functions/api/system-logs/handlers/export-system-logs.ts#L181-L192`
 
 ```typescript
 // Audit log for security-sensitive log exports
@@ -183,10 +183,10 @@ await auditLog(env, {
 - `ERROR/CRITICAL`: 365 days
 
 **Enforcement**:
-- Automated: Scheduled task runs daily at 2 AM UTC ([`functions/scheduled/cleanup-system-logs.ts`](x:\GitHub\sjrslms\functions\scheduled\cleanup-system-logs.ts))
-- Indexed: [`sql/migrations/add-system-logs-indexes.sql`](x:\GitHub\sjrslms\sql\migrations\add-system-logs-indexes.sql) for efficient cleanup
+- Automated: Scheduled task runs daily at 2 AM UTC (`functions/scheduled/cleanup-system-logs.ts`)
+- Indexed: `sql/migrations/add-system-logs-indexes.sql` for efficient cleanup
 
-**Documentation**: [`docs/security/system-logs-retention-policy.md`](x:\GitHub\sjrslms\docs\security\system-logs-retention-policy.md)
+**Documentation**: `docs/security/system-logs-retention-policy.md`
 
 ---
 
@@ -237,7 +237,7 @@ await auditLog(env, {
 
 ## Testing Coverage
 
-**Location**: [`src/hooks/__tests__/useSystemLogs.test.ts`](x:\GitHub\sjrslms\src\hooks\__tests__\useSystemLogs.test.ts)
+**Location**: `src/hooks/__tests__/useSystemLogs.test.ts`
 
 **Test Cases** (15+ tests):
 - ✅ Permission check before fetch (new)
@@ -282,8 +282,8 @@ await auditLog(env, {
 
 - [Permission-Based Security](../permission-based-security.md) - RBAC architecture
 - [System Logs Retention Policy](../security/system-logs-retention-policy.md) - Data retention rules
-- [API Design Standards](../.github/copilot-instructions.md) - Backend-first principles
-- [Security Principles](../.github/copilot-instructions.md#security-principles) - Defense-in-depth guidelines
+- `API Design Standards` (.github/copilot-instructions.md) - Backend-first principles
+- `Security Principles` (.github/copilot-instructions.md#security-principles) - Defense-in-depth guidelines
 
 ---
 

@@ -169,10 +169,10 @@ All phases of the refactoring have been successfully completed. The SJRS LMS now
 
 ## 🔗 **Related Documentation**
 
-- **[Current Architecture](../architecture/README.md)** - Current system overview
-- **[API Documentation](../api/README.md)** - API reference
-- **[Development Guides](./README.md)** - Development documentation
-- **[Getting Started](../getting-started/README.md)** - Setup guides
+- **[Current Architecture](../architecture/index.md)** - Current system overview
+- **[API Documentation](../api/index.md)** - API reference
+- **[Development Guides](./index.md)** - Development documentation
+- **[Getting Started](../getting-started/index.md)** - Setup guides
 
 ---
 

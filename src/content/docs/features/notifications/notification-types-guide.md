@@ -118,7 +118,7 @@ Announcements are bulk notifications sent to multiple users simultaneously. They
   - **Tabs**: 
     - "Compose" - Send new announcements
     - "Manage" - View and manage sent announcements (list, view details, delete)
-- **Documentation**: `src/components/features/announcements/README.md`
+- **Documentation**: `src/components/features/announcements/index.md`
 
 ### Use Cases
 - Sending important updates to all users
@@ -523,13 +523,14 @@ The user notification feed (`/api/notifications/feed`) combines:
 
 ## Related Documentation
 
-- **Announcements**: `src/components/features/announcements/README.md`
-- **App Notifications Module**: `docs/features/notifications/README.md`
-- **Email Service**: `docs/features/email-service/README.md`
+- **Announcements**: `src/components/features/announcements/index.md`
+- **App Notifications Module**: `docs/features/notifications/index.md`
+- **Email Service**: `docs/features/email-service/index.md`
 - **Database Schema**: `sql/d1-schema.sql`
 
 ---
 
 **Last Updated**: December 2025  
 **Version**: 1.1
+
 

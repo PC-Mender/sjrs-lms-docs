@@ -59,7 +59,7 @@ title: "Book Copies Refactoring"
 > Note: `src/pages/book-copies/types/*` and `src/pages/book-copies/utils/*` are now thin re-export shims for backward compatibility.
 
 ### Documentation
-- `src/pages/book-copies/README.md` - Created comprehensive documentation
+- `src/pages/book-copies/index.md` - Created comprehensive documentation
 - `src/pages/book-copies/REFACTORING_SUMMARY.md` - This summary document
 
 ## Backend Alignment Achieved
@@ -113,3 +113,4 @@ The book-copies module is now properly refactored, well-structured, and fully al
 ---
 
 **Source**: Moved from `src/pages/book-copies/REFACTORING_SUMMARY.md`
+

@@ -312,7 +312,7 @@ These standards are enforced through tooling where possible; deviations must be 
   - Use a dedicated `isRefreshing` state (no full-page spinners)
   - Show success feedback on refresh (e.g., "Data refreshed successfully")
   - With `staleTime: 0`, `refetch()` always fetches fresh server data
-  - Reference implementation: [BorrowLimitList.tsx](../src/pages/borrow-limits/BorrowLimitList.tsx)
+  - Reference implementation: `src/pages/borrow-limits/BorrowLimitList.tsx`
 - **Server Pagination Required**:
   - All data-heavy list endpoints must be paginated
   - Never return unbounded datasets

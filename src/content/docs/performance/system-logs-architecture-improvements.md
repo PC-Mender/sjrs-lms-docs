@@ -14,7 +14,7 @@ title: "System Logs Architecture Improvements"
 
 ### 1. **totalPages Bug** ❌ → ✅ FIXED
 **Problem**: `totalPages` was incorrectly set to `pagination.total` when calling the service  
-**Location**: [`useSystemLogs.ts:143`](x:\GitHub\sjrslms\src\hooks\useSystemLogs.ts#L143)
+**Location**: `src/hooks/useSystemLogs.ts#L143`
 
 **Before**:
 ```typescript
@@ -50,7 +50,7 @@ const response = await systemLogService.getSystemLogs(
 
 ### 2. **No Caching/Deduplication** ❌ → ✅ FIXED
 **Problem**: Every tab switch and filter change triggered fresh API calls, causing unnecessary load  
-**Location**: [`useSystemLogs.ts:101-163`](x:\GitHub\sjrslms\src\hooks\useSystemLogs.ts#L101-L163)
+**Location**: `src/hooks/useSystemLogs.ts#L101-L163`
 
 **Before** (Custom useState/useEffect Pattern):
 ```typescript
@@ -215,24 +215,24 @@ describe('useSystemLogs', () => {
 });
 ```
 
-**File**: [`src/hooks/__tests__/useSystemLogs.test.ts`](x:\GitHub\sjrslms\src\hooks\__tests__\useSystemLogs.test.ts)
+**File**: `src/hooks/__tests__/useSystemLogs.test.ts`
 
 ---
 
 ## 📝 Files Modified
 
-1. ✅ **[src/hooks/useSystemLogs.ts](src/hooks/useSystemLogs.ts)**
+1. ✅ **`src/hooks/useSystemLogs.ts`**
    - Migrated from useState/useEffect to React Query
    - Fixed totalPages calculation bug
    - Added staleTime configuration
    - Removed autoFetch option (handled by React Query)
    - Added keepPreviousData for smooth pagination
 
-2. ✅ **[src/services/system-log.service.ts](src/services/system-log.service.ts)**
+2. ✅ **`src/services/system-log.service.ts`**
    - Updated documentation to reflect React Query caching
    - No functional changes (service layer remains pure)
 
-3. ✅ **[src/hooks/__tests__/useSystemLogs.test.ts](src/hooks/__tests__/useSystemLogs.test.ts)**
+3. ✅ **`src/hooks/__tests__/useSystemLogs.test.ts`**
    - Recreated with React Query testing patterns
    - Added QueryClientProvider wrapper
    - Simplified tests (removed autoFetch parameter)
@@ -318,10 +318,10 @@ If **YES** to 2+ questions → Migrate to React Query
 
 ## 📚 Related Documentation
 
-- [Performance Engineering Guidelines](../.github/copilot-instructions.md#performance-engineering-blazing-fast-data-pages) - Core Web Vitals targets
+- `Performance Engineering Guidelines` (.github/copilot-instructions.md#performance-engineering-blazing-fast-data-pages) - Core Web Vitals targets
 - [React Query Official Docs](https://tanstack.com/query/latest/docs/framework/react/overview) - API reference
-- [System Logs Defense-in-Depth](./security/system-logs-defense-in-depth.md) - Security architecture
-- [useServerSideTable Hook](../src/hooks/useServerSideTable.ts) - Reference implementation with React Query
+- [System Logs Defense-in-Depth](../security/system-logs-defense-in-depth.md) - Security architecture
+- `src/hooks/useServerSideTable.ts` - Reference implementation with React Query
 
 ---
 

@@ -163,7 +163,7 @@ test('user can borrow a book', async ({ page }) => {
 
 ## 📚 Documentation
 
-- **Testing Guide**: `docs/testing/README.md`
+- **Testing Guide**: `docs/testing/index.md`
 - **Vitest Docs**: https://vitest.dev/
 - **Testing Library**: https://testing-library.com/
 - **Playwright Docs**: https://playwright.dev/
@@ -190,3 +190,4 @@ test('user can borrow a book', async ({ page }) => {
 You now have a **professional-grade testing suite** that rivals enterprise applications. This setup will help you build more reliable software and catch issues early in development.
 
 **Happy Testing! 🧪✨**
+

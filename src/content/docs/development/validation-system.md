@@ -304,9 +304,9 @@ console.log('Security cache:', stats.securityCache);
 
 ## 🔗 Related Documentation
 
-- **[useInputValidation Hook](../hooks/useInputValidation.md)** - React hook for form validation
+- **[useInputValidation Hook](#react-hook-integration)** - React hook for form validation
 - **[Security Best Practices](../security/)** - Application security guidelines
-- **[API Validation](../api/validation.md)** - Backend validation integration
+- **[API Validation](../api/api-response-standardization.md)** - Backend validation integration
 - **[Performance Guide](../performance/)** - Optimization strategies
 
 ---

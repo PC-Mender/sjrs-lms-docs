@@ -1,0 +1,152 @@
+---
+title: "Overview"
+---
+
+# Penalties Module
+
+This module provides a well-structured, modular system for managing library penalties. It follows the same architectural principles as the borrow-limits module with clean separation of concerns and modular components.
+
+## Structure
+
+```
+src/pages/penalties/
+├── PenaltyList.tsx          # Main list page
+├── PenaltyCreate.tsx        # Create page
+├── PenaltyEdit.tsx          # Edit page
+├── PenaltyShow.tsx          # Show page
+├── index.tsx                # Module entry point
+└── index.md                # Module documentation
+
+src/components/features/penalties/
+├── components/              # Reusable UI components
+│   ├── PenaltyTableColumns.tsx   # Table column definitions
+│   ├── PenaltyTableActions.tsx   # Table action definitions
+│   ├── PenaltyFormFields.tsx     # Form fields component
+│   ├── PenaltyForm.tsx           # Form wrapper (simplified)
+│   ├── PenaltyLoading.tsx        # Loading state component
+│   ├── PenaltyErrorBoundary.tsx  # Error boundary component
+│   ├── PenaltyDetails.tsx        # Detail view component
+│   ├── PenaltyContainer.tsx      # Container component
+│   └── index.ts                  # Component exports
+├── hooks/                   # Custom hooks
+│   └── usePenalties.ts          # Penalties data hooks (legacy wrapper)
+├── types/                   # TypeScript definitions
+│   └── penalty.types.ts         # Type definitions
+├── utils/                   # Utility functions
+│   ├── penalty.utils.ts         # Formatting and helper functions
+│   └── penalty.constants.ts     # Constants and configuration
+└── index.ts                 # Feature component exports
+
+src/hooks/d1/
+└── penalties.ts             # Shared D1 penalties hooks (primary data layer)
+```
+
+## Key Features
+
+### 1. **Backend Alignment**
+- Types match the database schema exactly
+- Field names align with backend API (`penalty_type`, `description`, etc.)
+- Proper validation and error handling
+
+### 2. **Modular Components**
+- **PenaltyTableColumns**: Column definitions as a hook for flexibility
+- **PenaltyTableActions**: Action definitions as a hook (extracted from inline code)
+- **PenaltyFormFields**: Reusable form fields component (extracted from PenaltyForm)
+- **PenaltyForm**: Simplified form wrapper
+- **PenaltyDetails**: Organized display of penalty information
+
+### 3. **Custom Hooks**
+- **useD1PenaltiesQuery**: Centralized data fetching from `src/hooks/d1/penalties.ts`
+- **useD1PenaltyQuery**: Single penalty data management
+- **useD1CreatePenalty**, **useD1UpdatePenalty**, **useD1DeletePenalty**: CRUD operations
+
+### 4. **Type Safety**
+- Comprehensive TypeScript interfaces
+- Proper type checking for all operations
+- Backend schema alignment
+
+### 5. **Utility Functions**
+- Consistent formatting (dates, currency, names)
+- Status color mapping
+- Permission checking utilities
+- Form validation rules
+
+## Usage
+
+### Basic Import
+```tsx
+import { PenaltyList, PenaltyCreate, PenaltyEdit, PenaltyShow } from '../pages/penalties';
+```
+
+### Using the Form Component
+```tsx
+import { PenaltyForm } from '../../components/features/penalties';
+
+<PenaltyForm
+  form={form}
+  onFinish={handleSubmit}
+  loading={loading}
+  submitText="Create Penalty"
+  onCancel={() => navigate('/dashboard/penalties')}
+  isEdit={false}
+/>
+```
+
+### Using Custom Hooks
+```tsx
+import { 
+  useD1PenaltiesQuery, 
+  useD1CreatePenalty,
+  useD1UpdatePenalty,
+  useD1DeletePenalty 
+} from '../../hooks/d1/penalties';
+
+const { data: penaltiesData, isLoading, error } = useD1PenaltiesQuery();
+const createMutation = useD1CreatePenalty();
+const updateMutation = useD1UpdatePenalty();
+const deleteMutation = useD1DeletePenalty();
+```
+
+## Backend Schema Alignment
+
+The module now properly aligns with the backend database schema:
+
+- **penalty_type**: `'overdue' | 'damage' | 'loss' | 'violation'`
+- **status**: `'pending' | 'paid' | 'waived' | 'cancelled'`
+- **description**: Main penalty description field
+- **due_date**: Optional due date for payment
+- **loan_id**: Optional reference to borrow record
+
+### ⚠️ **Backend Data Limitation**
+Currently, the backend penalty handlers only return basic user information (`first_name`, `last_name`). The frontend expects additional fields like `email`, `user_type`, and `phone` for full functionality. These fields are marked as optional in the types to prevent runtime errors.
+
+**Recommended Backend Improvement:**
+Update the penalty handlers to include complete user data:
+```sql
+SELECT p.*, u.first_name, u.last_name, u.email, u.user_type, u.phone
+FROM penalties p
+LEFT JOIN library_users u ON p.user_id = u.id
+```
+
+## Benefits of Refactoring
+
+1. **Maintainability**: Smaller, focused components are easier to maintain
+2. **Reusability**: Components can be reused across different pages
+3. **Type Safety**: Better TypeScript support and error catching
+4. **Performance**: Optimized data fetching and caching
+5. **Consistency**: Uniform UI patterns and behavior
+6. **Testing**: Easier to unit test individual components
+7. **Documentation**: Clear structure and purpose for each file
+
+## Migration Notes
+
+- Old monolithic `index.tsx` has been replaced with clean exports
+- All components now use the new type system
+- Form validation aligns with backend requirements
+- Error handling is consistent across the module
+- Payment integration remains unchanged for compatibility
+
+---
+
+**Source**: Moved from `src/pages/penalties/index.md` during documentation consolidation
+
