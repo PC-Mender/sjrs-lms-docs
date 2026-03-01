@@ -20,9 +20,10 @@ export default defineConfig({
       components: {
         Banner: './src/components/LifecycleBanner.astro',
         Footer: './src/components/CustomFooter.astro',
+        SocialIcons: './src/components/SocialIcons.astro',
       },
       social: [
-        { label: 'Open App', href: 'https://sjrslms.in', icon: 'external' },
+        { label: 'Open App', href: 'https://staging.yourdomain.com', icon: 'external' },
         { label: 'GitHub', href: 'https://github.com/PC-Mender/sjrs-lms-docs', icon: 'github' },
       ],
       sidebar: [
