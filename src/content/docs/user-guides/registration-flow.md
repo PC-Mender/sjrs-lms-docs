@@ -8,7 +8,7 @@ This guide explains the complete registration workflow for SJRS LMS, including a
 
 ## 🔄 Overview
 
-- New accounts start with `status = "pending"` and `email_verified = false`.
+- New accounts start with `status = "pending"`, `email_verified = false`, and `onboarding_status = "pending_email_confirmation"`.
 - After email confirmation, accounts remain `pending` until a superuser/admin approves them.
 - `role_id` is assigned using the `user_type_role_mapping` table; if no mapping exists, `role_id` stays `NULL` until admin assignment.
 - Users can check their status via OTP-based public endpoints.
@@ -63,6 +63,10 @@ Workflow statuses:
 - `pending_approval` – email verified and profile completed, awaiting admin approval.
 - `active` / `inactive` / `suspended` – terminal states.
 
+Note:
+- The canonical persisted onboarding field is `onboarding_status`.
+- Some responses also include `workflowStatus` / `workflow_status` for compatibility.
+
 ## 🛡️ Step 4: Admin Approval
 
 Admins approve and assign/override roles using the user management endpoint:
@@ -94,6 +98,7 @@ Example response:
     "phone": "+1234567890",
     "stream": "CSE",
     "email_verified": false,
+    "onboarding_status": "pending_email_confirmation",
     "workflowStatus": "pending_email_confirmation"
   }
 }

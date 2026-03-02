@@ -1,12 +1,25 @@
 ---
 title: "Overview"
+slug: features/members
 ---
 
 # Members Module - Refactored Architecture
 
 ## Overview
 
-The Members module has been refactored to follow a modular, maintainable architecture that aligns with the backend API structure and eliminates code duplication.
+The Members module has been refactored to follow a modular, maintainable architecture that aligns with the backend API structure and eliminates code duplication. **As of v3.49.0**, the Members directory features an improved card layout with enhanced status visibility.
+
+## Version History
+
+### v3.49.0 (March 2, 2026) - Enhanced Directory Layout
+- ✅ **Improved 3-Up Grid Layout**: Better visual organization with card-based view
+- ✅ **Status Visibility**: Clear separation of Account Status and Onboarding Status
+- ✅ **Enhanced Row Grouping**: Organized information display:
+  - Row 1: User type, Account status
+  - Row 2: Onboarding status, Role
+  - Row 3: Phone, Registration year
+- ✅ **Status Badges**: Color-coded visual indicators for quick identification
+- ✅ **Better Card Design**: Clearer information hierarchy and improved readability
 
 ## Architecture
 
@@ -61,6 +74,14 @@ src/pages/members/
 - Consistent error handling with `handleError`
 - Proper action logging with `ActionLogger`
 - Follows backend API patterns
+
+### 6. **Status Display (v3.49.0+)**
+- **Dual Status Tracking**: Shows both Account Status and Onboarding Status
+- **Card-Based Layout**: 3-column grid with enhanced information grouping
+- **Status Badges**: Color-coded indicators for quick recognition
+- **Filter Options**: Filter members by account status and onboarding status
+- **Sort Capabilities**: Sort by status fields for better organization
+- **Metadata Enrichment**: Enhanced member cards with comprehensive information
 
 ## Usage
 
@@ -156,6 +177,12 @@ import { getStatusColor } from './components/features/members/utils/member.utils
 
 1. **Component Library**: Extract common components to a shared library
 2. **State Management**: Consider using Zustand or Redux for complex state
+
+## Related Documentation
+
+- **[Account Status & Onboarding Management](/features/account-management/)** - Comprehensive guide to dual status tracking
+- **[Students Module](/features/students/)** - Student administration features
+- **[Guests Module](/features/guests/)** - Guest user management
 3. **Testing**: Add comprehensive unit and integration tests
 4. **Documentation**: Generate API documentation from TypeScript types
 5. **Performance**: Implement virtual scrolling for large datasets

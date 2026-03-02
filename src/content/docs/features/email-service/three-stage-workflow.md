@@ -29,8 +29,8 @@ The SJRS LMS implements a comprehensive three-stage user registration process de
 ## Three-Stage Process Flow
 
 ### Stage 1: Email Confirmation
-**Database Status:** `pending` (email_verified: false)
-**Workflow Status:** `pending_email_confirmation`
+**Account Status (DB):** `pending` (email_verified: false)
+**Onboarding Status (DB):** `pending_email_confirmation`
 **Duration:** 24 hours (confirmation link expires)
 
 **Process:**
@@ -47,8 +47,8 @@ The SJRS LMS implements a comprehensive three-stage user registration process de
 **Email Template:** `generateEmailConfirmationTemplate()`
 
 ### Stage 2: Profile Completion
-**Database Status:** `pending` (email_verified: true)
-**Workflow Status:** `profile_incomplete`
+**Account Status (DB):** `pending` (email_verified: true)
+**Onboarding Status (DB):** `profile_incomplete`
 **Duration:** User-dependent (immediate upon completion)
 
 **Process:**
@@ -61,13 +61,13 @@ The SJRS LMS implements a comprehensive three-stage user registration process de
    - Submitted profile details summary
    - Updated progress timeline
    - Next steps information
-6. Status changes to `pending_approval`
+6. Onboarding status changes to `pending_approval`
 
 **Email Template:** `generateProfileCompletionNotificationTemplate()`
 
 ### Stage 3: Admin Approval
-**Database Status:** `pending` → `active` or `inactive`
-**Workflow Status:** `pending_approval` → `active` or `inactive`
+**Account Status (DB):** `pending` → `active` or `inactive`
+**Onboarding Status (DB):** `pending_approval` → `complete`
 **Duration:** 24-48 hours (admin review time)
 
 **Process:**
@@ -85,15 +85,16 @@ The SJRS LMS implements a comprehensive three-stage user registration process de
 
 ## Status Mapping System
 
-The system uses a mapping layer to translate between database constraints and workflow terminology:
+The system uses **two persisted fields** to avoid conflating onboarding state with account state:
 
-### Database Status → Workflow Status
-- `'pending'` + `email_verified: false` → `'pending_email_confirmation'`
-- `'pending'` + `email_verified: true` + `profile_completed: false` → `'profile_incomplete'`
-- `'pending'` + `email_verified: true` + `profile_completed: true` → `'pending_approval'`
-- `'active'` → `'active'`
-- `'inactive'` → `'inactive'`
-- `'suspended'` → `'suspended'`
+- `status` (account status): `pending | active | inactive | suspended`
+- `onboarding_status` (onboarding stage): `pending_email_confirmation | profile_incomplete | pending_approval | complete`
+
+### Account Status + Flags → Onboarding Status
+- `status: 'pending'` + `email_verified: false` → `onboarding_status: 'pending_email_confirmation'`
+- `status: 'pending'` + `email_verified: true` + `profile_completed: false` → `onboarding_status: 'profile_incomplete'`
+- `status: 'pending'` + `email_verified: true` + `profile_completed: true` → `onboarding_status: 'pending_approval'`
+- `status: 'active' | 'inactive' | 'suspended'` → `onboarding_status: 'complete'`
 
 ### Implementation Details
 
@@ -120,6 +121,7 @@ export const getWorkflowStatusLabel = (status: string, email_verified: boolean, 
   "success": true,
   "user": {
     "status": "pending",
+    "onboarding_status": "pending_email_confirmation",
     "workflow_status": "pending_email_confirmation"
   }
 }
@@ -130,23 +132,21 @@ export const getWorkflowStatusLabel = (status: string, email_verified: boolean, 
 {
   "success": true,
   "message": "Email verified successfully! Your account is now pending admin approval.",
-  "workflow_status": "pending_approval",
-  "database_status": "pending"
+  "status": "pending",
+  "onboarding_status": "profile_incomplete"
 }
 ```
 
 ## Benefits of This Approach
 
-1. **No Database Migration Required** - Works with existing constraint
-2. **Proper Workflow Terminology** - Matches documentation
-3. **Clear Status Mapping** - Both database and workflow status provided
-4. **Consistent Across Codebase** - All components use mapping system
-5. **Backward Compatible** - Existing code continues to work
-6. **Type Safety** - Proper TypeScript types for all statuses
+1. **Clear separation of concerns** - Account state vs onboarding stage
+2. **DB-authoritative onboarding** - Onboarding stage is persisted as a first-class field
+3. **Consistent across backend + frontend** - UI can prefer `onboarding_status` and fall back when needed
+4. **Backward compatible** - Existing clients can still use `workflowStatus` / `workflow_status` where present
 
 ## User Experience
 
 - Users see clear workflow status labels throughout the application
 - Admin panel shows proper workflow status for user management
 - Email notifications use workflow terminology
-- System maintains data integrity with existing database schema 
+- System maintains data integrity with existing database schema

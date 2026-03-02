@@ -1,12 +1,21 @@
 ---
 title: "Overview"
+slug: features/guests
 ---
 
 # Guests Module - Refactored Architecture
 
 ## Overview
 
-The guests module has been refactored into a well-structured, modular system that aligns with the backend architecture and removes redundancy. This new structure provides better separation of concerns, improved maintainability, and consistent patterns.
+The guests module has been refactored into a well-structured, modular system that aligns with the backend architecture and removes redundancy. This new structure provides better separation of concerns, improved maintainability, and consistent patterns. **As of v3.49.0**, the module now includes robust onboarding status management.
+
+## Version History
+
+### v3.49.0 (March 2, 2026) - Enhanced Status Management
+- ✅ **Onboarding Status Field**: Added to guest edit modal with proper constraints
+- ✅ **Restricted Status Options**: Onboarding selector limited to onboarding-only values (in-progress, completed, skipped)
+- ✅ **Status Display**: Guest table columns now show Account Status and Onboarding Status
+- ✅ **Database Integration**: D1 migration added for onboarding_status field
 
 ## 🏗️ New Architecture
 
@@ -72,6 +81,10 @@ src/pages/guests/
 - **Purpose**: Edit existing guest information
 - **Features**:
   - Form validation with consistent rules
+  - **Onboarding Status Management (v3.49.0+)**: 
+    - Restricted selector with onboarding-only values
+    - Options: `in-progress`, `completed`, `skipped`
+    - Account status remains read-only (can only be modified by admin)
   - API integration for updates
   - Success/error feedback
 
@@ -137,6 +150,7 @@ The module integrates with the existing permission system:
 
 ## 📚 Related Documentation
 
+- **[Account Status & Onboarding Management](/features/account-management/)** - Comprehensive guide to status tracking
 - [API Patterns](../../api/api-patterns.md)
 - [Permission System](../../development/roles-and-permissions.md)
 - [User Management](../users/index.md)

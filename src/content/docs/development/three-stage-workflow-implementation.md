@@ -6,28 +6,34 @@ title: "Three Stage Workflow Implementation"
 
 ## Overview
 
-This document summarizes the implementation of the three-stage user registration workflow in the SJRS LMS system. The implementation uses a status mapping system to bridge the gap between database constraints and workflow terminology.
+This document summarizes the implementation of the three-stage user registration workflow in the SJRS LMS system. The implementation uses a persisted onboarding_status approach to bridge the gap between database constraints and workflow terminology.
 
 ## Problem Statement
 
-The original issue was a mismatch between:
-- **Application expectation**: Three-stage workflow with statuses `pending_email_confirmation`, `pending_approval`, `active`
-- **Database constraint**: Only allows statuses `pending`, `active`, `inactive`, `suspended`
+The original issue was that a single `status` field was being used to represent both:
 
-## Solution: Status Mapping System
+- **Account status** (active/inactive/suspended)
+- **Onboarding stage** (email confirmation, profile completion, pending approval)
 
-Instead of modifying the database schema (which would require complex migrations), we implemented an application-level mapping system that translates between database status and workflow status.
+This caused confusion and required brittle code-level mapping.
+
+## Solution: Persist onboarding_status separately
+
+We added a new persisted column on `library_users`:
+
+- `status` (account status): `pending | active | inactive | suspended`
+- `onboarding_status` (onboarding stage): `pending_email_confirmation | profile_incomplete | pending_approval | complete`
+
+The frontend prefers `onboarding_status` when present and falls back to derived mapping for backward compatibility.
 
 ### Mapping Logic
 
 ```typescript
-// Database Status → Workflow Status
-'pending' + email_verified: false → 'pending_email_confirmation'
-'pending' + email_verified: true  + profile_completed: false → 'profile_incomplete'
-'pending' + email_verified: true  + profile_completed: true  → 'pending_approval'
-'active'                         → 'active'
-'inactive'                       → 'inactive'
-'suspended'                      → 'suspended'
+// Account Status + Flags → Onboarding Status
+status: 'pending' + email_verified: false → onboarding_status: 'pending_email_confirmation'
+status: 'pending' + email_verified: true  + profile_completed: false → onboarding_status: 'profile_incomplete'
+status: 'pending' + email_verified: true  + profile_completed: true  → onboarding_status: 'pending_approval'
+status: 'active' | 'inactive' | 'suspended' → onboarding_status: 'complete'
 ```
 
 ## Files Modified
@@ -84,6 +90,7 @@ export const getWorkflowStatusLabel = (status: string, email_verified: boolean, 
   "success": true,
   "user": {
     "status": "pending",
+    "onboarding_status": "pending_email_confirmation",
     "workflow_status": "pending_email_confirmation"
   }
 }
@@ -94,8 +101,9 @@ export const getWorkflowStatusLabel = (status: string, email_verified: boolean, 
 {
   "success": true,
   "message": "Email verified successfully! Your account is now pending admin approval.",
-  "workflow_status": "profile_incomplete",
-  "database_status": "pending"
+  "status": "pending",
+  "onboarding_status": "profile_incomplete",
+  "workflow_status": "profile_incomplete"
 }
 ```
 
@@ -121,14 +129,10 @@ export const getWorkflowStatusLabel = (status: string, email_verified: boolean, 
 
 ## Benefits Achieved
 
-1. **✅ No Database Migration Required** - Works with existing constraint
-2. **✅ Proper Workflow Terminology** - Matches documentation
-3. **✅ Clear Status Mapping** - Both database and workflow status provided
-4. **✅ Consistent Across Codebase** - All components use mapping system
-5. **✅ Backward Compatible** - Existing code continues to work
-6. **✅ Type Safety** - Proper TypeScript types for all statuses
-7. **✅ Build Success** - All TypeScript compilation errors resolved
-8. **✅ Deployment Success** - Application deployed and working
+1. **✅ Clear separation** - Account status vs onboarding stage
+2. **✅ DB-authoritative onboarding** - Onboarding stage is stored as a persisted field
+3. **✅ Backward compatible** - Clients can still rely on `workflowStatus` / `workflow_status` when present
+4. **✅ Type safety** - Optional `onboarding_status` added to relevant TS types
 
 ## Testing Results
 
@@ -159,7 +163,7 @@ export const getWorkflowStatusLabel = (status: string, email_verified: boolean, 
 
 ## Maintenance Notes
 
-- All status-related code should use the mapping functions
+- Prefer `onboarding_status` (persisted) as the canonical onboarding stage and fall back when needed
 - New components should import helper functions from `src/constants/status.ts`
 - Database operations should use the actual database status values
 - UI displays should use the workflow status values

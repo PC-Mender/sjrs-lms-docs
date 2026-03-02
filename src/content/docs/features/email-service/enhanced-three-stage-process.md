@@ -14,7 +14,7 @@ The SJRS LMS now features an enhanced three-stage user registration process that
 - **Action**: User registers with email and password
 - **System**: Sends confirmation email with three-stage process explanation
 - **User**: Clicks confirmation link to verify email
-- **Status**: Database status remains `pending`; workflow status is `pending_email_confirmation` until email verification
+- **Status**: Account status remains `pending`; onboarding status is `pending_email_confirmation` until email verification
 
 ### Stage 2: Profile Completion
 - **Action**: User completes profile with required information
@@ -23,13 +23,13 @@ The SJRS LMS now features an enhanced three-stage user registration process that
   - **Professors**: Phone number, stream
   - **Guests**: Phone number, institution/organization
 - **System**: Sends profile completion notification email
-- **Status**: Database status remains `pending`; workflow status changes from `profile_incomplete` to `pending_approval` after profile completion
+- **Status**: Account status remains `pending`; onboarding status changes from `profile_incomplete` to `pending_approval` after profile completion
 
 ### Stage 3: Admin Approval
 - **Action**: Admin reviews user profile and information
 - **Options**: Approve or reject the account
 - **System**: Sends approval/rejection notification email
-- **Status**: Changes to `active` (approved) or `inactive` (rejected)
+- **Status**: Account status changes to `active` (approved) or `inactive` (rejected). Onboarding status becomes `complete`.
 
 ## 📧 Email Templates
 

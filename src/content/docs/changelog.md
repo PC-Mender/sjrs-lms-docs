@@ -1,9 +1,46 @@
 ---
 title: Changelog
 description: Detailed history of changes and improvements
+slug: changelog
 ---
 
 ## 🆕 **Latest Updates**
+
+### **Version 3.49.0** ⭐ **CURRENT** (March 2, 2026)
+
+#### **Onboarding Status & Account Management** ⭐ **NEW**
+The SJRS LMS now features **persistent onboarding status tracking** and improved account status visibility in Administration pages.
+
+**Key Features:**
+- ✅ **Onboarding Status Persistence**: New D1 migration to track `library_users.onboarding_status`
+- ✅ **Account Status Tracking**: Separate display of Account Status and Onboarding Status in admin lists
+- ✅ **Updated Admin Lists**: Professors, Students, Guests, and Members pages now show comprehensive status information
+- ✅ **Improved Members Directory**: Enhanced 3-up grid layout with clearer row grouping for user type, account status, onboarding status, phone, registration year
+- ✅ **Guest Edit Modal**: Tightened onboarding selector to onboarding-only values
+- ✅ **Enhanced Handlers**: New `get-professor-meta` and `get-student-meta` endpoints for metadata enrichment
+
+**Database Changes:**
+- Migration: `2026-03-01_add-onboarding-status-to-library-users.sql`
+- New field: `library_users.onboarding_status` with automatic backfill
+
+**API Updates:**
+- New handlers: `functions/api/professors/handlers/get-professor-meta.ts`
+- New handlers: `functions/api/students/handlers/get-student-meta.ts`
+- Enhanced status check services with helpers and next-steps logic
+
+#### **Performance Improvements**
+- ✅ **Professors Table**: Optimized table rendering and query performance
+- ✅ **Toolbar Enhancement**: Added avatar support for improved table UI
+- ✅ **Code Refactoring**: General refactoring for improved maintainability
+
+#### **Recent Patches (v3.48.22 - v3.48.15)**
+- ✅ Account Status Updates & Fixes
+- ✅ Profile Completion Workflow Refinements
+- ✅ Alignment of Students and Guests pages with Professor page patterns
+- ✅ Professor Edit Modal Fixes
+- ✅ TypeScript Error Resolutions
+
+---
 
 ### **Unified Cloudflare Workers Deployment** ⭐ **NEW**
 The SJRS LMS has been **migrated from Cloudflare Pages to a unified Cloudflare Workers deployment** with Static Assets, providing a simplified architecture and improved performance.

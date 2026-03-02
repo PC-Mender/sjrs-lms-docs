@@ -1,14 +1,26 @@
 ---
-import config from 'virtual:starlight/user-config';
 import { Icon } from '@astrojs/starlight/components';
 
-const links = config.social || [];
+// Type for social links
+interface SocialLink {
+	label: string;
+	href: string;
+	icon: string;
+}
+
+// Social links from astro.config
+const socialLinks: SocialLink[] = [
+	{ label: 'Open App', href: 'https://staging.yourdomain.com', icon: 'external' },
+	{ label: 'GitHub', href: 'https://github.com/PC-Mender/sjrs-lms-docs', icon: 'github' },
+];
+
+const links = socialLinks;
 ---
 
 {
 	links.length > 0 && (
 		<>
-			{links.map(({ label, href, icon }) => (
+			{links.map(({ label, href, icon }: SocialLink) => (
 				<a 
           href={href} 
           class="sl-flex"
@@ -16,7 +28,8 @@ const links = config.social || [];
           rel="me noopener noreferrer"
         >
 					<span class="sr-only">{label}</span>
-					<Icon name={icon} />
+					<Icon name={icon as any} />
+				</a>
 				</a>
 			))}
 		</>

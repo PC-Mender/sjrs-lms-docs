@@ -34,6 +34,7 @@ This document provides detailed documentation for the most important SJRS LMS AP
     "role": "Student",
     "status": "active",
     "email_verified": true,
+    "onboarding_status": "complete",
     "workflowStatus": "active"
   },
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
@@ -41,7 +42,8 @@ This document provides detailed documentation for the most important SJRS LMS AP
 ```
 
 Note:
-- `workflowStatus`: A user-friendly workflow state derived from `status` and verification flags.
+- `onboarding_status`: Persisted onboarding stage (`pending_email_confirmation | profile_incomplete | pending_approval | complete`).
+- `workflowStatus`: Compatibility field used by some clients. When present, it should match `onboarding_status` for onboarding stages, or match `status` for terminal states.
   - `pending_email_confirmation`
   - `profile_incomplete`
   - `pending_approval`
@@ -116,6 +118,7 @@ X-XSRF-TOKEN: <csrf_token>
     "phone": "+1234567890",
     "stream": "CSE",
     "email_verified": true,
+    "onboarding_status": "complete",
     "created_at": "2024-01-15T10:30:00Z",
     "updated_at": "2024-01-15T10:30:00Z",
     "workflowStatus": "active"
