@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [Unreleased]
+
+### Documentation
+
+* **auth:** Document login validation workflow and account recovery paths
+  - Added comprehensive login validation decision table to auth-flow.md
+  - Documented account lifecycle and status management
+  - Added 45-day auto-deactivation rules and email verification workflow
+  - Documented recovery paths for email-verified accounts
+  - Added account status troubleshooting to API troubleshooting guide
+  - Documented 2026-03-02 fix for stuck users with verified email
+  - Files updated:
+    - `src/content/docs/development/auth-flow.md` (new section: Login Validation & Account Lifecycle)
+    - `src/content/docs/api/troubleshooting-guide.md` (new section: Account Status & Email Verification Issues)
+
 ### [1.1.8](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.7...v1.1.8) (2026-03-02)
 
 

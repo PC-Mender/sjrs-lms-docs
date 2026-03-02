@@ -49,6 +49,101 @@ This document captures the finalized login flow, route-guard behavior, and suppo
 - Visiting public routes while authenticated should immediately redirect to the role dashboard.
 - Superusers should not be routed to `/inactive`.
 
+## Login Validation & Account Lifecycle
+
+**Reference:** `functions/middleware/auth/users/validation.ts` - `validateUserCredentials`
+
+### Account Status Values
+- **`pending`**: User registered but not yet fully onboarded (may be awaiting email verification, profile completion, or admin approval)
+- **`active`**: User has completed all onboarding steps and been approved by admin
+- **`inactive`**: Account deactivated (either auto-deactivated after 45 days with no email verification, or manually deactivated by admin)
+- **`suspended`**: Account suspended by admin (blocked from login)
+
+### Login Validation Decision Table
+
+This table shows precisely what happens during login based on account status, email verification, and profile completion state:
+
+| Status | Email Verified | Profile Complete | Age > 45 Days | Has Last Login | **Outcome** | **Error Code** | **Next Action** |
+|--------|----------------|------------------|---------------|----------------|-------------|----------------|-----------------|
+| `suspended` | Any | Any | Any | Any | ❌ **BLOCKED** | `ACCOUNT_SUSPENDED` | Contact admin |
+| `inactive` | ❌ No | Any | Any | Any | ❌ **BLOCKED** | `ACCOUNT_INACTIVE` | Reverify email |
+| `inactive` | ✅ Yes | ❌ No | Any | Any | ✅ **ALLOWED** | - | → `/profile-completion` (with `requiresProfileCompletion=true`) |
+| `inactive` | ✅ Yes | ✅ Yes | Any | Any | ✅ **ALLOWED** | - | → Role dashboard (recovery path) |
+| `pending` | ❌ No | Any | ✅ Yes | ❌ No | ❌ **AUTO-DEACTIVATED** | `ACCOUNT_INACTIVE` | Status changed to `inactive`, login blocked |
+| `pending` | ❌ No | Any | ❌ No | Any | ❌ **BLOCKED** | `EMAIL_NOT_CONFIRMED` | Check email for verification link |
+| `pending` | ✅ Yes | ❌ No | Any | Any | ✅ **ALLOWED** | - | → `/profile-completion` (with `requiresProfileCompletion=true`) |
+| `pending` | ✅ Yes | ✅ Yes | Any | Any | ❌ **BLOCKED** | `PENDING_APPROVAL` | Wait for admin approval |
+| `active` | Any | Any | Any | Any | ✅ **ALLOWED** | - | → Role dashboard |
+
+### Auto-Deactivation Rules
+
+**45-Day Auto-Deactivation (Lines 94-101):**
+- **Triggers when:** 
+  - Account status is `pending`
+  - Email is **NOT** verified (`email_verified = 0`)
+  - No successful login ever recorded (`last_login IS NULL`)
+  - Account age exceeds 45 days since `created_at`
+- **Action:** Status changed from `pending` to `inactive`
+- **Rationale:** User registered but never completed email verification = abandoned account
+
+**Important:** Users with verified email (`email_verified = 1`) are **never** auto-deactivated, even if they haven't completed their profile or logged in. This ensures email-verified users always have a recovery path.
+
+### Email Verification & Profile Completion Workflow
+
+#### Full Onboarding Flow
+1. **Registration** → Status: `pending`, `email_verified=0`, `onboarding_status='pending_email_confirmation'`
+2. **Email Verification** → `email_verified=1`, `onboarding_status='profile_incomplete'`
+3. **Profile Completion** → Profile data inserted into type-specific table (`students`, `professors`, `guests`), `onboarding_status='pending_approval'`
+4. **Admin Approval** → Status: `active`, `onboarding_status='complete'`
+
+#### Recovery Paths (Added 2026-03-02)
+
+**Problem:** Users who verified their email but didn't immediately complete their profile were auto-deactivated after 45 days, with no way to recover without admin intervention.
+
+**Solution (Lines 109-172):**
+1. **Inactive + Email Verified + Profile Incomplete (Line 109-139):**
+   - Allow login with `requiresProfileCompletion: true` flag
+   - Frontend routes to `/profile-completion`
+   - User can complete profile to move to `pending_approval` status
+
+2. **Inactive + Email Verified + Profile Complete (Line 145-172):**
+   - Allow full login (recovery path)
+   - Frontend routes to role dashboard
+   - User can access their account normally
+
+This ensures users with verified email addresses **always** have a path to recover their account, even if previously auto-deactivated.
+
+### Frontend Routing After Login
+
+Based on login response flags:
+
+| Response Flag | Frontend Routing |
+|--------------|------------------|
+| `requiresProfileCompletion: true` | Navigate to `/profile-completion` |
+| `workflowStatus: 'pending_approval'` | Navigate to `/pending-approval` |
+| `status: 'active'` | Navigate to role-based dashboard |
+
+**Implementation:** 
+- Backend: `functions/api/auth/login.ts` extracts `requiresProfileCompletion` from `validateUserCredentials` result
+- Backend: `functions/api/auth/services/login-responses.ts` includes flag in response body
+- Frontend: `src/pages/login.tsx` (lines 306-354) checks conditions and navigates appropriately
+
+### Code References
+
+- **Validation Logic:** `functions/middleware/auth/users/validation.ts` - Lines 60-180
+- **Login Handler:** `functions/api/auth/login.ts` - Lines 85-115
+- **Login Response Builder:** `functions/api/auth/services/login-responses.ts`
+- **Profile Completion:** `functions/api/auth/email-confirmation.ts` - `handleCompleteProfile`
+- **Frontend Login:** `src/pages/login.tsx`
+- **Profile Completion Page:** `src/pages/profile-completion.tsx`
+
+### Historical Context
+
+**2026-03-02 Fix:** Corrected auto-deactivation and recovery paths
+- **Before:** All `inactive` accounts blocked from login (error 5013)
+- **After:** `inactive` accounts with `email_verified=1` allowed to log in and complete onboarding
+- **Impact:** 3 stuck users (IDs 2, 3, 7) recovered
+
 ## Change Control
 - Do not alter this flow unless a defect is confirmed.
 - Any proposed changes must:
