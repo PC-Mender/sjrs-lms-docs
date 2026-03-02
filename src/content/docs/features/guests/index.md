@@ -150,7 +150,7 @@ The module integrates with the existing permission system:
 
 ## 📚 Related Documentation
 
-- **[Account Status & Onboarding Management](/features/account-management/)** - Comprehensive guide to status tracking
+- **[Account Status & Onboarding Management](/features/account-management)** - Comprehensive guide to status tracking
 - [API Patterns](../../api/api-patterns.md)
 - [Permission System](../../development/roles-and-permissions.md)
 - [User Management](../users/index.md)

@@ -180,7 +180,7 @@ import { getStatusColor } from './components/features/members/utils/member.utils
 
 ## Related Documentation
 
-- **[Account Status & Onboarding Management](/features/account-management/)** - Comprehensive guide to dual status tracking
+- **[Account Status & Onboarding Management](/features/account-management)** - Comprehensive guide to dual status tracking
 - **[Students Module](/features/students/)** - Student administration features
 - **[Guests Module](/features/guests/)** - Guest user management
 3. **Testing**: Add comprehensive unit and integration tests

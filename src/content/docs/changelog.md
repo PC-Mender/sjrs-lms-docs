@@ -4,6 +4,8 @@ description: Detailed history of changes and improvements
 slug: changelog
 ---
 
+> **Note:** This page highlights major updates and recent patches. For a complete list of all technical changes since inception, see the **[Full Technical Changelog](/full-changelog)**.
+
 ## 🆕 **Latest Updates**
 
 ### **Version 3.50.3** ⭐ **CURRENT** (March 2, 2026)

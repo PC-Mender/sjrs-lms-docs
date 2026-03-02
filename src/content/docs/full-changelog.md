@@ -1,0 +1,4213 @@
+---
+title: Full Technical Changelog
+description: Complete history of all changes and commits since project inception.
+slug: full-changelog
+---
+
+# Full Technical Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+[← Back to Highlights](/changelog)
+
+
+### [3.50.3](https://github.com/PC-Mender/sjrslms/compare/v3.50.2...v3.50.3) (2026-03-02)
+
+
+### Code Refactoring
+
+* move FAQ to docs site and simplify help system ([32190e2](https://github.com/PC-Mender/sjrslms/commit/32190e277d5cd11d9ad525d93588c4fb3e9d9249))
+
+### [3.50.2](https://github.com/PC-Mender/sjrslms/compare/v3.50.1...v3.50.2) (2026-03-02)
+
+
+### Bug Fixes
+
+* **auth:** harden /api/auth/me profile loading with schema-safe fallbacks ([8f177bd](https://github.com/PC-Mender/sjrslms/commit/8f177bdd8d25d13fe4f48da5eeae19a2c789619f))
+
+### [3.50.1](https://github.com/PC-Mender/sjrslms/compare/v3.50.0...v3.50.1) (2026-03-02)
+
+
+### Code Refactoring
+
+* split guest-profile-steps into focused step components ([14b96d8](https://github.com/PC-Mender/sjrslms/commit/14b96d8e78e87d22e67a98a612a833a296bcf45d))
+
+## [3.50.0](https://github.com/PC-Mender/sjrslms/compare/v3.49.1...v3.50.0) (2026-03-02)
+
+
+### Features
+
+* add location API endpoints with country-state-city integration ([c8b9307](https://github.com/PC-Mender/sjrslms/commit/c8b9307eca1cc94885591bd5ae9301105e51be96))
+* add location fields to database schema ([fe35514](https://github.com/PC-Mender/sjrslms/commit/fe35514b5792f8ba9946794ce1d8eea7dc171812))
+* add location fields to profile forms with cascading selectors ([1ffd820](https://github.com/PC-Mender/sjrslms/commit/1ffd820290049ab6df2f3d9c43c327e845dfc25e))
+* add location fields to user type definitions and contexts ([4f53d50](https://github.com/PC-Mender/sjrslms/commit/4f53d50fbbaf610fa9ead082d3bd5638bfe85e0d))
+* display location and about fields on pending-approval page ([98d85b9](https://github.com/PC-Mender/sjrslms/commit/98d85b923b361228704f06e7b6ac09e891078b7c))
+
+
+### Bug Fixes
+
+* enhance profile completion workflow with comprehensive field validation ([634038f](https://github.com/PC-Mender/sjrslms/commit/634038feab8362f6bdc00b1c0fbd53699d346413))
+* redirect to login after logout from public pages ([7736452](https://github.com/PC-Mender/sjrslms/commit/77364528b84bf7d2acf6d17f1fe260c3a61129f2))
+
+### [3.49.1](https://github.com/PC-Mender/sjrslms/compare/v3.49.0...v3.49.1) (2026-03-02)
+
+
+### Bug Fixes
+
+* email verification workflow and profile completion issues ([1c98ea4](https://github.com/PC-Mender/sjrslms/commit/1c98ea4c875819f352209bff6ddaeae4bc3870b7))
+
+
+### Performance Improvements
+
+* Update modal dismissal behaviour in login ([1629ee3](https://github.com/PC-Mender/sjrslms/commit/1629ee38bde44a5e4ec1f8382a037d1d451dc503))
+
+
+### Code Refactoring
+
+* simplify pending approval page UX ([ac23733](https://github.com/PC-Mender/sjrslms/commit/ac23733a4bd9a69c38a4437fc8126332f63dfd71))
+
+## [3.49.0](https://github.com/PC-Mender/sjrslms/compare/v3.48.22...v3.49.0) (2026-03-02)
+
+
+### Features
+
+* persist onboarding status & show account in Administration ([f171d30](https://github.com/PC-Mender/sjrslms/commit/f171d30923a755b098243239eeb1e1a98d0d26c7))
+
+
+### Performance Improvements
+
+* Improvements to Professors table ([b0fca54](https://github.com/PC-Mender/sjrslms/commit/b0fca54d5cff61a975da9ba71d7d4f5a52bc7a11))
+
+
+### Code Refactoring
+
+* Code refactored ([4e7007e](https://github.com/PC-Mender/sjrslms/commit/4e7007eba9a8291e92b416f5cf80c4980ce7df33))
+
+### [3.48.22](https://github.com/PC-Mender/sjrslms/compare/v3.48.21...v3.48.22) (2026-02-28)
+
+
+### Code Refactoring
+
+* Move Docs to a separate repo ([8537349](https://github.com/PC-Mender/sjrslms/commit/85373493673c83dedfd4648c38dd500da6c96125))
+
+### [3.48.21](https://github.com/PC-Mender/sjrslms/compare/v3.48.20...v3.48.21) (2026-02-27)
+
+
+### Performance Improvements
+
+* Account status updates & fixes ([f34610e](https://github.com/PC-Mender/sjrslms/commit/f34610e20283e8990cb112073dfd578916e7b808))
+
+### [3.48.20](https://github.com/PC-Mender/sjrslms/compare/v3.48.19...v3.48.20) (2026-02-26)
+
+
+### Performance Improvements
+
+* Workflow update to pending verfication ([484744c](https://github.com/PC-Mender/sjrslms/commit/484744cfcb63f5864541f91854395decf454d363))
+
+
+### Code Refactoring
+
+* code refactor for profile completion ([fc24d68](https://github.com/PC-Mender/sjrslms/commit/fc24d687cdf1bb55001c120bf4efd43e355b5e41))
+
+### [3.48.19](https://github.com/PC-Mender/sjrslms/compare/v3.48.18...v3.48.19) (2026-02-26)
+
+
+### Bug Fixes
+
+* issues with Profile completion ([353aedb](https://github.com/PC-Mender/sjrslms/commit/353aedb8d41e960745a530f30bdb8892769f0a53))
+
+### [3.48.18](https://github.com/PC-Mender/sjrslms/compare/v3.48.17...v3.48.18) (2026-02-26)
+
+
+### CI
+
+* remove dead code ([c067593](https://github.com/PC-Mender/sjrslms/commit/c067593ad368a2a3302e381ae960f61064bb927d))
+
+### [3.48.17](https://github.com/PC-Mender/sjrslms/compare/v3.48.16...v3.48.17) (2026-02-26)
+
+
+### Performance Improvements
+
+* toolbar & add avatar for table ([3edea8d](https://github.com/PC-Mender/sjrslms/commit/3edea8dd54935b6c2649642a24b450abe3f9cf59))
+
+### [3.48.16](https://github.com/PC-Mender/sjrslms/compare/v3.48.15...v3.48.16) (2026-02-26)
+
+
+### CI
+
+* remove two non-necessary  fields ([246e034](https://github.com/PC-Mender/sjrslms/commit/246e034e645bff0e5ce5de36fc38f38a4c3823a1))
+
+### [3.48.15](https://github.com/PC-Mender/sjrslms/compare/v3.48.14...v3.48.15) (2026-02-25)
+
+
+### Bug Fixes
+
+* align students and guests pages like professors ([b82fe11](https://github.com/PC-Mender/sjrslms/commit/b82fe113200125b546bd216d1da5dc064e9151cc))
+* lint issues ([ad47831](https://github.com/PC-Mender/sjrslms/commit/ad478314c57776dd6200676fd068388d02d74a1c))
+
+### [3.48.14](https://github.com/PC-Mender/sjrslms/compare/v3.48.13...v3.48.14) (2026-02-25)
+
+
+### Bug Fixes
+
+* issues with professor edit ([02aeb5a](https://github.com/PC-Mender/sjrslms/commit/02aeb5a9f55cced1828003d4ddc3825b982e122f))
+
+### [3.48.13](https://github.com/PC-Mender/sjrslms/compare/v3.48.12...v3.48.13) (2026-02-23)
+
+
+### Bug Fixes
+
+* typescript errors fixed ([a12bccc](https://github.com/PC-Mender/sjrslms/commit/a12bccc539b08b506d7c1a1d941ac71a07939822))
+
+### [3.48.12](https://github.com/PC-Mender/sjrslms/compare/v3.48.11...v3.48.12) (2026-02-23)
+
+
+### Bug Fixes
+
+* notification marked refresh icon ([7333461](https://github.com/PC-Mender/sjrslms/commit/73334612f644a8fa4f06723e84089fc0dd2c041c))
+
+### [3.48.11](https://github.com/PC-Mender/sjrslms/compare/v3.48.10...v3.48.11) (2026-02-23)
+
+
+### Bug Fixes
+
+* permission issues fixed ([1820f89](https://github.com/PC-Mender/sjrslms/commit/1820f8918a2439d379939aed0cc84e263640fe90))
+
+### [3.48.10](https://github.com/PC-Mender/sjrslms/compare/v3.48.9...v3.48.10) (2026-02-23)
+
+
+### Bug Fixes
+
+* issues with notification ([2328daa](https://github.com/PC-Mender/sjrslms/commit/2328daacb5698cdad3202ed52d49a2f8ab9c09f2))
+
+### [3.48.9](https://github.com/PC-Mender/sjrslms/compare/v3.48.8...v3.48.9) (2026-02-23)
+
+
+### Performance Improvements
+
+* updates to cart & side drawer ([0705473](https://github.com/PC-Mender/sjrslms/commit/07054738f931203ac304b1723766ed4db75e37fd))
+
+### [3.48.8](https://github.com/PC-Mender/sjrslms/compare/v3.48.7...v3.48.8) (2026-02-23)
+
+
+### Bug Fixes
+
+* minor fixes applied ([9280da0](https://github.com/PC-Mender/sjrslms/commit/9280da037a99f3241f66b484ee25addd4bd59fc3))
+
+### [3.48.7](https://github.com/PC-Mender/sjrslms/compare/v3.48.6...v3.48.7) (2026-02-22)
+
+
+### Performance Improvements
+
+* updates to docs homepage ([6b9bbb8](https://github.com/PC-Mender/sjrslms/commit/6b9bbb894352f95ec6695fbfe86b2c0a2c1ba3f1))
+
+
+### Code Refactoring
+
+* code refactored ([6d9b88e](https://github.com/PC-Mender/sjrslms/commit/6d9b88e8ae2683d7b91a4a7b83f75cc70c71b29b))
+
+### [3.48.6](https://github.com/PC-Mender/sjrslms/compare/v3.48.5...v3.48.6) (2026-02-20)
+
+
+### Performance Improvements
+
+* Updates to features, bug fixes & docs page show ([0f8778a](https://github.com/PC-Mender/sjrslms/commit/0f8778af655e26179951343a5982b267dcb2c676))
+
+
+### Code Refactoring
+
+* code refactored ([a94f6e1](https://github.com/PC-Mender/sjrslms/commit/a94f6e120013ae5188ef1009dae016a19b2c1900))
+
+### [3.48.5](https://github.com/PC-Mender/sjrslms/compare/v3.48.4...v3.48.5) (2026-02-19)
+
+
+### Bug Fixes
+
+* applied dash widget issues ([743972b](https://github.com/PC-Mender/sjrslms/commit/743972b69f2695903dc9f9618b79170118574972))
+* applied notification fixes ([2b9067d](https://github.com/PC-Mender/sjrslms/commit/2b9067d847784a949a705af7d593ce2094f53de2))
+
+### [3.48.4](https://github.com/PC-Mender/sjrslms/compare/v3.48.3...v3.48.4) (2026-02-18)
+
+
+### CI
+
+* remove a widget ([930cd0a](https://github.com/PC-Mender/sjrslms/commit/930cd0a7cae060f00b21b63d8b029845236405ed))
+
+### [3.48.3](https://github.com/PC-Mender/sjrslms/compare/v3.48.2...v3.48.3) (2026-02-18)
+
+
+### Performance Improvements
+
+* Updates to Members page ([bf03748](https://github.com/PC-Mender/sjrslms/commit/bf03748d2113343ad71fe0c0bd822b8ecf2b7c02))
+
+### [3.48.2](https://github.com/PC-Mender/sjrslms/compare/v3.48.1...v3.48.2) (2026-02-17)
+
+
+### Performance Improvements
+
+* improve permissions for superuser & dash config updates ([4c97c3f](https://github.com/PC-Mender/sjrslms/commit/4c97c3f745be8c2de80bf9abb8ae1067680afd2f))
+
+
+### Code Refactoring
+
+* code refactored ([005011b](https://github.com/PC-Mender/sjrslms/commit/005011bdc548731a1a2bc5ec0620f99a048c92b7))
+
+### [3.48.1](https://github.com/PC-Mender/sjrslms/compare/v3.48.0...v3.48.1) (2026-02-17)
+
+
+### Code Refactoring
+
+* code refactor & fixes ([edeab32](https://github.com/PC-Mender/sjrslms/commit/edeab325a46891a8a3a4f6e1de7b17d261dfd32b))
+
+## [3.48.0](https://github.com/PC-Mender/sjrslms/compare/v3.47.5...v3.48.0) (2026-02-17)
+
+
+### Features
+
+* Unified Dashboards ([4db2c9a](https://github.com/PC-Mender/sjrslms/commit/4db2c9aa4700fee53d7bcee89e6263dce4d52cf7))
+
+### [3.47.5](https://github.com/PC-Mender/sjrslms/compare/v3.47.4...v3.47.5) (2026-02-16)
+
+
+### Bug Fixes
+
+* dashboard issues partially fixed ([1f44e35](https://github.com/PC-Mender/sjrslms/commit/1f44e354cded6313f594dd396ad8f630b004fa6a))
+
+### [3.47.4](https://github.com/PC-Mender/sjrslms/compare/v3.47.3...v3.47.4) (2026-02-15)
+
+
+### Performance Improvements
+
+* search & filter updates to pages ([871ca25](https://github.com/PC-Mender/sjrslms/commit/871ca250b622985d1da1e15be2782abd959e2f82))
+* updates to filter in members page ([e859974](https://github.com/PC-Mender/sjrslms/commit/e85997425ee3a8871b86117681f71d1a7a0f7505))
+
+### [3.47.3](https://github.com/PC-Mender/sjrslms/compare/v3.47.2...v3.47.3) (2026-02-15)
+
+
+### Performance Improvements
+
+* update dash cards in superuser ([0ccd0d2](https://github.com/PC-Mender/sjrslms/commit/0ccd0d20958356456f73023b072b30609b961063))
+
+### [3.47.2](https://github.com/PC-Mender/sjrslms/compare/v3.47.1...v3.47.2) (2026-02-15)
+
+
+### Performance Improvements
+
+* improvements to journal page ([ca0a46d](https://github.com/PC-Mender/sjrslms/commit/ca0a46d03408dd4f461d6335f43b92c978a8d341))
+
+### [3.47.1](https://github.com/PC-Mender/sjrslms/compare/v3.47.0...v3.47.1) (2026-02-14)
+
+
+### CI
+
+* cleanup redundant files ([27fa0d2](https://github.com/PC-Mender/sjrslms/commit/27fa0d2d94de00163811e95522e8f5a1d44bd1bb))
+
+## [3.47.0](https://github.com/PC-Mender/sjrslms/compare/v3.46.63...v3.47.0) (2026-02-14)
+
+
+### Features
+
+* Catalogue as separate permission matrix ([9b7b514](https://github.com/PC-Mender/sjrslms/commit/9b7b5142320eaa5caea1b15efd755184e0c21e70))
+
+### [3.46.63](https://github.com/PC-Mender/sjrslms/compare/v3.46.62...v3.46.63) (2026-02-14)
+
+
+### Bug Fixes
+
+* Book route issues fixed ([0611860](https://github.com/PC-Mender/sjrslms/commit/06118606107a65c39e14d509325894924a375c69))
+* missing searchbar added ([295664e](https://github.com/PC-Mender/sjrslms/commit/295664efe84fe0a1e20f33f6d9e0c5d896c7e0f0))
+
+
+### CI
+
+* remove legacy wrappers & update to modern ([1e74216](https://github.com/PC-Mender/sjrslms/commit/1e742168f9d236271cdd109643de206345541608))
+
+### [3.46.62](https://github.com/PC-Mender/sjrslms/compare/v3.46.61...v3.46.62) (2026-02-14)
+
+
+### Performance Improvements
+
+* improvements to book reviews ([e4302dd](https://github.com/PC-Mender/sjrslms/commit/e4302ddfa60cbe987e67e495d1c39c197561ef13))
+
+### [3.46.61](https://github.com/PC-Mender/sjrslms/compare/v3.46.60...v3.46.61) (2026-02-14)
+
+
+### Performance Improvements
+
+* performance updates to publication page ([b838f43](https://github.com/PC-Mender/sjrslms/commit/b838f434d7e0c1d1de273763424c4f877abeb58b))
+
+
+### Code Refactoring
+
+* code refactor for publications ([db02ef0](https://github.com/PC-Mender/sjrslms/commit/db02ef016682c5e3b3913e56ef309fad643b78b3))
+
+### [3.46.60](https://github.com/PC-Mender/sjrslms/compare/v3.46.59...v3.46.60) (2026-02-13)
+
+
+### Performance Improvements
+
+* some improvements to books page ([abe852c](https://github.com/PC-Mender/sjrslms/commit/abe852caaad0d9609e6509a08afde53caa068bad))
+
+### [3.46.59](https://github.com/PC-Mender/sjrslms/compare/v3.46.58...v3.46.59) (2026-02-13)
+
+
+### Performance Improvements
+
+* updates to books & copies page ([493a727](https://github.com/PC-Mender/sjrslms/commit/493a727a6e1643094fd07be4ae38709afc61e978))
+
+### [3.46.58](https://github.com/PC-Mender/sjrslms/compare/v3.46.57...v3.46.58) (2026-02-13)
+
+
+### Performance Improvements
+
+* updates to Book copies page ([eefd6e5](https://github.com/PC-Mender/sjrslms/commit/eefd6e52fb46c3fce405472dc23132cbe36ae4be))
+
+### [3.46.57](https://github.com/PC-Mender/sjrslms/compare/v3.46.56...v3.46.57) (2026-02-13)
+
+
+### Performance Improvements
+
+* add book counts for authors ([df8df59](https://github.com/PC-Mender/sjrslms/commit/df8df598d987ccd71cd7ff5c11a7a7701a13d37d))
+* Improvements to books page ([62fb075](https://github.com/PC-Mender/sjrslms/commit/62fb075cb8d4238720681af99947806795fc947f))
+* make search serverside ([e1b8709](https://github.com/PC-Mender/sjrslms/commit/e1b87095552bdb68e8061e490ee18623e1fe5999))
+
+### [3.46.56](https://github.com/PC-Mender/sjrslms/compare/v3.46.55...v3.46.56) (2026-02-12)
+
+
+### CI
+
+* cleanup legacy code ([9161474](https://github.com/PC-Mender/sjrslms/commit/9161474208a0e245c955e4c376924dc4c757cc56))
+
+### [3.46.55](https://github.com/PC-Mender/sjrslms/compare/v3.46.54...v3.46.55) (2026-02-12)
+
+
+### Performance Improvements
+
+* refactor, performance updates to author page ([8189c1f](https://github.com/PC-Mender/sjrslms/commit/8189c1f762284ec3267c2b254fd49fc32591ab37))
+
+### [3.46.54](https://github.com/PC-Mender/sjrslms/compare/v3.46.51...v3.46.54) (2026-02-11)
+
+### [3.46.53](https://github.com/PC-Mender/sjrslms/compare/v3.46.52...v3.46.53) (2026-02-11)
+
+### [3.46.52](https://github.com/PC-Mender/sjrslms/compare/v3.46.51...v3.46.52) (2026-02-09)
+
+
+### CI
+
+* reduce chunk output ([8afc0d3](https://github.com/PC-Mender/sjrslms/commit/8afc0d3fddddbca57ccf18444af2e99a6a6e11b9))
+
+### [3.46.51](https://github.com/PC-Mender/sjrslms/compare/v3.46.50...v3.46.51) (2026-02-09)
+
+
+### Bug Fixes
+
+* fix ant design deprecated items ([fd39041](https://github.com/PC-Mender/sjrslms/commit/fd39041863258fee1c155352d9993364ff04d417))
+
+### [3.46.50](https://github.com/PC-Mender/sjrslms/compare/v3.46.49...v3.46.50) (2026-02-09)
+
+
+### Bug Fixes
+
+* downgraded eslint to ver9.0 ([6f17433](https://github.com/PC-Mender/sjrslms/commit/6f17433e99e9e821772524a5a2ab0e0f066e9275))
+
+
+### Build System
+
+* update packages & necessary file changes ([6516724](https://github.com/PC-Mender/sjrslms/commit/6516724c9970762d3553bcb06700bb3965854c7d))
+
+
+### Code Refactoring
+
+* code refactored ([f465532](https://github.com/PC-Mender/sjrslms/commit/f465532a169e40a9343fce604b1ac5e59bdb855d))
+
+### [3.46.49](https://github.com/PC-Mender/sjrslms/compare/v3.46.48...v3.46.49) (2026-02-09)
+
+
+### CI
+
+* clean up & packages update ([d206dd3](https://github.com/PC-Mender/sjrslms/commit/d206dd3f4717853d1db98c8849aa2ccb16cb3d0d))
+
+### [3.46.48](https://github.com/PC-Mender/sjrslms/compare/v3.46.47...v3.46.48) (2026-02-09)
+
+
+### Bug Fixes
+
+* remove unused imports & declarations ([4a98b7e](https://github.com/PC-Mender/sjrslms/commit/4a98b7e0edc86d969fe9595209b9c9d1f7ab5738))
+
+
+### Code Refactoring
+
+* system logs export segregation ([0f3af61](https://github.com/PC-Mender/sjrslms/commit/0f3af612f5fef9809d82a4c7301c4556c25c18f5))
+
+### [3.46.47](https://github.com/PC-Mender/sjrslms/compare/v3.46.46...v3.46.47) (2026-02-09)
+
+
+### Performance Improvements
+
+* performance improvements to system logger ([a2f9693](https://github.com/PC-Mender/sjrslms/commit/a2f96933bf9ce4555c8009ac73fbd7ab2816ed3f))
+
+
+### CI
+
+* move permission params to index ([7784aee](https://github.com/PC-Mender/sjrslms/commit/7784aeecf32edf99c2fba59c785162ddc5b35d2d))
+* remove icons ([5769b37](https://github.com/PC-Mender/sjrslms/commit/5769b37f805708c4e0659d210fe255f19b5cc767))
+
+### [3.46.46](https://github.com/PC-Mender/sjrslms/compare/v3.46.45...v3.46.46) (2026-02-07)
+
+
+### Bug Fixes
+
+* remove unused variables ([a5a93d8](https://github.com/PC-Mender/sjrslms/commit/a5a93d8d3032179647106b9663355cf92ddbbe98))
+
+### [3.46.45](https://github.com/PC-Mender/sjrslms/compare/v3.46.44...v3.46.45) (2026-02-07)
+
+
+### Performance Improvements
+
+* Performance improvements to migration & permission features ([f8a69fa](https://github.com/PC-Mender/sjrslms/commit/f8a69fa9d55390198954b5e4510e827352c12add))
+
+### [3.46.44](https://github.com/PC-Mender/sjrslms/compare/v3.46.43...v3.46.44) (2026-02-07)
+
+
+### Bug Fixes
+
+* minor patches ([6ac1fb4](https://github.com/PC-Mender/sjrslms/commit/6ac1fb483ff9a0cc47208fd11213fb431ce4d5c5))
+
+### [3.46.43](https://github.com/PC-Mender/sjrslms/compare/v3.46.42...v3.46.43) (2026-02-07)
+
+
+### Performance Improvements
+
+* updates to institution settings ([bde0734](https://github.com/PC-Mender/sjrslms/commit/bde07348a9023ae190af62f4049ce773d208d04d))
+
+### [3.46.42](https://github.com/PC-Mender/sjrslms/compare/v3.46.41...v3.46.42) (2026-02-07)
+
+
+### Performance Improvements
+
+* improvements to roles page ([4aaadf4](https://github.com/PC-Mender/sjrslms/commit/4aaadf4a8d38aafb8c8d47387dd4a40c4bb7facc))
+
+### [3.46.41](https://github.com/PC-Mender/sjrslms/compare/v3.46.40...v3.46.41) (2026-02-07)
+
+
+### Performance Improvements
+
+* improvements to badges & catalog ([5ba5c75](https://github.com/PC-Mender/sjrslms/commit/5ba5c7550396e4bdfec916c2e9112287381e8afd))
+
+### [3.46.40](https://github.com/PC-Mender/sjrslms/compare/v3.46.39...v3.46.40) (2026-02-06)
+
+
+### Bug Fixes
+
+* issues with test items ([81d2b60](https://github.com/PC-Mender/sjrslms/commit/81d2b60b2e7a9d1b518753557eb1038ee065dc57))
+
+### [3.46.39](https://github.com/PC-Mender/sjrslms/compare/v3.46.38...v3.46.39) (2026-02-06)
+
+
+### Performance Improvements
+
+* improvements to members, guest pages ([ed05644](https://github.com/PC-Mender/sjrslms/commit/ed056442144c829a62a3a3b16931a2184b7952d3))
+* improvements to pages ([64202df](https://github.com/PC-Mender/sjrslms/commit/64202df6dccb778c7b4cfe53658d80aadde049d2))
+
+### [3.46.38](https://github.com/PC-Mender/sjrslms/compare/v3.46.37...v3.46.38) (2026-02-06)
+
+
+### Bug Fixes
+
+* issue with unhandled error ([e32d990](https://github.com/PC-Mender/sjrslms/commit/e32d990d86f426d6b298e83a6fec912e89a0f7e4))
+
+### [3.46.37](https://github.com/PC-Mender/sjrslms/compare/v3.46.36...v3.46.37) (2026-02-06)
+
+
+### Performance Improvements
+
+* updates ([e991d14](https://github.com/PC-Mender/sjrslms/commit/e991d145e60bd4b83da582d78867814c3cef4e43))
+* updates to members page ([28a7b31](https://github.com/PC-Mender/sjrslms/commit/28a7b31de60689864d5c020b78f491a018dc42a5))
+* updates to students page ([384279a](https://github.com/PC-Mender/sjrslms/commit/384279a3e3f21dc0d994ddd7ec7c1b3434903af3))
+
+### [3.46.36](https://github.com/PC-Mender/sjrslms/compare/v3.46.35...v3.46.36) (2026-02-05)
+
+
+### Performance Improvements
+
+* updates to professor page ([ddb78bc](https://github.com/PC-Mender/sjrslms/commit/ddb78bcf37101f03ed24530699442ec2b206ce5b))
+
+### [3.46.35](https://github.com/PC-Mender/sjrslms/compare/v3.46.34...v3.46.35) (2026-02-05)
+
+
+### Performance Improvements
+
+* improvements to guest page ([15ce020](https://github.com/PC-Mender/sjrslms/commit/15ce0204ee32b3f59eb9acd4a4a1c5fd741ce1c2))
+
+### [3.46.34](https://github.com/PC-Mender/sjrslms/compare/v3.46.33...v3.46.34) (2026-02-04)
+
+
+### Bug Fixes
+
+* remove unused react imports ([d82bab0](https://github.com/PC-Mender/sjrslms/commit/d82bab09129ede4b848e55fc124c1e82f90f3711))
+
+### [3.46.33](https://github.com/PC-Mender/sjrslms/compare/v3.46.32...v3.46.33) (2026-02-04)
+
+
+### Bug Fixes
+
+* add test files to repository (test sources should be committed, not ignored) ([b9b98d5](https://github.com/PC-Mender/sjrslms/commit/b9b98d5abea0166207d85ce80cd34fae8d713c27))
+
+### [3.46.32](https://github.com/PC-Mender/sjrslms/compare/v3.46.31...v3.46.32) (2026-02-04)
+
+
+### Bug Fixes
+
+* remove unused parameter ([34e93e0](https://github.com/PC-Mender/sjrslms/commit/34e93e005589be8e593de0e74e73487a41acfff2))
+
+### [3.46.31](https://github.com/PC-Mender/sjrslms/compare/v3.46.30...v3.46.31) (2026-02-04)
+
+
+### Bug Fixes
+
+* remove unused variables ([ae4093c](https://github.com/PC-Mender/sjrslms/commit/ae4093c966ffe4edeb7797c54ebfc5af85a9d537))
+
+
+### Performance Improvements
+
+* improvements to members page ([3bed2cb](https://github.com/PC-Mender/sjrslms/commit/3bed2cbc3d09482daa050629433adfde6617b0d4))
+* migration to vitest from jest & updates ([0c85de5](https://github.com/PC-Mender/sjrslms/commit/0c85de52c118555961bff0cd31ae587f0bfe990b))
+
+
+### Documentation
+
+* updated doc - clarification on certian sections ([b23893a](https://github.com/PC-Mender/sjrslms/commit/b23893a8e7916c3a787c8c78074c3037b02822d7))
+
+
+### Code Refactoring
+
+* code refactor for permissions ([69ad93d](https://github.com/PC-Mender/sjrslms/commit/69ad93df5c99848dd9ed11025967bb26ea01d3f2))
+
+### [3.46.30](https://github.com/PC-Mender/sjrslms/compare/v3.46.29...v3.46.30) (2026-02-04)
+
+
+### Bug Fixes
+
+* Bug fixes ([f3436a2](https://github.com/PC-Mender/sjrslms/commit/f3436a2f88850c5631d843a641469e5f8023d71f))
+
+### [3.46.29](https://github.com/PC-Mender/sjrslms/compare/v3.46.28...v3.46.29) (2026-02-04)
+
+
+### Performance Improvements
+
+* improvements to members page ([a432dc5](https://github.com/PC-Mender/sjrslms/commit/a432dc506f0f56d4e3b3dc00b4761ad0ea876e9c))
+
+### [3.46.28](https://github.com/PC-Mender/sjrslms/compare/v3.46.27...v3.46.28) (2026-02-04)
+
+
+### Performance Improvements
+
+* improvements to wishlist page ([d3430fb](https://github.com/PC-Mender/sjrslms/commit/d3430fb72e133c3901eb4cc1af46ddfd11c8970b))
+
+### [3.46.27](https://github.com/PC-Mender/sjrslms/compare/v3.46.26...v3.46.27) (2026-02-04)
+
+
+### Performance Improvements
+
+* improvements to reservations page following arch. principles ([2ec32ea](https://github.com/PC-Mender/sjrslms/commit/2ec32ea2ba243d68efd69a14726205361bd847dd))
+
+### [3.46.26](https://github.com/PC-Mender/sjrslms/compare/v3.46.25...v3.46.26) (2026-02-03)
+
+
+### Bug Fixes
+
+* removed unused import ([f4f5a06](https://github.com/PC-Mender/sjrslms/commit/f4f5a06d79dfaf978511c356cc60dba467b4f8cb))
+
+### [3.46.25](https://github.com/PC-Mender/sjrslms/compare/v3.46.24...v3.46.25) (2026-02-03)
+
+
+### Performance Improvements
+
+* improvements to Order page ([80f9126](https://github.com/PC-Mender/sjrslms/commit/80f91267dc4cdca89a58045a949dbb01548b3d9a))
+* Improvements to Penalties page ([1eec4b5](https://github.com/PC-Mender/sjrslms/commit/1eec4b53361fc01558a2793412bfdadd77701263))
+
+### [3.46.24](https://github.com/PC-Mender/sjrslms/compare/v3.46.23...v3.46.24) (2026-02-03)
+
+
+### Bug Fixes
+
+* apply bug fixes ([94578b7](https://github.com/PC-Mender/sjrslms/commit/94578b73bcd6094a1b622aa7a0e2493ac01841fc))
+
+### [3.46.23](https://github.com/PC-Mender/sjrslms/compare/v3.46.22...v3.46.23) (2026-02-03)
+
+
+### Performance Improvements
+
+* apply architectural principles ([07dc0d6](https://github.com/PC-Mender/sjrslms/commit/07dc0d62bde2254e3e1c5785e00dccf2c7399907))
+
+### [3.46.22](https://github.com/PC-Mender/sjrslms/compare/v3.46.21...v3.46.22) (2026-02-02)
+
+
+### Bug Fixes
+
+* security concerns fixed ([e8d5c01](https://github.com/PC-Mender/sjrslms/commit/e8d5c01873796cbe8ad4c185a0696c130664f99d))
+
+### [3.46.21](https://github.com/PC-Mender/sjrslms/compare/v3.46.20...v3.46.21) (2026-02-02)
+
+
+### Bug Fixes
+
+* lint issues mitigation ([4aa2857](https://github.com/PC-Mender/sjrslms/commit/4aa285705635324076cac08a1c5dd68f5cbb6727))
+
+### [3.46.20](https://github.com/PC-Mender/sjrslms/compare/v3.46.19...v3.46.20) (2026-02-02)
+
+
+### Performance Improvements
+
+* improvements ([cd4f897](https://github.com/PC-Mender/sjrslms/commit/cd4f897c830551c45f02c307547128f1480181e5))
+* performance improvements ([0a43188](https://github.com/PC-Mender/sjrslms/commit/0a43188a5f39582ad44c936924e7616983a46253))
+
+### [3.46.19](https://github.com/PC-Mender/sjrslms/compare/v3.46.18...v3.46.19) (2026-02-02)
+
+
+### Bug Fixes
+
+* issues with page loads & architecture ([2953cf0](https://github.com/PC-Mender/sjrslms/commit/2953cf04d278abcd6f63d50dbde92ebc272f6cb4))
+* some performance fixes applied ([52f548c](https://github.com/PC-Mender/sjrslms/commit/52f548cd81b9fa6c28b23f16ea18b79e3dba90a9))
+
+
+### CI
+
+* remove unused import ([53127f7](https://github.com/PC-Mender/sjrslms/commit/53127f7ce531e5e687c258fffbeefabaadcd8e4f))
+
+### [3.46.18](https://github.com/PC-Mender/sjrslms/compare/v3.46.17...v3.46.18) (2026-02-02)
+
+
+### Bug Fixes
+
+* remove unused imports ([d474cda](https://github.com/PC-Mender/sjrslms/commit/d474cda8580c043d8ccd04f08520dbae365078db))
+
+
+### Performance Improvements
+
+* update to reservation page ([0c04ff6](https://github.com/PC-Mender/sjrslms/commit/0c04ff667a2040a4bf6958a5ada7e9d905ef100f))
+
+### [3.46.17](https://github.com/PC-Mender/sjrslms/compare/v3.46.16...v3.46.17) (2026-02-01)
+
+
+### Performance Improvements
+
+* Improvements to Wishlist page ([17d5c79](https://github.com/PC-Mender/sjrslms/commit/17d5c7900ccb6e366c4699ce6f9cb8a8d686af67))
+
+### [3.46.16](https://github.com/PC-Mender/sjrslms/compare/v3.46.15...v3.46.16) (2026-02-01)
+
+
+### Bug Fixes
+
+* applied lint & other performance issues ([3a9d52d](https://github.com/PC-Mender/sjrslms/commit/3a9d52d358fdb90f2f6e13a339beeb1e13c27051))
+
+### [3.46.15](https://github.com/PC-Mender/sjrslms/compare/v3.46.14...v3.46.15) (2026-02-01)
+
+
+### Bug Fixes
+
+* issue with DB fetch ([e61fb47](https://github.com/PC-Mender/sjrslms/commit/e61fb4797c715eff35196f859396ce36537f2460))
+
+
+### CI
+
+* remove refresh icon & console log ([e8c56aa](https://github.com/PC-Mender/sjrslms/commit/e8c56aa4b54c1ba16754559d0fafbbcb843f7e90))
+
+### [3.46.14](https://github.com/PC-Mender/sjrslms/compare/v3.46.13...v3.46.14) (2026-01-30)
+
+
+### CI
+
+* remove extra padding wrappers ([4d50f67](https://github.com/PC-Mender/sjrslms/commit/4d50f6787a07ec4be602fb76cc5f7ab9f5c42a77))
+
+### [3.46.13](https://github.com/PC-Mender/sjrslms/compare/v3.46.12...v3.46.13) (2026-01-30)
+
+
+### CI
+
+* remove extra padding wrapper ([1e3ce49](https://github.com/PC-Mender/sjrslms/commit/1e3ce49a55c0bd7d5eb39a45683aa363824bee7f))
+
+### [3.46.12](https://github.com/PC-Mender/sjrslms/compare/v3.46.11...v3.46.12) (2026-01-29)
+
+
+### Performance Improvements
+
+* add feature specific loading spinner ([bc56e3c](https://github.com/PC-Mender/sjrslms/commit/bc56e3cf3a88422a9c7cfd95319c268c56e64c3f))
+
+### [3.46.11](https://github.com/PC-Mender/sjrslms/compare/v3.46.10...v3.46.11) (2026-01-28)
+
+
+### Bug Fixes
+
+* performance fix values ([bc04e46](https://github.com/PC-Mender/sjrslms/commit/bc04e4635363568c07b5703b615ed4c5716fb55a))
+
+### [3.46.10](https://github.com/PC-Mender/sjrslms/compare/v3.46.9...v3.46.10) (2026-01-28)
+
+
+### Performance Improvements
+
+* performance improvements ([b9495bf](https://github.com/PC-Mender/sjrslms/commit/b9495bf33adc20d7577c141e89e97600a1f3f3c6))
+
+### [3.46.9](https://github.com/PC-Mender/sjrslms/compare/v3.46.8...v3.46.9) (2026-01-27)
+
+
+### Bug Fixes
+
+* issues with bell icon ([de22280](https://github.com/PC-Mender/sjrslms/commit/de2228000f5896cb6dd42457fe53ea230ce80ab2))
+
+### [3.46.8](https://github.com/PC-Mender/sjrslms/compare/v3.46.7...v3.46.8) (2026-01-27)
+
+
+### Bug Fixes
+
+* lint issues mitigated ([5c5c109](https://github.com/PC-Mender/sjrslms/commit/5c5c10959cf38c42954392ffebae6f27577d5b5f))
+
+### [3.46.7](https://github.com/PC-Mender/sjrslms/compare/v3.46.6...v3.46.7) (2026-01-27)
+
+
+### Performance Improvements
+
+* improvements to admin profile page ([be44c68](https://github.com/PC-Mender/sjrslms/commit/be44c6821ab858e29d0f8877879ebcf009949155))
+
+### [3.46.6](https://github.com/PC-Mender/sjrslms/compare/v3.46.5...v3.46.6) (2026-01-27)
+
+
+### Code Refactoring
+
+* code refactored for help category ([2ae2d84](https://github.com/PC-Mender/sjrslms/commit/2ae2d8473c596763113b105e0b6d837b1814e1b3))
+
+### [3.46.5](https://github.com/PC-Mender/sjrslms/compare/v3.46.4...v3.46.5) (2026-01-27)
+
+
+### Bug Fixes
+
+* eslint warmings elimination ([af78f70](https://github.com/PC-Mender/sjrslms/commit/af78f70621daf472846a5b8ad913291e89e28894))
+
+
+### Code Refactoring
+
+* code refactor & improvements ([864db32](https://github.com/PC-Mender/sjrslms/commit/864db3274714ff82a02bc854f1450d57359cf805))
+* code refactored ([70a36a4](https://github.com/PC-Mender/sjrslms/commit/70a36a4ae87bfc771dfef7a174c99d13f9389424))
+
+### [3.46.4](https://github.com/PC-Mender/sjrslms/compare/v3.46.3...v3.46.4) (2026-01-26)
+
+
+### Code Refactoring
+
+* replace console.log with structrured logger ([9001c2b](https://github.com/PC-Mender/sjrslms/commit/9001c2bdd12df06153f2108400c4a36ba3c4629c))
+* replace console.log with structured logger ([fbcc0ee](https://github.com/PC-Mender/sjrslms/commit/fbcc0ee73903fe0b544b32939ebc6148518c24f2))
+
+### [3.46.3](https://github.com/PC-Mender/sjrslms/compare/v3.46.2...v3.46.3) (2026-01-26)
+
+
+### Performance Improvements
+
+* Enable CF Analytics ([41ee2d1](https://github.com/PC-Mender/sjrslms/commit/41ee2d1d57e154fc11c8e63a7f2bb8a7aad9cfc4))
+
+### [3.46.2](https://github.com/PC-Mender/sjrslms/compare/v3.46.1...v3.46.2) (2026-01-24)
+
+
+### Bug Fixes
+
+* Remove unused imports from factory-migrated hooks ([bc6bb3f](https://github.com/PC-Mender/sjrslms/commit/bc6bb3f4de97bd0884d9574eb6873511c7ce1e4e))
+
+### [3.46.1](https://github.com/PC-Mender/sjrslms/compare/v3.46.0...v3.46.1) (2026-01-24)
+
+
+### Bug Fixes
+
+* issues loading components in admin dash ([11a343e](https://github.com/PC-Mender/sjrslms/commit/11a343eeb56c4f6a978a5c92140063021cc4ad55))
+
+
+### Code Refactoring
+
+* Add barrel exports for new refactoring utilities ([c935965](https://github.com/PC-Mender/sjrslms/commit/c935965e313120e0ee330b7a5ee6ce723c79abcc))
+* Apply industry-standard patterns (Factory, Template Method) ([d712c81](https://github.com/PC-Mender/sjrslms/commit/d712c81aa9cdc1140b9f7ee34eb8132bf7fb005f))
+* Migrate book-related hooks to factory pattern ([8c7552b](https://github.com/PC-Mender/sjrslms/commit/8c7552b4f64d70d9fc6fa7c5ea6d890e431d5b1f))
+* Migrate journals and publications to factory pattern ([d607165](https://github.com/PC-Mender/sjrslms/commit/d6071656107187a70c39e305558a4000d8b509b0))
+* Migrate notifications and orders to factory pattern ([42ad971](https://github.com/PC-Mender/sjrslms/commit/42ad971d44811475a26b912e1284edf491cea056))
+* Migrate reference hooks to factory pattern ([096a1af](https://github.com/PC-Mender/sjrslms/commit/096a1af67c1dac713f6573615012d4e7fd516461))
+* Migrate sections, subcategories, and resources to factory pattern ([d41a0d2](https://github.com/PC-Mender/sjrslms/commit/d41a0d24e823084066a75cf051f47631e623f9d4))
+* Migrate user-related hooks to factory pattern ([f0b9e33](https://github.com/PC-Mender/sjrslms/commit/f0b9e33d87ab2bd0b9285cdc4d4576af2569b4e7))
+* Migrate wishlist to factory pattern ([fc5c7a4](https://github.com/PC-Mender/sjrslms/commit/fc5c7a480fbb56f8ef1b32d9bc2aa226d20b2fb3))
+* Optimize dash & analytics fetching with react query ([d9d3b60](https://github.com/PC-Mender/sjrslms/commit/d9d3b608fafff008d3996b21d7af2ea522e41444))
+* Remove commented legacy code from useD1Query ([593afea](https://github.com/PC-Mender/sjrslms/commit/593afeae788f8784cbb335688a918ca7ceb589f8))
+
+
+### Documentation
+
+* Add comprehensive inline documentation for factory pattern ([136c829](https://github.com/PC-Mender/sjrslms/commit/136c829c8fa7e48c6ec11f4867087d395e032292))
+
+## [3.46.0](https://github.com/PC-Mender/sjrslms/compare/v3.45.38...v3.46.0) (2026-01-11)
+
+
+### Features
+
+* Add Multi Role System ([3f07f5c](https://github.com/PC-Mender/sjrslms/commit/3f07f5c6c2c5bc7a9395e5dee6cd75c8b5f1a6dd))
+
+### [3.45.38](https://github.com/PC-Mender/sjrslms/compare/v3.45.37...v3.45.38) (2026-01-10)
+
+
+### Bug Fixes
+
+* AntDesign typo issue ([fb6c5da](https://github.com/PC-Mender/sjrslms/commit/fb6c5dada2fa63a16743b708dca0ab47d2f9a288))
+* continuous fix for AntD ([4ba773b](https://github.com/PC-Mender/sjrslms/commit/4ba773bea71c32a7a567d370144c174c6a9f0b06))
+* fetch section & pubication in catalog ([189f8d1](https://github.com/PC-Mender/sjrslms/commit/189f8d191114f0274a72290302dcda9110fb6525))
+
+### [3.45.37](https://github.com/PC-Mender/sjrslms/compare/v3.45.36...v3.45.37) (2026-01-09)
+
+
+### Performance Improvements
+
+* Minor updates to Menu & Guest page ([d2d4ab7](https://github.com/PC-Mender/sjrslms/commit/d2d4ab7f2b2b277bbec4858ebdd5e574886f993c))
+
+### [3.45.36](https://github.com/PC-Mender/sjrslms/compare/v3.45.35...v3.45.36) (2026-01-09)
+
+
+### Bug Fixes
+
+* Roles fetch from DB in adv filter ([02aecbd](https://github.com/PC-Mender/sjrslms/commit/02aecbda4355952d58ef1d11a62f9c1a3b3d6b07))
+
+
+### Performance Improvements
+
+* Tweaked members & roles page ([728de69](https://github.com/PC-Mender/sjrslms/commit/728de69aadd5b166b03cc4eae34558d5336a555e))
+
+### [3.45.35](https://github.com/PC-Mender/sjrslms/compare/v3.45.34...v3.45.35) (2026-01-09)
+
+
+### Bug Fixes
+
+* applied some patches ([9b28b1d](https://github.com/PC-Mender/sjrslms/commit/9b28b1d1db27c2aed1ded66645a7d7a760f02612))
+
+### [3.45.34](https://github.com/PC-Mender/sjrslms/compare/v3.45.33...v3.45.34) (2026-01-09)
+
+
+### Performance Improvements
+
+* Move Sidebar to header ([143c172](https://github.com/PC-Mender/sjrslms/commit/143c1724071c78bd2d475ed4225bf78b7f565bcc))
+
+### [3.45.33](https://github.com/PC-Mender/sjrslms/compare/v3.45.32...v3.45.33) (2026-01-09)
+
+
+### Performance Improvements
+
+* Updates to reference page ([5b35642](https://github.com/PC-Mender/sjrslms/commit/5b3564287ef325f0ecbc3b2078f3ec939b9c391f))
+
+
+### Styling
+
+* update header design ([50e3734](https://github.com/PC-Mender/sjrslms/commit/50e3734868b867b560ab2ad59c8b0d1228f81eb8))
+
+### [3.45.32](https://github.com/PC-Mender/sjrslms/compare/v3.45.31...v3.45.32) (2026-01-08)
+
+
+### Performance Improvements
+
+* Updates to performance & bookmarks feat ([1b1b3f8](https://github.com/PC-Mender/sjrslms/commit/1b1b3f898acb2c7e8ead3721b5cb3bc435cabf9a))
+
+
+### Documentation
+
+* Update Project Core Rules ([dae16ff](https://github.com/PC-Mender/sjrslms/commit/dae16ff438fe56bda76823d3526ad8223a4cda13))
+
+
+### CI
+
+* config fix ([b781031](https://github.com/PC-Mender/sjrslms/commit/b7810312b2061a03f3ec279f3fa15b2b38cb2f8a))
+
+
+### Code Refactoring
+
+* Code refactor for UsePermissions ([997b777](https://github.com/PC-Mender/sjrslms/commit/997b777fc18308e9716921008dd37ec5336580ae))
+
+### [3.45.31](https://github.com/PC-Mender/sjrslms/compare/v3.45.30...v3.45.31) (2026-01-08)
+
+
+### CI
+
+* Typescript config updation ([17527e7](https://github.com/PC-Mender/sjrslms/commit/17527e7459a7a65b7ad9ec987030254b59669e18))
+
+### [3.45.30](https://github.com/PC-Mender/sjrslms/compare/v3.45.29...v3.45.30) (2026-01-08)
+
+
+### Code Refactoring
+
+* Code refactored to avoid circular dependency ([813e1e8](https://github.com/PC-Mender/sjrslms/commit/813e1e878af426ab7eea7ebfec8680051499a027))
+
+### [3.45.29](https://github.com/PC-Mender/sjrslms/compare/v3.45.28...v3.45.29) (2026-01-08)
+
+
+### Code Refactoring
+
+* Code refactor & fix violations issues ([6f8d4d2](https://github.com/PC-Mender/sjrslms/commit/6f8d4d2b56d3754bc349cb20f289b911df60201b))
+
+### [3.45.28](https://github.com/PC-Mender/sjrslms/compare/v3.45.27...v3.45.28) (2026-01-08)
+
+
+### Build System
+
+* add migrations ([4921c09](https://github.com/PC-Mender/sjrslms/commit/4921c09a3f4bdc91ef90e4aec12f0b1db50b329b))
+
+### [3.45.27](https://github.com/PC-Mender/sjrslms/compare/v3.45.26...v3.45.27) (2026-01-08)
+
+
+### Performance Improvements
+
+* Subcat code 0 include & form to include to code ([97e6380](https://github.com/PC-Mender/sjrslms/commit/97e63802c1b8be5eef1467f43a49909be6b2bd27))
+
+
+### Code Refactoring
+
+* code refactor & fix ([f048430](https://github.com/PC-Mender/sjrslms/commit/f048430da21f9961fefe670d2fe50824fc3c2d4b))
+
+### [3.45.26](https://github.com/PC-Mender/sjrslms/compare/v3.45.25...v3.45.26) (2026-01-08)
+
+
+### Performance Improvements
+
+* Updates to Bookmarks feature ([96645d0](https://github.com/PC-Mender/sjrslms/commit/96645d0b8062b1cdd7c549be009f39ddaef8e3c7))
+
+
+### Code Refactoring
+
+* Code refactor for bookmarks ([3975730](https://github.com/PC-Mender/sjrslms/commit/3975730d489f27214f39fa9220c24a6b359acaac))
+
+### [3.45.25](https://github.com/PC-Mender/sjrslms/compare/v3.45.24...v3.45.25) (2026-01-07)
+
+### [3.45.24](https://github.com/PC-Mender/sjrslms/compare/v3.45.23...v3.45.24) (2026-01-07)
+
+
+### Performance Improvements
+
+* Page load & column update ([023a1c4](https://github.com/PC-Mender/sjrslms/commit/023a1c48cae66252d7505e26a39de7e11be85594))
+
+### [3.45.23](https://github.com/PC-Mender/sjrslms/compare/v3.45.22...v3.45.23) (2026-01-06)
+
+
+### Performance Improvements
+
+* improve searchbar in dash adding drawer ([0827f0a](https://github.com/PC-Mender/sjrslms/commit/0827f0aaad2ab1146bd18ee7ee74f1a6221a5094))
+
+### [3.45.22](https://github.com/PC-Mender/sjrslms/compare/v3.45.21...v3.45.22) (2026-01-06)
+
+
+### Performance Improvements
+
+* Update book search performance ([5ba1e2c](https://github.com/PC-Mender/sjrslms/commit/5ba1e2c13b45911bfd9ce02fe38795b4b2ce1a48))
+* Update to header icons ([b713d81](https://github.com/PC-Mender/sjrslms/commit/b713d81d475d867bd8beab8d17c2accb75fbf193))
+
+### [3.45.21](https://github.com/PC-Mender/sjrslms/compare/v3.45.20...v3.45.21) (2026-01-06)
+
+
+### Performance Improvements
+
+* Updates to header & footer icons & positions ([7dd4e26](https://github.com/PC-Mender/sjrslms/commit/7dd4e26c53ed7a6d153aab1e60d35b86f5179c4f))
+
+### [3.45.20](https://github.com/PC-Mender/sjrslms/compare/v3.45.19...v3.45.20) (2026-01-06)
+
+
+### Code Refactoring
+
+* Publication list refactored ([41a36e3](https://github.com/PC-Mender/sjrslms/commit/41a36e3f6579913ef26c14850a5d06ed3b299b79))
+
+### [3.45.19](https://github.com/PC-Mender/sjrslms/compare/v3.45.18...v3.45.19) (2026-01-06)
+
+
+### Bug Fixes
+
+* Fix ESlint warnings ([bcdaaca](https://github.com/PC-Mender/sjrslms/commit/bcdaaca3445a106f501e4a445c8a212083bab6f8))
+
+### [3.45.18](https://github.com/PC-Mender/sjrslms/compare/v3.45.17...v3.45.18) (2026-01-06)
+
+
+### Bug Fixes
+
+* Issues with triggers, missing column, fetch for books table ([aa7fe5e](https://github.com/PC-Mender/sjrslms/commit/aa7fe5e56a50f5e58191b43487ea84258322cb37))
+
+
+### CI
+
+* update packages ([ee315db](https://github.com/PC-Mender/sjrslms/commit/ee315db658b0499df9b269fd7728a506244efba8))
+
+### [3.45.17](https://github.com/PC-Mender/sjrslms/compare/v3.45.16...v3.45.17) (2026-01-04)
+
+
+### Bug Fixes
+
+* remove author id from publications & genre from books ([5472026](https://github.com/PC-Mender/sjrslms/commit/5472026cffc5c5f5659746974c95e75996bf8029))
+
+### [3.45.16](https://github.com/PC-Mender/sjrslms/compare/v3.45.15...v3.45.16) (2026-01-04)
+
+
+### Code Refactoring
+
+* code refactor & updates ([ee56485](https://github.com/PC-Mender/sjrslms/commit/ee5648533bd99db8bd138cce07a5983c82e5fbd0))
+* code refactored ([27b47e1](https://github.com/PC-Mender/sjrslms/commit/27b47e1eae2355339300232dcb6632e54caded33))
+
+### [3.45.15](https://github.com/PC-Mender/sjrslms/compare/v3.45.14...v3.45.15) (2026-01-04)
+
+
+### Bug Fixes
+
+* Lint warnings mitigated ([1ea0005](https://github.com/PC-Mender/sjrslms/commit/1ea0005fa394f631045a00d5d4c9bbb2d5993d4f))
+
+
+### Performance Improvements
+
+* Updates to search term ([16f1363](https://github.com/PC-Mender/sjrslms/commit/16f1363a235b8b9ecb9faf020fcd07fa6775e732))
+
+
+### Code Refactoring
+
+* code refactor for enhanced list view ([dc92150](https://github.com/PC-Mender/sjrslms/commit/dc921502316493d0648a7e09543812dd46ec3f15))
+
+### [3.45.14](https://github.com/PC-Mender/sjrslms/compare/v3.45.13...v3.45.14) (2026-01-03)
+
+
+### Documentation
+
+* Docs update ([e3a0693](https://github.com/PC-Mender/sjrslms/commit/e3a0693a06c8bc422eb1e6e0da0eb4f0a2d6fcf4))
+
+
+### Code Refactoring
+
+* Code refactor for Terms of service page ([a7b0814](https://github.com/PC-Mender/sjrslms/commit/a7b0814d55b7039dfc5ba8f486bf982caca2585a))
+* Privacy page is refactored ([66c0c6d](https://github.com/PC-Mender/sjrslms/commit/66c0c6dbd83ae90386e724e06ceb6937316eadc4))
+
+### [3.45.13](https://github.com/PC-Mender/sjrslms/compare/v3.45.12...v3.45.13) (2026-01-03)
+
+
+### Bug Fixes
+
+* Apply fix to publication feature ([c2dc9e6](https://github.com/PC-Mender/sjrslms/commit/c2dc9e661d9cdff47f23e69b3a10661dc4aa0f8b))
+* Book catalogue fixes ([628177c](https://github.com/PC-Mender/sjrslms/commit/628177c8e614d5bdc2aea271cecb5eeba4d447b7))
+* issues with packages ([c47207f](https://github.com/PC-Mender/sjrslms/commit/c47207ffe4eccd66fba0768c09fcd23ba21de51d))
+
+
+### Code Refactoring
+
+* code refactor for publication list ([04d5a8e](https://github.com/PC-Mender/sjrslms/commit/04d5a8ec2d53d36a9efab12705cd389f275fbbf3))
+* subcategory & digital resource refactored ([da143ff](https://github.com/PC-Mender/sjrslms/commit/da143ff6e77484ecd919574217ada4ca4a183ee0))
+
+### [3.45.12](https://github.com/PC-Mender/sjrslms/compare/v3.45.11...v3.45.12) (2026-01-02)
+
+
+### Performance Improvements
+
+* Updates to Digital Resources ([3d975b3](https://github.com/PC-Mender/sjrslms/commit/3d975b3d205a0c668fdf1eb6260589a0d7601d86))
+
+### [3.45.11](https://github.com/PC-Mender/sjrslms/compare/v3.45.10...v3.45.11) (2026-01-01)
+
+
+### CI
+
+* remove unnecessary Menu ([8f08f60](https://github.com/PC-Mender/sjrslms/commit/8f08f60f7aa8633a23dbf4bca751caeb58f3d52c))
+
+
+### Code Refactoring
+
+* constants refactored ([9c9894c](https://github.com/PC-Mender/sjrslms/commit/9c9894c090032295ebdc860029d2e793901b073e))
+
+### [3.45.10](https://github.com/PC-Mender/sjrslms/compare/v3.45.9...v3.45.10) (2026-01-01)
+
+
+### Performance Improvements
+
+* Tweaked Book copies ([de413e0](https://github.com/PC-Mender/sjrslms/commit/de413e084970c0e837520f063986a3af57b26348))
+
+### [3.45.9](https://github.com/PC-Mender/sjrslms/compare/v3.45.8...v3.45.9) (2025-12-31)
+
+
+### CI
+
+* fix github release issue ([2778585](https://github.com/PC-Mender/sjrslms/commit/277858555ccb82551a19ddb58779ad32f77f8c51))
+
+### [3.45.8](https://github.com/PC-Mender/sjrslms/compare/v3.45.7...v3.45.8) (2025-12-31)
+
+
+### Performance Improvements
+
+* patches & updates to Books section ([f10c412](https://github.com/PC-Mender/sjrslms/commit/f10c41270361a9ee45e0e6e3a971a70b73c8b421))
+
+### [3.45.7](https://github.com/PC-Mender/sjrslms/compare/v3.45.6...v3.45.7) (2025-12-31)
+
+
+### Bug Fixes
+
+* logical issues handled ([8b34865](https://github.com/PC-Mender/sjrslms/commit/8b3486561cbf99080476dd70b10f2f444b65e9a5))
+* session expire user to redirect to login page ([c5fecdd](https://github.com/PC-Mender/sjrslms/commit/c5fecdd306d8d058ee432bc730c7b09e494c6335))
+
+### [3.45.6](https://github.com/PC-Mender/sjrslms/compare/v3.45.5...v3.45.6) (2025-12-31)
+
+
+### Bug Fixes
+
+* issue with POST ([0e2e611](https://github.com/PC-Mender/sjrslms/commit/0e2e611fa3bd4cf34f540f215168684644250c36))
+
+
+### Performance Improvements
+
+* Fixes & Updates to Subcategory & Sections pages ([6380a9a](https://github.com/PC-Mender/sjrslms/commit/6380a9a5a13e4f2c7e014f4ff231ee0b43b9a974))
+* Improvement to Zen mode ([04be4b5](https://github.com/PC-Mender/sjrslms/commit/04be4b5b6fa4392d1538374ae1b9fea3c590ee30))
+
+### [3.45.5](https://github.com/PC-Mender/sjrslms/compare/v3.45.4...v3.45.5) (2025-12-31)
+
+
+### Performance Improvements
+
+* add features to the table ([ab3ed11](https://github.com/PC-Mender/sjrslms/commit/ab3ed11cfc607b46495e50eeedc9e07f6a64a7d4))
+
+
+### Styling
+
+* Remove border on footer & header ([96ab0aa](https://github.com/PC-Mender/sjrslms/commit/96ab0aae06ca4bf8ba3c47b646ce2e2df19279a7))
+
+
+### Code Refactoring
+
+* code refactored for subcategory ([8bfadb4](https://github.com/PC-Mender/sjrslms/commit/8bfadb444e8130ca771f10776d678963dde02df6))
+
+### [3.45.4](https://github.com/PC-Mender/sjrslms/compare/v3.45.3...v3.45.4) (2025-12-31)
+
+
+### Performance Improvements
+
+* Updates to subcategories-C & D ([06e7a39](https://github.com/PC-Mender/sjrslms/commit/06e7a3971a60b63bb3664933b10d1cee4d6c9968))
+
+### [3.45.3](https://github.com/PC-Mender/sjrslms/compare/v3.45.2...v3.45.3) (2025-12-30)
+
+
+### Performance Improvements
+
+* Update to subcategory page & B-cat migration ([4b22b53](https://github.com/PC-Mender/sjrslms/commit/4b22b53eaef2f24684909e86434aaa0935150616))
+
+### [3.45.2](https://github.com/PC-Mender/sjrslms/compare/v3.45.1...v3.45.2) (2025-12-30)
+
+
+### Performance Improvements
+
+* Make IST global ([e7b9863](https://github.com/PC-Mender/sjrslms/commit/e7b98637b6ef645e85fb442e894468a438ffb15a))
+
+
+### Code Refactoring
+
+* code refatored ([385b3e1](https://github.com/PC-Mender/sjrslms/commit/385b3e1cec2301e66b1236e1009bd6f8bd42cd01))
+* fixes as well as refactor ([8444747](https://github.com/PC-Mender/sjrslms/commit/8444747d4ee9aa393869f5b1a925cddb6094e24f))
+
+### [3.45.1](https://github.com/PC-Mender/sjrslms/compare/v3.45.0...v3.45.1) (2025-12-30)
+
+
+### Performance Improvements
+
+* Update to header Menus in Desktop ([7463045](https://github.com/PC-Mender/sjrslms/commit/74630451d297d28113dd35f3fb41f706a511228c))
+* Updates to header Menu ([480de42](https://github.com/PC-Mender/sjrslms/commit/480de42e340f197bb1a041a7fe83ef1c5d57ed7e))
+
+## [3.45.0](https://github.com/PC-Mender/sjrslms/compare/v3.44.28...v3.45.0) (2025-12-30)
+
+
+### Features
+
+* Add Global Search & other improvements ([cde7a93](https://github.com/PC-Mender/sjrslms/commit/cde7a939381bb758e9f8bcb5be88f632cf733491))
+
+
+### Performance Improvements
+
+* Add advanced filter, improvements ([09cb291](https://github.com/PC-Mender/sjrslms/commit/09cb29154290dbbaf47f79f98a27d0b5d97ab76c))
+
+
+### Code Refactoring
+
+* Shift from Resource to Digital Resources ([2c63a37](https://github.com/PC-Mender/sjrslms/commit/2c63a37d19710d6c9940afaed170b3615e6c920a))
+
+
+### CI
+
+* improvise chunking & fast loads ([9d81ab3](https://github.com/PC-Mender/sjrslms/commit/9d81ab3877610e7a6bbed308de3db83164e55da9))
+
+### [3.44.28](https://github.com/PC-Mender/sjrslms/compare/v3.44.27...v3.44.28) (2025-12-29)
+
+
+### Bug Fixes
+
+* TS errors ([e71f0e6](https://github.com/PC-Mender/sjrslms/commit/e71f0e6787fa58d4fafc6ee32964184639cbfa54))
+
+### [3.44.27](https://github.com/PC-Mender/sjrslms/compare/v3.44.26...v3.44.27) (2025-12-29)
+
+
+### Code Refactoring
+
+* Code refactored ([2f7e0f2](https://github.com/PC-Mender/sjrslms/commit/2f7e0f2900a0d814dfde8f5cc87d50dcd1ed7c5c))
+
+### [3.44.26](https://github.com/PC-Mender/sjrslms/compare/v3.44.25...v3.44.26) (2025-12-29)
+
+
+### Bug Fixes
+
+* bug fixes ([470e7e9](https://github.com/PC-Mender/sjrslms/commit/470e7e957a4ee83c2d9affa5bbf8d5755a03dfb1))
+* bug fixes ([e4d5de1](https://github.com/PC-Mender/sjrslms/commit/e4d5de1c0d5bf1f741665fcd77521f853741f87d))
+* issues props ([3a96df7](https://github.com/PC-Mender/sjrslms/commit/3a96df7070b1c1f12d7f8d5ce6de22c08aec942a))
+
+
+### Performance Improvements
+
+* fix loading issues & added missing templates ([7555852](https://github.com/PC-Mender/sjrslms/commit/75558523d9df67283194f69add7545a891899400))
+* Major update to Sections ([a7269d2](https://github.com/PC-Mender/sjrslms/commit/a7269d22b5955f3d07a8607df0270527a62a62fa))
+* update to add book counts ([daec1dd](https://github.com/PC-Mender/sjrslms/commit/daec1ddc55201473b3a4b0da160b5712d61f111e))
+
+
+### Code Refactoring
+
+* code refactor for email template ([3b03cc4](https://github.com/PC-Mender/sjrslms/commit/3b03cc4113caf37df94c053be02e9df9128f1462))
+* email template refactored ([7e54386](https://github.com/PC-Mender/sjrslms/commit/7e5438626513a8365877299204f2a3272d65f360))
+* sections comp refactored ([d00c42d](https://github.com/PC-Mender/sjrslms/commit/d00c42d6471bd95145ee54d505acb728a5465275))
+
+### [3.44.25](https://github.com/PC-Mender/sjrslms/compare/v3.44.24...v3.44.25) (2025-12-27)
+
+
+### Bug Fixes
+
+* issue with migration page updates ([aa444f1](https://github.com/PC-Mender/sjrslms/commit/aa444f198ec6ad230293a3caec5b35288d119264))
+
+### [3.44.24](https://github.com/PC-Mender/sjrslms/compare/v3.44.23...v3.44.24) (2025-12-26)
+
+
+### Bug Fixes
+
+* issues with logging mitigated ([eb68398](https://github.com/PC-Mender/sjrslms/commit/eb68398f3d8eab4f551d4a8f4c510cdf1dd1ebb9))
+
+### [3.44.23](https://github.com/PC-Mender/sjrslms/compare/v3.44.22...v3.44.23) (2025-12-26)
+
+
+### Bug Fixes
+
+* Roles update, add sidedrawer ([80fea15](https://github.com/PC-Mender/sjrslms/commit/80fea157b96fa54c01fc42ec574f1f5cf9c6992b))
+
+
+### Performance Improvements
+
+* Roles page now using UVS ([7a48745](https://github.com/PC-Mender/sjrslms/commit/7a48745e6c2c2a960dbdb9b93389293a9a53ce2b))
+
+
+### Code Refactoring
+
+* code refactor for role component ([5d97efe](https://github.com/PC-Mender/sjrslms/commit/5d97efeb5f5c6ebc2d32543c0fb7c830dd5efa62))
+
+### [3.44.22](https://github.com/PC-Mender/sjrslms/compare/v3.44.21...v3.44.22) (2025-12-26)
+
+
+### Bug Fixes
+
+* issues with adding roles ([b70ace7](https://github.com/PC-Mender/sjrslms/commit/b70ace71ec01218c96840acb6c2f540f9ccf805a))
+
+
+### Build System
+
+* remove extra space ([e43e3a2](https://github.com/PC-Mender/sjrslms/commit/e43e3a266af9c59127597cace35fb6993e597af7))
+
+### [3.44.21](https://github.com/PC-Mender/sjrslms/compare/v3.44.20...v3.44.21) (2025-12-26)
+
+
+### Bug Fixes
+
+* Some fixes & updates to notification system ([13f85c3](https://github.com/PC-Mender/sjrslms/commit/13f85c39f20a07558986f210a3e9617e82b3acb5))
+
+
+### Performance Improvements
+
+* Make indicator functional-online or offline ([896c7ef](https://github.com/PC-Mender/sjrslms/commit/896c7ef689ff1fb256d83a9aacd2aea17c919614))
+
+
+### Code Refactoring
+
+* code refactor for notifications ([f1603ec](https://github.com/PC-Mender/sjrslms/commit/f1603ecf9deef040777ee232fb9d7e45cf969a30))
+
+### [3.44.20](https://github.com/PC-Mender/sjrslms/compare/v3.44.19...v3.44.20) (2025-12-25)
+
+
+### Code Refactoring
+
+* renaming to system notifications ([162b3df](https://github.com/PC-Mender/sjrslms/commit/162b3df26ea3510980c2e6040af21ace7e37e4fe))
+
+### [3.44.19](https://github.com/PC-Mender/sjrslms/compare/v3.44.18...v3.44.19) (2025-12-25)
+
+
+### Performance Improvements
+
+* Updates by removing deprecated enpoints, cleanup ([175179e](https://github.com/PC-Mender/sjrslms/commit/175179e90e1e8ed0ad7bf0483b8e08fd268f61e5))
+
+
+### Code Refactoring
+
+* notification service is refactored ([70ba088](https://github.com/PC-Mender/sjrslms/commit/70ba08855fad3db16340af03b0825a5ded198e5a))
+* notification service is refactored ([89ceb7f](https://github.com/PC-Mender/sjrslms/commit/89ceb7f2d4aee65afe15ba7b78c03b0479ae9e2f))
+
+### [3.44.18](https://github.com/PC-Mender/sjrslms/compare/v3.44.17...v3.44.18) (2025-12-25)
+
+
+### Bug Fixes
+
+* Cleanu route violations, patterns ([8da0133](https://github.com/PC-Mender/sjrslms/commit/8da0133ef09007bff0badadfad8aa87c2f0c9312))
+* issues with backend fetching ([97fc9d2](https://github.com/PC-Mender/sjrslms/commit/97fc9d20197b79fa8764946001f58d9eccdcdd96))
+
+
+### Performance Improvements
+
+* Improvements to Notification System ([a88d565](https://github.com/PC-Mender/sjrslms/commit/a88d565ae9df5409bbbfae548e39bec7f397b3d6))
+
+### [3.44.17](https://github.com/PC-Mender/sjrslms/compare/v3.44.16...v3.44.17) (2025-12-25)
+
+
+### Performance Improvements
+
+* Enable public search on homepage ([6829448](https://github.com/PC-Mender/sjrslms/commit/6829448e9b48da338a0fb6d2a348597f7dedcf89))
+* Improvements to public book search ([ed7a166](https://github.com/PC-Mender/sjrslms/commit/ed7a166f366eb18c9ad1d181ca8c34a7e8927684))
+
+
+### Code Refactoring
+
+* Book repository query was refactored ([2e73682](https://github.com/PC-Mender/sjrslms/commit/2e736820f1f1cae09c116c6fbc1813eb2d02c71f))
+
+### [3.44.16](https://github.com/PC-Mender/sjrslms/compare/v3.44.15...v3.44.16) (2025-12-24)
+
+
+### Performance Improvements
+
+* Updates to Impersonation feature, superuser actions ([b03facc](https://github.com/PC-Mender/sjrslms/commit/b03facc362d02e35c5cd49faf84032cceed7759b))
+
+
+### Code Refactoring
+
+* Applayout refactored ([781605c](https://github.com/PC-Mender/sjrslms/commit/781605caed7fac8e486bc30d7b55ac62aead75aa))
+
+### [3.44.15](https://github.com/PC-Mender/sjrslms/compare/v3.44.14...v3.44.15) (2025-12-23)
+
+
+### Bug Fixes
+
+* issues with reg flow ([b23f94a](https://github.com/PC-Mender/sjrslms/commit/b23f94a7ec5f536eea25a973d5ae3d832060258f))
+* missing check ([99db07a](https://github.com/PC-Mender/sjrslms/commit/99db07ac078f24eca66e0eec59d91d6ee7f5e910))
+
+
+### Performance Improvements
+
+* Hardened security for registration flow ([ee13237](https://github.com/PC-Mender/sjrslms/commit/ee132378171a22cd77388ccc04e43f619a3f7e59))
+* update to auth handler ([af34867](https://github.com/PC-Mender/sjrslms/commit/af348676dbc9ce0857ec681770376e0b2296f12d))
+
+### [3.44.14](https://github.com/PC-Mender/sjrslms/compare/v3.44.13...v3.44.14) (2025-12-23)
+
+
+### Bug Fixes
+
+* issue with save button ([9478ae0](https://github.com/PC-Mender/sjrslms/commit/9478ae0012a6dbe56e57cbb074395deb0b35f05e))
+* migration to missing professor table ([695a1fc](https://github.com/PC-Mender/sjrslms/commit/695a1fc4e78e454664f63d8fc9b40f640e43dfb7))
+* patches to register flow & roles update ([7efd87c](https://github.com/PC-Mender/sjrslms/commit/7efd87ce5ed41874f869b3bded7207d4c94ae8eb))
+* registration page fixed ([90dae9a](https://github.com/PC-Mender/sjrslms/commit/90dae9a1348e8f558a345cc300e1cb45d0269d5a))
+* spacing between buttons ([3888de0](https://github.com/PC-Mender/sjrslms/commit/3888de089bd63affe8774481958353bdce5f19e2))
+
+
+### Performance Improvements
+
+* Update to UX behaviour on register page ([a12178d](https://github.com/PC-Mender/sjrslms/commit/a12178d73b81a7014675d343d8587aa67b1d7b35))
+
+### [3.44.13](https://github.com/PC-Mender/sjrslms/compare/v3.44.12...v3.44.13) (2025-12-23)
+
+
+### Bug Fixes
+
+* students fetch data, remove duplicates ([4421dc9](https://github.com/PC-Mender/sjrslms/commit/4421dc9715bb2900d29d32e0d3f8472df7dc946d))
+
+### [3.44.12](https://github.com/PC-Mender/sjrslms/compare/v3.44.11...v3.44.12) (2025-12-22)
+
+
+### Performance Improvements
+
+* Improve permission guard for superuser role ([9905598](https://github.com/PC-Mender/sjrslms/commit/99055985f0a6c3653b4640d9b37909566a272a98))
+* unified role apply dash redirect ([9f9a2b4](https://github.com/PC-Mender/sjrslms/commit/9f9a2b41b68bd111bd6269f09992eea5f38ffbfe))
+* update to page loads ([22495d3](https://github.com/PC-Mender/sjrslms/commit/22495d353a21c70ed8616cc482c4e884b2ff6cba))
+
+
+### Code Refactoring
+
+* secure storage is refactored ([360af29](https://github.com/PC-Mender/sjrslms/commit/360af292f75a56661fa4b5cfcd87ef090815ca6e))
+
+### [3.44.11](https://github.com/PC-Mender/sjrslms/compare/v3.44.10...v3.44.11) (2025-12-22)
+
+
+### Bug Fixes
+
+* books api missed ([70a2d2d](https://github.com/PC-Mender/sjrslms/commit/70a2d2d26d97d86a34ddb97da898291b7bae06dd))
+
+
+### Code Refactoring
+
+* Base service code refactored ([a335772](https://github.com/PC-Mender/sjrslms/commit/a33577206b0da195273f1f3dc0c699322be52878))
+
+### [3.44.10](https://github.com/PC-Mender/sjrslms/compare/v3.44.9...v3.44.10) (2025-12-22)
+
+
+### Bug Fixes
+
+* issues with badges granted endpoint ([9f0fca7](https://github.com/PC-Mender/sjrslms/commit/9f0fca70b3634cf3502184eae239aacda821c744))
+* remove as any statements ([b76aa5f](https://github.com/PC-Mender/sjrslms/commit/b76aa5fee6339a77bd73afb1cb05cb3713db1da8))
+
+
+### Performance Improvements
+
+* Improve security by removing as any ([2d995d3](https://github.com/PC-Mender/sjrslms/commit/2d995d341da752e0f0c277d620719e3561e61d43))
+
+
+### Code Refactoring
+
+* Badge repository refactored ([e3dc3b3](https://github.com/PC-Mender/sjrslms/commit/e3dc3b3414d1bdeb6bf9b1c2b0e481a8c2663783))
+* mfa challenge backend refactored ([1f2833b](https://github.com/PC-Mender/sjrslms/commit/1f2833b3bc31d4a7274a3cf558e8bfeb68e92c96))
+
+### [3.44.9](https://github.com/PC-Mender/sjrslms/compare/v3.44.8...v3.44.9) (2025-12-22)
+
+
+### Code Refactoring
+
+* Email tokens refactored ([8a046b3](https://github.com/PC-Mender/sjrslms/commit/8a046b3bf6ba5c0201968b46965afaacc3e52fe7))
+
+### [3.44.8](https://github.com/PC-Mender/sjrslms/compare/v3.44.7...v3.44.8) (2025-12-22)
+
+
+### Bug Fixes
+
+* bug fix for profile page ([82ba5fc](https://github.com/PC-Mender/sjrslms/commit/82ba5fc829153802919e5c18777f378b778a4d00))
+
+
+### Performance Improvements
+
+* Improved security on MFA ([accb3c2](https://github.com/PC-Mender/sjrslms/commit/accb3c282c87875df6b4a772d837d63ca8808bfc))
+
+
+### Code Refactoring
+
+* MFA feature is refactored ([b48ba9a](https://github.com/PC-Mender/sjrslms/commit/b48ba9ab27bc41a60766e561bb0020b2b56ae09e))
+
+### [3.44.7](https://github.com/PC-Mender/sjrslms/compare/v3.44.6...v3.44.7) (2025-12-22)
+
+
+### Bug Fixes
+
+* missing icon in desktop view for theme ([d8643f8](https://github.com/PC-Mender/sjrslms/commit/d8643f818f12993ba27d61c8c1e3ff83e0dc3cb7))
+
+
+### Performance Improvements
+
+* keep theme change icon only in deskview public page ([c1de0a2](https://github.com/PC-Mender/sjrslms/commit/c1de0a2c4295d65c6653c85c4344a2b237e2fa7a))
+* Update user session management to Session details with fix ([1d873cd](https://github.com/PC-Mender/sjrslms/commit/1d873cd7b3b27ba7ac01ff4c814ad0fd30a571e7))
+* UX improvement ([ad49a9f](https://github.com/PC-Mender/sjrslms/commit/ad49a9fbccad02f6b20bab7abbcac27b40650302))
+
+
+### Documentation
+
+* update docs for MFA & endpoints ([ec17e43](https://github.com/PC-Mender/sjrslms/commit/ec17e43a04399f521af9cd49dff77bcf379085cb))
+
+### [3.44.6](https://github.com/PC-Mender/sjrslms/compare/v3.44.5...v3.44.6) (2025-12-22)
+
+
+### Performance Improvements
+
+* Updates to account recovery ([a3d6c3d](https://github.com/PC-Mender/sjrslms/commit/a3d6c3d0ec75227d7666d68af950897879d730c4))
+
+### [3.44.5](https://github.com/PC-Mender/sjrslms/compare/v3.44.4...v3.44.5) (2025-12-21)
+
+
+### Bug Fixes
+
+* profile page save issue & update to register page ([3fc2521](https://github.com/PC-Mender/sjrslms/commit/3fc2521c342f192a20dacd688a57b72dfaec91bf))
+* profile page status field ([247f8fd](https://github.com/PC-Mender/sjrslms/commit/247f8fd5f61e5ca6d9422e2b00a5e9d9ec4a932d))
+
+### [3.44.4](https://github.com/PC-Mender/sjrslms/compare/v3.44.3...v3.44.4) (2025-12-21)
+
+
+### Build System
+
+* remove theme from avatar menu ([438bd30](https://github.com/PC-Mender/sjrslms/commit/438bd3086e3aad2dce8219ae8e70441d844cb46a))
+
+
+### Styling
+
+* Update to use AntDesign Tokens ([843b19d](https://github.com/PC-Mender/sjrslms/commit/843b19d84940c521621070420e849da55ede1c1f))
+
+### [3.44.3](https://github.com/PC-Mender/sjrslms/compare/v3.44.2...v3.44.3) (2025-12-20)
+
+
+### Bug Fixes
+
+* issues with token cleanup & Email OTP ([def412d](https://github.com/PC-Mender/sjrslms/commit/def412d03a7a08769182f0578b890e2789038bc4))
+
+
+### Styling
+
+* update to MFA page UI ([d22f0cf](https://github.com/PC-Mender/sjrslms/commit/d22f0cf61a8d4cbfbb0d32d8f4875e95d49f98ba))
+
+### [3.44.2](https://github.com/PC-Mender/sjrslms/compare/v3.44.1...v3.44.2) (2025-12-20)
+
+
+### Bug Fixes
+
+* issue with missing column ([434b70c](https://github.com/PC-Mender/sjrslms/commit/434b70ca602a7333789dc898236fae3773a725f9))
+
+### [3.44.1](https://github.com/PC-Mender/sjrslms/compare/v3.44.0...v3.44.1) (2025-12-20)
+
+
+### Performance Improvements
+
+* Improvements to MFA feature ([a0db760](https://github.com/PC-Mender/sjrslms/commit/a0db760370d35e7090bb2695aa3220d0618d90fb))
+
+## [3.44.0](https://github.com/PC-Mender/sjrslms/compare/v3.43.3...v3.44.0) (2025-12-20)
+
+
+### Features
+
+* Add Webuthn for MFA ([91cf123](https://github.com/PC-Mender/sjrslms/commit/91cf123c2476d7a4cb6b2338b1634210d2551650))
+
+
+### Performance Improvements
+
+* Adding Email code as MFA ([2090b05](https://github.com/PC-Mender/sjrslms/commit/2090b05ebc729377880bcd08c03c9d41e3b15057))
+
+
+### Code Refactoring
+
+* MfA auth settings page refactored ([934d95d](https://github.com/PC-Mender/sjrslms/commit/934d95d5263c3b12fafe7c47f7c9e0ed984dcdfa))
+
+### [3.43.3](https://github.com/PC-Mender/sjrslms/compare/v3.43.2...v3.43.3) (2025-12-19)
+
+
+### Performance Improvements
+
+* Update to Cookie feature ([18101f4](https://github.com/PC-Mender/sjrslms/commit/18101f40279f7048bac8769a00034fe2a48b4ad2))
+
+
+### Code Refactoring
+
+* CSRF refactored ([0b52530](https://github.com/PC-Mender/sjrslms/commit/0b52530141f17421a6666b8efc2a3699a2baeb9b))
+
+### [3.43.2](https://github.com/PC-Mender/sjrslms/compare/v3.43.1...v3.43.2) (2025-12-19)
+
+
+### Bug Fixes
+
+* issue with inserting to table ([c9a5d0e](https://github.com/PC-Mender/sjrslms/commit/c9a5d0ed337852db2425b24f2cd8c52d0d1246ec))
+
+
+### Performance Improvements
+
+* Update to disable MFA Feature ([edab83a](https://github.com/PC-Mender/sjrslms/commit/edab83a2290ceb8b870e156f26e2c1360675fa90))
+
+
+### Styling
+
+* Update UI to have grouped menu ([03a9ed7](https://github.com/PC-Mender/sjrslms/commit/03a9ed760c410455b8ad0c2957329bbd83c7d73b))
+
+### [3.43.1](https://github.com/PC-Mender/sjrslms/compare/v3.43.0...v3.43.1) (2025-12-19)
+
+
+### Bug Fixes
+
+* Force Logout session ([6d05f28](https://github.com/PC-Mender/sjrslms/commit/6d05f28522ff6c9a783c50988344a3c6aa45b2ce))
+
+
+### Performance Improvements
+
+* update time to 60s for force logout ([38a0f78](https://github.com/PC-Mender/sjrslms/commit/38a0f78456a1580d8769be6f3601e1134d5805dc))
+
+## [3.43.0](https://github.com/PC-Mender/sjrslms/compare/v3.42.26...v3.43.0) (2025-12-19)
+
+
+### Features
+
+* Backup Codes & Logging feature for MFA ([da60d61](https://github.com/PC-Mender/sjrslms/commit/da60d611fc13901058ce27650ed0b0aea21e2a0b))
+
+### [3.42.26](https://github.com/PC-Mender/sjrslms/compare/v3.42.25...v3.42.26) (2025-12-19)
+
+
+### Bug Fixes
+
+* account text view & page refresh issues ([0e0966b](https://github.com/PC-Mender/sjrslms/commit/0e0966bbca422a71b8777de459536ac4c2e9b3cb))
+
+### [3.42.25](https://github.com/PC-Mender/sjrslms/compare/v3.42.24...v3.42.25) (2025-12-19)
+
+
+### Performance Improvements
+
+* add missing MFA when force-logout & update UI ([a780097](https://github.com/PC-Mender/sjrslms/commit/a780097ab1ffabd824d986b5a220481c2d0379fe))
+
+
+### Code Refactoring
+
+* Unified api client refactored ([9b88d31](https://github.com/PC-Mender/sjrslms/commit/9b88d312972f144b3ac2e5af265140b5fd315fba))
+
+
+### CI
+
+* Add Turnstile Key to Github ([7f75ffa](https://github.com/PC-Mender/sjrslms/commit/7f75ffa2680b5801f55e15e2759243b5f0f6be97))
+
+### [3.42.24](https://github.com/PC-Mender/sjrslms/compare/v3.42.23...v3.42.24) (2025-12-19)
+
+
+### Bug Fixes
+
+* force logout issue ([71d69b4](https://github.com/PC-Mender/sjrslms/commit/71d69b4c12903941f3e65315fa2c7fbf8b581c71))
+* issues with MFA ([9b82800](https://github.com/PC-Mender/sjrslms/commit/9b8280039238cb583ed05a41fc8289c510525063))
+
+
+### Performance Improvements
+
+* Update MFA challege, fix enabling functioning aling with login ([3f02470](https://github.com/PC-Mender/sjrslms/commit/3f02470099ad879dd629c8a23f96e5aeb8f688b2))
+
+### [3.42.23](https://github.com/PC-Mender/sjrslms/compare/v3.42.22...v3.42.23) (2025-12-17)
+
+
+### Code Refactoring
+
+* list view refactored ([b2d88f7](https://github.com/PC-Mender/sjrslms/commit/b2d88f724bc69dce70a292fceed3919c818c100b))
+
+### [3.42.22](https://github.com/PC-Mender/sjrslms/compare/v3.42.21...v3.42.22) (2025-12-17)
+
+
+### Code Refactoring
+
+* Bookmarks comp. refactored ([6192f58](https://github.com/PC-Mender/sjrslms/commit/6192f58099be155955ba2f2e1e7cf31476191bf0))
+
+### [3.42.21](https://github.com/PC-Mender/sjrslms/compare/v3.42.20...v3.42.21) (2025-12-17)
+
+
+### Bug Fixes
+
+* MFA status page, login issue, table reference issue ([b9d8240](https://github.com/PC-Mender/sjrslms/commit/b9d82402939ecb7a7255766e7ff211450bba9452))
+
+
+### Code Refactoring
+
+* auth handler refactor ([4285468](https://github.com/PC-Mender/sjrslms/commit/42854682f556d70747bc538641fff746ed15d592))
+
+### [3.42.20](https://github.com/PC-Mender/sjrslms/compare/v3.42.19...v3.42.20) (2025-12-16)
+
+
+### Performance Improvements
+
+* Updates to MFA feature, session issues ([c80cb40](https://github.com/PC-Mender/sjrslms/commit/c80cb407c9f14e9f74369cd1f56d389b60b7f15b))
+
+### [3.42.19](https://github.com/PC-Mender/sjrslms/compare/v3.42.18...v3.42.19) (2025-12-13)
+
+
+### Bug Fixes
+
+* issues with CSRF & others ([dea3f6c](https://github.com/PC-Mender/sjrslms/commit/dea3f6cea5694f11e7a654f5a1e476aced907504))
+* Session management refresh token issue ([361315c](https://github.com/PC-Mender/sjrslms/commit/361315cea2b4888e661c807158e16e290f297f33))
+* Session storage issue ([75e676b](https://github.com/PC-Mender/sjrslms/commit/75e676bc21e718f23e1d912fa57aad1ea191991d))
+
+### [3.42.18](https://github.com/PC-Mender/sjrslms/compare/v3.42.17...v3.42.18) (2025-12-13)
+
+
+### Bug Fixes
+
+* remove legacy autologout & issues with bookmaks page ([ef9fcc2](https://github.com/PC-Mender/sjrslms/commit/ef9fcc2cd80e57c8a5cab588083b9e4826cd826e))
+* Turnstile import fixed ([2d99d58](https://github.com/PC-Mender/sjrslms/commit/2d99d586df0cf24f9869d2a56e7db5bd78e431f6))
+
+### [3.42.17](https://github.com/PC-Mender/sjrslms/compare/v3.42.16...v3.42.17) (2025-12-12)
+
+
+### Performance Improvements
+
+* Standardize Error codes ([6df92ed](https://github.com/PC-Mender/sjrslms/commit/6df92edc5de7a98de717b34d2cc0ecaa7ffd7cfc))
+
+### [3.42.16](https://github.com/PC-Mender/sjrslms/compare/v3.42.15...v3.42.16) (2025-12-11)
+
+
+### Bug Fixes
+
+* Some patches applied ([5060423](https://github.com/PC-Mender/sjrslms/commit/5060423d006bc85e88b00d63ab8356a17ee8729a))
+
+
+### Code Refactoring
+
+* session manager refactored ([41df7c3](https://github.com/PC-Mender/sjrslms/commit/41df7c3fe718540e6511a3d8b7934eab4cc404b8))
+
+### [3.42.15](https://github.com/PC-Mender/sjrslms/compare/v3.42.14...v3.42.15) (2025-12-09)
+
+
+### Bug Fixes
+
+* issues with logout -session cookie fixed ([7b81550](https://github.com/PC-Mender/sjrslms/commit/7b81550b4a7d246bc2394a7faa24d8f129b12d5d))
+* patch to Turnstile ([7a3fa0e](https://github.com/PC-Mender/sjrslms/commit/7a3fa0ef8252bd372c1b2dec531ecdea74640d82))
+
+### [3.42.14](https://github.com/PC-Mender/sjrslms/compare/v3.42.13...v3.42.14) (2025-12-08)
+
+
+### Code Refactoring
+
+* Table list view component refactor ([4a2a9c3](https://github.com/PC-Mender/sjrslms/commit/4a2a9c30310366754678e94229d491cb459c6334))
+
+### [3.42.13](https://github.com/PC-Mender/sjrslms/compare/v3.42.12...v3.42.13) (2025-12-08)
+
+
+### Code Refactoring
+
+* Login component is refactored ([1145ca4](https://github.com/PC-Mender/sjrslms/commit/1145ca438950b119f283184312afc00cf6c978a1))
+* Login page refactored ([480816a](https://github.com/PC-Mender/sjrslms/commit/480816a47496f9f0ca59bb1f030d96d546fe8f18))
+
+### [3.42.12](https://github.com/PC-Mender/sjrslms/compare/v3.42.11...v3.42.12) (2025-12-08)
+
+
+### Performance Improvements
+
+* Update Login page with Turnstile & design ([6cedbbd](https://github.com/PC-Mender/sjrslms/commit/6cedbbdc60b030de8646812dc5e327f4862d7d23))
+
+### [3.42.11](https://github.com/PC-Mender/sjrslms/compare/v3.42.10...v3.42.11) (2025-12-08)
+
+
+### Bug Fixes
+
+* issues with permisison matrix ([c26240d](https://github.com/PC-Mender/sjrslms/commit/c26240d95b7ce34e371eeffc4d7839552ae6d988))
+
+### [3.42.10](https://github.com/PC-Mender/sjrslms/compare/v3.42.9...v3.42.10) (2025-12-07)
+
+
+### Bug Fixes
+
+* CSP issue for Grafana & sentry removal ([b575475](https://github.com/PC-Mender/sjrslms/commit/b57547543b7108739dd2b7172b26333c69b4c60d))
+
+### [3.42.9](https://github.com/PC-Mender/sjrslms/compare/v3.42.8...v3.42.9) (2025-12-06)
+
+
+### Bug Fixes
+
+* issues with login at origin & page load ([d8187e7](https://github.com/PC-Mender/sjrslms/commit/d8187e76e5d19f87482eb46f2b10d81cb87c8e2d))
+
+
+### Performance Improvements
+
+* 403 error fixes & add Grafana Faro ([60b7815](https://github.com/PC-Mender/sjrslms/commit/60b7815ac86a995b02bd8d5fe16077fb56ed3035))
+
+
+### Styling
+
+* remove extra superuser dash card ([e33e465](https://github.com/PC-Mender/sjrslms/commit/e33e465b5181806666ef334db39ba896f57a9086))
+
+### [3.42.8](https://github.com/PC-Mender/sjrslms/compare/v3.42.7...v3.42.8) (2025-12-06)
+
+
+### Bug Fixes
+
+* linting issues ([098dc1b](https://github.com/PC-Mender/sjrslms/commit/098dc1b0f985322c0138368faf3bd99d7834b5e3))
+
+
+### Code Refactoring
+
+* code refactored ([6adcd85](https://github.com/PC-Mender/sjrslms/commit/6adcd85942c56053c35d6740b585925bb01ec5d0))
+* code refactored ([b6bd0ee](https://github.com/PC-Mender/sjrslms/commit/b6bd0ee9afe9761a56113a5c5d0758e94df06022))
+
+### [3.42.7](https://github.com/PC-Mender/sjrslms/compare/v3.42.6...v3.42.7) (2025-12-06)
+
+
+### Bug Fixes
+
+* bug fixes for secure storage ([02e591e](https://github.com/PC-Mender/sjrslms/commit/02e591e129889160836b2765c2cbe771491d0517))
+* Lint issues ([e258731](https://github.com/PC-Mender/sjrslms/commit/e25873153fbd860a6b816f3aa45aa04f9c43cf72))
+
+
+### Code Refactoring
+
+* code refactored ([c536885](https://github.com/PC-Mender/sjrslms/commit/c536885b457388c9fd9882e17b56391e36a4e4c7))
+* code refactored ([78d3cda](https://github.com/PC-Mender/sjrslms/commit/78d3cda76b1e3292460d4270a1d32113ac4db40f))
+
+### [3.42.6](https://github.com/PC-Mender/sjrslms/compare/v3.42.5...v3.42.6) (2025-12-06)
+
+
+### Bug Fixes
+
+* removed duplicate route ([78ff43a](https://github.com/PC-Mender/sjrslms/commit/78ff43a320f257efa01581deba897414a6d66e3f))
+
+
+### Performance Improvements
+
+* Normalized Error Message for user ([123bfdf](https://github.com/PC-Mender/sjrslms/commit/123bfdf877919521a80be9ae46ff5167572a660f))
+
+### [3.42.5](https://github.com/PC-Mender/sjrslms/compare/v3.42.4...v3.42.5) (2025-12-05)
+
+
+### Performance Improvements
+
+* Some updates to Bookmarks & Permissions ([15d3e78](https://github.com/PC-Mender/sjrslms/commit/15d3e78d97ce67871c27fc9e0da73a771a54a463))
+
+
+### Build System
+
+* Typescript strictness applied throughout the app ([e0d4a97](https://github.com/PC-Mender/sjrslms/commit/e0d4a9790995ca804bd35428e6f236ce78b13d7a))
+
+### [3.42.4](https://github.com/PC-Mender/sjrslms/compare/v3.42.3...v3.42.4) (2025-12-03)
+
+
+### Bug Fixes
+
+* notification, badge, profile page, route fixes ([0e36387](https://github.com/PC-Mender/sjrslms/commit/0e3638715a8db81493bdc70ada9b8ecc101ac5db))
+
+### [3.42.3](https://github.com/PC-Mender/sjrslms/compare/v3.42.2...v3.42.3) (2025-12-03)
+
+
+### Bug Fixes
+
+* Issues with resetting password ([aa325c2](https://github.com/PC-Mender/sjrslms/commit/aa325c238529d8349b489f525bbe965d27a13dee))
+* Sending email with 200 ([f241c85](https://github.com/PC-Mender/sjrslms/commit/f241c850cfeaf30a6cb9e74c1b4600c0d1d3df32))
+* user redirect issue ([50abae4](https://github.com/PC-Mender/sjrslms/commit/50abae43f579997677d4d0acca509a467590ac49))
+
+
+### Styling
+
+* header UI updates ([bb3077e](https://github.com/PC-Mender/sjrslms/commit/bb3077e164779888374061c5e986aa28b4e5220f))
+
+
+### Code Refactoring
+
+* Password reset refactored ([08000d4](https://github.com/PC-Mender/sjrslms/commit/08000d4275b757d4f6dd550297360422b6fe8a38))
+
+### [3.42.2](https://github.com/PC-Mender/sjrslms/compare/v3.42.1...v3.42.2) (2025-12-02)
+
+
+### Performance Improvements
+
+* Make header fixed ([537dfb8](https://github.com/PC-Mender/sjrslms/commit/537dfb87f087ab77e87e2d051a3fecbb07b8c590))
+
+### [3.42.1](https://github.com/PC-Mender/sjrslms/compare/v3.42.0...v3.42.1) (2025-12-02)
+
+
+### Bug Fixes
+
+* patched page loading issue ([56d63d6](https://github.com/PC-Mender/sjrslms/commit/56d63d6474c12454df6da6ec1a8906eed3ccf037))
+
+## [3.42.0](https://github.com/PC-Mender/sjrslms/compare/v3.41.51...v3.42.0) (2025-12-02)
+
+
+### Features
+
+* Add Full Screen & Zod Mode ([ce8c659](https://github.com/PC-Mender/sjrslms/commit/ce8c6595e9edfe2bcbfee6895d54d16094d90171))
+
+### [3.41.51](https://github.com/PC-Mender/sjrslms/compare/v3.41.50...v3.41.51) (2025-12-02)
+
+
+### Performance Improvements
+
+* some updates ([7b88651](https://github.com/PC-Mender/sjrslms/commit/7b88651c4d1e494eb6216873017fa18b62436ff9))
+
+
+### Build System
+
+* packages update ([7142236](https://github.com/PC-Mender/sjrslms/commit/7142236d2d2c073fb445c530b929517f942a5f78))
+
+### [3.41.50](https://github.com/PC-Mender/sjrslms/compare/v3.41.49...v3.41.50) (2025-12-02)
+
+
+### Performance Improvements
+
+* Fixes & Updates to Bookmark MOdule ([75c7fe4](https://github.com/PC-Mender/sjrslms/commit/75c7fe4598db9172fb0d455e7b921c9dda3b3826))
+* reorder validates ID in bookmarks ([f7e3d8e](https://github.com/PC-Mender/sjrslms/commit/f7e3d8e2315d3e9f378af702114a6974e8c649c9))
+
+
+### CI
+
+* package info update ([2195002](https://github.com/PC-Mender/sjrslms/commit/2195002a713f5567c8e6d437ecd82cc64cc56dfb))
+
+### [3.41.49](https://github.com/PC-Mender/sjrslms/compare/v3.41.48...v3.41.49) (2025-12-02)
+
+
+### Performance Improvements
+
+* Adding favicon support ([95bd7bb](https://github.com/PC-Mender/sjrslms/commit/95bd7bb2132c64519a1bda85786080477fe1e019))
+
+
+### Code Refactoring
+
+* Bookmarks code refactor ([dd961e5](https://github.com/PC-Mender/sjrslms/commit/dd961e526b99ab1aa9e82c1607956fdecdf3483a))
+
+
+### Tests
+
+* checking tanstack query ([a5d033f](https://github.com/PC-Mender/sjrslms/commit/a5d033ffa748dfff8814ab34b884ef1069149684))
+
+### [3.41.48](https://github.com/PC-Mender/sjrslms/compare/v3.41.47...v3.41.48) (2025-11-29)
+
+
+### Performance Improvements
+
+* Updates to Bookmarks module ([1a18eb0](https://github.com/PC-Mender/sjrslms/commit/1a18eb0963dd4aada6ed4a5968fa2e9d52f3f3a9))
+
+### [3.41.47](https://github.com/PC-Mender/sjrslms/compare/v3.41.46...v3.41.47) (2025-11-28)
+
+
+### Performance Improvements
+
+* tweaks to bookmarks module ([a471ba0](https://github.com/PC-Mender/sjrslms/commit/a471ba0bfc0bc0e67ccc8a733b9f38edc6f9b799))
+* Update to UVS & bookmarks ([bf589e7](https://github.com/PC-Mender/sjrslms/commit/bf589e75194b62f4a648d44c322eb5d18d9edb4f))
+
+### [3.41.46](https://github.com/PC-Mender/sjrslms/compare/v3.41.45...v3.41.46) (2025-11-26)
+
+
+### Performance Improvements
+
+* Unified View Switcher Adaption ([ebdc85b](https://github.com/PC-Mender/sjrslms/commit/ebdc85b792cbd9affb700edb464dc7ee4b1a5d18))
+* Updates to Bookmarks Feature ([6a20298](https://github.com/PC-Mender/sjrslms/commit/6a202981bd4d26441430bb12d95c774bf8c7442f))
+
+### [3.41.45](https://github.com/PC-Mender/sjrslms/compare/v3.41.44...v3.41.45) (2025-11-25)
+
+
+### Bug Fixes
+
+* iMport issue ([85e7fc6](https://github.com/PC-Mender/sjrslms/commit/85e7fc654e6b897e91e0a8af8732afb67c49d068))
+
+
+### Code Refactoring
+
+* authors List ([eeae57f](https://github.com/PC-Mender/sjrslms/commit/eeae57fe1e27ccf4b0207e54e5babda4a1b27eff))
+
+### [3.41.44](https://github.com/PC-Mender/sjrslms/compare/v3.41.43...v3.41.44) (2025-11-25)
+
+
+### Performance Improvements
+
+* Updates to Unified View Switcher, Bookmarks, Authors page ([939df23](https://github.com/PC-Mender/sjrslms/commit/939df2357eb0fc4097ea01fe06d645226a3305b9))
+
+### [3.41.43](https://github.com/PC-Mender/sjrslms/compare/v3.41.42...v3.41.43) (2025-11-25)
+
+
+### Performance Improvements
+
+* Updates to footer & Unified View Switcher ([ebfb3a8](https://github.com/PC-Mender/sjrslms/commit/ebfb3a8b1f3b6b27071050e92ae21ce03e57a234))
+
+### [3.41.42](https://github.com/PC-Mender/sjrslms/compare/v3.41.41...v3.41.42) (2025-11-24)
+
+
+### Performance Improvements
+
+* Updates to Unified View Switcher, fixes & patches ([4a11d5b](https://github.com/PC-Mender/sjrslms/commit/4a11d5b62610057b85bdf3040b8e68e23bd2f52c))
+
+### [3.41.41](https://github.com/PC-Mender/sjrslms/compare/v3.41.40...v3.41.41) (2025-11-22)
+
+
+### Bug Fixes
+
+* route issues ([d38908c](https://github.com/PC-Mender/sjrslms/commit/d38908c74b3f97ca6e0eb7e6ff1d1f54cc466194))
+
+### [3.41.40](https://github.com/PC-Mender/sjrslms/compare/v3.41.39...v3.41.40) (2025-11-22)
+
+
+### Bug Fixes
+
+* Issue with circular dependency ([1302371](https://github.com/PC-Mender/sjrslms/commit/1302371f73a98c29e8f2788d55f6cbf946f485c1))
+
+### [3.41.39](https://github.com/PC-Mender/sjrslms/compare/v3.41.38...v3.41.39) (2025-11-22)
+
+
+### Bug Fixes
+
+* homepage loading issue ([1c5c263](https://github.com/PC-Mender/sjrslms/commit/1c5c26343a6d5c66a7acc55fd70b24b17ca04503))
+
+### [3.41.38](https://github.com/PC-Mender/sjrslms/compare/v3.41.37...v3.41.38) (2025-11-22)
+
+
+### Bug Fixes
+
+* configurations fixed ([ed49505](https://github.com/PC-Mender/sjrslms/commit/ed49505d17680168c471d46f6cf7f15da8117e00))
+* Page loading issue ([373c346](https://github.com/PC-Mender/sjrslms/commit/373c3460bc1d90bee3d34039ce70830f898c5b48))
+
+
+### CI
+
+* package update ([515de6e](https://github.com/PC-Mender/sjrslms/commit/515de6e7736b3efff1fc9dbe64cf1ac97b3f93d5))
+
+### [3.41.37](https://github.com/PC-Mender/sjrslms/compare/v3.41.36...v3.41.37) (2025-11-22)
+
+
+### Bug Fixes
+
+* issues with asset loading ([5704736](https://github.com/PC-Mender/sjrslms/commit/57047362505b0b92a3915d4f4bc9ab98467bd769))
+
+### [3.41.36](https://github.com/PC-Mender/sjrslms/compare/v3.41.35...v3.41.36) (2025-11-22)
+
+
+### Bug Fixes
+
+* certain logical loopholes fixed ([b8fe156](https://github.com/PC-Mender/sjrslms/commit/b8fe156e018e3fa5fa71548ef44823888fbad0d8))
+* issues with db table increment ([a7a6fb0](https://github.com/PC-Mender/sjrslms/commit/a7a6fb079ccd63a8fdbcd4e8b41a866d3d0ef636))
+* Minor fix for notifications backend module post refactor ([5f7d15b](https://github.com/PC-Mender/sjrslms/commit/5f7d15b9f778efa303b670891ae1b3384de80dd9))
+* Typescript warning ([83e3e33](https://github.com/PC-Mender/sjrslms/commit/83e3e33fa4fa930925d7470c1a959cba17e10aa6))
+
+
+### Performance Improvements
+
+* add bookmark hook ([02e5e1b](https://github.com/PC-Mender/sjrslms/commit/02e5e1b57a32066ce5674aa9eddea1893ebf0187))
+* Major refactor based on compliance, fixes & updates ([9ecc6e8](https://github.com/PC-Mender/sjrslms/commit/9ecc6e84c1c4858a54fd2453e9072f4e91235fa6))
+* some improvement ([eedfe45](https://github.com/PC-Mender/sjrslms/commit/eedfe456248906f0d1a51c0655396679b838d1d6))
+* update UI to match backend ([358123c](https://github.com/PC-Mender/sjrslms/commit/358123c5e29f6bbbabbfac108e86ce0ffec3e1a9))
+* updated bookmark UI based on backend ([7ca2996](https://github.com/PC-Mender/sjrslms/commit/7ca299616c2839fe7f98ab0d28c63dfda59d9b5c))
+* updated UI in order to match backend ([06eec8a](https://github.com/PC-Mender/sjrslms/commit/06eec8a8287b12584f462e7d1ddedeb473432090))
+
+
+### Build System
+
+* add sql map generator for migrations ([9fe22c3](https://github.com/PC-Mender/sjrslms/commit/9fe22c387757d04cf8c3923d7da88356b3568651))
+* Migration files for Bookmark feature ([f6be313](https://github.com/PC-Mender/sjrslms/commit/f6be313af9a30e9c012527f8c24f4b5d0831ead9))
+
+
+### Code Refactoring
+
+* code refactor ([423f35b](https://github.com/PC-Mender/sjrslms/commit/423f35b18cdee85f264cd60663a3f4b73b5fc621))
+* Code refactor ([b1de0a8](https://github.com/PC-Mender/sjrslms/commit/b1de0a80466f5a5e964e91f0ffd981e91d37d5d3))
+* Code refactor ([099ebe2](https://github.com/PC-Mender/sjrslms/commit/099ebe24312a50bbfecdaf99f33d47f8dca45349))
+* Code refactor & fix loopholes ([90b3100](https://github.com/PC-Mender/sjrslms/commit/90b310026f25dbf41e4a3d47aec73956e0a724f4))
+* Code refactor for Analytics ([11acd42](https://github.com/PC-Mender/sjrslms/commit/11acd42856ba78352b59aac6fa8d1e4b856637fb))
+* Code refactor for badges functions ([40ee619](https://github.com/PC-Mender/sjrslms/commit/40ee619608ce98f2128a0af067686bc0dad881fb))
+* Code refactor for book copies ([ac2e8a7](https://github.com/PC-Mender/sjrslms/commit/ac2e8a734bbd58f30400165c82fd5f861643e38c))
+* Code refactor for Book Reviews ([f59e0c9](https://github.com/PC-Mender/sjrslms/commit/f59e0c91a1ffecb7d92a6defbebb2a34462e02a8))
+* Code refactor for journals ([a502cfb](https://github.com/PC-Mender/sjrslms/commit/a502cfb50dfa2d8022e0f6ca7df124aaf9e261ac))
+* code refactor for maintainability ([075ba71](https://github.com/PC-Mender/sjrslms/commit/075ba71e4129f85d1e9093636df5ede7b9087d21))
+* code refactor for migrations ([de0fb2e](https://github.com/PC-Mender/sjrslms/commit/de0fb2e86643b221f2187c39f183e39668afcc64))
+* Code refactor of Authors module ([44eb999](https://github.com/PC-Mender/sjrslms/commit/44eb99911b72a1518b0b1e02ef9b21967da2105a))
+* Code refactor of this Order module ([238b6d9](https://github.com/PC-Mender/sjrslms/commit/238b6d9dd08a087a98fd595150f35131a66d06f9))
+* Code refactor: modular structure-feature based ([479a390](https://github.com/PC-Mender/sjrslms/commit/479a3905abcd64bcddd8961199814c476076e738))
+* code refactored ([f2c8d1f](https://github.com/PC-Mender/sjrslms/commit/f2c8d1fa4c0f23532e98111c03318665012f10f9))
+* Code refactored ([a26bb6a](https://github.com/PC-Mender/sjrslms/commit/a26bb6ad414628f5cfbe5f549cbd8b56de61f0c9))
+* Code refactored ([91b3319](https://github.com/PC-Mender/sjrslms/commit/91b33193d9eefc032ed1f23291d9a7569e062702))
+* homepage refactored ([de571ee](https://github.com/PC-Mender/sjrslms/commit/de571ee6ee99dae99ba60685c4da65748e749570))
+
+### [3.41.35](https://github.com/PC-Mender/sjrslms/compare/v3.41.34...v3.41.35) (2025-11-19)
+
+
+### Bug Fixes
+
+* Bug fixes for XSS, DOM Santization, EnhancedMutation ([50539c6](https://github.com/PC-Mender/sjrslms/commit/50539c651dcd0c49f9a960315215afba5a8f737e))
+* ESlint issues & removed hardcoded permissions ([021855f](https://github.com/PC-Mender/sjrslms/commit/021855f11ac465655598bb2d66b1dd104025b84c))
+* Issues with error handling ([b6bc34c](https://github.com/PC-Mender/sjrslms/commit/b6bc34c8f1bf0f02cb09a965d3685827309bcfa0))
+* Issues with permission ([9538f57](https://github.com/PC-Mender/sjrslms/commit/9538f571682edb8071dc7a61c4fa9d85a5d046ff))
+* Notable error handling issues fixed ([8ae4600](https://github.com/PC-Mender/sjrslms/commit/8ae460012bd91ce5bc8b6c2114f5a5f19befdae2))
+* remove unused imports ([936ea5a](https://github.com/PC-Mender/sjrslms/commit/936ea5af8e77f2d89191dac72c1219d45d0ac793))
+* Typescript ESLint issues ([9e00af1](https://github.com/PC-Mender/sjrslms/commit/9e00af19277b74a00c06b6dfbe2f51a283cfef5f))
+* Update HTML Sanitizer ([44a359b](https://github.com/PC-Mender/sjrslms/commit/44a359bca2a8db68b742b3b0db68e058569d1257))
+
+
+### Documentation
+
+* updated doc on CSRF ([f6451c8](https://github.com/PC-Mender/sjrslms/commit/f6451c846939742231442c6af9b31c614e926f47))
+
+
+### Code Refactoring
+
+* api client refactored ([a6b571a](https://github.com/PC-Mender/sjrslms/commit/a6b571a82cca17c9fd88f0ec5a115ea4b06fed9e))
+* api refactored ([d1fa1f8](https://github.com/PC-Mender/sjrslms/commit/d1fa1f89ea58d72f07ab0b75c1e2beceb7e72d43))
+* error handler is refactored ([6218e96](https://github.com/PC-Mender/sjrslms/commit/6218e9695e868e8c4174587e6968876fecdbb83b))
+* Further components refactor ([aa833a7](https://github.com/PC-Mender/sjrslms/commit/aa833a770836d37c6bb0d73c15c3ba15a2979833))
+* sentry resource is refactored ([e121c74](https://github.com/PC-Mender/sjrslms/commit/e121c74aa5d10b8bc5caee25dca133a5778cb314))
+
+
+### CI
+
+* remove unused package & add missing ([9137219](https://github.com/PC-Mender/sjrslms/commit/91372196b5742d7d6f32b8c5161315d03ef29dcd))
+
+### [3.41.34](https://github.com/PC-Mender/sjrslms/compare/v3.41.33...v3.41.34) (2025-11-18)
+
+
+### Performance Improvements
+
+* Certain refactors & feature based moves to components ([33c482f](https://github.com/PC-Mender/sjrslms/commit/33c482f3c4c8e3902e7b948b4952b8d419973571))
+
+### [3.41.33](https://github.com/PC-Mender/sjrslms/compare/v3.41.32...v3.41.33) (2025-11-18)
+
+
+### Code Refactoring
+
+* permission hook refactored ([4865c58](https://github.com/PC-Mender/sjrslms/commit/4865c58952ec9f0bdfaa80f5f9eec55c73af740e))
+
+### [3.41.32](https://github.com/PC-Mender/sjrslms/compare/v3.41.31...v3.41.32) (2025-11-18)
+
+
+### Code Refactoring
+
+* Permissions, Wishlist, Migrations, Guests refactored ([e24f3da](https://github.com/PC-Mender/sjrslms/commit/e24f3da66afeeedd8d851b2bddaa4f916a2d88f3))
+
+### [3.41.31](https://github.com/PC-Mender/sjrslms/compare/v3.41.30...v3.41.31) (2025-11-17)
+
+
+### Bug Fixes
+
+* Typescript error ([9a7f067](https://github.com/PC-Mender/sjrslms/commit/9a7f0678246a3d95598e0c232f6a873a3b065882))
+
+
+### Performance Improvements
+
+* Updated features for Citation ([f3ecd17](https://github.com/PC-Mender/sjrslms/commit/f3ecd1789702511fefffd35c1d06c838fb622d01))
+
+
+### Code Refactoring
+
+* code refactor for Loans module ([918ef6e](https://github.com/PC-Mender/sjrslms/commit/918ef6ef0bb1fc00d25183b6706564f792b779e0))
+* Modules refactored ([cf9ef7e](https://github.com/PC-Mender/sjrslms/commit/cf9ef7e1d3b7ab6e9c18bcd9044964943fb6a854))
+
+### [3.41.30](https://github.com/PC-Mender/sjrslms/compare/v3.41.29...v3.41.30) (2025-11-17)
+
+
+### Bug Fixes
+
+* Issues with API & permission ([50e810d](https://github.com/PC-Mender/sjrslms/commit/50e810d5cc4437df49a4368bfacbfaba2d2423ad))
+* lint issue ([c5186b0](https://github.com/PC-Mender/sjrslms/commit/c5186b04d8c3e0d595d4d62c815f567f743071b8))
+
+
+### Code Refactoring
+
+* permission distribution ([c07f058](https://github.com/PC-Mender/sjrslms/commit/c07f0584f5fbcea5676d68fd956edc0ace218d42))
+
+### [3.41.29](https://github.com/PC-Mender/sjrslms/compare/v3.41.28...v3.41.29) (2025-11-17)
+
+
+### Performance Improvements
+
+* Refactor & add switch view for Author ([f0ab6a5](https://github.com/PC-Mender/sjrslms/commit/f0ab6a5d89319a501e7a54435e5007c5d3a3159d))
+
+### [3.41.28](https://github.com/PC-Mender/sjrslms/compare/v3.41.27...v3.41.28) (2025-11-17)
+
+
+### Bug Fixes
+
+* issue with permission check ([0f38832](https://github.com/PC-Mender/sjrslms/commit/0f38832954a6cb314a119fd23d8dc0de4d8dbe44))
+
+
+### CI
+
+* remove quality gates from Github Actions ([3df499b](https://github.com/PC-Mender/sjrslms/commit/3df499b4df002b58d3eb38219588e651c80aaa53))
+* remove quality gates from Github Actions ([f58079a](https://github.com/PC-Mender/sjrslms/commit/f58079a0b660be3a01d9386a78ef00be8808d4b5))
+
+### [3.41.27](https://github.com/PC-Mender/sjrslms/compare/v3.41.26...v3.41.27) (2025-11-17)
+
+
+### Bug Fixes
+
+* redundant permission check fixed ([81523e6](https://github.com/PC-Mender/sjrslms/commit/81523e6f5421d85ca9f72f86f4a0dce8a76d8f55))
+
+### [3.41.26](https://github.com/PC-Mender/sjrslms/compare/v3.41.25...v3.41.26) (2025-11-17)
+
+
+### Bug Fixes
+
+* API issues, updated error handling ([bb2cb9a](https://github.com/PC-Mender/sjrslms/commit/bb2cb9a2b11d9c40079855a99195ca10208af58c))
+* API issues, updated error handling ([64311d3](https://github.com/PC-Mender/sjrslms/commit/64311d3993d3adf8c4d3568517166272fc61196d))
+* Build errors ([917cc7d](https://github.com/PC-Mender/sjrslms/commit/917cc7dca176daae759cbf09cf17664b72f3f2f4))
+
+
+### Documentation
+
+* Updated docs ([b7fa0bd](https://github.com/PC-Mender/sjrslms/commit/b7fa0bdcd1b0248d5939fca756816dc4d9aafb70))
+* updated docs; removed redundant content ([bee0e36](https://github.com/PC-Mender/sjrslms/commit/bee0e3614f1270a3dfdbeffc6c57efffb336144f))
+
+
+### Code Refactoring
+
+* Migration components, Guests, Roles & other patches ([475f52e](https://github.com/PC-Mender/sjrslms/commit/475f52ebc9a92611d5f8de480d1a0dd2333893ea))
+
+
+### Build System
+
+* update package ([8a065e5](https://github.com/PC-Mender/sjrslms/commit/8a065e51e4e40ef75600dea2f1f7e489fb08f13b))
+
+
+### CI
+
+* husky config ([595090b](https://github.com/PC-Mender/sjrslms/commit/595090b42a5a2155f9a2f1a2de6b9166ef772674))
+* update script for checking ([ad1151a](https://github.com/PC-Mender/sjrslms/commit/ad1151a452f9847ab8a3802644584d98dd833144))
+
+### [3.41.25](https://github.com/PC-Mender/sjrslms/compare/v3.41.24...v3.41.25) (2025-11-16)
+
+
+### Bug Fixes
+
+* API Calls issues, env. variables fixes ([b26a8e1](https://github.com/PC-Mender/sjrslms/commit/b26a8e188e703ebf793ca1a3e579cfe218ed8e05))
+* issue with page load ([c1c985d](https://github.com/PC-Mender/sjrslms/commit/c1c985d50b3051e28114314991dc1f8162452c3e))
+* issues loading page ([621dede](https://github.com/PC-Mender/sjrslms/commit/621dede90c42348f8740189a38ea702458b98eb5))
+
+
+### Performance Improvements
+
+* Add pagination ([dac4253](https://github.com/PC-Mender/sjrslms/commit/dac42535f79ed01139ff9255bbf70c5e027eb607))
+
+### [3.41.24](https://github.com/PC-Mender/sjrslms/compare/v3.41.23...v3.41.24) (2025-11-16)
+
+
+### Bug Fixes
+
+* Issue with System Log page & component fix at 404 ([e5ccfcc](https://github.com/PC-Mender/sjrslms/commit/e5ccfcc46cd84b1b57636b62c9fa7cce2e6adecd))
+
+
+### Performance Improvements
+
+* Optimized to fetch data adequately ([25e889a](https://github.com/PC-Mender/sjrslms/commit/25e889a8608b4f0bd0a030de7b05dbecdbed9e0c))
+
+### [3.41.23](https://github.com/PC-Mender/sjrslms/compare/v3.41.22...v3.41.23) (2025-11-16)
+
+
+### Bug Fixes
+
+* API calls fixed ([c7294d8](https://github.com/PC-Mender/sjrslms/commit/c7294d8d3d4a454a15d084cb3904af8137eac05f))
+* Issues with handleError & apis ([09ab369](https://github.com/PC-Mender/sjrslms/commit/09ab36921357806ac6a12e01efd0959aa5732153))
+
+### [3.41.22](https://github.com/PC-Mender/sjrslms/compare/v3.41.21...v3.41.22) (2025-11-16)
+
+
+### Performance Improvements
+
+* Update Academic Tools to use hasPermission ([703c0d6](https://github.com/PC-Mender/sjrslms/commit/703c0d686c2c2e87ad71e5ce38726c906a8c7330))
+
+
+### Styling
+
+* improvement in responsiveness & minor update to Menu position ([8bca4c6](https://github.com/PC-Mender/sjrslms/commit/8bca4c60549f3d01da2b8bf4f8efc7db06d19537))
+
+### [3.41.21](https://github.com/PC-Mender/sjrslms/compare/v3.41.20...v3.41.21) (2025-11-16)
+
+
+### Performance Improvements
+
+* Updates to Menu, layout, themechange settings ([adbb6ce](https://github.com/PC-Mender/sjrslms/commit/adbb6cee90243163c8903cf44c807043e00ceef1))
+
+### [3.41.20](https://github.com/PC-Mender/sjrslms/compare/v3.41.19...v3.41.20) (2025-11-16)
+
+
+### Bug Fixes
+
+* Typescript errors ([59f9cd4](https://github.com/PC-Mender/sjrslms/commit/59f9cd41c4f88dbd69841f1b1b9702a03420ab34))
+
+
+### Code Refactoring
+
+* Split components for ease & maintenance ([8371888](https://github.com/PC-Mender/sjrslms/commit/8371888ff5ba865d306973fe22cc2bcdbecdd434))
+
+### [3.41.19](https://github.com/PC-Mender/sjrslms/compare/v3.41.18...v3.41.19) (2025-11-16)
+
+
+### Bug Fixes
+
+* Environement variables ([904d132](https://github.com/PC-Mender/sjrslms/commit/904d13248b6677d77cd20b89e1a29f5dab153ed7))
+* Notification API Fix ([61bec81](https://github.com/PC-Mender/sjrslms/commit/61bec81f6d3d80a9be23bc625c81d00362198aca))
+
+
+### Documentation
+
+* Add docs for Postman API Testing ([8bee1c6](https://github.com/PC-Mender/sjrslms/commit/8bee1c6d0b4caf51dbbdbce1c6c5484ee31913ac))
+
+### [3.41.18](https://github.com/PC-Mender/sjrslms/compare/v3.41.17...v3.41.18) (2025-11-16)
+
+
+### Bug Fixes
+
+* Internal Server Error resolved ([5d54de0](https://github.com/PC-Mender/sjrslms/commit/5d54de07b3a9257bcf53c7fad5388d9aa1ac1814))
+
+### [3.41.17](https://github.com/PC-Mender/sjrslms/compare/v3.41.16...v3.41.17) (2025-11-16)
+
+### [3.41.16](https://github.com/PC-Mender/sjrslms/compare/v3.41.15...v3.41.16) (2025-11-16)
+
+
+### Bug Fixes
+
+* 401 Error resolution attempt ([c8f4dc2](https://github.com/PC-Mender/sjrslms/commit/c8f4dc24a1bf83e270d345ffc016456103bb2b7d))
+
+### [3.41.15](https://github.com/PC-Mender/sjrslms/compare/v3.41.14...v3.41.15) (2025-11-16)
+
+
+### Bug Fixes
+
+* Continue to resolve 401 Unauthorized ([71ca37b](https://github.com/PC-Mender/sjrslms/commit/71ca37b40d31d07348c9ac87933fd2ddc3be66d0))
+
+### [3.41.14](https://github.com/PC-Mender/sjrslms/compare/v3.41.13...v3.41.14) (2025-11-16)
+
+
+### Bug Fixes
+
+* Continue to resolve 401 Unauthorized ([9e4afbc](https://github.com/PC-Mender/sjrslms/commit/9e4afbce5251141cfa2c3dd45914b66375ada12f))
+
+### [3.41.13](https://github.com/PC-Mender/sjrslms/compare/v3.41.12...v3.41.13) (2025-11-16)
+
+
+### Bug Fixes
+
+* Continue to fix issue ([3cff95e](https://github.com/PC-Mender/sjrslms/commit/3cff95eafc18351560d267d07f007ba157ec8771))
+
+### [3.41.12](https://github.com/PC-Mender/sjrslms/compare/v3.41.11...v3.41.12) (2025-11-16)
+
+
+### Bug Fixes
+
+* Continue to debug 401 error ([c85d0d3](https://github.com/PC-Mender/sjrslms/commit/c85d0d354a69f8b97b980d9135f31f35c612d914))
+
+### [3.41.11](https://github.com/PC-Mender/sjrslms/compare/v3.41.10...v3.41.11) (2025-11-16)
+
+
+### Bug Fixes
+
+* Continue to fix 401 Login Issue ([8da017b](https://github.com/PC-Mender/sjrslms/commit/8da017b661b1805bac1e9ea4a581181081e7a303))
+
+### [3.41.10](https://github.com/PC-Mender/sjrslms/compare/v3.41.9...v3.41.10) (2025-11-16)
+
+
+### Bug Fixes
+
+* Continue to fix 401 login issue ([9861e80](https://github.com/PC-Mender/sjrslms/commit/9861e80faa500f8a486fd7a0943e9a1ecd4046e5))
+
+### [3.41.9](https://github.com/PC-Mender/sjrslms/compare/v3.41.8...v3.41.9) (2025-11-16)
+
+
+### Bug Fixes
+
+* 401 Unable to login ([eeb4745](https://github.com/PC-Mender/sjrslms/commit/eeb47457c2761f80bb4bb2f5326288c7fac4c7ba))
+
+### [3.41.8](https://github.com/PC-Mender/sjrslms/compare/v3.41.7...v3.41.8) (2025-11-16)
+
+
+### Bug Fixes
+
+* ESLint Issues ([91f6b93](https://github.com/PC-Mender/sjrslms/commit/91f6b93d272c1fd8a35de5e34344a5d91d2319d0))
+* ESLint warnings ([0428281](https://github.com/PC-Mender/sjrslms/commit/0428281aeb9bd7b6d7ced6c51da29fbb7d96f634))
+* Remove console.log statements in the production ([ee4c0dd](https://github.com/PC-Mender/sjrslms/commit/ee4c0ddc8afed6f85827e88691cf3f47a1cd6848))
+
+
+### Code Refactoring
+
+* MFA Feature split ([3dd1015](https://github.com/PC-Mender/sjrslms/commit/3dd10153804133c074e4424181fe40c38744be1a))
+* Status check & Notification refactor ([6ba1ffe](https://github.com/PC-Mender/sjrslms/commit/6ba1ffe93d170a620f713440a703e4d2d5421b00))
+
+### [3.41.7](https://github.com/PC-Mender/sjrslms/compare/v3.41.6...v3.41.7) (2025-11-15)
+
+
+### Bug Fixes
+
+* ESLint Issues warning ([586b7c7](https://github.com/PC-Mender/sjrslms/commit/586b7c7c8e0950c3148c9c81048cdebcb6621110))
+
+
+### Code Refactoring
+
+* Register, Analytics Pages ([1521f08](https://github.com/PC-Mender/sjrslms/commit/1521f08982bd8fcc8db035609ea1e60d1d764c35))
+
+### [3.41.6](https://github.com/PC-Mender/sjrslms/compare/v3.41.5...v3.41.6) (2025-11-15)
+
+
+### Bug Fixes
+
+* Updated error handling across app ([00b084d](https://github.com/PC-Mender/sjrslms/commit/00b084d9754e83f4eaa443c554a2107512c5e73f))
+
+
+### Code Refactoring
+
+* Analytics & Profile Page ([b8fc55c](https://github.com/PC-Mender/sjrslms/commit/b8fc55cfb2334d6ed9825ae5e142e6d18cf63f48))
+
+### [3.41.5](https://github.com/PC-Mender/sjrslms/compare/v3.41.4...v3.41.5) (2025-11-15)
+
+
+### Bug Fixes
+
+* Issues SQL Queries ([1a13612](https://github.com/PC-Mender/sjrslms/commit/1a13612b7efcb1d3603046b7374e9cf7fb1c6196))
+
+
+### Performance Improvements
+
+* Cleaned console.log statements ([5accf7b](https://github.com/PC-Mender/sjrslms/commit/5accf7bcdbd1e8b5277e35b826b1853bfb047674))
+
+### [3.41.4](https://github.com/PC-Mender/sjrslms/compare/v3.41.3...v3.41.4) (2025-11-15)
+
+
+### Bug Fixes
+
+* Remaining ESLint Warnings ([40de250](https://github.com/PC-Mender/sjrslms/commit/40de250171792842462da034ca2aad2f88b09852))
+
+### [3.41.3](https://github.com/PC-Mender/sjrslms/compare/v3.41.2...v3.41.3) (2025-11-15)
+
+
+### Bug Fixes
+
+* ESLint warnings mitigation ([9020223](https://github.com/PC-Mender/sjrslms/commit/9020223ad71823b4bee56fff11c26b29d6256edd))
+
+### [3.41.2](https://github.com/PC-Mender/sjrslms/compare/v3.41.1...v3.41.2) (2025-11-15)
+
+
+### Bug Fixes
+
+* ESLint Warnings Mitigated ([6ca999b](https://github.com/PC-Mender/sjrslms/commit/6ca999b3fffa55d0b31f66f46324fd493fd4bb8d))
+
+### [3.41.1](https://github.com/PC-Mender/sjrslms/compare/v3.41.0...v3.41.1) (2025-11-15)
+
+
+### Bug Fixes
+
+* Critical ESLint Errors ([2d3ed8b](https://github.com/PC-Mender/sjrslms/commit/2d3ed8b3558bcc9b6f6f37a2763f467e354d5a44))
+
+## [3.41.0](https://github.com/PC-Mender/sjrslms/compare/v3.40.34...v3.41.0) (2025-11-15)
+
+
+### Features
+
+* Add Plagiarism Checker & Citation Generator ([4928ef3](https://github.com/PC-Mender/sjrslms/commit/4928ef3ecebcb687e619d7141820e302f6557e4c))
+* Plagiarism & Citation Components & Pages ([bca1600](https://github.com/PC-Mender/sjrslms/commit/bca1600b87f646ddc6fbcfb68e7413adfe48c205))
+
+
+### Bug Fixes
+
+* ESLint Issues ([9c00f36](https://github.com/PC-Mender/sjrslms/commit/9c00f3614f78454d1b436daaa273bdc0c34ccd2a))
+
+
+### Performance Improvements
+
+* Updates to Typescript Issues ([5686d7d](https://github.com/PC-Mender/sjrslms/commit/5686d7de785c3b344b365a2b569d7883959da36c))
+
+
+### Documentation
+
+* Add docs for Academic Tools Feature ([0c749dd](https://github.com/PC-Mender/sjrslms/commit/0c749dd99354598783efb34a5b6d41ed539061ab))
+
+
+### Build System
+
+* Migration files & catch-error scripts ([c639d97](https://github.com/PC-Mender/sjrslms/commit/c639d97f0bdabcf46ab7c2e14f4f7b9df8af961c))
+
+### [3.40.34](https://github.com/PC-Mender/sjrslms/compare/v3.40.33...v3.40.34) (2025-11-14)
+
+
+### Bug Fixes
+
+* ESLint Resolutions ([fadbca0](https://github.com/PC-Mender/sjrslms/commit/fadbca038b20e37caf574bac816df9ccc7869581))
+
+### [3.40.33](https://github.com/PC-Mender/sjrslms/compare/v3.40.32...v3.40.33) (2025-11-14)
+
+
+### Bug Fixes
+
+* Issue with parse error ([b4241fd](https://github.com/PC-Mender/sjrslms/commit/b4241fd4e483cced27a4790868a04752cf7ebf6a))
+
+### [3.40.32](https://github.com/PC-Mender/sjrslms/compare/v3.40.31...v3.40.32) (2025-11-14)
+
+
+### Bug Fixes
+
+* Issue with JS Comment ([2476422](https://github.com/PC-Mender/sjrslms/commit/2476422831b754f2202488d2a90a90835a6a9f3e))
+
+### [3.40.31](https://github.com/PC-Mender/sjrslms/compare/v3.40.30...v3.40.31) (2025-11-14)
+
+
+### Bug Fixes
+
+* ESLint Issues & update layer ([265d472](https://github.com/PC-Mender/sjrslms/commit/265d472192f2bde4c909aee789f68b1a44c95d6d))
+* issues with Quality Gates ([d6ce4c7](https://github.com/PC-Mender/sjrslms/commit/d6ce4c764ff9fb59b24906d6b8f434af555ec6d6))
+* issues with quality-gates ([ca5d026](https://github.com/PC-Mender/sjrslms/commit/ca5d0261f1ea476de636660d36c087c27556ba56))
+
+
+### Documentation
+
+* Add docs on deployment workflow ([856db35](https://github.com/PC-Mender/sjrslms/commit/856db3503c543b3b0afc66ed0d651a6d470790e7))
+
+### [3.40.30](https://github.com/PC-Mender/sjrslms/compare/v3.40.29...v3.40.30) (2025-11-14)
+
+
+### Bug Fixes
+
+* ESLint Issues ([7a633ea](https://github.com/PC-Mender/sjrslms/commit/7a633ea1489ffd6918014347e4263fa488db164c))
+
+### [3.40.29](https://github.com/PC-Mender/sjrslms/compare/v3.40.28...v3.40.29) (2025-11-14)
+
+
+### Bug Fixes
+
+* issues with Notification Display ([6776435](https://github.com/PC-Mender/sjrslms/commit/6776435f9a25fdd40a3c22f18f8ee237cc9231f1))
+
+### [3.40.28](https://github.com/PC-Mender/sjrslms/compare/v3.40.27...v3.40.28) (2025-11-14)
+
+
+### Bug Fixes
+
+* Issues with Git Release & Notification Flow ([774efb4](https://github.com/PC-Mender/sjrslms/commit/774efb4d5f3544c823d65e174e9834a1d239ae04))
+
+### [3.40.27](https://github.com/PC-Mender/sjrslms/compare/v3.40.26...v3.40.27) (2025-11-14)
+
+
+### Bug Fixes
+
+* issues with notification ([e246578](https://github.com/PC-Mender/sjrslms/commit/e24657854eac4f3b05ddb413d0bd33f887fbcdcf))
+
+### [3.40.26](https://github.com/PC-Mender/sjrslms/compare/v3.40.25...v3.40.26) (2025-11-14)
+
+
+### Bug Fixes
+
+* Issues with workflow ([b95a65d](https://github.com/PC-Mender/sjrslms/commit/b95a65dfb80c61d205c2aaf7dbc992b82ffb5178))
+
+### [3.40.25](https://github.com/PC-Mender/sjrslms/compare/v3.40.24...v3.40.25) (2025-11-14)
+
+
+### Performance Improvements
+
+* Updated script for notification drop & deploy config ([baa30c8](https://github.com/PC-Mender/sjrslms/commit/baa30c838e18bab9d5774d35dd6ed798d3971da8))
+
+### [3.40.24](https://github.com/PC-Mender/sjrslms/compare/v3.40.23...v3.40.24) (2025-11-14)
+
+
+### Bug Fixes
+
+* ESLint Issues ([34fef53](https://github.com/PC-Mender/sjrslms/commit/34fef53f886264b1e353caaa16ad11a421b42e17))
+* issues with workflow ([c2130cc](https://github.com/PC-Mender/sjrslms/commit/c2130cc40415edff3a021a4ba3ae1ab7adaa9d2d))
+
+
+### Build System
+
+* Standard version config ([2fe4626](https://github.com/PC-Mender/sjrslms/commit/2fe46266fb81d98a4de2c9ac72eb34853ace5d03))
+
+## [3.40.23] - 2025-11-14
+
+### Fixed
+- 🐛 Issues with ESLint
+## [3.40.22] - 2025-11-14
+
+### Fixed
+- 🐛 ESLint errors
+## [3.40.21] - 2025-11-14
+
+### Technical
+- 🔧 bump version to 3.40.20 [skip ci]
+## [3.40.20] - 2025-11-14
+
+### Fixed
+- 🐛 issues with workflow and ESLint
+## [3.40.19] - 2025-11-14
+
+### Fixed
+- 🐛 ESLint issues
+## [3.40.18] - 2025-11-14
+
+### Fixed
+- 🐛 ESLint issues
+## [3.40.17] - 2025-11-14
+
+### Fixed
+- 🐛 Issues with ESLint and automatic workflow
+## [3.40.16] - 2025-11-14
+
+### Fixed
+- 🐛 Issues of ESLint
+## [3.40.15] - 2025-11-14
+
+### Fixed
+- 🐛 ESLint issues
+## [3.40.14] - 2025-11-14
+
+### Fixed
+- 🐛 ESLint issues
+## [3.40.13] - 2025-11-14
+
+### Technical
+- 🔧 bump version to 3.40.12 [skip ci]
+## [3.40.12] - 2025-11-14
+
+### Fixed
+- 🐛 issues with Wrangler config
+## [3.40.11] - 2025-11-14
+
+### Fixed
+- 🐛 simplify github actions
+## [3.40.10] - 2025-11-14
+
+### Fixed
+- 🐛 Issues with Wrangler version
+## [3.40.9] - 2025-11-14
+
+### Fixed
+- 🐛 Issues with Wrangler config to push to Workers
+## [3.40.8] - 2025-11-14
+
+### Fixed
+- 🐛 issues with Build App for Github Actions
+## [3.40.7] - 2025-11-14
+
+### Fixed
+- 🐛 Issues with Building App via Github Actions
+## [3.40.6] - 2025-11-14
+
+### Fixed
+- 🐛 Issues with node version
+## [3.40.5] - 2025-11-14
+
+### Fixed
+- 🐛 issues with deployment configurations
+## [3.40.4] - 2025-11-14
+
+### Fixed
+- 🐛 Issues with build configs
+## [3.40.3] - 2025-11-14
+
+### Fixed
+- 🐛 applied depoyment level fixes
+## [3.40.2] - 2025-11-14
+
+### Technical
+- 🔧 bump version to 3.40.1 [skip ci]
+## [3.40.1] - 2025-11-14
+
+### Technical
+- 🔧 Update script and package
+## [3.40.0] - 2025-11-14
+
+### Added
+- ✅ Updated documentation and API and user interface
+## [3.39.0] - 2025-11-14
+
+### Added
+- ✅ Updated documentation and API and config and user interface
+## [3.38.1] - 2025-11-13
+
+### Technical
+- 🔧 Updated config and documentation
+## [3.38.0] - 2025-11-13
+
+### Added
+- ✅ Updated user interface and documentation
+## [3.37.0] - 2025-11-13
+
+### Added
+- ✅ Updated user interface and documentation
+## [3.36.1] - 2025-11-13
+
+### Technical
+- 🔧 Platform update
+## [3.36.0] - 2025-11-13
+
+### Added
+- ✅ Updated API and documentation and user interface
+## [3.35.1] - 2025-11-13
+
+### Technical
+- 🔧 Platform update
+## [3.35.0] - 2025-11-13
+
+### Added
+- ✅ Updated documentation and API and config and user interface
+## [3.34.0] - 2025-11-13
+
+### Added
+- ✅ Updated config and user interface and documentation and API
+## [3.33.0] - 2025-11-13
+
+### Added
+- ✅ Updated user interface
+## [3.32.0] - 2025-11-13
+
+### Added
+- ✅ Updated documentation and API and config and user interface
+## [3.31.0] - 2025-11-13
+
+### Added
+- ✅ Updated documentation and API and config and user interface
+## [3.30.0] - 2025-11-13
+
+### Added
+- ✅ Updated API and config and user interface and documentation
+## [3.29.0] - 2025-11-13
+
+### Added
+- ✅ Updated API and user interface and config and documentation
+## [3.28.0] - 2025-11-13
+
+### Added
+- ✅ Updated user interface
+## [3.27.4] - 2025-11-13
+
+### Technical
+- 🔧 Updated documentation and config and user interface
+## [3.27.3] - 2025-11-13
+
+### Technical
+- 🔧 Updated documentation and config and user interface
+## [3.27.2] - 2025-11-13
+
+### Technical
+- 🔧 Updated config
+## [3.27.1] - 2025-11-13
+
+### Technical
+- 🔧 Updated config
+## [3.27.0] - 2025-11-13
+
+### Added
+- ✅ Updated config and user interface
+## [3.26.10] - 2025-11-13
+
+### Technical
+- 🔧 Updated config
+## [3.26.9] - 2025-11-13
+
+### Technical
+- 🔧 Updated config
+## [3.26.8] - 2025-11-13
+
+### Technical
+- 🔧 Updated config
+## [3.26.7] - 2025-11-13
+
+### Technical
+- 🔧 Updated documentation and config
+## [3.26.6] - 2025-11-12
+
+### Technical
+- 🔧 Updated documentation and config
+## [3.26.5] - 2025-11-12
+
+### Technical
+- 🔧 Updated config
+## [3.26.4] - 2025-11-12
+
+### Technical
+- 🔧 Updated config
+## [3.26.3] - 2025-11-12
+
+### Technical
+- 🔧 Updated config
+## [3.26.2] - 2025-11-12
+
+### Technical
+- 🔧 Updated config
+## [3.26.1] - 2025-11-12
+
+### Technical
+- 🔧 Updated config
+## [3.26.0] - 2025-11-12
+
+### Added
+- ✅ Updated documentation and API and user interface and config
+## [3.25.0] - 2025-11-12
+
+### Added
+- ✅ Updated documentation and config and user interface
+## [3.24.0] - 2025-11-12
+
+### Added
+- ✅ Updated user interface and documentation
+## [3.23.0] - 2025-11-12
+
+### Added
+- ✅ Updated documentation and API and config and user interface
+## [3.22.0] - 2025-11-12
+
+### Added
+- ✅ Updated API and user interface and documentation
+## [3.21.2] - 2025-11-12
+
+### Technical
+- 🔧 Updated documentation and config and user interface
+## [3.21.1] - 2025-11-12
+
+### Technical
+- 🔧 Platform update
+## [3.21.0] - 2025-11-12
+
+### Added
+- ✅ Updated API
+## [3.20.0] - 2025-11-12
+
+### Added
+- ✅ Updated documentation and config and user interface
+## [3.19.3] - 2025-11-12
+
+### Technical
+- 🔧 Platform update
+## [3.19.2] - 2025-11-12
+
+### Technical
+- 🔧 Platform update
+## [3.19.1] - 2025-11-12
+
+### Technical
+- 🔧 Platform update
+## [3.19.0] - 2025-11-12
+
+### Added
+- ✅ Updated user interface
+## [3.18.4] - 2025-11-12
+
+### Technical
+- 🔧 Platform update
+## [3.18.3] - 2025-11-12
+
+### Technical
+- 🔧 Platform update
+## [3.18.2] - 2025-11-12
+
+### Technical
+- 🔧 Platform update
+## [3.18.1] - 2025-11-12
+
+### Technical
+- 🔧 Platform update
+## [3.18.0] - 2025-11-12
+
+### Added
+- ✅ Updated user interface
+## [3.17.1] - 2025-11-12
+
+### Technical
+- 🔧 Platform update
+## [3.17.0] - 2025-11-12
+
+### Added
+- ✅ Updated API
+## [3.16.0] - 2025-11-12
+
+### Added
+- ✅ Updated API and user interface
+## [3.15.0] - 2025-11-12
+
+### Added
+- ✅ Updated API and config and user interface and documentation
+## [3.14.270] - 2025-11-12
+
+### Technical
+- 🔧 Platform update
+## [3.14.269] - 2025-11-12
+
+### Technical
+- 🔧 Platform update
+## [3.14.268] - 2025-11-12
+
+### Technical
+- 🔧 Platform update
+## [3.14.267] - 2025-11-12
+
+### Technical
+- 🔧 1 file changed; release v3.14.267 [skip ci]
+
+- M cripts/auto-version.js
+## [3.14.266] - 2025-11-12
+
+### Technical
+- 🔧 bump version to 3.14.265 [skip ci]
+## [3.14.265] - 2025-11-12
+
+### Technical
+- 🔧 bump version to 3.14.264 [skip ci]
+## [3.14.264] - 2025-11-12
+
+### Technical
+- 🔧 bump version to 3.14.263 [skip ci]
+## [3.14.263] - 2025-11-12
+
+### Technical
+- 🔧 bump version to 3.14.262 [skip ci]
+## [3.14.262] - 2025-11-12
+
+### Technical
+- 🔧 bump version to 3.14.261 [skip ci]
+## [3.14.261] - 2025-11-12
+
+### Technical
+- 🔧 bump version to 3.14.259 [skip ci]
+## [3.14.260] - 2025-11-12
+
+### Technical
+- 🔧 bump version to 3.14.259 [skip ci]
+## [3.14.259] - 2025-11-12
+
+### Technical
+- 🔧 bump version to 3.14.258 [skip ci]
+## [3.14.258] - 2025-11-12
+
+### Technical
+- 🔧 bump version to 3.14.257 [skip ci]
+## [3.14.257] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.255 [skip ci]
+## [3.14.256] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.255 [skip ci]
+## [3.14.255] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.254 [skip ci]
+## [3.14.254] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.253 [skip ci]
+## [3.14.253] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.252 [skip ci]
+## [3.14.252] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.251 [skip ci]
+## [3.14.251] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.250 [skip ci]
+## [3.14.250] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.249 [skip ci]
+## [3.14.249] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.248 [skip ci]
+## [3.14.248] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.247 [skip ci]
+## [3.14.247] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.246 [skip ci]
+## [3.14.246] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.245 [skip ci]
+## [3.14.245] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.244 [skip ci]
+## [3.14.244] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.243 [skip ci]
+## [3.14.243] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.242 [skip ci]
+## [3.14.242] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.241 [skip ci]
+## [3.14.241] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.240 [skip ci]
+## [3.14.240] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.239 [skip ci]
+## [3.14.239] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.238 [skip ci]
+## [3.14.238] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.237 [skip ci]
+## [3.14.237] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.236 [skip ci]
+## [3.14.236] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.233 [skip ci]
+## [3.14.235] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.233 [skip ci]
+## [3.14.234] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.233 [skip ci]
+## [3.14.233] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.232 [skip ci]
+## [3.14.232] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.231 [skip ci]
+## [3.14.231] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.230 [skip ci]
+## [3.14.230] - 2025-11-11
+
+### Technical
+- 🔧 bump version to 3.14.229 [skip ci]
+## [3.14.229] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.228 [skip ci]
+## [3.14.228] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.227 [skip ci]
+## [3.14.227] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.226 [skip ci]
+## [3.14.226] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.225 [skip ci]
+## [3.14.225] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.224 [skip ci]
+## [3.14.224] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.222 [skip ci]
+## [3.14.223] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.222 [skip ci]
+## [3.14.222] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.221 [skip ci]
+## [3.14.221] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.220 [skip ci]
+## [3.14.220] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.219 [skip ci]
+## [3.14.219] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.218 [skip ci]
+## [3.14.218] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.217 [skip ci]
+## [3.14.217] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.216 [skip ci]
+## [3.14.216] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.215 [skip ci]
+## [3.14.215] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.214 [skip ci]
+## [3.14.214] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.213 [skip ci]
+## [3.14.213] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.212 [skip ci]
+## [3.14.212] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.211 [skip ci]
+## [3.14.211] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.210 [skip ci]
+## [3.14.210] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.209 [skip ci]
+## [3.14.209] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.208 [skip ci]
+## [3.14.208] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.207 [skip ci]
+## [3.14.207] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.206 [skip ci]
+## [3.14.206] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.204 [skip ci]
+## [3.14.205] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.204 [skip ci]
+## [3.14.204] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.203 [skip ci]
+## [3.14.203] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.202 [skip ci]
+## [3.14.202] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.200 [skip ci]
+## [3.14.201] - 2025-11-10
+
+### Technical
+- 🔧 bump version to 3.14.200 [skip ci]
+## [3.14.200] - 2025-11-09
+
+### Technical
+- 🔧 bump version to 3.14.199 [skip ci]
+## [3.14.199] - 2025-11-09
+
+### Technical
+- 🔧 bump version to 3.14.198 [skip ci]
+## [3.14.198] - 2025-11-09
+
+### Technical
+- 🔧 bump version to 3.14.197 [skip ci]
+## [3.14.197] - 2025-11-09
+
+### Technical
+- 🔧 bump version to 3.14.196 [skip ci]
+## [3.14.196] - 2025-11-09
+
+### Technical
+- 🔧 bump version to 3.14.194 [skip ci]
+## [3.14.195] - 2025-11-09
+
+### Technical
+- 🔧 bump version to 3.14.194 [skip ci]
+## [3.14.194] - 2025-11-09
+
+### Technical
+- 🔧 bump version to 3.14.193 [skip ci]
+## [3.14.193] - 2025-11-09
+
+### Technical
+- 🔧 bump version to 3.14.192 [skip ci]
+## [3.14.192] - 2025-11-09
+
+### Technical
+- 🔧 bump version to 3.14.191 [skip ci]
+## [3.14.191] - 2025-11-09
+
+### Technical
+- 🔧 bump version to 3.14.190 [skip ci]
+## [3.14.190] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.189 [skip ci]
+## [3.14.189] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.188 [skip ci]
+## [3.14.188] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.187 [skip ci]
+## [3.14.187] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.186 [skip ci]
+## [3.14.186] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.185 [skip ci]
+## [3.14.185] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.184 [skip ci]
+## [3.14.184] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.183 [skip ci]
+## [3.14.183] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.182 [skip ci]
+## [3.14.182] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.181 [skip ci]
+## [3.14.181] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.180 [skip ci]
+## [3.14.180] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.179 [skip ci]
+## [3.14.179] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.178 [skip ci]
+## [3.14.178] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.177 [skip ci]
+## [3.14.177] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.176 [skip ci]
+## [3.14.176] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.175 [skip ci]
+## [3.14.175] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.173 [skip ci]
+## [3.14.174] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.173 [skip ci]
+## [3.14.173] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.172 [skip ci]
+## [3.14.172] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.171 [skip ci]
+## [3.14.171] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.170 [skip ci]
+## [3.14.170] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.169 [skip ci]
+## [3.14.169] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.168 [skip ci]
+## [3.14.168] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.167 [skip ci]
+## [3.14.167] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.166 [skip ci]
+## [3.14.166] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.165 [skip ci]
+## [3.14.165] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.164 [skip ci]
+## [3.14.164] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.163 [skip ci]
+## [3.14.163] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.162 [skip ci]
+## [3.14.162] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.161 [skip ci]
+## [3.14.161] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.160 [skip ci]
+## [3.14.160] - 2025-11-08
+
+### Technical
+- 🔧 bump version to 3.14.159 [skip ci]
+## [3.14.159] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.158 [skip ci]
+## [3.14.158] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.157 [skip ci]
+## [3.14.157] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.155 [skip ci]
+## [3.14.156] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.155 [skip ci]
+## [3.14.155] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.154 [skip ci]
+## [3.14.154] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.153 [skip ci]
+## [3.14.153] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.152 [skip ci]
+## [3.14.152] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.151 [skip ci]
+## [3.14.151] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.149 [skip ci]
+## [3.14.150] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.149 [skip ci]
+## [3.14.149] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.148 [skip ci]
+## [3.14.148] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.147 [skip ci]
+## [3.14.147] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.146 [skip ci]
+## [3.14.146] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.145 [skip ci]
+## [3.14.145] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.144 [skip ci]
+## [3.14.144] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.143 [skip ci]
+## [3.14.143] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.141 [skip ci]
+## [3.14.142] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.141 [skip ci]
+## [3.14.141] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.137 [skip ci]
+## [3.14.140] - 2025-11-07
+
+### Technical
+- 🔧 bump version to 3.14.137 [skip ci]
+## [3.14.139] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.137 [skip ci]
+## [3.14.138] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.137 [skip ci]
+## [3.14.137] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.136 [skip ci]
+## [3.14.136] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.135 [skip ci]
+## [3.14.135] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.134 [skip ci]
+## [3.14.134] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.133 [skip ci]
+## [3.14.133] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.132 [skip ci]
+## [3.14.132] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.131 [skip ci]
+## [3.14.131] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.130 [skip ci]
+## [3.14.130] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.129 [skip ci]
+## [3.14.129] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.128 [skip ci]
+## [3.14.128] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.127 [skip ci]
+## [3.14.127] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.126 [skip ci]
+## [3.14.126] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.125 [skip ci]
+## [3.14.125] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.124 [skip ci]
+## [3.14.124] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.123 [skip ci]
+## [3.14.123] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.122 [skip ci]
+## [3.14.122] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.121 [skip ci]
+## [3.14.121] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.120 [skip ci]
+## [3.14.120] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.119 [skip ci]
+## [3.14.119] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.118 [skip ci]
+## [3.14.118] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.117 [skip ci]
+## [3.14.117] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.116 [skip ci]
+## [3.14.116] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.115 [skip ci]
+## [3.14.115] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.114 [skip ci]
+## [3.14.114] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.113 [skip ci]
+## [3.14.113] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.112 [skip ci]
+## [3.14.112] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.111 [skip ci]
+## [3.14.111] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.110 [skip ci]
+## [3.14.110] - 2025-11-06
+
+### Technical
+- 🔧 bump version to 3.14.109 [skip ci]
+## [3.14.109] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.108 [skip ci]
+## [3.14.108] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.107 [skip ci]
+## [3.14.107] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.106 [skip ci]
+## [3.14.106] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.104 [skip ci]
+## [3.14.105] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.104 [skip ci]
+## [3.14.104] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.103 [skip ci]
+## [3.14.103] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.102 [skip ci]
+## [3.14.102] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.101 [skip ci]
+## [3.14.101] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.100 [skip ci]
+## [3.14.100] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.99 [skip ci]
+## [3.14.99] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.98 [skip ci]
+## [3.14.98] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.97 [skip ci]
+## [3.14.97] - 2025-11-05
+
+### Added
+- AuthBootstrap in `App.tsx` to hydrate session on app start when cookie exists
+- `credentials: 'include'` on API client requests to send HttpOnly cookies
+- Public header gating in `PublicLayout` to hide user UI on auth/public routes
+- Documentation: `docs/development/auth-flow.md` linked from `docs/README.md`
+
+### Changed
+- Standardized secure cookie reads via `getSecureData(..., 'cookie')` default
+- Delegated protected routing decisions exclusively to `AuthGuard`
+
+### Fixed
+- Spinner/flicker on `/dashboard` after sign-in or refresh
+- Incorrect user identity showing in header on `/login` and other public pages
+## [3.14.96] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.95 [skip ci]
+## [3.14.95] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.94 [skip ci]
+## [3.14.94] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.93 [skip ci]
+## [3.14.93] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.92 [skip ci]
+## [3.14.92] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.91 [skip ci]
+## [3.14.91] - 2025-11-05
+
+### Technical
+- 🔧 bump version to 3.14.90 [skip ci]
+## [3.14.90] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.88 [skip ci]
+## [3.14.89] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.88 [skip ci]
+## [3.14.88] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.87 [skip ci]
+## [3.14.87] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.86 [skip ci]
+## [3.14.86] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.85 [skip ci]
+## [3.14.85] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.84 [skip ci]
+## [3.14.84] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.83 [skip ci]
+## [3.14.83] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.82 [skip ci]
+## [3.14.82] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.81 [skip ci]
+## [3.14.81] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.80 [skip ci]
+## [3.14.80] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.79 [skip ci]
+## [3.14.79] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.77 [skip ci]
+## [3.14.78] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.77 [skip ci]
+## [3.14.77] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.76 [skip ci]
+## [3.14.76] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.75 [skip ci]
+## [3.14.75] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.74 [skip ci]
+## [3.14.74] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.73 [skip ci]
+## [3.14.73] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.72 [skip ci]
+## [3.14.72] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.71 [skip ci]
+## [3.14.71] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.70 [skip ci]
+## [3.14.70] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.69 [skip ci]
+## [3.14.69] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.68 [skip ci]
+## [3.14.68] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.67 [skip ci]
+## [3.14.67] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.64 [skip ci]
+## [3.14.66] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.64 [skip ci]
+## [3.14.65] - 2025-11-04
+
+### Technical
+- 🔧 bump version to 3.14.64 [skip ci]
+## [3.14.64] - 2025-10-16
+
+### 🔧 Technical
+- 🔧 fix(validation): narrow command-injection patterns; feat(devops): align Sentry SDK usage and remove dev Sentry test; fix(auth): login email validation and deploy
+## [3.14.63] - 2025-09-15
+
+### Fixed
+- 🐛 set to use production workers api even for local dev
+## [3.14.62] - 2025-09-14
+
+### Fixed
+- 🐛 workers api update
+## [3.14.61] - 2025-09-14
+
+### Technical
+- 🔧 bump version to 3.14.59 [skip ci]
+## [3.14.60] - 2025-09-14
+
+### Technical
+- 🔧 bump version to 3.14.59 [skip ci]
+## [3.14.59] - 2025-09-14
+
+### Technical
+- 🔧 bump version to 3.14.58 [skip ci]
+## [3.14.58] - 2025-09-14
+
+### Fixed
+- 🐛 resolved issues with superuser dashboard components
+## [3.14.57] - 2025-09-14
+
+### Technical
+- 🔧 bump version to 3.14.56 [skip ci]
+## [3.14.56] - 2025-09-14
+
+### Technical
+- 🔧 bump version to 3.14.55 [skip ci]
+## [3.14.55] - 2025-09-13
+
+### Fixed
+- 🐛 resolved issues with feature-flag and login issue
+## [3.14.54] - 2025-09-11
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.53] - 2025-09-02
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.52] - 2025-09-02
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.51] - 2025-09-02
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.50] - 2025-09-02
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.49] - 2025-09-02
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.48] - 2025-09-02
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.47] - 2025-09-02
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.46] - 2025-09-02
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.45] - 2025-09-02
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.44] - 2025-09-02
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.43] - 2025-09-01
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.42] - 2025-08-31
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.41] - 2025-08-31
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.40] - 2025-08-31
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.39] - 2025-08-31
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.38] - 2025-08-31
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.37] - 2025-08-31
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.36] - 2025-08-31
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.35] - 2025-08-31
+
+### Technical
+- 🔧 bump version to 3.14.34 [skip ci]
+## [3.14.34] - 2025-08-28
+
+### Fixed
+- 🐛 issues with Workers compatibility
+## [3.14.33] - 2025-08-22
+
+### Technical
+- 🔧 bump version to 3.14.32 [skip ci]
+## [3.14.32] - 2025-08-22
+
+### Technical
+- 🔧 bump version to 3.14.31 [skip ci]
+## [3.14.31] - 2025-08-21
+
+### Technical
+- 🔧 bump version to 3.14.30 [skip ci]
+## [3.14.30] - 2025-08-21
+
+### 🔧 Technical
+- 🔧 Update all readme files according to their features
+## [3.14.29] - 2025-08-21
+
+### Technical
+- 🔧 bump version to 3.14.28 [skip ci]
+## [3.14.28] - 2025-08-21
+
+### Technical
+- 🔧 bump version to 3.14.27 [skip ci]
+## [3.14.27] - 2025-08-21
+
+### Technical
+- 🔧 bump version to 3.14.25 [skip ci]
+## [3.14.26] - 2025-08-21
+
+### Technical
+- 🔧 bump version to 3.14.25 [skip ci]
+## [3.14.25] - 2025-08-21
+
+### Technical
+- 🔧 bump version to 3.14.24 [skip ci]
+## [3.14.24] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.23 [skip ci]
+## [3.14.23] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.22 [skip ci]
+## [3.14.22] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.21 [skip ci]
+## [3.14.21] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.20 [skip ci]
+## [3.14.20] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.19 [skip ci]
+## [3.14.19] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.18 [skip ci]
+## [3.14.18] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.17 [skip ci]
+## [3.14.17] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.16 [skip ci]
+## [3.14.16] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.15 [skip ci]
+## [3.14.15] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.14 [skip ci]
+## [3.14.14] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.13 [skip ci]
+## [3.14.13] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.12 [skip ci]
+## [3.14.12] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.11 [skip ci]
+## [3.14.11] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.10 [skip ci]
+## [3.14.10] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.9 [skip ci]
+## [3.14.9] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.8 [skip ci]
+## [3.14.8] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.7 [skip ci]
+## [3.14.7] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.6 [skip ci]
+## [3.14.6] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.5 [skip ci]
+## [3.14.5] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.4 [skip ci]
+## [3.14.4] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.2 [skip ci]
+## [3.14.3] - 2025-08-20
+
+### Technical
+- 🔧 bump version to 3.14.2 [skip ci]
+## [3.14.2] - 2025-08-19
+
+### Fixed
+- 🐛 continue to fix login related errors
+## [3.14.1] - 2025-08-19
+
+### Fixed
+- 🐛 409 error
+## [3.14.0] - 2025-08-19
+
+### Added
+- ✅ test version display system
+## [3.13.20] - 2025-08-19
+
+### Technical
+- 🔧 fixed version
+## [3.13.32] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.30 [skip ci]
+## [3.13.31] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.29 [skip ci]
+## [3.13.30] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.28 [skip ci]
+## [3.13.29] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.27 [skip ci]
+## [3.13.28] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.26 [skip ci]
+## [3.13.27] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.25 [skip ci]
+## [3.13.26] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.24 [skip ci]
+## [3.13.25] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.23 [skip ci]
+## [3.13.24] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.22 [skip ci]
+## [3.13.23] - 2025-08-19
+
+### Technical
+- 🔧 automated version bump to 3.13.20
+## [3.13.22] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.21 [skip ci]
+## [3.13.21] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.20 [skip ci]
+## [3.13.20] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.39 [skip ci]
+## [3.13.39] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.38 [skip ci]
+## [3.13.38] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.37 [skip ci]
+## [3.13.37] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.36 [skip ci]
+## [3.13.36] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.35 [skip ci]
+## [3.13.35] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.34 [skip ci]
+## [3.13.34] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.33 [skip ci]
+## [3.13.33] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.32 [skip ci]
+## [3.13.32] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.31 [skip ci]
+## [3.13.31] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.30 [skip ci]
+## [3.13.30] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.29 [skip ci]
+## [3.13.29] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.28 [skip ci]
+## [3.13.28] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.27 [skip ci]
+## [3.13.27] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.26 [skip ci]
+## [3.13.26] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.25 [skip ci]
+## [3.13.25] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.24 [skip ci]
+## [3.13.24] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.23 [skip ci]
+## [3.13.23] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.22 [skip ci]
+## [3.13.22] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.21 [skip ci]
+## [3.13.21] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.20 [skip ci]
+## [3.13.20] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.32 [skip ci]
+## [3.13.32] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.31 [skip ci]
+## [3.13.31] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.30 [skip ci]
+## [3.13.30] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.29 [skip ci]
+## [3.13.29] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.28 [skip ci]
+## [3.13.28] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.27 [skip ci]
+## [3.13.27] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.26 [skip ci]
+## [3.13.26] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.25 [skip ci]
+## [3.13.25] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.24 [skip ci]
+## [3.13.24] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.23 [skip ci]
+## [3.13.23] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.22 [skip ci]
+## [3.13.22] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.21 [skip ci]
+## [3.13.21] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.20 [skip ci]
+## [3.13.20] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.22 [skip ci]
+## [3.13.22] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.21 [skip ci]
+## [3.13.21] - 2025-08-19
+
+### Technical
+- 🔧 bump version to 3.13.20 [skip ci]
+## [3.13.20] - 2025-08-19
+
+### 🔧 Technical
+- 🔧 chore(release): 3.13.19 [skip ci]
+## [3.13.19] - 2025-08-19
+
+### Changed
+- ✅ Migrated from Cloudflare Pages to Workers Static Assets
+- ✅ Unified deployment: single `npm run deploy` command
+- ✅ Removed GitHub Actions deployment automation
+- ✅ Simplified development workflow to local-only deployment
+
+### Removed
+- ❌ Semantic-release automation
+- ❌ GitHub Actions workflows
+- ❌ Automatic changelog generation
+
+### Technical
+- 🔧 Updated wrangler.toml with static assets configuration
+- 🔧 Added ASSETS binding for unified Worker deployment
+- 🔧 Cleaned up package.json dependencies
+
+---
+
+## Template for Future Releases
+
+```markdown
+## [VERSION] - YYYY-MM-DD
+
+### Added
+- ✅ New features
+
+### Changed
+- 🔄 Modified functionality
+
+### Fixed
+- 🐛 Bug fixes
+
+### Removed
+- ❌ Removed features
+
+### Technical
+- 🔧 Infrastructure changes
+- 📦 Dependency updates
+- 🛡️ Security improvements
+```
+
+---
+
+## How to Update This File
+
+1. **Before each release**, update the version section
+2. **Use clear categories**: Added, Changed, Fixed, Removed, Technical
+3. **Use emojis** for quick visual scanning
+4. **Be specific** about what changed
+5. **Include dates** in YYYY-MM-DD format
