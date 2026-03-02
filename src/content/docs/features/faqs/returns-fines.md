@@ -1,0 +1,81 @@
+---
+title: "Returns & Fines"
+description: "Questions about returning books, late fees, damaged books, and lost items"
+---
+
+# Returns & Fines - FAQ
+
+## How do I return a book?
+
+You can return books in two ways:
+
+1. **In Person:** Bring them to the library desk during operating hours
+2. **Online:** Use the online return feature in your account dashboard
+
+**Important:** Make sure to return books on time to avoid late fees.
+
+## What happens if I return a book late?
+
+Late returns result in fines calculated **per day**. The fine amount depends on your user type:
+
+- **Students:** ₹25 per day
+- **Professors:** ₹50 per day
+- **Guests:** ₹100 per day
+
+Fines accumulate daily until the book is returned. **Repeated late returns may affect your borrowing privileges.**
+
+## What is the grace period for overdue books?
+
+There is a **3-day grace period** after the due date before fines begin to accumulate. However, you should still return books on time to avoid any issues. After the grace period, daily fines will apply based on your user type.
+
+## How do I know when my books are due?
+
+You can check your account dashboard to see all your current loans and their due dates. You'll also receive **email reminders before books are due**.
+
+## How do I pay my fines?
+
+Fines can typically be paid through your account dashboard using the payment options available. You can also **pay in person at the library**. Check your account for the exact amount and payment methods.
+
+## Should I do if I receive a fine I believe is incorrect?
+
+If you believe a fine is incorrect, contact the library staff immediately. Provide details about the issue, and the library will review your account. **Fines can be adjusted if there was an error in calculation** or if you have a valid reason for the discrepancy.
+
+## What should I do if I return a book to the wrong library location?
+
+If you return a book to a different library location, it will still be processed, but there may be a delay in updating your account. The book will be transferred to the correct location.
+
+**Tip:** Always try to return books to the location where you borrowed them when possible.
+
+## What should I do if I receive a damaged book?
+
+If you receive a book in damaged condition, **report it to the library staff immediately** when you check it out or as soon as you notice the damage. This will prevent you from being held responsible for the damage.
+
+## What should I do if I find a book I borrowed is missing pages?
+
+Report missing pages immediately to the library staff when you check out the book or as soon as you notice. This will **prevent you from being held responsible**. The library will handle the book appropriately and may provide you with a replacement copy if available.
+
+## What happens if I damage a book?
+
+If you damage a book, you must **report it immediately** to the library staff. Depending on the extent of damage:
+
+- **Minor damage:** Small repair fee
+- **Significant damage:** May require full replacement cost
+
+## How do I report a lost book?
+
+If you've lost a book, **contact the library immediately**. You may be required to pay a replacement fee depending on the book's value and availability.
+
+## What is the policy on lost books?
+
+If you lose a book, report it immediately to the library. You will be **responsible for the replacement cost** of the book, which may include processing fees. The exact cost depends on the:
+- Book's value
+- Book's availability
+- Processing fees
+
+Once paid, your account will be cleared.
+
+## What should I do if my library card is lost or stolen?
+
+Report a lost or stolen library card immediately through your account or by contacting the library. Your account may be temporarily suspended to prevent unauthorized use. 
+
+You can request a replacement card, which may involve a small fee.

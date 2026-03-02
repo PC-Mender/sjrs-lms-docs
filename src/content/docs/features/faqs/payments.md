@@ -1,0 +1,105 @@
+---
+title: "Payments & Fines"
+description: "Questions about paying fines, payment methods, and billing disputes"
+---
+
+# Payments & Fines - FAQ
+
+## How do I pay my fines?
+
+Fines can be paid in **two ways**:
+
+1. **Online through your account dashboard**
+   - Use the payment options available in the system
+   - Typically supports UPI, cards, and other payment methods
+
+2. **In Person at the library**
+   - Visit the library desk during operating hours
+   - Check your account for the exact amount and payment methods
+
+## What are the late fees?
+
+Late fees are calculated **per day** and depend on your user type:
+
+| User Type | Daily Fine |
+|-----------|-----------|
+| Students | ₹25/day |
+| Professors | ₹50/day |
+| Guests | ₹100/day |
+
+Fines accumulate daily until the book is returned.
+
+## What if I receive a fine I believe is incorrect?
+
+1. **Contact the library staff immediately**
+2. **Provide details** about the issue
+3. The library will **review your account**
+
+**Fines can be adjusted if:**
+- There was an error in calculation
+- You have a valid reason for the discrepancy
+
+## Can I borrow books if I have outstanding fines?
+
+This depends on your account status:
+
+- **Small fines:** May not prevent borrowing
+- **Significant outstanding fines:** May result in **borrowing restrictions until fines are paid**
+- **Repeated violations:** May also result in restrictions
+
+## What happens if I have pending penalties?
+
+If you have pending penalties or outstanding fines:
+
+1. Your order priority may be affected
+2. Your borrowing privileges may be restricted
+3. You must clear penalties before borrowing more books
+4. Pay fines through your dashboard or in person at the library
+
+## How long can I defer payment?
+
+There are no formal deferment periods. You must:
+
+1. Pay outstanding fines to maintain borrowing privileges
+2. Contact the library staff if you need to discuss payment arrangements
+3. Special arrangements may be considered on a case-by-case basis
+
+## What payment methods are accepted?
+
+Common payment methods include:
+
+- **UPI** (most common through the system)
+- **Debit/Credit Cards**
+- **Cash** (in-person at library)
+- **Cheque** (potentially, check with library)
+
+Check your account dashboard for currently available payment methods.
+
+## Where can I see the details of my outstanding fines?
+
+You can view all outstanding fines in:
+
+1. **Your account dashboard** - Fines & Penalties section
+2. **Borrowing history** - Shows all fines associated with past loans
+3. Contact the **library staff** for detailed information
+
+## Is there a way to dispute a fine?
+
+Yes, if you believe a fine is incorrect:
+
+1. **Contact the library staff immediately**
+2. **Provide evidence** or explanation (e.g., book returned on time, receipt, etc.)
+3. The library will **investigate and adjust** if warranted
+
+Document the dates and circumstances if you suspect an error.
+
+## What happens if I don't pay my fines?
+
+Outstanding fines can result in:
+
+1. **Borrowing privileges suspended**
+2. **Account restrictions**
+3. **Hold on future borrowing** until fines are cleared
+4. Potentially **escalation to institutional procedures**
+
+It's best to pay fines promptly to maintain full access to library services.
