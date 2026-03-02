@@ -31,6 +31,13 @@ This directory contains detailed documentation for specific features and systems
 ### **🏆 Badge System**
 - **[Badge System Documentation](./badges/)** - Comprehensive gamification and achievement system
 
+### **🌍 Location Services**
+- **[Location Services Documentation](./locations/)** - Global location data system (Countries, States, Cities)
+
+### **❓ Help & Support**
+- **[Frequently Asked Questions](./faqs/)** - Comprehensive FAQs for all user roles
+- **[Notification Types Guide](./notifications/notification-types-guide.md)** - Guide to system notifications and announcements
+
 
 
 ## 🎯 Quick Navigation

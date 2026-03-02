@@ -1,0 +1,112 @@
+---
+title: "Location Services"
+description: "Documentation for the Location Services system providing country, state, and city data."
+---
+
+# 🌍 Location Services
+
+The SJRS LMS includes a comprehensive Location Services system that provides standardized geographical data (Countries, States, Cities) to ensure consistent user profile information across the platform.
+
+## 🏗️ Architecture
+
+The system is built on a backend-first architecture where the API serves as the single source of truth for location data, utilizing the `country-state-city` library to ensure accuracy and standardization.
+
+### **Backend Implementation**
+
+The backend exposes a set of RESTful endpoints under `/api/locations` that provide hierarchical data access:
+
+1.  **Countries**: Top-level data with ISO codes and phone codes.
+2.  **States**: Linked to specific countries via ISO country codes.
+3.  **Cities**: Linked to specific states and countries.
+
+This hierarchical structure enables **cascading selectors** on the frontend, where selecting a country filters the available states, and selecting a state filters the available cities.
+
+### **Database Integration**
+
+User profiles in the D1 database have been updated to store location references:
+- `country`: ISO Country Code (e.g., "US", "IN")
+- `state`: ISO State Code (e.g., "CA", "MH")
+- `city`: City Name (e.g., "San Francisco", "Mumbai")
+
+Storing codes instead of full names for countries and states ensures data normalization, while the API handles the resolution of codes to display names.
+
+## 🔌 API Endpoints
+
+| Method | Endpoint | Query Parameters | Description |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/locations/countries` | None | Returns a list of all supported countries. |
+| `GET` | `/api/locations/states` | `?country=CODE` | Returns states for the specified country code. |
+| `GET` | `/api/locations/cities` | `?country=CODE&state=CODE` | Returns cities for the specified state and country. |
+| `GET` | `/api/locations/districts` | `?country=CODE&state=CODE` | Returns districts for the specified state (if supported). |
+
+### **Sample Response (Cities)**
+
+```json
+{
+  "success": true,
+  "data": {
+    "cities": [
+      {
+        "name": "Mumbai",
+        "stateCode": "MH",
+        "countryCode": "IN",
+        "latitude": "19.07609000",
+        "longitude": "72.87742600"
+      }
+      // ...
+    ],
+    "total": 150,
+    "countryCode": "IN",
+    "stateCode": "MH"
+  },
+  "message": "Cities retrieved successfully",
+  "statusCode": 200
+}
+```
+
+## 💻 Frontend Integration
+
+The frontend utilizes **React Query** hooks to efficiently fetch and cache location data. These hooks are located in `src/hooks/useLocations.ts`.
+
+### **Available Hooks**
+
+- `useCountries()`: Fetches list of countries. Caches for 24 hours.
+- `useStates(countryCode)`: Fetches states when a country is selected. Dependent on `countryCode`.
+- `useCities(countryCode, stateCode)`: Fetches cities when a state is selected. Dependent on both codes.
+
+### **Usage Example**
+
+```tsx
+import { useCountries, useStates, useCities } from '@/hooks/useLocations';
+
+const LocationForm = () => {
+  const [country, setCountry] = useState('');
+  const [state, setState] = useState('');
+  
+  const { data: countries } = useCountries();
+  const { data: states } = useStates(country);
+  const { data: cities } = useCities(country, state);
+
+  return (
+    <form>
+      {/* Country Selector */}
+      <Select value={country} onChange={e => setCountry(e.target.value)}>
+        {countries?.map(c => <option value={c.code}>{c.name}</option>)}
+      </Select>
+
+      {/* State Selector - Disabled until country selected */}
+      <Select value={state} onChange={e => setState(e.target.value)} disabled={!country}>
+        {states?.map(s => <option value={s.code}>{s.name}</option>)}
+      </Select>
+      
+      {/* ... */}
+    </form>
+  );
+};
+```
+
+## 🔒 Security & Validation
+
+- **Input Validation**: The API validates that required parameters (`country`, `state`) are present before processing requests.
+- **Error Handling**: Standardized error responses (400 Bad Request) are returned for missing parameters.
+- **Method Restrictions**: Only `GET` requests are allowed; other methods return 405 Method Not Allowed.

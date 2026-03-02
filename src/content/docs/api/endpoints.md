@@ -68,6 +68,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 
 ### **Student Management**
 - **GET** `/api/students` - Get all students
+- **GET** `/api/students/meta` - Get student metadata (filters, counts)
 - **GET** `/api/students/:id` - Get specific student
 - **POST** `/api/students` - Create student
 - **PUT** `/api/students/:id` - Update student
@@ -75,10 +76,19 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 
 ### **Professor Management**
 - **GET** `/api/professors` - Get all professors
+- **GET** `/api/professors/meta` - Get professor metadata (filters, counts)
 - **GET** `/api/professors/:id` - Get specific professor
 - **POST** `/api/professors` - Create professor
 - **PUT** `/api/professors/:id` - Update professor
 - **DELETE** `/api/professors/:id` - Delete professor
+
+## 🌍 Location Endpoints
+
+### **Location Data**
+- **GET** `/api/locations/countries` - Get all countries
+- **GET** `/api/locations/states` - Get states by country (`?country=CODE`)
+- **GET** `/api/locations/districts` - Get districts by state (`?country=CODE&state=CODE`)
+- **GET** `/api/locations/cities` - Get cities by state (`?country=CODE&state=CODE`)
 
 ## 📚 Book Management Endpoints
 

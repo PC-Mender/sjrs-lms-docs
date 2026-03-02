@@ -6,7 +6,41 @@ slug: changelog
 
 ## 🆕 **Latest Updates**
 
-### **Version 3.49.0** ⭐ **CURRENT** (March 2, 2026)
+### **Version 3.50.3** ⭐ **CURRENT** (March 2, 2026)
+
+#### **Code Refactoring**
+- ✅ **Documentation**: Moved FAQ content to the documentation site and simplified the help system.
+
+### **Version 3.50.2** (March 2, 2026)
+
+#### **Security Hardening**
+- ✅ **Auth Profile Loading**: Hardened `/api/auth/me` profile loading with schema-safe fallbacks.
+
+### **Version 3.50.1** (March 2, 2026)
+
+#### **Code Refactoring**
+- ✅ **Guest Profile Steps**: Split `guest-profile-steps` into focused step components for better maintainability.
+
+### **Version 3.50.0** ⭐ **MAJOR UPDATE** (March 2, 2026)
+
+#### **Location Services Integration** ⭐ **NEW**
+The SJRS LMS now features **comprehensive location services** with country-state-city integration for accurate user profile data.
+
+**Key Features:**
+- ✅ **Location API**: New endpoints for fetching countries, states, and cities.
+- ✅ **Database Schema**: New location fields added to the database schema.
+- ✅ **Profile Forms**: Cascading selectors for location fields in profile forms.
+- ✅ **User Types**: Updated user type definitions and contexts to include location data.
+- ✅ **Pending Approval**: Display of location and "about" fields on the pending approval page.
+
+### **Version 3.49.1** (March 2, 2026)
+
+#### **Bug Fixes & Improvements**
+- ✅ **Email Verification**: Fixed email verification workflow and profile completion issues.
+- ✅ **Login UX**: Improved modal dismissal behavior in login.
+- ✅ **Pending Approval**: Simplified pending approval page UX.
+
+### **Version 3.49.0** (March 2, 2026)
 
 #### **Onboarding Status & Account Management** ⭐ **NEW**
 The SJRS LMS now features **persistent onboarding status tracking** and improved account status visibility in Administration pages.
