@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.14](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.13...v1.1.14) (2026-03-03)
+
+
+### Documentation
+
+* align onboarding workflow and help system\n\n- Update Account Management to new onboarding statuses\n- Simplify Help System Guide with keyboard shortcut and external links\n- Update changelog for 3.52.0, 3.51.x\n- Add onboarding-status reference and status data dictionary\n- Minor doc index adjustments ([eac78fb](https://github.com/PC-Mender/sjrs-lms-docs/commit/eac78fb041a7f110175474931cbfff25098a4ba4))
+
 ### [1.1.13](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.12...v1.1.13) (2026-03-03)
 
 
