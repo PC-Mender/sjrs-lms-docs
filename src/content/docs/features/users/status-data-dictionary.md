@@ -1,0 +1,366 @@
+---
+title: "User Status Data Dictionary"
+description: "Complete reference for all user status fields and values in SJRS LMS"
+---
+
+# 📚 User Status Data Dictionary
+
+This document provides a comprehensive reference for all status-related fields and their possible values in the SJRS LMS user system.
+
+## 📋 Status Fields
+
+### `status` (Account Status)
+
+**Type**: `TEXT` (enum-like)  
+**Table**: `library_users`  
+**Purpose**: Primary account state controlling access and lifecycle  
+**Managed By**: System, Admin, Superuser
+
+| Value | Description | Access Level | Settable By |
+|-------|-------------|--------------|-------------|
+| `pending` | Newly registered, awaiting activation | Limited (profile only) | System (auto), Admin |
+| `active` | Fully activated and functional | Full access | Admin, Superuser |
+| `inactive` | Deactivated or rejected | No access | Admin, Superuser |
+| `suspended` | Temporarily suspended | No access | Admin, Superuser |
+
+**Color Mapping**:
+```typescript
+{
+  'pending': 'orange',
+  'active': 'green',
+  'inactive': 'red',
+  'suspended': 'red'
+}
+```
+
+---
+
+### `onboarding_status` (Workflow Status)
+
+**Type**: `TEXT` (enum-like)  
+**Table**: `library_users`  
+**Purpose**: Granular onboarding progress tracking  
+**Managed By**: System (auto-update), Admin (override)
+
+| Value | Description | User State | Auto-Set By |
+|-------|-------------|------------|-------------|
+| `pending_email_confirmation` | Email unverified | Cannot log in | Registration |
+| `profile_incomplete` | Email verified, profile missing | Can log in, limited access | Email confirmation |
+| `pending_approval` | Profile complete, awaiting approval | Can log in, limited access | Profile submission |
+| `complete` | Onboarding finished | Full access | Admin approval |
+
+**Color Mapping**:
+```typescript
+{
+  'pending_email_confirmation': 'blue',
+  'profile_incomplete': 'blue',
+  'pending_approval': 'orange',
+  'complete': 'green'
+}
+```
+
+**Label Mapping**:
+```typescript
+{
+  'pending_email_confirmation': 'Pending Email Confirmation',
+  'profile_incomplete': 'Profile Incomplete',
+  'pending_approval': 'Pending Approval',
+  'complete': 'Complete'
+}
+```
+
+> 📘 **See Also**: [Onboarding Status System](/features/onboarding-status) for detailed workflow documentation.
+
+---
+
+### `email_verified` (Email Confirmation Flag)
+
+**Type**: `BOOLEAN` (INTEGER in SQLite: 0 or 1)  
+**Table**: `library_users`  
+**Purpose**: Track email confirmation status  
+**Managed By**: System (auto-update via email confirmation)
+
+| Value | Description | Set By |
+|-------|-------------|--------|
+| `0` / `false` | Email not confirmed | Registration (default) |
+| `1` / `true` | Email confirmed | Email confirmation endpoint |
+
+**Usage**:
+- Blocks login if `false` (except for guests in some configurations)
+- Required to progress from `pending_email_confirmation` to next status
+- Cannot be manually set to `false` after verified (one-way flag)
+
+---
+
+### `profile_completed` (Profile Completion Flag)
+
+**Type**: `BOOLEAN` (INTEGER in SQLite: 0 or 1)  
+**Table**: `library_users`  
+**Purpose**: Track profile completion status (derived/cached)  
+**Managed By**: System (auto-computed based on user_type records)
+
+| Value | Description | Determined By |
+|-------|-------------|---------------|
+| `0` / `false` | Profile incomplete or missing | No record in students/professors/guests table |
+| `1` / `true` | Profile complete | Record exists in students/professors/guests table |
+
+**Computation Logic**:
+```typescript
+// Backend: functions/api/auth/profile-handlers/get-current-user.ts
+const profileCompleted = 
+  (userType === 'Student' && studentRecord !== null) ||
+  (userType === 'Professor' && professorRecord !== null) ||
+  (userType === 'Guest' && guestRecord !== null);
+```
+
+**Usage**:
+- Drives onboarding workflow progression
+- Used to determine redirect to profile-completion page
+- **Note**: As of latest fixes, presence of record is sufficient (field values not checked)
+
+---
+
+## 🔄 Status Combinations
+
+### Typical Onboarding States
+
+| status | onboarding_status | email_verified | profile_completed | User Experience |
+|--------|-------------------|----------------|-------------------|-----------------|
+| `pending` | `pending_email_confirmation` | `false` | `false` | Cannot log in, must verify email |
+| `pending` | `profile_incomplete` | `true` | `false` | Can log in, redirected to profile completion |
+| `pending` | `pending_approval` | `true` | `true` | Can log in, limited access, awaiting approval |
+| `active` | `complete` | `true` | `true` | Full access, normal operation |
+| `inactive` | `complete` | `true` | `true` | Deactivated, no access |
+| `suspended` | `complete` | `true` | `true` | Suspended, no access |
+
+### Edge Cases
+
+| status | onboarding_status | email_verified | profile_completed | Note |
+|--------|-------------------|----------------|-------------------|------|
+| `active` | `pending_approval` | `true` | `true` | Admin manually set active without updating onboarding_status |
+| `pending` | `complete` | `true` | `true` | Should not occur (inconsistent state) |
+| `active` | `profile_incomplete` | `true` | `false` | Should not occur (admin bypassed onboarding) |
+
+---
+
+## 🎨 Display Constants
+
+### Frontend Constants Location
+
+**Primary**: [`src/constants/user-status.ts`](e:\GitHub\sjrslms\src\constants\user-status.ts)
+
+```typescript
+export const USER_STATUS = {
+  // Account Status
+  ACTIVE: 'active',
+  INACTIVE: 'inactive',
+  SUSPENDED: 'suspended',
+  PENDING: 'pending',
+  
+  // Onboarding Status
+  PENDING_EMAIL_CONFIRMATION: 'pending_email_confirmation',
+  PROFILE_INCOMPLETE: 'profile_incomplete',
+  PENDING_APPROVAL: 'pending_approval',
+  COMPLETE: 'complete',
+} as const;
+
+export const USER_STATUS_COLORS = {
+  // Account Status Colors
+  active: 'green',
+  inactive: 'red',
+  suspended: 'red',
+  pending: 'blue',
+  
+  // Onboarding Status Colors
+  pending_email_confirmation: 'blue',
+  profile_incomplete: 'blue',
+  pending_approval: 'orange',
+  complete: 'green',
+} as const;
+
+export const USER_STATUS_LABELS = {
+  // Account Status Labels
+  active: 'Active',
+  inactive: 'Inactive',
+  suspended: 'Suspended',
+  pending: 'Pending',
+  
+  // Onboarding Status Labels
+  pending_email_confirmation: 'Pending Email Confirmation',
+  profile_incomplete: 'Profile Incomplete',
+  pending_approval: 'Pending Approval',
+  complete: 'Complete',
+} as const;
+```
+
+### Display Utilities
+
+**Location**: [`src/utilities/status/status-utils.tsx`](e:\GitHub\sjrslms\src\utilities\status\status-utils.tsx)
+
+```typescript
+export const getStatusColor = (status: string): string => {
+  // Returns Ant Design color name
+};
+
+export const getStatusIcon = (status: string): React.ReactElement | null => {
+  // Returns Ant Design icon component
+};
+
+export const getStatusLabel = (status: string): string => {
+  // Returns human-readable label
+};
+```
+
+**Usage Example**:
+```typescript
+import { getStatusColor, getStatusLabel } from '@/utilities/status/status-utils';
+
+<Tag color={getStatusColor(user.onboarding_status)}>
+  {getStatusLabel(user.onboarding_status)}
+</Tag>
+```
+
+---
+
+## 🔧 Backend Implementation
+
+### Database Queries
+
+**Select Status Fields**:
+```sql
+SELECT 
+  u.id,
+  u.status,
+  u.onboarding_status,
+  u.email_verified,
+  -- profile_completed is computed, not selected directly
+FROM library_users u
+WHERE u.id = ?
+```
+
+**Update Status**:
+```sql
+UPDATE library_users 
+SET 
+  status = ?,
+  onboarding_status = ?,
+  updated_at = datetime('now')
+WHERE id = ?
+```
+
+**Auto-Update on Email Confirmation**:
+```sql
+UPDATE library_users 
+SET 
+  email_verified = 1,
+  onboarding_status = ?, -- 'profile_incomplete' or 'pending_approval'
+  updated_at = datetime('now')
+WHERE id = ?
+```
+
+---
+
+## 🚨 Validation Rules
+
+### Backend Validation
+
+**Location**: [`functions/middleware/validation/schemas/common-schemas.ts`](e:\GitHub\sjrslms\functions\middleware\validation\schemas\common-schemas.ts)
+
+```typescript
+// Status field validation
+status: z.enum(['active', 'inactive', 'suspended', 'pending']).optional(),
+
+// Onboarding status validation
+onboarding_status: z.enum([
+  'pending_email_confirmation',
+  'profile_incomplete',
+  'pending_approval',
+  'complete'
+]).optional(),
+```
+
+### Frontend Validation
+
+**TypeScript Types**:
+```typescript
+type AccountStatus = 'active' | 'inactive' | 'suspended' | 'pending';
+type OnboardingStatus = 'pending_email_confirmation' | 'profile_incomplete' | 'pending_approval' | 'complete';
+
+interface User {
+  status: AccountStatus;
+  onboarding_status?: OnboardingStatus;
+  email_verified: boolean;
+  profile_completed?: boolean;
+}
+```
+
+---
+
+## 📊 API Endpoints
+
+### Get User Status
+
+```http
+GET /api/auth/me
+Authorization: Bearer <token>
+```
+
+**Response**:
+```json
+{
+  "user": {
+    "status": "active",
+    "onboarding_status": "complete",
+    "email_verified": true,
+    "profile_completed": true
+  }
+}
+```
+
+### Update User Status (Admin)
+
+```http
+PUT /api/users/:id
+Authorization: Bearer <token>
+Content-Type: application/json
+
+{
+  "status": "active",
+  "onboarding_status": "complete"
+}
+```
+
+### Check Status (Public, OTP-based)
+
+```http
+POST /api/auth/check-status/verify
+Content-Type: application/json
+
+{
+email": "user@example.com",
+  "otp": "123456"
+}
+```
+
+**Response**:
+```json
+{
+  "workflowStatus": "pending_approval",
+  "onboarding_status": "pending_approval",
+  "email_verified": true
+}
+```
+
+---
+
+## 🔗 Related Documentation
+
+- [Onboarding Status System](/features/onboarding-status) - Complete workflow guide
+- [Registration Flow](/user-guides/registration-flow) - User registration process
+- [User Management](/features/users/) - Admin user management features
+- [Permission System](/features/permissions/) - Access control documentation
+
+---
+
+**Last Updated**: March 3, 2026  
+**Version**: 1.0.0

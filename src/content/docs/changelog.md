@@ -8,7 +8,32 @@ slug: changelog
 
 ## 🆕 **Latest Updates**
 
-### **Version 3.50.3** ⭐ **CURRENT** (March 2, 2026)
+### **Version 3.52.0** ⭐ **CURRENT** (March 3, 2026)
+
+#### **User Status Enhancements**
+- ✅ **Status Handling**: Enhanced user status handling across forms and contexts
+- ✅ **Form Components**: Improved status selectors and validation for onboarding statuses
+- ✅ **Help Integration**: Simplified in-app Help linking to docs site with keyboard shortcut (press **?**)
+
+#### **Quality & Security**
+- ✅ **Dependencies**: Updated dependencies; known vulnerabilities reduced to 0
+- ✅ **Auth**: More robust profile loading with schema-safe fallbacks (`/api/auth/me`)
+
+### **Version 3.51.1** (March 3, 2026)
+
+#### **Testing**
+- ✅ **Fixed Failing Tests**: Addressed intermittent test failures
+- ✅ **Noise Reduction**: Suppressed noisy warnings in test environment
+
+### **Version 3.51.0** (March 3, 2026)
+
+#### **Administration UI Improvements**
+- ✅ **Onboarding Filters**: Added onboarding status filter to Students, Professors, and Members pages
+- ✅ **Account Status Precision**: Aligned account status labels and colors across management pages
+- ✅ **Guest Management UI**: Kept Account Status and Onboarding Status in a single row; added onboarding status filter
+- ✅ **Profile Data Fetching**: Fetched guest profile data for accurate UI display
+
+### **Version 3.50.3** (March 2, 2026)
 
 #### **Code Refactoring**
 - ✅ **Documentation**: Moved FAQ content to the documentation site and simplified the help system.

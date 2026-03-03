@@ -18,18 +18,17 @@ The SJRS LMS now features comprehensive account status and onboarding tracking t
 ### Account Status
 Represents the **account state** within the system:
 - **Active**: User account is fully functional and active
-- **Pending Verification**: Email verification pending
-- **Pending Approval**: Awaiting administrative approval
-- **Rejected**: Account application was rejected
+- **Pending**: Newly registered or awaiting activation
+- **Inactive**: Account application was rejected or deactivated
 - **Suspended**: Account has been suspended
-- **Deactivated**: User account has been closed/deactivated
+- Note: Account status is distinct from onboarding status and determines access
 
 ### Onboarding Status
-Represents the **user setup progress** through the onboarding workflow:
-- **Not Started**: User hasn't begun the onboarding process
-- **In Progress**: User has started but not completed onboarding
-- **Completed**: User has finished all onboarding steps
-- **Skipped**: User skipped the onboarding process
+Represents the **user setup progress** through the onboarding workflow (persisted in the database):
+- **Pending Email Confirmation**: User registered but has not verified email (`pending_email_confirmation`)
+- **Profile Incomplete**: Email verified but profile not completed (`profile_incomplete`)
+- **Pending Approval**: Profile completed; awaiting admin approval (`pending_approval`)
+- **Complete**: Onboarding fully finished (`complete`)
 
 ---
 
@@ -39,16 +38,16 @@ Represents the **user setup progress** through the onboarding workflow:
 ```sql
 -- Migration: 2026-03-01_add-onboarding-status-to-library-users.sql
 ALTER TABLE library_users ADD COLUMN onboarding_status TEXT;
--- Backfilled with 'completed' for existing users
--- New users default to 'not-started'
+-- Backfilled appropriately for existing users based on email/profile flags
+-- Values used: 'pending_email_confirmation' | 'profile_incomplete' | 'pending_approval' | 'complete'
 ```
 
 ### Fields
 - **Field**: `library_users.onboarding_status`
 - **Type**: TEXT
-- **Values**: `'not-started' | 'in-progress' | 'completed' | 'skipped'`
-- **Default**: `'not-started'` for new users
-- **Backfill**: Existing users set to `'completed'` for backward compatibility
+- **Values**: `'pending_email_confirmation' | 'profile_incomplete' | 'pending_approval' | 'complete'`
+- **Default**: Derived from workflow at runtime; persisted when set
+- **Backfill**: Calculated from `email_verified` and `profile_completed` flags
 
 ---
 
@@ -59,38 +58,38 @@ ALTER TABLE library_users ADD COLUMN onboarding_status TEXT;
 ```
 Registration
     ↓
-Email Confirmation (Account Status: Pending Verification)
+Email Confirmation (Onboarding: Pending Email Confirmation)
     ↓
-Profile Completion + Onboarding (Onboarding Status: In Progress)
+Profile Completion (Onboarding: Profile Incomplete → Pending Approval)
     ↓
-Approval (if required) (Account Status: Pending Approval → Active)
+Administrative Approval (Account Status: Pending → Active; Onboarding remains Pending Approval until approved)
     ↓
-Onboarding Complete (Onboarding Status: Completed)
+Onboarding Complete (Onboarding: Complete)
     ↓
-Active User (Account Status: Active, Onboarding Status: Completed)
+Active User (Account Status: Active, Onboarding: Complete)
 ```
 
 ### Status Transitions
 
 #### Email Confirmation
 - **Triggered**: User clicks email confirmation link
-- **Updates**: Account Status → `pending-approval` (if approval required) or `active`
-- **Onboarding Status**: Advances if user completes profile
+- **Updates**: Onboarding → `pending_email_confirmation` → progresses after verification
+- **Account Status**: Stays `pending` until approval or activation
 
 #### Profile Completion
 - **Triggered**: User completes profile/onboarding form
-- **Updates**: Onboarding Status → `in-progress` or `completed`
-- **Prerequisite**: Account Status must be `active`
+- **Updates**: Onboarding → `profile_incomplete` while incomplete; `pending_approval` when submitted
+- **Prerequisite**: Email must be verified
 
 #### Administrative Approval
 - **Triggered**: Admin approves/rejects pending user
-- **Approval**: Account Status → `active` + triggers onboarding start
-- **Rejection**: Account Status → `rejected`
+- **Approval**: Account Status → `active`; Onboarding → `complete`
+- **Rejection**: Account Status → `inactive`
 - **Audit Logged**: All approval/rejection actions
 
 #### Onboarding Completion
 - **Triggered**: User completes all onboarding steps
-- **Updates**: Onboarding Status → `completed`
+- **Updates**: Onboarding → `complete`
 - **Verification**: Backend validates completion before marking as done
 
 ---
@@ -124,9 +123,10 @@ Bob Johnson     | Active           | Not Started       | Guest
 #### Guest Edit Modal (Onboarding-Specific)
 - **Constraint**: Guest edit modal restricts onboarding selector to onboarding-only values
 - **Allowed Values**: 
-  - `in-progress`
-  - `completed`
-  - `skipped`
+  - `pending_email_confirmation`
+  - `profile_incomplete`
+  - `pending_approval`
+  - `complete`
 - **Use Case**: Allows admins to manually adjust guest onboarding progress
 
 #### Edit Student/Professor
@@ -246,10 +246,10 @@ The monolithic `status.ts` has been split into specialized modules:
    - Onboarding Status = Have they completed setup?
 
 2. **User Creation Workflow**:
-   - Invite user → Account Status: Pending Verification
-   - User confirms email → Account Status: Active
-   - User completes profile → Onboarding Status: In Progress
-   - Admin approves → Account Status: Active, Onboarding Status: Completed
+   - Invite user → Onboarding: Pending Email Confirmation
+   - User confirms email → Onboarding: Profile Incomplete (until profile is done)
+   - User completes profile → Onboarding: Pending Approval
+   - Admin approves → Account: Active, Onboarding: Complete
 
 3. **Troubleshooting**:
    - User can't login? Check Account Status
@@ -258,7 +258,7 @@ The monolithic `status.ts` has been split into specialized modules:
 
 ### For Developers
 
-1. **Always Persist Onboarding State**: Use database field, not session
+1. **Persist Onboarding State**: Use `library_users.onboarding_status`
 2. **Update on Key Events**: Trigger updates on profile completion, approval, etc.
 3. **Idempotent Updates**: Status updates should be idempotent
 4. **Audit Trail**: Log all status changes for compliance
@@ -301,22 +301,22 @@ const response = await fetch('/api/auth/check-status', {
 });
 
 const { data } = await response.json();
-console.log(data.account_status);      // 'active' | 'pending-verification' | etc.
-console.log(data.onboarding_status);   // 'completed' | 'in-progress' | etc.
+console.log(data.account_status);      // 'active' | 'pending' | 'inactive' | 'suspended'
+console.log(data.onboarding_status);   // 'pending_email_confirmation' | 'profile_incomplete' | 'pending_approval' | 'complete'
 ```
 
 ### Display Status (React)
 ```tsx
-import { getStatusColor, getStatusLabel } from '@/utilities/status-helpers';
+import { getWorkflowStatusColor, getWorkflowStatusLabel } from '@/constants/status';
 
 function UserStatusBadge({ accountStatus, onboardingStatus }) {
   return (
     <div>
-      <span className={`badge ${getStatusColor(accountStatus)}`}>
-        {getStatusLabel(accountStatus)}
+      <span className={`badge ${getWorkflowStatusColor(accountStatus)}`}>
+        {getWorkflowStatusLabel(accountStatus)}
       </span>
-      <span className={`badge ${getStatusColor(onboardingStatus)}`}>
-        {getStatusLabel(onboardingStatus)}
+      <span className={`badge ${getWorkflowStatusColor(onboardingStatus)}`}>
+        {getWorkflowStatusLabel(onboardingStatus)}
       </span>
     </div>
   );
@@ -330,7 +330,12 @@ export async function handleUpdateUser(req) {
   const { onboarding_status, ...otherFields } = req.body;
 
   // Validate onboarding status
-  const validStatuses = ['not-started', 'in-progress', 'completed', 'skipped'];
+  const validStatuses = [
+    'pending_email_confirmation',
+    'profile_incomplete',
+    'pending_approval',
+    'complete'
+  ];
   if (!validStatuses.includes(onboarding_status)) {
     return createErrorResponse('Invalid onboarding status', 400);
   }
@@ -360,14 +365,14 @@ export async function handleUpdateUser(req) {
 
 ### Common Issues
 
-#### User Shows "Pending Verification" After Email Confirmed
-- **Cause**: Email confirmation status not updated in database
-- **Fix**: Run email confirmation handler again or manually update account status
+#### User Shows "Pending Email Confirmation" After Email Confirmed
+- **Cause**: Email verification flag not updated
+- **Fix**: Re-run email confirmation handler or verify token processing; ensure `email_verified` is true
 
-#### Onboarding Status Shows "Not Started" for Active Users
-- **Cause**: Old user data not backfilled (if migrating from older version)
-- **Fix**: Run backfill script to set existing users to 'completed'
-- **Prevention**: Migration handles this automatically in v3.49.0+
+#### Onboarding Status Shows "Profile Incomplete" for Verified Users
+- **Cause**: Profile data not completed/submitted
+- **Fix**: Complete profile and submit for approval
+- **Prevention**: Use profile completion page and ensure required fields are filled
 
 #### Can't Update Guest Onboarding Status
 - **Cause**: Guest edit modal has validation restrictions

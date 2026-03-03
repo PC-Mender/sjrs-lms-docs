@@ -24,7 +24,11 @@ This directory contains detailed documentation for specific features and systems
 - **[Permission System Architecture](../architecture/permission-system.md)** - System design and database schema
 - **[Roles and Permissions Guide](../development/roles-and-permissions.md)** - Role management and hierarchy
 
-### **🔔 Notifications System**
+### **� User Onboarding**
+- **[Onboarding Status System](./onboarding-status.md)** - Complete workflow status reference (pending_email_confirmation, profile_incomplete, pending_approval, complete)
+- **[Registration Flow Guide](../user-guides/registration-flow.md)** - User registration and approval process
+
+### **�🔔 Notifications System**
 - **[App Notifications Module](./notifications/)** - User-specific in-app notifications
 - **[Notification Types Guide](./notifications/notification-types-guide.md)** - Complete guide to Announcements, System Notifications, and App Notifications
 

@@ -6,7 +6,7 @@ title: "Help System Guide"
 
 ## Overview
 
-The SJRS LMS Help System provides comprehensive, role-based documentation that adapts to each user's permissions and access level. The system is designed to be user-friendly, accessible, and integrated seamlessly into the application.
+The SJRS LMS Help System provides streamlined, discoverable documentation integrated directly into the application. The in-app Help page now features curated categories that link to the full documentation site, ensuring content stays current and comprehensive while keeping the app lightweight.
 
 ## 🎯 Key Features
 
@@ -29,31 +29,47 @@ The SJRS LMS Help System provides comprehensive, role-based documentation that a
 
 ### **Multiple Access Points**
 - **Help button** in the top navigation bar
+- **Press ?** anywhere in the app to toggle the Help drawer
 - **User menu** with dedicated help link
-- **Direct URL access** via `/dashboard/help` routes
+- **Direct URL access** via `/help`
 
 ## 🚀 How to Access Help
 
-### **Method 1: Help Button**
-1. Look for the **question mark (?) icon** in the top navigation bar
-2. Click the help button to open the help drawer
-3. Browse categories or search for specific topics
+### **Method 1: Keyboard Shortcut**
+1. Press **?** (Shift + /) anywhere in the app
+2. The Help drawer opens instantly
+3. Follow quick links to documentation topics
 
-### **Method 2: User Menu**
+### **Method 2: Help Button**
+1. Look for the **info icon** in the top navigation bar
+2. Click the help button to open the help drawer
+3. Browse categories or open topics
+
+### **Method 3: User Menu**
 1. Click on your **user avatar** in the top right
 2. Select **"Help & Documentation"** from the dropdown menu
 3. Navigate to the full help page
 
-### **Method 3: Direct URL**
-- Navigate to `/dashboard/help` (or your role-specific dashboard)
-- Access the comprehensive help interface
+### **Method 4: Direct URL**
+- Navigate to `/help`
+- Access the curated help interface
 
-## 📚 Help Categories
+## 📚 Help Categories (External Links)
 
-### **Getting Started**
-- **Available to**: All users
-- **Content**: Basic introduction and first steps
-- **Topics**: Welcome guide, navigation basics, profile management
+### **Borrowing**
+- Links to docs site: borrowing rules, order requests, limits
+### **Returns & Fines**
+- Links to docs site: returns, late fees, lost items
+### **Account Management**
+- Links to docs site: registration, login, profile updates
+### **Payments**
+- Links to docs site: payment methods and fines
+### **Library Rules**
+- Links to docs site: hours, policies, facility rules
+### **Digital Resources**
+- Links to docs site: printing, remote access
+### **Special Services**
+- Links to docs site: research privileges, donations
 
 ### **User Management**
 - **Available to**: Admin, Superuser
@@ -92,15 +108,13 @@ The SJRS LMS Help System provides comprehensive, role-based documentation that a
 
 ## 🎨 User Interface Features
 
-### **Search Functionality**
-- **Real-time search** across all available topics
-- **Keyword matching** in titles, descriptions, and tags
-- **Instant results** with highlighting
+### **Quick Navigation**
+- Category cards with icons and descriptions
+- One-click links to the documentation site
 
-### **Category Filtering**
-- **Visual category cards** with icons and descriptions
-- **Topic count** for each category
-- **Color-coded** categories for easy identification
+### **Keyboard Shortcut**
+- Press **?** to toggle the Help drawer
+- Accessible from any non-typing context
 
 ### **Content Display**
 - **Two view modes**: List and Grid
@@ -130,9 +144,9 @@ src/pages/help/
 ```
 
 ### **Routing Integration**
-- **All dashboard routes** include `/help` path
-- **Role-specific routing** based on user permissions
-- **Lazy loading** for optimal performance
+- Dedicated `/help` route available from all layouts
+- Links open external docs in a new tab
+- Lazy loading for optimal performance
 
 ### **Theme Integration**
 - **Automatic theme detection** from color mode context
@@ -156,53 +170,28 @@ src/pages/help/
 - **Simplified navigation** with larger touch targets
 - **Optimized content** for smaller screens
 
-## 🎯 Role-Based Content Examples
+## 🎯 Role-Based Access
 
-### **Student Help Topics**
-- Welcome to SJRS LMS
-- Browsing and Searching Books
-- Managing Your Profile
-- Understanding Borrow Limits
+### **Students**
+- Borrowing, returns, account basics
 
-### **Professor Help Topics**
-- Welcome to SJRS LMS
-- Browsing and Searching Books
-- Extended Borrowing Privileges
-- Academic Resource Access
+### **Professors**
+- Extended borrowing privileges, academic resources
 
-### **Librarian Help Topics**
-- Welcome to SJRS LMS
-- Book Management
-- Circulation Management
-- User Management (Read-only)
-- Notification Management
+### **Librarians**
+- Book and circulation management, notifications
 
-### **Admin Help Topics**
-- Welcome to SJRS LMS
-- User Management
-- Book Management
-- Circulation Management
-- Analytics & Reports
-- Security & Permissions
-- Notification Management
+### **Admins**
+- Users, permissions, analytics, notifications
 
-### **Superuser Help Topics**
-- Welcome to SJRS LMS
-- User Management
-- Book Management
-- Circulation Management
-- Analytics & Reports
-- System Administration
-- Security & Permissions
-- Notification Management
+### **Superusers**
+- System administration and advanced configuration
 
-## 🔍 Search and Discovery
+## 🔍 External Documentation
 
-### **Search Features**
-- **Full-text search** across all content
-- **Tag-based filtering** for specific topics
-- **Category-based browsing** for systematic exploration
-- **Difficulty-based filtering** for skill-appropriate content
+### **Docs Site**
+- Full search, tags, and filters available on docs.sjrslms.in
+- In-app help provides quick entry points
 
 ### **Content Organization**
 - **Hierarchical structure** with categories and subcategories
@@ -239,15 +228,12 @@ src/pages/help/
 ## 📊 Usage Analytics
 
 ### **Help System Metrics**
-- **Most accessed topics** for content optimization
-- **Search patterns** for improving discoverability
-- **User engagement** with different content types
-- **Role-based usage** patterns for targeted improvements
+- Most accessed categories
+- Click-through rates to docs site
 
 ### **Content Performance**
-- **Reading time accuracy** for better user expectations
-- **Difficulty level appropriateness** based on user feedback
-- **Content freshness** with regular update tracking
+- Content freshness tracked on docs site
+- Regular updates reflected via external links
 
 ## 🔧 Maintenance and Updates
 
@@ -306,5 +292,5 @@ src/pages/help/
 ---
 
 **Last Updated:** November 2025  
-**Version:** 2.2.0  
+**Version:** 2.3.0  
 **Status:** Production Ready

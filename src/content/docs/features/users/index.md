@@ -6,6 +6,11 @@ title: "Overview"
 
 This directory contains comprehensive user management components that were restored after being lost during a refactor.
 
+## 📚 Documentation
+
+- **[User Status Data Dictionary](./status-data-dictionary.md)** - Complete reference for status field values and workflow states
+- **[Onboarding Status System](/features/onboarding-status.md)** - Detailed onboarding workflow documentation
+
 ## Components Overview
 
 ### Core Components (`/components`)

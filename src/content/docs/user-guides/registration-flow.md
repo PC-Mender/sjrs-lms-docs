@@ -61,7 +61,10 @@ Workflow statuses:
 - `pending_email_confirmation` – email not yet verified.
 - `profile_incomplete` – email verified, but profile details are not completed yet.
 - `pending_approval` – email verified and profile completed, awaiting admin approval.
-- `active` / `inactive` / `suspended` – terminal states.
+- `complete` – onboarding finished, account fully activated.
+- `active` / `inactive` / `suspended` – terminal account states.
+
+> 📘 **Detailed Reference**: See [Onboarding Status System](/features/onboarding-status) for complete workflow documentation, admin management, and troubleshooting.
 
 Note:
 - The canonical persisted onboarding field is `onboarding_status`.
