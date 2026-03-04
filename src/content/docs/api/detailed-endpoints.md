@@ -654,6 +654,9 @@ X-XSRF-TOKEN: <csrf_token>
 **Authentication:** Required (Bearer token)
 
 #### Request Body
+- `book_id`: ID of the book (required)
+- `priority`: One of `low`, `normal`, `high` (optional, default: `normal`)
+
 ```json
 {
   "book_id": 1,

@@ -414,5 +414,5 @@ export async function newResource(request: Request, env: any) {
 
 ---
 
-**Last Updated:** November 2025  
-**Version:** 3.41.25 
+**Last Updated:** March 2026  
+**Version:** 4.0.0 

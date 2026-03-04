@@ -5,8 +5,8 @@ title: "Functions Folder Architecture"
 # 🏗️ Functions Folder Architecture
 
 **Status:** ✅ **Production Ready**  
-**Version:** 2.2.0  
-**Last Updated:** November 2025
+**Version:** 4.0.0  
+**Last Updated:** March 2026
 
 ## 📋 Overview
 
@@ -129,18 +129,6 @@ export interface BookData {
   // ... other fields
 }
 
-// Authentication helper
-export async function requireAuthentication(request: Request, env: any) {
-  const user = await getAuthenticatedUser(request, env);
-  if (!user) {
-    return { 
-      user: null, 
-      response: createErrorResponse('Unauthorized', 401, 'UNAUTHORIZED') 
-    };
-  }
-  return { user };
-}
-
 // Re-export standardized response functions
 export { createSuccessResponse, createErrorResponse };
 ```
@@ -148,33 +136,27 @@ export { createSuccessResponse, createErrorResponse };
 ### **2. Handler Implementation**
 ```typescript
 // functions/api/books/handlers/create-book.ts
-import { requireAuthentication, createSuccessResponse, createErrorResponse } from '../base/book-utils';
+import { createSuccessResponse, createErrorResponse } from '../base/book-utils';
 import { createCreatedResponse } from '../../../utilities/response-builder';
+import type { Environment } from '../../../lib/types';
 
-export async function handleCreateBook(request: Request, env: any): Promise<Response> {
+export async function handleCreateBook(
+  request: Request, 
+  env: Environment,
+  user: any,
+  sanitizedData?: any
+): Promise<Response> {
+  const origin = request.headers.get('Origin');
+  
   try {
-    // Authentication
-    const { user, response: authResponse } = await requireAuthentication(request, env);
-    if (authResponse) return authResponse;
-
-    // Validation
-    const body = await request.json();
-    if (!body.title) {
-      return createErrorResponse(
-        'Title is required', 
-        400, 
-        'VALIDATION_ERROR',
-        'Title field is required',
-        { title: ['Title is required'] },
-        request.headers.get('Origin')
-      );
-    }
+    // Validation is handled by securityMiddleware before reaching here
+    const payload = sanitizedData ?? await request.json();
 
     // Business logic
     const result = await env.DB.prepare(`
       INSERT INTO books (title, author_id, isbn, created_at, updated_at)
       VALUES (?, ?, ?, datetime('now'), datetime('now'))
-    `).bind(body.title, body.author_id, body.isbn).run();
+    `).bind(payload.title, payload.author_id, payload.isbn).run();
 
     const createdBook = await env.DB.prepare(`
       SELECT * FROM books WHERE id = ?
@@ -184,7 +166,7 @@ export async function handleCreateBook(request: Request, env: any): Promise<Resp
     return createCreatedResponse(
       createdBook, 
       'Book', 
-      request.headers.get('Origin')
+      origin
     );
 
   } catch (error) {
@@ -194,7 +176,7 @@ export async function handleCreateBook(request: Request, env: any): Promise<Resp
       'INTERNAL_ERROR',
       error.message,
       undefined,
-      request.headers.get('Origin')
+      origin
     );
   }
 }

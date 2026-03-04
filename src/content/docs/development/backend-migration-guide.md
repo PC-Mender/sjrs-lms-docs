@@ -6,7 +6,8 @@ title: "Backend Migration Guide"
 
 **Target Audience:** Developers working with the SJRS LMS backend  
 **Status:** ✅ **Complete**  
-**Last Updated:** November 2025
+**Last Updated:** March 2026
+**Version:** 4.0.0 (Security Middleware Integration)
 
 ## 📋 Overview
 
@@ -49,8 +50,18 @@ import {
 } from '../../../utilities/response-builder';
 
 // Use in your handlers
-export async function handleNewEndpoint(request: Request, env: any): Promise<Response> {
+export async function handleNewEndpoint(
+  request: Request, 
+  env: Environment,
+  user: any,
+  sanitizedData?: any
+): Promise<Response> {
+  const origin = request.headers.get('Origin');
+  
   try {
+    // Use pre-validated data from security middleware
+    const data = sanitizedData ?? await request.json();
+    
     // ... your logic ...
     
     return createSuccessResponse(
@@ -58,7 +69,7 @@ export async function handleNewEndpoint(request: Request, env: any): Promise<Res
       'Operation completed successfully', // Message
       200,                              // Status code (optional)
       { version: '1.0.0' },            // Metadata (optional)
-      request.headers.get('Origin')     // Origin for CORS
+      origin                            // Origin for CORS
     );
   } catch (error) {
     return createErrorResponse(
@@ -67,7 +78,7 @@ export async function handleNewEndpoint(request: Request, env: any): Promise<Res
       'INTERNAL_ERROR',               // Error code
       error.message,                  // Details
       undefined,                      // Validation fields
-      request.headers.get('Origin')   // Origin for CORS
+      origin                          // Origin for CORS
     );
   }
 }

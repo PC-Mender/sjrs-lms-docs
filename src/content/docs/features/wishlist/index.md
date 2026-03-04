@@ -59,6 +59,10 @@ The wishlist system has been refactored into a modular, well-structured architec
 
 ### POST `/api/wishlist`
 - **Body:**
+  - `book_id`: ID of the book (required)
+  - `priority`: Priority level (`low`, `normal`, `high`) (optional, default: `normal`)
+  - `notes`: Additional notes (optional)
+  - `title`, `author`, `isbn`: Custom book details (optional)
   ```json
   {
     "book_id": 123,
@@ -86,7 +90,7 @@ The wishlist table includes:
 - `author` - Custom author (nullable)
 - `isbn` - ISBN (nullable)
 - `notes` - Additional notes (nullable)
-- `priority` - Priority level (low, normal, high)
+- `priority` - Priority level (integer: 1=low, 3=normal, 5=high)
 - `status` - Item status (active, acquired, removed)
 - `created_at` - Creation timestamp
 - `updated_at` - Last update timestamp

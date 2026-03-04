@@ -32,70 +32,80 @@ The project was migrated from Hono-based APIs to direct function APIs for the fo
 
 ### **Standard API Function Pattern**
 
-All API endpoints follow this consistent pattern:
+All API endpoints follow a consistent pattern that separates routing, security, and business logic:
+
+#### **1. The Router (index.ts)**
+The router handles security middleware, permission checks, and dispatches requests to specific handlers.
 
 ```typescript
-// functions/api/resource-name.ts
-import { getAuthenticatedUser } from '../../middleware/auth';
-import { addCORSHeaders } from '../../middleware/cors';
-import { handleError } from '../../utilities/error/unified-error-handler';
+// functions/api/authors/index.ts
+import { handleGetAuthors } from './handlers/get-authors';
+import { handleCreateAuthor } from './handlers/create-author';
+import { securityMiddleware, SECURITY_CONFIGS } from '../../middleware/security';
+import { AUTHOR_CREATE_SCHEMA } from '../../middleware/validation/schemas';
 
-export async function resourceName(request: Request, env: any) {
+export async function authors(request: Request, env: Environment): Promise<Response> {
   const url = new URL(request.url);
-  const path = url.pathname.replace('/api/resource-name', '');
+  const path = url.pathname.replace('/api/authors', '');
+  const origin = request.headers.get('Origin');
+
+  try {
+    // 1. Security Middleware (Auth & Validation)
+    const securityResult = await securityMiddleware(request, env, {
+      ...SECURITY_CONFIGS.API,
+      validationSchema: request.method === 'POST' ? AUTHOR_CREATE_SCHEMA : undefined
+    });
+
+    if (!securityResult.allowed) {
+      return securityResult.response || createForbiddenResponse('Unauthorized', origin);
+    }
+
+    const { user, sanitizedData } = securityResult;
+
+    // 2. Route to Handlers
+    if (request.method === 'GET') {
+      return await handleGetAuthors(request, env, user);
+    } else if (request.method === 'POST') {
+      // Pass sanitizedData from middleware to handler
+      return await handleCreateAuthor(request, env, user, sanitizedData);
+    }
+
+    return createMethodNotAllowedResponse(request);
+  } catch (error) {
+    return await handleError(error, { operation: "Authors API", env });
+  }
+}
+```
+
+#### **2. The Handler**
+Handlers focus on business logic. They receive the authenticated user and pre-validated data.
+
+```typescript
+// functions/api/authors/handlers/create-author.ts
+export async function handleCreateAuthor(
+  request: Request,
+  env: Environment,
+  user: any,
+  sanitizedData?: any
+) {
+  const origin = request.headers.get('Origin');
   
   try {
-    // Authentication middleware
-    const user = await getAuthenticatedUser(request, env);
-    if (!user) {
-      const response = new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return addCORSHeaders(response, request.headers.get('Origin'));
-    }
+    // Use pre-validated data from security middleware
+    // fallback to request.json() if not available (e.g. internal calls)
+    const payload = sanitizedData ?? await request.json();
+
+    const newAuthorId = await createAuthorService(env, payload);
     
-    // Route handling with consistent patterns
-    if (request.method === 'GET' && (path === '' || path === '/')) {
-      // Handle GET /api/resource-name
-      const result = await env.DB.prepare('SELECT * FROM resource_name').all();
-      const response = new Response(JSON.stringify({ success: true, data: result.results }), {
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return addCORSHeaders(response, request.headers.get('Origin'));
-    } else if (request.method === 'POST' && (path === '' || path === '/')) {
-      // Handle POST /api/resource-name
-      const body = await request.json();
-      const result = await env.DB.prepare('INSERT INTO resource_name (name) VALUES (?)').bind(body.name).run();
-      const response = new Response(JSON.stringify({ success: true, data: result }), {
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return addCORSHeaders(response, request.headers.get('Origin'));
-    } else if (path.startsWith('/')) {
-      const id = path.substring(1);
-      // Handle /api/resource-name/:id
-      if (request.method === 'GET') {
-        const result = await env.DB.prepare('SELECT * FROM resource_name WHERE id = ?').bind(id).first();
-        const response = new Response(JSON.stringify({ success: true, data: result }), {
-          headers: { 'Content-Type': 'application/json' }
-        });
-        return addCORSHeaders(response, request.headers.get('Origin'));
-      }
-    }
-    
-    // Handle unsupported methods
-    const response = new Response(JSON.stringify({ error: 'Method not allowed' }), {
-      status: 405,
-      headers: { 'Content-Type': 'application/json' }
-    });
-    return addCORSHeaders(response, request.headers.get('Origin'));
-    
+    return createSuccessResponse(
+      { id: newAuthorId }, 
+      'Author created', 
+      201, 
+      undefined, 
+      origin
+    );
   } catch (error) {
-    return await handleError(error, {
-      operation: 'resource_name_api',
-      component: 'ResourceNameAPI',
-      context: { endpoint: '/api/resource-name' }
-    });
+    return await handleAuthorError(error, 'Create Author', env, origin);
   }
 }
 ```
