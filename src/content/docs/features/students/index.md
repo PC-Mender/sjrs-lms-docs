@@ -208,7 +208,7 @@ import { StudentWithDetails, StudentFormData } from 'src/types/students';
 
 - **[Account Status & Onboarding Management](/features/account-management)** - Comprehensive guide to status tracking and onboarding workflows
 - **[Members Directory](/features/members/)** - Member administration and directory features
-<!-- - **[Professors Module](/features/professors/)** - Professor management and administration -->
+<!-- Future links here -->
 
 ---
 
