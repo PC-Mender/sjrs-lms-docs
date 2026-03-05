@@ -6,7 +6,7 @@ title: "ORDERING BORROWING FLOW ANALYSIS"
 
 ## Executive Summary
 
-The ordering and borrowing facility has a **solid foundation** but contains **several inconsistencies and missing integrations** that prevent a smooth user flow. The backend logic is well-implemented, but the frontend has gaps that need to be addressed.
+The ordering and borrowing facility has a **solid foundation** and the previous inconsistencies have been **resolved**. Both backend and frontend flows are now fully integrated, providing a smooth user journey from catalog browsing to loan creation.
 
 ---
 
@@ -35,38 +35,20 @@ The ordering and borrowing facility has a **solid foundation** but contains **se
    - Due date calculation based on user type limits
    - Badge system integration
 
-### ⚠️ **Frontend Flow (Inconsistent)**
+### ✅ **Frontend Flow (Fully Integrated)**
 
-#### **What Works:**
-1. ✅ Request Cart Context (`RequestCartProvider`) - properly implemented
-2. ✅ Request Cart Drawer component - functional UI
-3. ✅ Book Details Modal - correctly uses `addToCart` from context
-4. ✅ Order List page - displays orders with approve/reject actions
-5. ✅ Loan List page - displays active loans
+#### **Key Components:**
+1. ✅ **Request Cart Context** (`RequestCartProvider`) - Manages cart state globally.
+2. ✅ **Request Cart Drawer** - UI for reviewing and submitting requests.
+3. ✅ **Cart Access Button** - Header button with badge count to open drawer.
+4. ✅ **Book Interaction** - Both Modal and Table correctly add items to cart via context.
+5. ✅ **Order & Loan Lists** - Full visibility into request status and active loans.
 
-#### **What's Broken/Missing:**
-
-1. **❌ No Cart Access Button**
-   - The `RequestCartDrawer` is in the layout but there's no button/icon to open it
-   - `setCartOpen(true)` is never called anywhere
-   - Users cannot access their request cart
-
-2. **❌ Inconsistent Order Placement**
-   - `BookCatalogTable` uses `BookCatalogUtils.handlePlaceOrder()` which:
-     - Has a TODO comment
-     - Doesn't actually create an order
-     - Doesn't use the request cart
-     - Just shows a success message (misleading!)
-   - `BookDetailsModal` correctly uses `addToCart` from context
-   - **Result**: Table "Order" button doesn't work, only modal works
-
-3. **❌ Missing Cart Badge/Indicator**
-   - No visual indicator showing cart item count
-   - Users can't see if they have items in cart
-
-4. **❌ No Navigation After Order Submission**
-   - After submitting cart, users aren't redirected to orders page
-   - No clear feedback on what happens next
+#### **Resolved Issues:**
+- **Cart Access**: `CartButton` component added to header.
+- **Table Integration**: `BookCatalogTable` now uses `useRequestCart` instead of broken utility.
+- **Navigation**: Users are redirected to Orders page after successful submission.
+- **Feedback**: Clear success messages and error handling.
 
 ---
 
@@ -81,23 +63,33 @@ The ordering and borrowing facility has a **solid foundation** but contains **se
 
 ### **Current Implementation Status:**
 
-| Step | Component | Status | Issues |
+| Step | Component | Status | Notes |
 |------|-----------|--------|--------|
 | 1. Browse Catalog | `BookCatalogContainer` | ✅ Works | None |
-| 2. Add to Cart (Modal) | `BookDetailsModal` | ✅ Works | None |
-| 2. Add to Cart (Table) | `BookCatalogTable` | ❌ Broken | Uses non-functional `handlePlaceOrder` |
-| 3. Review Cart | `RequestCartDrawer` | ⚠️ Partial | No way to open it |
-| 4. Submit Requests | `RequestCartDrawer` | ✅ Works | No post-submit navigation |
-| 5. View Orders | `OrderList` | ✅ Works | None |
-| 6. Admin Approves | `OrderList` | ✅ Works | None |
-| 7. Loan Created | Backend | ✅ Works | None |
-| 8. View Loans | `LoanList` | ✅ Works | None |
+| 2. Add to Cart (Modal) | `BookDetailsModal` | ✅ Works | Connected to context |
+| 2. Add to Cart (Table) | `BookCatalogTable` | ✅ Works | Connected to context |
+| 3. Review Cart | `RequestCartDrawer` | ✅ Works | Accessible via header button |
+| 4. Submit Requests | `RequestCartDrawer` | ✅ Works | Auto-redirects to orders |
+| 5. View Orders | `OrderList` | ✅ Works | Admin/User views correct |
+| 6. Admin Approves | `OrderList` | ✅ Works | Triggers loan creation |
+| 7. Loan Created | Backend | ✅ Works | Atomic transaction |
+| 8. View Loans | `LoanList` | ✅ Works | Shows new loans |
 
 ---
 
-## Code Issues Found
+## Historical Code Issues (Resolved)
 
-### 1. **BookCatalogUtils.handlePlaceOrder** (Broken)
+### 1. **BookCatalogUtils.handlePlaceOrder** (Deprecated)
+- **Issue**: Utility function was a stub.
+- **Fix**: Replaced usage with `useRequestCart` hook in all components.
+
+### 2. **Missing Cart Trigger**
+- **Issue**: Drawer existed but no button to open it.
+- **Fix**: Added `CartButton` to `AppLayout`.
+
+### 3. **Request Cart Context Not Used in Table**
+- **Issue**: Table used broken utility.
+- **Fix**: Updated `BookCatalogTable.tsx` to use `addToCart`.
 ```typescript
 // src/pages/book-catalog/components/utils.ts:25-69
 static async handlePlaceOrder(...) {

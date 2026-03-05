@@ -4,158 +4,116 @@ title: "Overview"
 
 # Orders Module
 
-This module provides a complete, modular system for managing library orders and book requests.
+This module provides a complete, modular system for managing library orders and book requests, utilizing a **Backend-First** architecture with **Cloudflare D1**.
 
 ## Structure
 
+The module follows a feature-based architecture, separating UI components, business logic, and page wrappers.
+
+```text
+src/
+├── components/
+│   ├── features/
+│   │   └── orders/             # Core order components and logic
+│   │       ├── components/     # UI Components (OrderForm, OrderTableActions, etc.)
+│   │       ├── hooks/          # Custom hooks (useOrderModeration, useOrderTableColumns)
+│   │       ├── types/          # TypeScript interfaces (Order, OrderFormValues)
+│   │       ├── utils/          # Utilities (status colors, formatting)
+│   │       └── index.ts        # Public API
+│   └── request-cart/           # Request Cart feature
+│       ├── RequestCartDrawer.tsx
+│       └── ...
+└── pages/
+    └── orders/                 # Page wrappers (Lazy loaded)
+        ├── OrderList.tsx       # Main listing page
+        ├── OrderCreate.tsx     # Create page
+        ├── OrderShow.tsx       # Details page
+        └── OrderEdit.tsx       # Edit page
 ```
-src/pages/orders/
-├── components/           # React components
-│   ├── OrderList.tsx    # Main orders listing with table
-│   ├── OrderCreate.tsx  # Create new order form
-│   ├── OrderShow.tsx    # Display order details
-│   ├── OrderEdit.tsx    # Edit existing order form
-│   └── index.ts         # Component exports
-├── types.ts             # TypeScript interfaces and types
-├── constants.ts         # Configuration constants
-├── utils.ts             # Utility functions
-├── index.tsx            # Main module exports
-└── index.md            # This file
+
+### Backend Structure (`functions/api/orders/`)
+
+The backend is organized into layers to ensure separation of concerns and testability:
+
+```text
+functions/api/orders/
+├── handlers/           # HTTP Endpoint handlers (GET, POST, etc.)
+├── policies/           # Business rules (canApproveOrder, canCreateOrder)
+├── repositories/       # Data access layer (D1 queries & mutations)
+│   └── orders-repository/
+│       ├── loan-from-order.ts # Atomic loan creation logic
+│       └── ...
+├── validation/         # Zod schemas for input validation
+└── services/           # External services (e.g., Notifications)
 ```
 
 ## Components
 
 ### OrderList
-- Displays all orders in a searchable, paginated table
-- Supports filtering by various criteria
-- Includes actions for view, edit, approve, reject, and delete
-- Role-based permission controls
+-   **Wrapper**: `src/pages/orders/OrderList.tsx`
+-   **Implementation**: Uses `ManagementTable` and `useD1OrdersQuery`.
+-   **Features**:
+    -   Server-side pagination and sorting.
+    -   Advanced filtering (Priority, Author, Date Range, User).
+    -   Role-based columns (Admin sees User info, Regular users don't).
+    -   Real-time feedback on actions (Approve, Reject).
 
-### Request Cart (Frontend)
-- Users do not fill a form; they add books to a Request Cart from the catalog.
-- The "Add to Request Cart" button is shown only when the book's availability status is exactly `Available`.
-- Submitting the cart creates one request per book via `POST /api/orders` with `{ book_id, order_type: 'request' }`.
-- Client removes only successful items; failed items remain for retry.
+### Request Cart
+-   **Location**: `src/components/request-cart/`
+-   **Functionality**:
+    -   Allows users to collect multiple book requests.
+    -   **Validation**: Checks for existing pending requests and availability.
+    -   **Submission**: Bulk submission via `useRequestCart` context.
+    -   **UI**: Drawer-based interface accessible via the global layout.
 
 ### OrderShow
-- Detailed view of a single order
-- Displays all order information in organized sections
-- Shows approval/rejection dates when applicable
+-   Detailed view of a single order using `OrderDescriptions`.
+-   Displays timeline of events (Created -> Approved/Rejected).
+-   Shows book copy allocation details when approved.
 
-### OrderEdit
-- Form for editing existing orders
-- Pre-fills with current order data
-- Status-based editing restrictions
-- Navigation back to order details
+## Backend Architecture
 
-## Types
+This module fully implements the **Backend-First** principle.
 
-### OrderWithDetails
-Extended interface that includes related user and book information.
+### 1. Policies (`policies/`)
+Business logic is encapsulated in policy functions, not handlers.
+-   `canApproveOrder`: Checks book availability, user borrow limits, and user status.
+-   `canCreateOrder`: Checks for duplicates, overdue books, and cooldown periods.
 
-### OrderFormValues
-Form data structure for creating and editing orders.
+### 2. Repositories (`repositories/`)
+Handles all D1 database interactions.
+-   **Atomic Operations**: Critical state changes happen in transactions.
+    -   **Approval Flow** (`loan-from-order.ts`):
+        1.  Updates `book_copies` status to 'borrowed'.
+        2.  Creates a new `loans` record.
+        3.  Updates `orders` status to 'completed'.
+        4.  Updates `wishlist` status to 'acquired' (if applicable).
+        5.  All execution within a single `db.batch()` call.
 
-### OrderStatusConfig, OrderTypeConfig, PriorityConfig
-Configuration objects for statuses, types, and priorities.
+### 3. Validation (`validation/`)
+Uses **Zod** for strict input validation.
+-   `OrderCreateSchema`: Validates book ID and order type.
+-   `OrderUpdateSchema`: Validates status transitions and admin notes.
 
-## Constants
+## Integration
 
-### ORDER_STATUSES
-Defines all possible order statuses with colors and labels.
+### With Wishlist
+-   **Automatic Update**: When an order is approved, the system checks if the user has the book in their wishlist. If found, the wishlist item is marked as `acquired`.
+-   **Status Check**: The backend prevents ordering books that are already "Available" (users should borrow directly) unless configured otherwise.
 
-### ORDER_TYPES
-Available order types with descriptions.
+### With Loans
+-   **Seamless Transition**: An approved order automatically becomes a loan.
+-   **Due Date**: Calculated automatically based on the user's role and borrow limits.
 
-### PRIORITIES
-Priority levels with color coding.
+## Types & Constants
 
-### TABLE_COLUMNS
-Column configuration for the orders table.
+Defined in `src/components/features/orders/types/` and `utils/`.
 
-### FORM_VALIDATION_RULES
-Validation rules for form fields.
-
-## Utilities
-
-### Status and Priority Functions
-- `getStatusColor(status)` - Get color for status display
-- `getPriorityColor(priority)` - Get color for priority display
-- `getStatusLabel(status)` - Get human-readable status label
-- `getPriorityLabel(priority)` - Get human-readable priority label
-
-### Date Formatting
-- `formatDate(date)` - Format date for display
-- `formatDateTime(date)` - Format date and time for display
-
-### Display Helpers
-- `getUserDisplayName(order)` - Get formatted user name
-- `getBookDisplayInfo(order)` - Get book title and subtitle
-
-### Permission Checks
-- `canManageOrders(userRole)` - Check if user can manage orders
-- `canApproveOrder(status)` - Check if order can be approved
-- `canRejectOrder(status)` - Check if order can be rejected
-- `canEditOrder(status)` - Check if order can be edited
-- `canDeleteOrder(status)` - Check if order can be deleted
-
-## Usage
-
-### Basic Import
-```typescript
-import { OrderList, OrderCreate, OrderShow, OrderEdit } from './pages/orders';
-```
-
-### Using Utilities
-```typescript
-import { getStatusColor, formatDate } from './pages/orders';
-
-const statusColor = getStatusColor('pending');
-const formattedDate = formatDate(order.created_at);
-```
-
-### Using Types
-```typescript
-import type { OrderWithDetails, OrderFormValues } from './pages/orders';
-
-const order: OrderWithDetails = { /* ... */ };
-const formData: OrderFormValues = { /* ... */ };
-```
-
-## Backend Alignment
-
-This module is designed to work with the Cloudflare D1 database and API structure:
-
-- Uses `useD1OrdersQuery` for data fetching
-- Uses `useD1CreateOrder`, `useD1UpdateOrder`, `useD1DeleteOrder` for mutations
-- Aligns with the orders table schema in `sql/d1-schema.sql`
-- Follows the API patterns in `functions/api/orders/`
-
-### Borrow Request Rules (Backend)
-- Create request requires: existing book, all copies `available`, no duplicate pending user+book, within borrow limits.
-- Approval automatically allocates a copy atomically, creates a loan (due date from `borrow_limits.max_days`), and completes the order.
-- POST allowed for students, professors, guests, librarians; updates restricted to librarians.
-
-## Features
-
-- **Role-based Access Control**: Different actions available based on user role
-- **Status Management**: Complete order lifecycle from pending to completed
-- **Search and Filtering**: Find orders by various criteria
-- **Validation**: Form validation with clear error messages
-- **Responsive Design**: Works on all device sizes
-- **Error Handling**: Comprehensive error handling and user feedback
-- **Type Safety**: Full TypeScript support with proper interfaces
+-   **`OrderWithDetails`**: Full order object with joined Book and User data.
+-   **`ORDER_STATUSES`**: `pending`, `completed`, `cancelled`, `rejected`.
+-   **`ORDER_TYPES`**: `request` (borrow), `purchase` (suggestion).
 
 ## Future Enhancements
 
-- Bulk operations (approve/reject multiple orders)
-- Advanced filtering and sorting
-- Order templates for common requests
-- Integration with notification system
-- Export functionality (CSV, PDF)
-- Order history tracking
-
----
-
-**Source**: Moved from `src/pages/orders/index.md` during documentation consolidation
-
+-   **Email Notifications**: Send email on status change (Service stubbed in `services/`).
+-   **Waitlist System**: Automatically create a reservation if order cannot be fulfilled immediately.

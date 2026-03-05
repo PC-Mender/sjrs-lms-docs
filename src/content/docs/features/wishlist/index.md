@@ -6,139 +6,88 @@ title: "Overview"
 
 ## Overview
 
-The wishlist system has been refactored into a modular, well-structured architecture that aligns with the backend API and follows modern React patterns.
+The wishlist system allows users to track books they intend to borrow. It is currently being refactored to use **D1 Hooks** for data fetching and mutation, ensuring type safety and consistency, though some legacy service-based components remain.
 
 ## Architecture
 
 ### Components
 
-- **`WishlistList.tsx`** - Main wishlist management interface with table, search, and actions
-- **`WishlistCreate.tsx`** - Form for adding new wishlist items
-- **`WishlistEdit.tsx`** - Form for editing existing wishlist items
-- **`WishlistShow.tsx`** - Detailed view of a wishlist item
+- **`src/pages/wishlist/WishlistList.tsx`** - Main page for managing wishlist items. Uses `ManagementTable` with D1 hooks.
+- **`src/components/features/wishlist/components/WishlistCreate.tsx`** - Component for adding new items.
+- **`src/components/features/wishlist/components/WishlistStats.tsx`** - Statistics dashboard (currently uses legacy `useWishlistStats` hook).
+- **`src/components/features/wishlist/components/WishlistTableActionsSimple.tsx`** - Defines available actions (Edit, Delete) for the main list.
 
-### Services
+### Data Hooks (D1)
 
-- **`WishlistService`** - Business logic and API communication layer
-- **`useWishlist`** - Custom hooks for data fetching and mutations
+The system is transitioning to generated CRUD hooks from `src/hooks/d1/wishlist.ts`:
+
+- **`useD1WishlistQuery`** - Fetches paginated wishlist items (Used in `WishlistList`).
+- **`useD1CreateWishlistItem`** - Creates a new wishlist item.
+- **`useD1UpdateWishlistItem`** - Updates an item.
+- **`useD1DeleteWishlistItem`** - Removes an item.
+
+### Service Layer (Legacy)
+
+- **`src/services/wishlist.service.ts`** - Contains business logic for wishlist operations.
+- **`src/hooks/useWishlist.ts`** - Wraps the service. Used by `WishlistStats` and provides a stub for `placeOrderFromWishlist`.
 
 ### Types
 
-- **`WishlistItem`** - Core wishlist item interface
-- **`WishlistItemWithDetails`** - Extended interface with user and book relations
-- **`WishlistFormData`** - Form data for creating wishlist items
-- **`WishlistUpdateData`** - Form data for updating wishlist items
+- **`D1Wishlist`** - Zod-inferred type matching the backend schema.
+- **`WishlistFormData`** - Form data structure for create/update operations.
 
 ## Features
 
 ### Core Functionality
 - ✅ Create, read, update, delete wishlist items
-- ✅ Search and filter wishlist items
-- ✅ Pagination support
-- ✅ Priority management (low, normal, high)
-- ✅ Status tracking (active, acquired, removed)
+- ✅ Search and filter wishlist items (by title, author, priority, status)
+- ✅ Pagination support (via `ManagementTable`)
+- ✅ Priority management (Low, Normal, High)
+- ✅ Status tracking (Active, Acquired, Removed)
 - ✅ User and book relationship management
 
 ### Enhanced Features
-- ✅ Statistics dashboard
-- ✅ Availability checking
-- ✅ Order placement from wishlist
+- ✅ Statistics dashboard (via `WishlistStats`)
+- ✅ Availability checking (backend logic)
+- ❌ **Order placement from wishlist** (Backend supports atomic updates, but Frontend UI is missing)
 - ✅ Custom title, author, and ISBN support
 - ✅ Notes and priority management
+
+## Integration with Orders
+
+The wishlist system integration with the Order system is partially complete:
+
+1.  **Backend (Atomic Updates)**: When an admin approves an order, the corresponding wishlist item (if it exists) is **automatically updated** to `status: 'acquired'`. This is handled transactionally in `loan-from-order.ts` to ensure data consistency.
+2.  **Frontend (Gap)**: Currently, there is **no direct "Add to Cart" or "Place Order" button** in the Wishlist UI.
+    - The `WishlistTableActionsSimple` component only provides "Edit" and "Delete" actions.
+    - The `WishlistService.placeOrderFromWishlist` method is currently a stub.
+    - Users must manually find the book in the catalog and place a request.
 
 ## API Endpoints
 
 ### GET `/api/wishlist`
 - **Query Parameters:**
-  - `page` - Page number (default: 1)
-  - `limit` - Items per page (default: 20)
-  - `search` - Search term for title, author, or user
+  - `page`, `limit` - Pagination
+  - `search` - Search term
   - `priority` - Filter by priority (low, normal, high)
   - `status` - Filter by status (active, acquired, removed)
-  - `user_id` - Filter by specific user
+  - `user_id` - Filter by specific user (Admin only)
+- **Note**: Does not currently use `addOptimizedCacheHeaders`.
 
 ### POST `/api/wishlist`
-- **Body:**
-  - `book_id`: ID of the book (required)
-  - `priority`: Priority level (`low`, `normal`, `high`) (optional, default: `normal`)
-  - `notes`: Additional notes (optional)
-  - `title`, `author`, `isbn`: Custom book details (optional)
-  ```json
-  {
-    "book_id": 123,
-    "title": "Custom Title (optional)",
-    "author": "Custom Author (optional)",
-    "isbn": "1234567890 (optional)",
-    "notes": "Additional notes (optional)",
-    "priority": "normal"
-  }
-  ```
+- **Body:** `book_id` (required), `priority`, `notes`, `title`, `author`, `isbn`
+- **Priority Handling**: Maps strings ('low', 'normal', 'high') to database integers (1, 3, 5).
 
 ### PUT `/api/wishlist/:id`
-- **Body:** Same as POST, but all fields are optional
+- Updates status, priority, or notes.
 
 ### DELETE `/api/wishlist/:id`
-- Deletes the specified wishlist item
+- Deletes the specified wishlist item.
 
 ## Database Schema
 
-The wishlist table includes:
-- `id` - Primary key
-- `user_id` - Foreign key to library_users
-- `book_id` - Foreign key to books (nullable)
-- `title` - Custom title (nullable)
-- `author` - Custom author (nullable)
-- `isbn` - ISBN (nullable)
-- `notes` - Additional notes (nullable)
-- `priority` - Priority level (integer: 1=low, 3=normal, 5=high)
-- `status` - Item status (active, acquired, removed)
-- `created_at` - Creation timestamp
-- `updated_at` - Last update timestamp
+The `wishlist` table uses integer priorities for efficient indexing:
+- `priority`: Integer (1=low, 3=normal, 5=high)
+- `status`: String ('active', 'acquired', 'removed')
 
-## Usage Examples
-
-### Basic List Component
-```tsx
-import { WishlistList } from './pages/wishlist';
-
-function App() {
-  return <WishlistList />;
-}
-```
-
-### Custom Hook Usage
-```tsx
-import { useWishlistItems, useCreateWishlistItem } from './hooks/useWishlist';
-
-function MyComponent() {
-  const { data, isLoading } = useWishlistItems();
-  const createMutation = useCreateWishlistItem();
-  
-  // Use the data and mutations
-}
-```
-
-## Benefits of Refactoring
-
-1. **Modularity** - Each component has a single responsibility
-2. **Type Safety** - Comprehensive TypeScript interfaces
-3. **Performance** - React Query for efficient data fetching and caching
-4. **Maintainability** - Clean separation of concerns
-5. **Reusability** - Custom hooks can be used across components
-6. **Backend Alignment** - API structure matches frontend expectations
-7. **Error Handling** - Consistent error handling throughout
-8. **User Experience** - Better loading states and feedback
-
-## Future Enhancements
-
-- [ ] Bulk operations (delete multiple items)
-- [ ] Export functionality (CSV, PDF)
-- [ ] Advanced filtering and sorting
-- [ ] Wishlist analytics and reporting
-- [ ] Integration with notification system
-- [ ] Wishlist sharing between users
-
----
-
-**Source**: Moved from `src/pages/wishlist/index.md` during documentation consolidation
-
+The API handles the conversion between string representations (for frontend) and integer values (for database).
