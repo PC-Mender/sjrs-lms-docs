@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.19](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.18...v1.1.19) (2026-03-05)
+
+
+### Bug Fixes
+
+* remove broken link to non-existent professors module ([00e8f4e](https://github.com/PC-Mender/sjrs-lms-docs/commit/00e8f4e34f08973c8908657d8eb2a178661c482d))
+
 ### [1.1.18](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.16...v1.1.18) (2026-03-05)
 
 
