@@ -28,7 +28,7 @@ The SJRS LMS uses a multi-layered testing approach that includes:
 - **Strategy**: Test on Workers Dev after pushing code to avoid local security issues
 - **Deployment**: `npm run build && npm run deploy`
 - **URL**: `https://your-worker.your-subdomain.workers.dev`
-- **Guide**: [Testing Guide - Workers Dev Environment](./TESTING_GUIDE_WORKERS_DEV.md)
+- **Guide**: [Testing Guide - Workers Dev Environment](./testing-guide-workers-dev.md)
 
 ### Production Testing
 - **Security**: All testing follows security-first principles
@@ -176,7 +176,7 @@ curl -X POST https://your-worker.your-subdomain.workers.dev/api/users \
 ## 📚 Additional Resources
 
 ### Testing Guides
-- [Workers Dev Environment Testing](./TESTING_GUIDE_WORKERS_DEV.md) - Production-like testing
+- [Workers Dev Environment Testing](./testing-guide-workers-dev.md) - Production-like testing
 - [Development Testing Guide](../development/testing-guide.md) - Local development testing
 - [Session Management Testing](../development/session-management.md) - Session-specific testing
 

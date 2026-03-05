@@ -8,8 +8,8 @@ This section contains documentation for database migrations and schema changes.
 
 ## 📋 Migration Status Reports
 
-- **[Pending Migrations Review](./PENDING_MIGRATIONS_REVIEW.md)** - Detailed analysis of pending migrations.
-- **[Transaction ID Unique Applied](./MIGRATION_TRANSACTION_ID_UNIQUE_APPLIED.md)** - Documentation on the transaction ID uniqueness migration.
+- **[Pending Migrations Review](./pending-migrations-review.md)** - Detailed analysis of pending migrations.
+- **[Transaction ID Unique Applied](./migration-transaction-id-unique-applied.md)** - Documentation on the transaction ID uniqueness migration.
 
 ## 🔗 Related Documentation
 

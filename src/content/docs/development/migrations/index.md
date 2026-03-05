@@ -20,8 +20,8 @@ This directory contains all documentation related to database migrations, schema
 - **[Migrations Page Architecture](migrations-page-architecture.md)** - Frontend migrations interface design
 
 ### Migration Status Reports
-- **[Pending Migrations Review](../../database/migrations/PENDING_MIGRATIONS_REVIEW.md)** - Database migration queue
-- **[Migration Transaction ID Unique Applied](../../database/migrations/MIGRATION_TRANSACTION_ID_UNIQUE_APPLIED.md)** - Transaction ID migration status
+- **[Pending Migrations Review](../../database/migrations/pending-migrations-review.md)** - Database migration queue
+- **[Migration Transaction ID Unique Applied](../../database/migrations/migration-transaction-id-unique-applied.md)** - Transaction ID migration status
 
 ## 🔧 Migration Tools
 

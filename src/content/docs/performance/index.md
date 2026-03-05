@@ -6,8 +6,8 @@ This section covers performance optimizations and analysis for the SJRS LMS.
 
 ## Optimizations
 
-- [Performance Optimizations Summary](./PERFORMANCE_OPTIMIZATIONS_SUMMARY.md)
-- [Performance Optimizations Verification](./PERFORMANCE_OPTIMIZATIONS_VERIFICATION.md)
+- [Performance Optimizations Summary](./performance-optimizations-summary.md)
+- [Performance Optimizations Verification](./performance-optimizations-verification.md)
 - [System Logs Performance Optimizations](./system-logs-performance-optimizations.md)
 
 ## Implementation & Architecture

@@ -194,7 +194,7 @@ const hasAccess = await hasPermission(env, {
 ### New Files
 - `functions/middleware/security/utils/permission-based-security.ts`
 - `docs/permission-based-security.md`
-- `PERMISSION_SYSTEM_CENTRALIZATION_REPORT.md` (this file)
+- `permission-system-centralization-report.md` (this file)
 
 ### Modified Files
 - `functions/middleware/security/config/security-configs.ts`

@@ -199,7 +199,7 @@ curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/ev
 If you're still experiencing issues:
 
 1. **Check logs**: Look at Cloudflare Workers logs for errors
-2. **Verify configuration**: See `CONFIGURATION-STATUS.md`
+2. **Verify configuration**: See `configuration-status.md`
 3. **Test manually**: Use curl to test the endpoint directly
 4. **Check permissions**: Make sure you have `notification_events:read` permission
 
@@ -207,7 +207,7 @@ If you're still experiencing issues:
 
 ## Related Documentation
 
-- [Configuration Guide](./CONFIGURATION-GUIDE.md)
-- [Configuration Status](./CONFIGURATION-STATUS.md)
-- [External Sources Configuration](./EXTERNAL-SOURCES-CONFIGURATION.md)
+- [Configuration Guide](./configuration-guide.md)
+- [Configuration Status](./configuration-status.md)
+- [External Sources Configuration](./external-sources-configuration.md)
 

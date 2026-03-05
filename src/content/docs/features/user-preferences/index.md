@@ -10,7 +10,7 @@ This directory contains the planning and implementation documentation for the Us
 
 ## Documents
 
-1. **[USER-PREFERENCES-PLAN.md](./USER-PREFERENCES-PLAN.md)** - Comprehensive implementation plan
+1. **[user-preferences-plan.md](./user-preferences-plan.md)** - Comprehensive implementation plan
    - Current state analysis
    - Database schema design
    - API design
@@ -18,7 +18,7 @@ This directory contains the planning and implementation documentation for the Us
    - Integration points
    - Implementation phases
 
-2. **[INTEGRATION-MAP.md](./INTEGRATION-MAP.md)** - Visual integration guide
+2. **[integration-map.md](./integration-map.md)** - Visual integration guide
    - Component integration points
    - Data flow diagrams
    - Migration path
@@ -70,8 +70,8 @@ This directory contains the planning and implementation documentation for the Us
 
 ## Next Steps
 
-1. Review the comprehensive plan in `USER-PREFERENCES-PLAN.md`
-2. Review integration points in `INTEGRATION-MAP.md`
+1. Review the comprehensive plan in `user-preferences-plan.md`
+2. Review integration points in `integration-map.md`
 3. Start with Phase 1: Database schema creation
 4. Migrate theme preferences from localStorage to database
 5. Build settings page structure
@@ -80,6 +80,6 @@ This directory contains the planning and implementation documentation for the Us
 ## Questions?
 
 Refer to the detailed documentation in:
-- `USER-PREFERENCES-PLAN.md` for implementation details
-- `INTEGRATION-MAP.md` for component integration guidance
+- `user-preferences-plan.md` for implementation details
+- `integration-map.md` for component integration guidance
 

@@ -106,8 +106,8 @@ For each component with large datasets:
 ## 📚 Documentation
 
 - **Usage Guide**: `docs/features/tables/server-side-pagination-guide.md`
-- **Centralized Solution**: `docs/features/tables/CENTRALIZED_SERVER_SIDE_PAGINATION.md`
-- **Performance Analysis**: `docs/features/tables/OPTIMIZED_TABLE_PERFORMANCE_ANALYSIS.md`
+- **Centralized Solution**: `docs/features/tables/centralized-server-side-pagination.md`
+- **Performance Analysis**: `docs/features/tables/optimized-table-performance-analysis.md`
 
 ## 🔄 Backward Compatibility
 

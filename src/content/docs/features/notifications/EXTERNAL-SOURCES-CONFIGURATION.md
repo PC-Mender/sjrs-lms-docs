@@ -294,5 +294,5 @@ export default {
 - `functions/api/notifications/handlers/ingest-notification-event.ts`
 - `scripts/auto-version.js` (Deployment Script)
 - `env.example` (Environment Variables Example)
-- [System Notifications Root Analysis](./SYSTEM-NOTIFICATIONS-ROOT-ANALYSIS.md)
+- [System Notifications Root Analysis](./system-notifications-root-analysis.md)
 

@@ -44,7 +44,7 @@ scripts/
 docs/deployment/
   ├── deployment-workflow-organization.md  (NEW: detailed analysis)
   ├── workflow-quick-reference.md          (NEW: quick guide)
-  └── WORKFLOW_REORGANIZATION_SUMMARY.md   (this file)
+  └── workflow-reorganization-summary.md   (this file)
 ```
 
 ### 3. **Improved Workflow**
@@ -171,7 +171,7 @@ All documentation is in `docs/deployment/`:
 
 - **`deployment-workflow-organization.md`** - Detailed analysis and proposal
 - **`workflow-quick-reference.md`** - Quick reference guide
-- **`WORKFLOW_REORGANIZATION_SUMMARY.md`** - This summary
+- **`workflow-reorganization-summary.md`** - This summary
 
 ---
 

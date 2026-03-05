@@ -23,5 +23,5 @@ This section covers deployment guides and references for the SJRS LMS.
 
 ## Cloudflare
 
-- [Cloudflare Optimizations](./cloudflare/CLOUDFLARE_OPTIMIZATIONS.md)
-- [Cloudflare Optimizations Verification](./cloudflare/CLOUDFLARE_OPTIMIZATIONS_VERIFICATION.md)
+- [Cloudflare Optimizations](./cloudflare/cloudflare-optimizations.md)
+- [Cloudflare Optimizations Verification](./cloudflare/cloudflare-optimizations-verification.md)

@@ -89,7 +89,7 @@ Comprehensive review and update of all documentation to ensure accuracy, consist
 - `docs/features/email-service/enhanced-three-stage-process.md` (December 2024 → November 2025)
 - `docs/features/permissions/index.md` (December 2024 → November 2025)
 - `docs/testing/index.md` (November 2024 → November 2025)
-- `docs/testing/POSTMAN_GUIDE.md` (November 2024 → November 2025)
+- `docs/testing/postman-guide.md` (November 2024 → November 2025)
 - `docs/features/superuser/index.md` (November 2024 → November 2025)
 - `docs/development/migrations/index.md` (November 2024 → November 2025)
 - `docs/deployment/registration-troubleshooting.md` (2025-11-10 → November 2025)

@@ -125,7 +125,7 @@ See [TypeScript Quick Reference](./typescript-quick-reference.md) for common err
 - **Pages**: ≤ 500 lines
 - **Components**: ≤ 300 lines
 - Files exceeding limits are automatically flagged in pre-commit/pre-push hooks
-- See [File Size Analysis](../architecture/FILE_SIZE_ANALYSIS.md) for details
+- See [File Size Analysis](../architecture/file-size-analysis.md) for details
 
 #### Error Handling
 - Use `handleError` from `functions/utilities/logging` for all error logging

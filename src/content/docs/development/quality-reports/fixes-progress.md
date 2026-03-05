@@ -150,6 +150,6 @@ title: "FIXES PROGRESS"
 ### New Files Created
 1. `functions/middleware/security/utils/permission-based-security.ts`
 2. `docs/permission-based-security.md`
-3. `PERMISSION_SYSTEM_CENTRALIZATION_REPORT.md`
-4. `PERMISSION_SYSTEM_COMPREHENSIVE_AUDIT.md`
-5. `FIXES_PROGRESS.md` (this file)
+3. `permission-system-centralization-report.md`
+4. `permission-system-comprehensive-audit.md`
+5. `fixes-progress.md` (this file)

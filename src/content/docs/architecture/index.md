@@ -18,7 +18,7 @@ This directory contains comprehensive documentation for the SJRS LMS architectur
 
 ### Code Organization
 - **[Import Boundaries](./import-boundaries-enforcement.md)** - Import rules and enforcement
-- **[Structure Best Practices](./STRUCTURE_BEST_PRACTICES.md)** - Best practices for maintaining code structure
+- **[Structure Best Practices](./structure-best-practices.md)** - Best practices for maintaining code structure
 - **[Borrow Limits Reference Architecture](./borrow-limits-reference-architecture.md)** - ⭐ **Reference implementation** for feature module refactoring (security, imports, architecture)
 
 ### Related Documentation
@@ -33,7 +33,7 @@ This directory contains comprehensive documentation for the SJRS LMS architectur
 ### For New Developers
 1. Start with **[Quick Reference](./quick-reference.md)** for essential patterns
 2. Review **[Core Architecture](./core-architecture.md)** for system overview
-3. Check **[Structure Best Practices](./STRUCTURE_BEST_PRACTICES.md)** for code organization guidelines
+3. Check **[Structure Best Practices](./structure-best-practices.md)** for code organization guidelines
 
 ### For System Understanding
 1. Read **[Core Architecture](./core-architecture.md)** for complete system overview
@@ -42,7 +42,7 @@ This directory contains comprehensive documentation for the SJRS LMS architectur
 
 ### For Maintenance & Operations
 1. Check **[Quick Reference](./quick-reference.md)** for common patterns
-2. Review **[Structure Best Practices](./STRUCTURE_BEST_PRACTICES.md)** for code organization
+2. Review **[Structure Best Practices](./structure-best-practices.md)** for code organization
 3. Consult **[API Documentation](../api/index.md)** for endpoint details
 
 ## 🏗️ Architecture Overview

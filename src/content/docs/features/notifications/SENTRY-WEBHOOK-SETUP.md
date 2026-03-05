@@ -231,7 +231,7 @@ After configuring Sentry webhook:
 
 ## Related Documentation
 
-- [Configuration Status](./CONFIGURATION-STATUS.md)
-- [Full Configuration Guide](./CONFIGURATION-GUIDE.md)
-- [External Sources Configuration](./EXTERNAL-SOURCES-CONFIGURATION.md)
+- [Configuration Status](./configuration-status.md)
+- [Full Configuration Guide](./configuration-guide.md)
+- [External Sources Configuration](./external-sources-configuration.md)
 

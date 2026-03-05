@@ -181,7 +181,7 @@ if (allowIf) {
 - **Location:** Various frontend components
 - **Issue:** Some components use role checks instead of permission checks
 - **Risk:** UI might show/hide features incorrectly
-- **Status:** Documented in `PERMISSION_SYSTEM_COMPLETE_ASSESSMENT.md`
+- **Status:** Documented in `permission-system-complete-assessment.md`
 - **Recommendation:** Migrate all role checks to permission checks
 
 ---

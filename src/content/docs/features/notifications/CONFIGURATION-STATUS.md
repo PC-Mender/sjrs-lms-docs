@@ -211,7 +211,7 @@ x-notification-ingest-token: <token>
 
 ## Documentation
 
-- [Full Configuration Guide](./CONFIGURATION-GUIDE.md)
-- [External Sources Configuration](./EXTERNAL-SOURCES-CONFIGURATION.md)
-- [System Notifications Root Analysis](./SYSTEM-NOTIFICATIONS-ROOT-ANALYSIS.md)
+- [Full Configuration Guide](./configuration-guide.md)
+- [External Sources Configuration](./external-sources-configuration.md)
+- [System Notifications Root Analysis](./system-notifications-root-analysis.md)
 

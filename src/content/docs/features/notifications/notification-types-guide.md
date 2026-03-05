@@ -424,7 +424,7 @@ await createAppNotification(env, {
   - `publishPaymentReceiptNotification()` - Creates notification when payment is received
 
 ### Related Documentation
-- **Comprehensive Analysis**: `docs/features/notifications/APP-NOTIFICATIONS-ANALYSIS.md`
+- **Comprehensive Analysis**: `docs/features/notifications/app-notifications-analysis.md`
 - **Implementation Status**: See analysis document for detailed breakdown of what's done vs what's missing
 
 ---
