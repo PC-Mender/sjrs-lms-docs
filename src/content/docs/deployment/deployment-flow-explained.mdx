@@ -1,0 +1,243 @@
+---
+title: "Deployment Flow Explained"
+---
+
+# Deployment Flow Explained
+
+## 🎯 Overview
+
+This document clarifies how code flows from your local machine to Cloudflare Workers, addressing common questions about the deployment process.
+
+---
+
+## ❓ Common Questions
+
+### Q1: "Cloudflare is connected to GitHub already"
+
+**Answer**: There are **two different** ways Cloudflare can connect to GitHub:
+
+1. **Cloudflare Pages Integration** (Native GitHub Integration)
+   - Cloudflare automatically deploys when you push to GitHub
+   - Used for static sites and Pages projects
+   - **You've migrated away from this** (moved from Pages to Workers)
+
+2. **GitHub Actions with wrangler-action** (What we're using now)
+   - GitHub Actions runs on GitHub's servers
+   - Uses `wrangler-action` to deploy to Cloudflare Workers
+   - More control over the deployment process
+   - Better for CI/CD pipelines
+
+**Current Setup**: You're using **GitHub Actions** (option 2), not Cloudflare's native GitHub integration.
+
+---
+
+### Q2: "Does deployment go: GitHub → Cloudflare → Workers?"
+
+**Answer**: **No**. The flow is:
+
+```
+Your Code → GitHub → GitHub Actions → Cloudflare Workers
+```
+
+**Detailed Flow**:
+
+1. **You push code to GitHub**
+   ```bash
+   git push origin main
+   ```
+
+2. **GitHub Actions triggers** (runs on GitHub's servers)
+   - Quality gates run
+   - Build happens
+   - Deployment step executes
+
+3. **GitHub Actions deploys DIRECTLY to Cloudflare Workers**
+   - Uses `wrangler-action` (Cloudflare's official GitHub Action)
+   - Authenticates using `CLOUDFLARE_API_TOKEN` from GitHub Secrets
+   - Deploys directly to Workers (not via Cloudflare Pages)
+
+4. **Your app is live**
+   - URL: https://your-worker.your-subdomain.workers.dev
+
+**Key Point**: GitHub Actions **bypasses** Cloudflare's native GitHub integration. It uses the Cloudflare API directly via `wrangler-action`.
+
+---
+
+## 🔄 Complete Deployment Flow
+
+### Visual Flow Diagram
+
+```
+┌─────────────────┐
+│  Your Computer  │
+│                 │
+│  1. Make changes│
+│  2. Commit      │
+│  3. Push        │
+└────────┬────────┘
+         │
+         │ git push
+         ↓
+┌─────────────────┐
+│     GitHub       │
+│                  │
+│  - Code stored   │
+│  - Triggers      │
+│    GitHub Actions│
+└────────┬─────────┘
+         │
+         │ GitHub Actions workflow runs
+         ↓
+┌─────────────────────────────────────┐
+│      GitHub Actions                 │
+│      (Runs on GitHub's servers)     │
+│                                     │
+│  1. Checkout code                   │
+│  2. Install dependencies            │
+│  3. Run quality gates               │
+│  4. Build application                │
+│  5. Deploy using wrangler-action    │
+│     ↓                               │
+│     Uses CLOUDFLARE_API_TOKEN       │
+│     Calls Cloudflare API directly    │
+└────────┬────────────────────────────┘
+         │
+         │ wrangler deploy (via API)
+         ↓
+┌─────────────────┐
+│ Cloudflare       │
+│ Workers          │
+│                  │
+│ Your app is live │
+│ at:              │
+│ your-worker.your-subdomain.   │
+│ workers.dev      │
+└──────────────────┘
+```
+
+---
+
+## 🔍 How It Works Technically
+
+### GitHub Actions Workflow
+
+The `.github/workflows/deploy.yml` file contains:
+
+```yaml
+- name: Deploy to Cloudflare Workers
+  uses: cloudflare/wrangler-action@v3
+  with:
+    apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+    accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+    command: deploy
+```
+
+**What happens**:
+1. GitHub Actions checks out your code
+2. Runs `wrangler deploy` command
+3. `wrangler` authenticates using `CLOUDFLARE_API_TOKEN`
+4. `wrangler` uploads your code directly to Cloudflare Workers
+5. Cloudflare Workers becomes live
+
+**No Cloudflare Pages involved** - This is a direct Workers deployment.
+
+---
+
+## 🆚 Comparison: Two Deployment Methods
+
+### Method 1: Cloudflare Pages Integration (Old - Not Used)
+
+```
+GitHub → Cloudflare Dashboard → Pages → Your Site
+```
+
+- Cloudflare watches your GitHub repo
+- Automatically deploys on push
+- Limited control over deployment process
+- **You migrated away from this**
+
+### Method 2: GitHub Actions + wrangler (Current - What We're Using)
+
+```
+GitHub → GitHub Actions → Cloudflare Workers API → Workers
+```
+
+- Full control over deployment process
+- Can run tests, quality gates, etc.
+- Better error handling
+- Deployment logs in GitHub Actions
+- **This is what we're using now**
+
+---
+
+## 🔧 Configuration Required
+
+### For GitHub Actions Deployment
+
+You need these **GitHub Secrets** configured:
+
+1. `CLOUDFLARE_API_TOKEN`
+   - Get from: Cloudflare Dashboard → My Profile → API Tokens
+   - Needs: Workers Edit permissions
+
+2. `CLOUDFLARE_ACCOUNT_ID`
+   - Get from: Cloudflare Dashboard → Right sidebar
+   - Your account ID
+
+**Where to configure**:
+- GitHub → Your Repo → Settings → Secrets and variables → Actions
+- Add the secrets there
+
+---
+
+## 📊 Deployment Status Tracking
+
+### Where to Check Deployment Status
+
+1. **GitHub Actions**
+   - URL: `https://github.com/PC-Mender/sjrslms/actions`
+   - Shows: Build status, deployment logs, errors
+
+2. **Cloudflare Dashboard**
+   - URL: `https://dash.cloudflare.com`
+   - Shows: Workers deployment status, logs, analytics
+
+3. **Your Application**
+   - URL: `https://your-worker.your-subdomain.workers.dev`
+   - Shows: Live application status
+
+---
+
+## 🎯 Summary
+
+### Key Points
+
+1. **Cloudflare is NOT directly connected to GitHub** in the traditional sense
+   - We use GitHub Actions, not Cloudflare's native integration
+
+2. **Deployment flow**:
+   - Code → GitHub → GitHub Actions → Cloudflare Workers
+   - **NOT**: Code → GitHub → Cloudflare → Workers
+
+3. **GitHub Actions does the deployment**
+   - Uses `wrangler-action` to deploy
+   - Authenticates with Cloudflare API
+   - Deploys directly to Workers
+
+4. **No Cloudflare Pages involved**
+   - You migrated from Pages to Workers
+   - Workers deployment is different from Pages deployment
+
+---
+
+## 🔗 Related Documentation
+
+- **[Deployment Quick Reference](./quick-reference.mdx)** - Quick reference guide
+- **[Unified Workers Deployment](./unified-workers-deployment.mdx)** - Workers deployment guide
+- **[Deployment and Notification Process](./deployment-and-notification-process.mdx)** - Complete deployment process
+
+---
+
+**Last Updated**: January 2025  
+**Status**: Active
+

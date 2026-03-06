@@ -1,0 +1,213 @@
+---
+title: "TROUBLESHOOTING"
+---
+
+# System Notifications - Troubleshooting Guide
+
+## Common Issues
+
+### Issue 1: "Method not allowed" (405 Error)
+
+**Symptom**: Getting 405 error when accessing the endpoint.
+
+**Cause**: The endpoint only accepts POST requests, not GET.
+
+**Solution**: 
+- Use POST method when testing
+- For browser testing, use a tool like Postman or curl
+- Example curl command:
+  ```bash
+  curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+    -H "Content-Type: application/json" \
+    -H "x-notification-ingest-token: YOUR_TOKEN" \
+    -d '{"source":"release:pipeline","title":"Test","message":"Test","category":"deployment","release":{"version":"1.0.0","environment":"production","status":"success"}}'
+  ```
+
+---
+
+### Issue 2: "Ingest token is not configured" (501 Error)
+
+**Symptom**: Getting 501 error with message "Ingest token is not configured for source..."
+
+**Possible Causes**:
+1. Secrets not set in Cloudflare Workers
+2. Secrets set but worker not redeployed
+3. Secret propagation delay (can take a few minutes)
+4. Wrong environment (secrets set for wrong environment)
+
+**Solutions**:
+
+1. **Verify secrets are set**:
+   ```bash
+   wrangler secret list --env=""
+   ```
+   Should show:
+   - `NOTIFICATION_INGEST_TOKEN`
+   - `NOTIFICATION_INGEST_TOKEN_RELEASE` (optional)
+   - `NOTIFICATION_INGEST_TOKEN_SENTRY` (optional)
+   - `NOTIFICATION_INGEST_TOKEN_CLOUDFLARE` (optional)
+
+2. **Redeploy worker** (if secrets were just set):
+   ```bash
+   wrangler deploy --env=""
+   ```
+
+3. **Wait a few minutes** - Cloudflare secrets can take 1-2 minutes to propagate
+
+4. **Check environment** - Make sure secrets are set for the correct environment:
+   ```bash
+   # For production (default)
+   wrangler secret put NOTIFICATION_INGEST_TOKEN --env=""
+   
+   # For specific environment
+   wrangler secret put NOTIFICATION_INGEST_TOKEN --env=production
+   ```
+
+5. **Verify token value** - Make sure the token in the request header matches the secret:
+   ```bash
+   # You can't read the secret value, but you can verify it's set
+   wrangler secret list --env=""
+   ```
+
+---
+
+### Issue 3: "Unauthorized ingest request" (401 Error)
+
+**Symptom**: Getting 401 error with message "Unauthorized ingest request".
+
+**Cause**: The token in the request header doesn't match any of the configured tokens.
+
+**Solutions**:
+
+1. **Check token header**:
+   - Header name must be: `x-notification-ingest-token`
+   - Token value must match one of:
+     - `NOTIFICATION_INGEST_TOKEN` (global token)
+     - Source-specific token (e.g., `NOTIFICATION_INGEST_TOKEN_RELEASE` for `release:pipeline`)
+
+2. **Verify token format**:
+   - No extra spaces or newlines
+   - Exact match (case-sensitive)
+   - No quotes around the token
+
+3. **Test with global token first**:
+   ```bash
+   curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+     -H "Content-Type: application/json" \
+     -H "x-notification-ingest-token: YOUR_GLOBAL_TOKEN" \
+     -d '{"source":"release:pipeline",...}'
+   ```
+
+---
+
+### Issue 4: Empty Response Body
+
+**Symptom**: Getting error status code but response body is empty.
+
+**Possible Causes**:
+1. CORS issue
+2. Response serialization error
+3. Network issue
+
+**Solutions**:
+
+1. **Check CORS headers** - The endpoint should return CORS headers
+2. **Check network tab** - Look at the full response in browser dev tools
+3. **Try different client** - Use curl or Postman instead of browser
+
+---
+
+### Issue 5: Deployment Notifications Not Appearing
+
+**Symptom**: Running `npm run release` but no notification appears in System Notifications.
+
+**Possible Causes**:
+1. Token not configured in deployment script
+2. Deployment script not calling ingest endpoint
+3. Ingest endpoint failing silently
+
+**Solutions**:
+
+1. **Check deployment script** (`scripts/auto-version.js`):
+   - Should have `NOTIFICATION_INGEST_TOKEN` or `NOTIFICATION_INGEST_TOKEN_RELEASE` set
+   - Should call the ingest endpoint after deployment
+
+2. **Check deployment logs**:
+   - Look for: `📣 Posted deployment update to system notifications feed.`
+   - Or: `ℹ️ Notification ingest token is not configured`
+
+3. **Test manually**:
+   ```bash
+   # Test the ingest endpoint directly
+   curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+     -H "Content-Type: application/json" \
+     -H "x-notification-ingest-token: YOUR_TOKEN" \
+     -d '{"source":"release:pipeline","title":"Test Deployment","message":"Testing","category":"deployment","release":{"version":"1.0.0","environment":"production","status":"success"}}'
+   ```
+
+---
+
+## Debugging Steps
+
+### Step 1: Verify Endpoint is Accessible
+
+```bash
+# Test with OPTIONS (should return 204)
+curl -X OPTIONS https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest
+
+# Test with GET (should return 405)
+curl -X GET https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest
+```
+
+### Step 2: Verify Tokens are Set
+
+```bash
+wrangler secret list --env="" | Select-String -Pattern "NOTIFICATION"
+```
+
+Should show all notification tokens.
+
+### Step 3: Test with Minimal Payload
+
+```bash
+curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+  -H "Content-Type: application/json" \
+  -H "x-notification-ingest-token: YOUR_TOKEN" \
+  -d '{
+    "source": "release:pipeline",
+    "title": "Test",
+    "message": "Test",
+    "category": "deployment",
+    "release": {
+      "version": "1.0.0",
+      "environment": "production",
+      "status": "success"
+    }
+  }'
+```
+
+### Step 4: Check System Notifications
+
+1. Go to `/dashboard-superuser/system-notifications`
+2. Look for the notification
+3. Check filters (source, category, etc.)
+
+---
+
+## Getting Help
+
+If you're still experiencing issues:
+
+1. **Check logs**: Look at Cloudflare Workers logs for errors
+2. **Verify configuration**: See `configuration-status.md`
+3. **Test manually**: Use curl to test the endpoint directly
+4. **Check permissions**: Make sure you have `notification_events:read` permission
+
+---
+
+## Related Documentation
+
+- [Configuration Guide](./configuration-guide.mdx)
+- [Configuration Status](./configuration-status.mdx)
+- [External Sources Configuration](./external-sources-configuration.mdx)
+

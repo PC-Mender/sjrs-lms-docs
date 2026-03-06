@@ -9,78 +9,78 @@ const __dirname = path.dirname(__filename);
 const DOCS_ROOT = path.join(__dirname, '../src/content/docs');
 
 const fixes = {
-  'api/api-response-standardization.md': [
-    { from: '../development/error-handling.md', to: '../development/error-mapping.md' },
-    { from: '../development/testing.md', to: '../development/testing-guide.md' }
+  'api/api-response-standardization.mdx': [
+    { from: '../development/error-handling.mdx', to: '../development/error-mapping.mdx' },
+    { from: '../development/testing.mdx', to: '../development/testing-guide.mdx' }
   ],
-  'api/functions-folder-architecture.md': [
-    { from: '../../sql/index.md', to: '../database/index.md' }
+  'api/functions-folder-architecture.mdx': [
+    { from: '../../sql/index.mdx', to: '../database/index.mdx' }
   ],
-  'api/quick-start-guide.md': [
-    { from: '../index.md#session-management-api', to: '../development/session-management.md' }
+  'api/quick-start-guide.mdx': [
+    { from: '../index.mdx#session-management-api', to: '../development/session-management.mdx' }
   ],
-  'api/superuser-endpoints.md': [
-    { from: '../features/superuser-features-implementation.md', to: '../features/superuser/superuser-features-implementation.md' }
+  'api/superuser-endpoints.mdx': [
+    { from: '../features/superuser-features-implementation.mdx', to: '../features/superuser/superuser-features-implementation.mdx' }
   ],
-  'api/token-requirements.md': [
-    { from: './development/ENHANCED_PERMISSION_SYSTEM.md', to: '../development/enhanced-permissions.md' },
-    { from: './security/index.md', to: '../security/index.md' },
-    { from: './deployment/D1_SETUP_GUIDE.md', to: '../deployment/d1-setup.md' },
-    { from: './PERMISSION_SYSTEM_GUIDE.md', to: '../architecture/permission-system.md' }
+  'api/token-requirements.mdx': [
+    { from: './development/ENHANCED_PERMISSION_SYSTEM.mdx', to: '../development/enhanced-permissions.mdx' },
+    { from: './security/index.mdx', to: '../security/index.mdx' },
+    { from: './deployment/D1_SETUP_GUIDE.mdx', to: '../deployment/d1-setup.mdx' },
+    { from: './PERMISSION_SYSTEM_GUIDE.mdx', to: '../architecture/permission-system.mdx' }
   ],
-  'architecture/index.md': [
-    { from: '../features/permission-system.md', to: '../features/permissions/index.md' }
+  'architecture/index.mdx': [
+    { from: '../features/permission-system.mdx', to: '../features/permissions/index.mdx' }
   ],
-  'archive/deployment-workflow-organization.md': [
-    { from: './unified-workers-deployment.md', to: '../deployment/unified-workers-deployment.md' },
-    { from: './ci-cd-pipeline.md', to: '../deployment/version-and-release-management.md' },
-    { from: './local-development.md', to: '../getting-started/setup.md' }
+  'archive/deployment-workflow-organization.mdx': [
+    { from: './unified-workers-deployment.mdx', to: '../deployment/unified-workers-deployment.mdx' },
+    { from: './ci-cd-pipeline.mdx', to: '../deployment/version-and-release-management.mdx' },
+    { from: './local-development.mdx', to: '../getting-started/setup.mdx' }
   ],
-  'archive/index.md': [
-    { from: '../architecture/refactoring-summary.md', to: '../development/refactoring-summary.md' }
+  'archive/index.mdx': [
+    { from: '../architecture/refactoring-summary.mdx', to: '../development/refactoring-summary.mdx' }
   ],
-  'changelog.md': [
+  'changelog.mdx': [
     { from: '/architecture/routing-system/', to: '/architecture/routing-system' },
     { from: '/api/api-response-standardization/', to: '/api/api-response-standardization' },
     { from: '/api/functions-folder-architecture/', to: '/api/functions-folder-architecture' },
     { from: '/development/session-management/', to: '/development/session-management' },
     { from: '/features/multiple-device-login-detection/', to: '/features/multiple-device-login-detection' }
   ],
-  'development/refactoring-summaries/guests-refactoring.md': [
+  'development/refactoring-summaries/guests-refactoring.mdx': [
     { from: '../../../sql/d1-schema.sql', to: '../../database/d1-schema.sql' }
   ],
-  'development/reference-books-refactoring-summary.md': [
-    { from: '../api/reference-books.md', to: '../features/reference-books/index.md' },
+  'development/reference-books-refactoring-summary.mdx': [
+    { from: '../api/reference-books.mdx', to: '../features/reference-books/index.mdx' },
     { from: '../sql/d1-schema.sql', to: '../database/d1-schema.sql' }
   ],
-  'features/badges/index.md': [
-    { from: './action-logging.md', to: '../action-logging.md' },
+  'features/badges/index.mdx': [
+    { from: './action-logging.mdx', to: '../action-logging.mdx' },
     { from: './permissions/', to: '../permissions/' },
     { from: '../api/', to: '../../api/' }
   ],
-  'features/email-service/enhanced-three-stage-process.md': [
-    { from: '../user-management/index.md', to: '../../features/users/index.md' },
-    { from: '../admin-dashboard/index.md', to: '../../features/superuser/index.md' },
-    { from: '../security/index.md', to: '../../security/index.md' }
+  'features/email-service/enhanced-three-stage-process.mdx': [
+    { from: '../user-management/index.mdx', to: '../../features/users/index.mdx' },
+    { from: '../admin-dashboard/index.mdx', to: '../../features/superuser/index.mdx' },
+    { from: '../security/index.mdx', to: '../../security/index.mdx' }
   ],
-  'features/email-service/index.md': [
-    { from: './direct-mailjet.md', to: '#-account-email-direct-mailjet' },
-    { from: './queue-mailjet.md', to: '#-transactional-email-queue--mailjet' }
+  'features/email-service/index.mdx': [
+    { from: './direct-mailjet.mdx', to: '#-account-email-direct-mailjet' },
+    { from: './queue-mailjet.mdx', to: '#-transactional-email-queue--mailjet' }
   ],
-  'features/guests/index.md': [
+  'features/guests/index.mdx': [
     { from: '../../../sql/d1-schema.sql', to: '../../database/d1-schema.sql' }
   ],
-  'features/notifications/EXTERNAL-SOURCES-CONFIGURATION.md': [
+  'features/notifications/EXTERNAL-SOURCES-CONFIGURATION.mdx': [
     { from: '../scripts/auto-version.js', to: '../../scripts/auto-version.js' },
     { from: '../../env.example', to: '../../env.example' } 
   ],
-  'features/penalties/AUTOMATIC_PENALTY_CALCULATION.md': [
-    { from: '../../development/scheduled-tasks.md', to: '../../deployment/index.md' }
+  'features/penalties/AUTOMATIC_PENALTY_CALCULATION.mdx': [
+    { from: '../../development/scheduled-tasks.mdx', to: '../../deployment/index.mdx' }
   ],
-  'features/superuser/index.md': [
-    { from: '../development/roles-and-permissions.md', to: '../../development/roles-and-permissions.md' },
+  'features/superuser/index.mdx': [
+    { from: '../development/roles-and-permissions.mdx', to: '../../development/roles-and-permissions.mdx' },
     { from: '../features/permissions/', to: '../permissions/' },
-    { from: '../development/session-management.md', to: '../../development/session-management.md' }
+    { from: '../development/session-management.mdx', to: '../../development/session-management.mdx' }
   ],
   'index.mdx': [
     { from: '/getting-started/setup/', to: '/getting-started/setup' },
@@ -98,31 +98,31 @@ const fixes = {
     { from: '/deployment/version-and-release-management/', to: '/deployment/version-and-release-management' },
     { from: '/documentation-review/', to: '/documentation-review' }
   ],
-  'performance/cloudflare-web-analytics-setup.md': [
+  'performance/cloudflare-web-analytics-setup.mdx': [
     { from: '../../index.html', to: '`index.html`' }
   ],
-  'performance/implementation-2026-01-25.md': [
-    { from: '../project-rules.md', to: '../project-rules-app.md' },
+  'performance/implementation-2026-01-25.mdx': [
+    { from: '../project-rules.mdx', to: '../project-rules-app.mdx' },
     { from: '../../index.html', to: '`index.html`' }
   ],
-  'performance/system-logs-architecture-improvements.md': [
-    { from: './security/system-logs-defense-in-depth.md', to: '../security/system-logs-defense-in-depth.md' }
+  'performance/system-logs-architecture-improvements.mdx': [
+    { from: './security/system-logs-defense-in-depth.mdx', to: '../security/system-logs-defense-in-depth.mdx' }
   ],
-  'performance/system-logs-performance-optimizations.md': [
-    { from: './security/system-logs-defense-in-depth.md', to: '../security/system-logs-defense-in-depth.md' }
+  'performance/system-logs-performance-optimizations.mdx': [
+    { from: './security/system-logs-defense-in-depth.mdx', to: '../security/system-logs-defense-in-depth.mdx' }
   ],
-  'security/system-logs-retention-policy.md': [
-    { from: './security/logging-standards.md', to: '../development/logging-system.md' },
-    { from: './security/audit-log-policy.md', to: '../features/action-logging.md' },
-    { from: './data-privacy-policy.md', to: '../security/index.md' },
-    { from: './deployment/scheduled-tasks.md', to: '../deployment/index.md' }
+  'security/system-logs-retention-policy.mdx': [
+    { from: './security/logging-standards.mdx', to: '../development/logging-system.mdx' },
+    { from: './security/audit-log-policy.mdx', to: '../features/action-logging.mdx' },
+    { from: './data-privacy-policy.mdx', to: '../security/index.mdx' },
+    { from: './deployment/scheduled-tasks.mdx', to: '../deployment/index.mdx' }
   ],
-  'user-guides/superuser-features-guide.md': [
-    { from: '../features/superuser-features-implementation.md', to: '../features/superuser/superuser-features-implementation.md' }
+  'user-guides/superuser-features-guide.mdx': [
+    { from: '../features/superuser-features-implementation.mdx', to: '../features/superuser/superuser-features-implementation.mdx' }
   ],
-  'development/validation-system.md': [
-    { from: '../hooks/useInputValidation.md', to: '#react-hook-integration' },
-    { from: '../api/validation.md', to: '../api/api-response-standardization.md' }
+  'development/validation-system.mdx': [
+    { from: '../hooks/useInputValidation.mdx', to: '#react-hook-integration' },
+    { from: '../api/validation.mdx', to: '../api/api-response-standardization.mdx' }
   ]
 };
 

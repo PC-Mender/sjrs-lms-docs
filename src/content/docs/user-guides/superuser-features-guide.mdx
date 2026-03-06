@@ -1,0 +1,615 @@
+---
+title: "Superuser Features Guide"
+---
+
+# 🔴 Superuser Features User Guide
+
+**Audience:** Superusers, System Administrators  
+**Last Updated:** January 6, 2025  
+**Version:** 1.0
+
+---
+
+## 📋 Table of Contents
+
+1. [Overview](#overview)
+2. [Action Logging](#action-logging)
+3. [Emergency Access](#emergency-access)
+4. [User Impersonation](#user-impersonation)
+5. [Badge Management](#badge-management)
+6. [Best Practices](#best-practices)
+7. [Common Scenarios](#common-scenarios)
+8. [Troubleshooting](#troubleshooting)
+
+---
+
+## Overview
+
+This guide explains how to use the main superuser features:
+- **Action Logging** - Track all privileged actions
+- **Emergency Access** - Request/approve temporary account access
+- **User Impersonation** - View system as another user
+- **Badge Management** - Recognize user achievements
+
+### Prerequisites
+
+- Superuser role assigned to your account
+- Access to `/dashboard-superuser`
+- Understanding of your responsibilities
+
+---
+
+## 🔍 Action Logging
+
+### What is Action Logging?
+
+Action logging automatically tracks all superuser activities including:
+- Emergency access requests/approvals
+- User impersonation sessions
+- Manual interventions
+- Permission changes
+- System configuration updates
+
+### Viewing Action Logs
+
+**Step 1:** Navigate to Dashboard
+```
+/dashboard-superuser → Superuser Actions
+```
+
+**Step 2:** Filter Actions
+- By action type (impersonation_start, emergency_access_request, etc.)
+- By target user
+- By date range
+- By superuser (who performed the action)
+
+**Step 3:** View Details
+- Click on any action to see full details
+- View JSON action_details for comprehensive information
+- See IP address and user agent
+- Check timestamp
+
+### Understanding Action Types
+
+| Action Type | Description | When It Occurs |
+|-------------|-------------|----------------|
+| `impersonation_start` | Started impersonating a user | When you start impersonating |
+| `impersonation_stop` | Stopped impersonating | When you exit impersonation |
+| `emergency_access_request` | Requested emergency access | When you request emergency access |
+| `emergency_access_approve` | Approved emergency request | When you approve a request |
+| `emergency_access_reject` | Rejected emergency request | When you reject a request |
+| `emergency_access_revoke` | Revoked active access | When you revoke access |
+| `manual_intervention` | Custom logged action | When you manually log an action |
+
+### Manual Action Logging
+
+For actions not automatically logged:
+
+**When to Use:**
+- Manual database changes
+- Configuration updates via CLI
+- Any privileged action outside the system
+
+**How to Log:**
+1. Navigate to Superuser Actions page
+2. Click "Log Action" button
+3. Fill in details:
+   - Action type
+   - Target user (if applicable)
+   - Description/reason
+   - Any relevant details
+4. Submit
+
+**Example:**
+```
+Action Type: manual_database_update
+Target User: john.doe@example.com
+Reason: Fixed corrupted loan record after database recovery
+Details: Updated loans table, record ID 123, set status to 'returned'
+```
+
+---
+
+## 🚨 Emergency Access
+
+### What is Emergency Access?
+
+A formal workflow for requesting and approving temporary access to user accounts when normal access methods fail.
+
+### When to Use Emergency Access
+
+**Appropriate Scenarios:**
+- ✅ User locked out (password forgotten, MFA lost)
+- ✅ Account investigation (security incident)
+- ✅ Data recovery (user deleted critical data)
+- ✅ Compliance request (legal/audit requirement)
+- ✅ System migration (data transfer needed)
+
+**Inappropriate Scenarios:**
+- ❌ Routine support (use impersonation instead)
+- ❌ Curiosity or testing
+- ❌ Bypassing permissions for convenience
+- ❌ Unauthorized access requests
+
+### Requesting Emergency Access
+
+**Step 1:** Navigate to Emergency Access
+```
+/dashboard-superuser → Emergency Access → Request Access
+```
+
+**Step 2:** Fill Request Form
+- **Target User:** Select user needing emergency access
+- **Reason:** Provide detailed justification (required)
+- **Duration:** Default 24 hours, adjust if needed
+
+**Example Good Reason:**
+```
+User John Doe (student@example.com) lost MFA device and is locked out. 
+Urgent access needed to reset MFA settings before final exam submission 
+deadline tomorrow. Support ticket #456.
+```
+
+**Example Bad Reason:**
+```
+Need to check user's account
+```
+
+**Step 3:** Submit Request
+- Request enters "pending" status
+- Another superuser must approve (separation of duties)
+- Requester receives notification
+
+### Approving/Rejecting Requests
+
+**As an Approver:**
+
+1. Navigate to Pending Requests
+   ```
+   /dashboard-superuser → Emergency Access → Pending
+   ```
+
+2. Review Each Request:
+   - Who requested it
+   - Which user account
+   - Reason provided
+   - Duration requested
+
+3. Make Decision:
+   - **Approve:** If reason is valid and justified
+   - **Reject:** If insufficient justification
+     - Must provide rejection reason
+     - Example: "Insufficient detail - please provide support ticket number"
+
+### Monitoring Active Access
+
+**Check Active Access:**
+```
+/dashboard-superuser → Emergency Access → Active
+```
+
+**You'll see:**
+- Who has access
+- To which account
+- When it expires
+- Original reason
+
+**Revoking Access:**
+- Click "Revoke" on any active access
+- Access immediately terminated
+- Action logged in audit trail
+
+### Emergency Access Lifecycle
+
+```
+Request → Pending → Approved/Rejected
+                      ↓
+                   Active → Expired/Revoked
+```
+
+**Automatic Expiration:**
+- Access automatically revokes after duration expires
+- System checks expiration every hour
+- No manual intervention needed
+
+---
+
+## 👤 User Impersonation
+
+### What is User Impersonation?
+
+Temporarily log in as another user to:
+- Debug issues they're experiencing
+- Verify permissions are working correctly
+- Reproduce reported problems
+- Provide real-time support
+
+### When to Use Impersonation
+
+**Best For:**
+- ✅ "I can't see X" support tickets
+- ✅ Permission testing
+- ✅ Reproducing user-reported bugs
+- ✅ UI/UX issue verification
+- ✅ Feature walkthrough/training
+
+**Not For:**
+- ❌ Data modification on behalf of user
+- ❌ Password resets (use password reset flow)
+- ❌ Long-term access (use emergency access)
+- ❌ Unauthorized snooping
+
+### Starting Impersonation
+
+**Step 1:** Navigate to Dashboard
+```
+/dashboard-superuser → User Impersonation
+```
+
+**Step 2:** Search for User
+- Search by email, name, or student ID
+- View user details before impersonating
+
+**Step 3:** Start Impersonation
+- Click "Impersonate" button
+- Enter reason (required):
+  ```
+  Example: Support ticket #789 - User reports missing loans in dashboard
+  ```
+- Confirm
+
+**Step 4:** You're Now Impersonating
+- **Banner appears** at top of screen:
+  ```
+  ⚠️ Currently Impersonating: John Doe (student@example.com)
+  [Exit Impersonation]
+  ```
+- You see the system exactly as the user sees it
+- All your actions are logged as impersonation actions
+
+### While Impersonating
+
+**What You Can Do:**
+- Navigate through all pages the user can access
+- View data the user can view
+- Test features and permissions
+- Take screenshots for documentation
+
+**What You Should NOT Do:**
+- Make changes to user's data (unless necessary for support)
+- Access sensitive information unrelated to the issue
+- Stay impersonated longer than necessary
+
+**Limitations:**
+- Cannot impersonate another superuser (security boundary)
+- Session timeout still applies
+- Some admin actions may be blocked
+
+### Stopping Impersonation
+
+**Method 1:** Click Banner Button
+- Click "Exit Impersonation" in the warning banner
+- Immediately returns to your superuser account
+
+**Method 2:** Navigate to Dashboard
+```
+/dashboard-superuser → Stop Impersonation
+```
+
+**After Stopping:**
+- You're back in your superuser account
+- Impersonation session logged (start and stop times)
+- Can view full action log in Superuser Actions
+
+### Impersonation Best Practices
+
+1. **Always Document Reason**
+   - Include support ticket number
+   - Describe the issue being investigated
+   - Note any findings
+
+2. **Minimize Duration**
+   - Only stay impersonated as long as needed
+   - Exit as soon as issue is understood
+   - Typical session: 2-5 minutes
+
+3. **Communicate**
+   - Inform user if you're going to impersonate them
+   - Document findings in support ticket
+   - Follow up with user after investigation
+
+4. **Screenshots**
+   - Take screenshots of issues found
+   - Blur sensitive information
+   - Include in support documentation
+
+---
+
+## 🏅 Badge Management
+
+### What are Badges?
+Badges are digital awards used to recognize user achievements, roles, or contributions. Superusers can manage the badge catalog and manually assign badges to users.
+
+### Managing the Catalog
+1. Navigate to **"Badge Management"**.
+2. View the **"Badge Catalog"** tab to see all available badges.
+3. Use the search bar to find specific badges by name or key.
+4. Available badges include:
+   - **Roles**: `superuser_crown`, `librarian_book`, etc.
+   - **Achievements**: `top_reader`, `early_bird`.
+   - **Special**: `bug_hunter`, `contributor`.
+
+### Assigning Badges
+1. Go to the **"Badge Management"** page.
+2. In the assignment section:
+   - **User**: Search for the user by name or email.
+   - **Badge Key**: Enter the key (e.g., `superuser_crown`) or click a badge in the catalog to auto-fill.
+   - **Reason**: (Optional) Add a note explaining why the badge is being awarded.
+3. Click **"Assign"**.
+4. The user will receive the badge immediately.
+
+### Revoking Badges
+1. Switch to the **"Granted Badges"** tab.
+2. Search for the user or badge.
+3. Click **"Revoke"** next to the badge you want to remove.
+4. Confirm the action.
+
+---
+
+## 🎯 Best Practices
+
+### General Guidelines
+
+1. **Principle of Least Privilege**
+   - Only use superuser powers when absolutely necessary
+   - Use regular admin account for routine tasks
+   - Escalate to superuser only for special cases
+
+2. **Documentation First**
+   - Always document why you're taking action
+   - Include support ticket numbers
+   - Provide context for future reference
+
+3. **Peer Review**
+   - Have another superuser review emergency access requests
+   - Discuss major decisions with team
+   - Follow established approval workflows
+
+4. **Audit Regularly**
+   - Review action logs weekly
+   - Check for unusual patterns
+   - Verify all actions were legitimate
+
+### Security Guidelines
+
+1. **Protect Your Credentials**
+   - Never share your superuser account
+   - Use strong, unique password
+   - Enable MFA on your account
+   - Log out when leaving workstation
+
+2. **Verify Requests**
+   - Confirm identity before granting access
+   - Verify support tickets exist
+   - Check with user if possible
+
+3. **Limit Exposure**
+   - Minimize time in elevated privileges
+   - Exit impersonation promptly
+   - Revoke emergency access when complete
+
+4. **Report Incidents**
+   - Report any suspicious access attempts
+   - Document security concerns
+   - Follow incident response procedures
+
+---
+
+## 💡 Common Scenarios
+
+### Scenario 1: User Locked Out Before Exam
+
+**Situation:**
+Student John locked out, final exam submission due in 2 hours.
+
+**Solution:**
+```
+1. Request Emergency Access
+   Reason: "Student locked out, MFA device lost. 
+           Final exam submission deadline in 2h. 
+           Support ticket #456."
+   Duration: 2 hours
+
+2. Get approval from another superuser
+
+3. Once approved, access user account
+
+4. Reset MFA settings
+
+5. Notify user via email that MFA is reset
+
+6. Access auto-revokes after 2 hours
+```
+
+**Why Emergency Access, Not Impersonation?**
+- Need to modify user security settings
+- Impersonation is read-only for troubleshooting
+- Emergency access provides full account control
+
+---
+
+### Scenario 2: "I Don't See My Loans" Support Ticket
+
+**Situation:**
+Student reports loans not showing in dashboard.
+
+**Solution:**
+```
+1. Start User Impersonation
+   Reason: "Support ticket #789 - User reports missing loans"
+
+2. Navigate to user's dashboard
+
+3. Check loans section
+
+4. Verify issue:
+   - No loans visible (bug confirmed)
+   - OR loans are visible (user error - provide guidance)
+
+5. Take screenshot
+
+6. Stop Impersonation
+
+7. Document findings in ticket
+
+8. Create bug report if needed
+```
+
+**Why Impersonation, Not Emergency Access?**
+- Just troubleshooting/debugging
+- No data modification needed
+- Quick investigation (&lt;5 minutes)
+- Read-only access sufficient
+
+---
+
+### Scenario 3: Account Compromise Investigation
+
+**Situation:**
+Suspicious activity detected on professor's account.
+
+**Solution:**
+```
+1. Request Emergency Access
+   Reason: "Investigating potential account compromise.
+           Unusual login pattern detected from foreign IP.
+           Security incident #123."
+   Duration: 4 hours
+
+2. Get approval
+
+3. Access account and:
+   - Review recent activity logs
+   - Check for unauthorized changes
+   - Verify data integrity
+   - Reset password if compromised
+
+4. Document all findings
+
+5. Revoke emergency access when complete
+
+6. Report to security team
+
+7. Contact user with findings
+```
+
+---
+
+### Scenario 4: Mass User Update Testing
+
+**Situation:**
+Need to test new feature on different user types before rollout.
+
+**Solution:**
+```
+For each user type (Student, Professor, Guest):
+
+1. Use Impersonation (not Emergency Access)
+   Reason: "Testing feature-X rollout for [user_type] role"
+
+2. Test new feature functionality
+
+3. Document behavior
+
+4. Exit impersonation
+
+5. Move to next user type
+
+Total time: 15-20 minutes
+```
+
+---
+
+## 🔧 Troubleshooting
+
+### "Access Denied" When Using Features
+
+**Problem:** Getting 403 Forbidden errors
+
+**Solutions:**
+1. Verify you're logged in as superuser
+2. Check your role in profile settings
+3. Clear browser cache and cookies
+4. Log out and log back in
+5. Contact system administrator if persists
+
+---
+
+### Emergency Access Request Stuck "Pending"
+
+**Problem:** Request not being approved
+
+**Solutions:**
+1. Check if another superuser is available to approve
+2. Cannot approve your own requests (separation of duties)
+3. Check notification settings for approvers
+4. Escalate to senior administrator if urgent
+
+---
+
+### Can't Stop Impersonation
+
+**Problem:** Exit button not working
+
+**Solutions:**
+1. Try navigating directly to `/dashboard-superuser`
+2. Clear browser cache
+3. Log out completely and log back in
+4. Check browser console for errors
+5. Report bug to development team
+
+---
+
+### Action Not Appearing in Logs
+
+**Problem:** Recent action not showing in action logs
+
+**Solutions:**
+1. Wait 1-2 minutes for database sync
+2. Refresh the page
+3. Check date range filters aren't excluding it
+4. Verify you're looking at correct log type
+5. If missing after 5 minutes, report as bug
+
+---
+
+## 📞 Getting Help
+
+### Support Resources
+
+- **Documentation:** [docs/user-guides/](../user-guides/)
+- **API Reference:** [docs/api/superuser-endpoints.md](../api/superuser-endpoints.mdx)
+- **Technical Guide:** [docs/features/superuser-features-implementation.md](../features/superuser/superuser-features-implementation.mdx)
+
+### Contact Information
+
+- **System Administrator:** [Your institution's contact]
+- **Security Team:** [For security incidents]
+- **Technical Support:** [For technical issues]
+
+---
+
+## 📚 Related Documentation
+
+- [Superuser Guide](./superuser-guide.mdx) - Role overview and capabilities
+- [API Endpoints Reference](../api/superuser-endpoints.mdx) - API documentation
+- [Action Logging System](../features/action-logging.mdx) - Technical details
+- [Security Best Practices](../security/index.mdx) - Security guidelines
+
+---
+
+**Last Updated:** January 6, 2025  
+**Version:** 1.0  
+**Maintained by:** SJRS LMS Development Team
+
+

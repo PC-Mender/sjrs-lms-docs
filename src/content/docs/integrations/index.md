@@ -1,7 +1,0 @@
----
-title: Integrations
----
-
-This section details external and internal integrations within the SJRS LMS.
-
-- [Penalty System Integrations](./penalty-system-integrations.md)

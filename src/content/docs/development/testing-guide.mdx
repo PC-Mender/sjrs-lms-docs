@@ -1,0 +1,282 @@
+---
+title: "Testing Guide"
+---
+
+# 🧪 Testing Guide
+
+**Purpose**: Comprehensive testing documentation for SJRS LMS  
+**Audience**: Developers and QA Engineers  
+**Last Updated**: November 2025
+
+## 📋 Overview
+
+This guide covers all testing aspects of the SJRS LMS, including unit testing, integration testing, session management testing, and security feature validation.
+
+## 🧪 Testing Components
+
+### Session Management Testing
+The SJRS LMS includes comprehensive session management testing components for validating cross-tab synchronization and security features.
+
+**Location**: `src/testing/session-test.tsx`
+
+**Features:**
+- Test mode toggle (1-minute timeout for faster testing)
+- Real-time session status display
+- Tab visibility and focus monitoring
+- Activity simulation
+- Testing instructions
+
+**Usage:**
+```tsx
+import { SessionTest } from '../testing/session-test';
+
+// Add to any page for testing
+<SessionTest />
+```
+
+### Security Features Demo
+Console-based demonstrations of security features for validation and debugging.
+
+**Location**: `src/testing/security-demo.ts`
+
+**Features:**
+- Rate limiting demonstrations
+- Error handling examples
+- Security event logging
+- Comprehensive security overview
+
+**Usage:**
+```tsx
+import { demonstrateSecurityFeatures } from '../testing/security-demo';
+
+// Run in browser console or component
+demonstrateSecurityFeatures();
+```
+
+### Testing Module Exports
+Centralized exports for all testing components and utilities.
+
+**Location**: `src/testing/index.ts`
+
+## 🎯 Testing Scenarios
+
+### Session Management Tests
+- **Normal Operation**: 15-minute timeout, 2-minute warning
+- **Test Mode**: 1-minute timeout, 30-second warning
+- **Tab Switching**: Verify session continues in background
+- **Focus Changes**: Test window focus/blur detection
+- **Activity Simulation**: Reset timer with button clicks
+
+### Security Feature Tests
+- **Rate Limiting**: Test failed login attempts
+- **Error Handling**: Verify user-friendly error messages
+- **Event Logging**: Monitor security events in console
+- **Session Cleanup**: Ensure proper logout and cleanup
+
+### API Response Tests
+- **Response Format**: Verify standardized response structure
+- **Error Codes**: Test proper error code usage
+- **CORS Headers**: Validate CORS implementation
+- **Request Tracking**: Verify request ID generation
+
+## 🔧 Test Configuration
+
+### Session Test Configuration
+```tsx
+// Test mode settings
+timeoutMinutes: 1,        // 1 minute for testing
+warningMinutes: 0.5,      // 30 seconds warning
+detectIdleTabs: true,     // Enable tab detection
+```
+
+### Security Demo Configuration
+```tsx
+// Demo settings
+const testEmail = 'test@example.com';
+const maxAttempts = 5;
+const timeWindow = 15 * 60 * 1000; // 15 minutes
+```
+
+## 🚀 Quick Start Testing
+
+### 1. Session Management Testing
+```tsx
+import { SessionTest } from '../testing';
+
+function TestPage() {
+  return (
+    <div>
+      <h1>Testing Page</h1>
+      <SessionTest />
+    </div>
+  );
+}
+```
+
+### 2. Security Feature Testing
+```tsx
+import { demonstrateSecurityFeatures } from '../testing';
+
+// In component or console
+useEffect(() => {
+  demonstrateSecurityFeatures();
+}, []);
+```
+
+### 3. API Response Testing
+```tsx
+// Test standardized API responses
+const testResponse = await fetch('/api/books/1');
+const data = await testResponse.json();
+
+// Verify response structure
+console.assert(data.success !== undefined, 'Response missing success field');
+console.assert(data.timestamp, 'Response missing timestamp');
+console.assert(data.requestId, 'Response missing requestId');
+```
+
+## 📋 Testing Checklist
+
+### Session Management
+- [ ] Session timeout works correctly
+- [ ] Warning modal appears at right time
+- [ ] Tab switching doesn't break session
+- [ ] Focus detection works properly
+- [ ] Activity resets timer correctly
+- [ ] Logout cleans up properly
+- [ ] Cross-tab sync works
+- [ ] Security features function as expected
+
+### API Testing
+- [ ] All endpoints return standardized format
+- [ ] Error responses include proper codes
+- [ ] CORS headers present on all responses
+- [ ] Request IDs generated for tracking
+- [ ] Authentication validates properly
+- [ ] Rate limiting functions correctly
+
+### Security Testing
+- [ ] Multi-factor authentication works
+- [ ] Password hashing is secure
+- [ ] Session management is secure
+- [ ] Input validation prevents injection
+- [ ] Error responses don't leak data
+- [ ] Audit logging captures events
+
+## 🛠️ Manual Testing Procedures
+
+### 1. Authentication Flow
+1. **Registration**: Test new user registration
+2. **Login**: Verify login with valid credentials
+3. **Invalid Login**: Test failed login attempts
+4. **Session Timeout**: Wait for session expiry
+5. **Logout**: Test proper logout cleanup
+
+### 2. Session Management
+1. **Multiple Tabs**: Open multiple tabs, test sync
+2. **Focus Changes**: Switch between apps
+3. **Activity Detection**: Test user activity tracking
+4. **Timeout Warning**: Verify warning modal
+5. **Extension**: Test session extension
+
+### 3. API Functionality
+1. **CRUD Operations**: Test Create, Read, Update, Delete
+2. **Pagination**: Test list endpoints with pagination
+3. **Filtering**: Test search and filter functionality
+4. **Error Handling**: Test error scenarios
+5. **Permission Checks**: Test role-based access
+
+## 🔍 Debugging Tests
+
+### Session Management Debug
+```tsx
+// Enable debug mode
+window.SESSION_DEBUG = true;
+
+// Monitor session events
+window.addEventListener('session-event', (event) => {
+  console.log('Session Event:', event.detail);
+});
+```
+
+### API Debug
+```tsx
+// Monitor API responses
+const originalFetch = window.fetch;
+window.fetch = async (...args) => {
+  const response = await originalFetch(...args);
+  const clone = response.clone();
+  const data = await clone.json();
+  console.log('API Response:', data);
+  return response;
+};
+```
+
+## 📊 Test Reporting
+
+### Session Test Results
+```tsx
+// Generate session test report
+const sessionTestReport = {
+  timeout: 'PASS',
+  warning: 'PASS',
+  tabSync: 'PASS',
+  focusDetection: 'PASS',
+  activityReset: 'PASS',
+  logout: 'PASS'
+};
+```
+
+### API Test Results
+```tsx
+// Generate API test report
+const apiTestReport = {
+  standardizedFormat: 'PASS',
+  errorCodes: 'PASS',
+  corsHeaders: 'PASS',
+  requestIds: 'PASS',
+  authentication: 'PASS',
+  rateLimiting: 'PASS'
+};
+```
+
+## 🎯 Best Practices
+
+### 1. Test Environment
+- Use separate test database
+- Configure test-specific timeouts
+- Enable debug logging
+- Use test user accounts
+
+### 2. Test Data
+- Create consistent test data
+- Clean up after tests
+- Use realistic test scenarios
+- Test edge cases
+
+### 3. Automation
+- Automate repetitive tests
+- Set up continuous testing
+- Monitor test results
+- Document test procedures
+
+## 🔗 Related Documentation
+
+- **[Session Management](./session-management.mdx)** - Session system implementation
+- **[API Response Standardization](../api/api-response-standardization.mdx)** - API testing guidelines
+- **[Security Documentation](../security/index.mdx)** - Security testing procedures
+- **[Functions Folder Architecture](../api/functions-folder-architecture.mdx)** - Backend testing
+
+## 📝 Notes
+
+- Testing components are for **development and testing only**
+- They should **not be included in production builds**
+- Use them to verify functionality during development
+- Remove or conditionally render them for production
+
+---
+
+**Last Updated:** November 2025  
+**Status:** ✅ Active  
+**Next Review:** January 2026
+

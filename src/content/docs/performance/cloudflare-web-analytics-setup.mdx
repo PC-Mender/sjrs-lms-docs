@@ -1,0 +1,187 @@
+---
+title: "Cloudflare Web Analytics Setup"
+---
+
+# Cloudflare Web Analytics Setup Guide
+
+## Overview
+Cloudflare Web Analytics provides automatic Core Web Vitals tracking with zero configuration. It's:
+- ✅ **Free** - No cost, included with Cloudflare
+- ✅ **Privacy-friendly** - No cookies, GDPR compliant
+- ✅ **Automatic** - Tracks LCP, INP, CLS, FCP, TTFB without code
+- ✅ **Real-time** - Live dashboard with device/browser/geo breakdowns
+
+## Setup Steps
+
+### 1. Get Your Web Analytics Token
+
+1. Log in to [Cloudflare Dashboard](https://dash.cloudflare.com)
+2. Navigate to **Analytics** → **Web Analytics**
+3. Click **"Add a site"** or **"Get started"**
+4. Enter your site details:
+   - **Hostname:** `your-worker.your-subdomain.workers.dev` (or your custom domain)
+   - **Automatic setup:** Off (we'll add the script manually)
+5. Copy the **Token** from the JavaScript snippet shown
+
+### 2. Add Token to index.html
+
+Replace `CLOUDFLARE_WEB_ANALYTICS_TOKEN` in `index.html`:
+
+```html
+{/* Current placeholder */}
+<script defer src='https://static.cloudflare.com/beacon.min.js' 
+        data-cf-beacon='{"token": "CLOUDFLARE_WEB_ANALYTICS_TOKEN"}'></script>
+
+{/* Replace with your actual token */}
+<script defer src='https://static.cloudflare.com/beacon.min.js' 
+        data-cf-beacon='{"token": "abc123def456..."}'></script>
+```
+
+### 3. Deploy
+
+```bash
+# Build and deploy
+npm run build
+wrangler pages deploy dist
+
+# Or just deploy
+wrangler pages deploy dist
+```
+
+### 4. Verify Tracking
+
+1. Visit your site in production
+2. Navigate a few pages
+3. Go to Cloudflare Dashboard → Analytics → Web Analytics
+4. You should see live data within minutes
+
+## What Gets Tracked
+
+### Core Web Vitals (Automatic)
+- **LCP** (Largest Contentful Paint) - Load performance
+- **INP** (Interaction to Next Paint) - Interactivity
+- **CLS** (Cumulative Layout Shift) - Visual stability
+- **FCP** (First Contentful Paint) - Perceived load
+- **TTFB** (Time to First Byte) - Server response
+
+### Additional Metrics (Automatic)
+- Page views
+- Unique visitors
+- Referrers
+- Top pages
+- Browsers
+- Operating systems
+- Device types
+- Countries/regions
+
+## Viewing Metrics
+
+### Cloudflare Dashboard
+1. Go to [dash.cloudflare.com](https://dash.cloudflare.com)
+2. Navigate to **Analytics** → **Web Analytics**
+3. Select your site
+4. View:
+   - Core Web Vitals overview
+   - Time-series graphs
+   - Breakdowns by device/browser/country
+   - Individual page performance
+
+### In-App Access
+Superusers can access the dashboard via:
+- **Dashboard** → **Performance** tab
+- Click **"Open Cloudflare Analytics Dashboard"**
+
+## Privacy & Compliance
+
+### GDPR Compliant
+- ✅ No cookies used
+- ✅ No personal data collected
+- ✅ Aggregated data only
+- ✅ IP addresses not stored
+- ✅ No cross-site tracking
+
+### What's Collected
+- Page URL
+- User agent (browser/device)
+- Referrer
+- Country (from IP, not stored)
+- Performance metrics
+
+### What's NOT Collected
+- ❌ IP addresses
+- ❌ User IDs
+- ❌ Session IDs
+- ❌ Cookies
+- ❌ Personal information
+
+## Troubleshooting
+
+### No Data Appearing
+1. **Check token:** Ensure token is correct in index.html
+2. **Check deployment:** Verify production build includes the script
+3. **Check browser:** Some ad blockers block analytics (test in incognito)
+4. **Wait:** Data appears within 5-10 minutes of first visit
+
+### Script Not Loading
+1. View page source, verify script tag is present
+2. Check browser console for errors
+3. Check network tab for beacon.min.js request
+4. Ensure CSP allows `static.cloudflare.com`
+
+### Local Development
+Cloudflare Web Analytics only tracks production. In development:
+- Beacon script won't send data (by design)
+- Console will log: "Cloudflare Web Analytics handles tracking in production"
+
+## Comparison: Custom vs Cloudflare
+
+| Feature | Custom Implementation | Cloudflare Web Analytics |
+|---------|----------------------|--------------------------|
+| **Setup** | Complex (API, DB, queries) | One script tag |
+| **Cost** | D1 storage, compute | Free |
+| **Maintenance** | Manual (cleanup, queries) | Zero |
+| **Dashboard** | Build custom UI | Built-in, beautiful |
+| **Privacy** | Need to implement | GDPR compliant by default |
+| **Data Retention** | Manual cleanup | Automatic (90 days) |
+| **Geo/Device Data** | Need to collect | Automatic |
+| **Real-time** | Need to implement | Built-in |
+
+## Migration from Custom Implementation
+
+Our previous custom implementation is now simplified:
+- ✅ Removed custom POST endpoint logic (Cloudflare handles it)
+- ✅ Removed D1 database queries (no storage needed)
+- ✅ Removed complex percentile calculations (Cloudflare aggregates)
+- ✅ Simplified Performance Widget (links to dashboard)
+- ✅ Kept `web-vitals` library (for future custom metrics if needed)
+
+## Future Custom Metrics (Optional)
+
+If you need **custom business metrics** beyond Core Web Vitals:
+
+```typescript
+// Keep custom tracking for business-specific metrics
+import { sendBusinessMetric } from './utilities/analytics';
+
+// Example: Track time to first interaction
+sendBusinessMetric('time_to_first_click', Date.now() - pageLoadTime);
+
+// Example: Track feature usage
+sendBusinessMetric('feature_usage', { feature: 'advanced_search', duration: 1500 });
+```
+
+Use the existing `/api/analytics/web-vitals` endpoint for custom metrics, but keep Core Web Vitals on Cloudflare.
+
+## References
+
+- [Cloudflare Web Analytics Docs](https://developers.cloudflare.com/analytics/web-analytics/)
+- [Core Web Vitals (Google)](https://web.dev/vitals/)
+- [Web Analytics Dashboard](https://dash.cloudflare.com → Analytics → Web Analytics)
+
+## Next Steps
+
+1. ✅ Get your token from Cloudflare dashboard
+2. ✅ Update index.html with token
+3. ✅ Deploy to production
+4. ✅ Verify data in Cloudflare dashboard
+5. ✅ Share dashboard access with team (optional)

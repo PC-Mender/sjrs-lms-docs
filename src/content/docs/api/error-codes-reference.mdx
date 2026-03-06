@@ -1,0 +1,636 @@
+---
+title: "Error Codes Reference"
+---
+
+# 🚨 API Error Codes Reference
+
+This document provides a comprehensive reference for all error codes, error messages, and troubleshooting steps for the SJRS LMS API.
+
+For plain-language, end-user explanations of the same error codes, see the [Error Codes Explained guide](../user-guides/error-codes-explained.mdx).
+
+## 📋 HTTP Status Codes
+
+### **2xx Success Codes**
+- **200 OK** - Request successful
+- **201 Created** - Resource created successfully
+- **204 No Content** - Request successful, no content to return
+
+### **4xx Client Error Codes**
+- **400 Bad Request** - Invalid request syntax or parameters
+- **401 Unauthorized** - Authentication required or failed
+- **403 Forbidden** - Authentication successful but insufficient permissions
+- **404 Not Found** - Requested resource not found
+- **405 Method Not Allowed** - HTTP method not supported for endpoint
+- **409 Conflict** - Resource conflict (e.g., duplicate email)
+- **422 Unprocessable Entity** - Validation errors
+- **429 Too Many Requests** - Rate limit exceeded
+
+### **5xx Server Error Codes**
+- **500 Internal Server Error** - Unexpected server error
+- **502 Bad Gateway** - Upstream service error
+- **503 Service Unavailable** - Service temporarily unavailable
+- **504 Gateway Timeout** - Upstream service timeout
+
+## 🔐 Authentication Errors
+
+### ✅ Frontend Error Mapping (Cross‑Sync)
+
+This section aligns backend error codes and fields with the frontend’s inline validation behavior. See the comprehensive guide: `docs/development/error-mapping.md`.
+
+#### Registration
+- `EMAIL_ALREADY_EXISTS` → field: `email` → "Email address is already registered"
+- `INVALID_EMAIL_FORMAT` → field: `email` → "Please enter a valid email address"
+- `PASSWORD_TOO_SHORT` → field: `password` → "Password must be at least 8 characters long"
+
+Example response (field-specific):
+```json
+{
+  "success": false,
+  "error": "Email address is already registered",
+  "code": "EMAIL_ALREADY_EXISTS",
+  "field": "email",
+  "status": 409
+}
+```
+
+#### Login
+- `INVALID_CREDENTIALS` → field: `password` → "Invalid email or password."
+- `EMAIL_NOT_CONFIRMED` → global message → "Please verify your email before logging in."
+- `ACCOUNT_LOCKED` → global message → "Account temporarily locked due to failed attempts."
+- `RATE_LIMIT_EXCEEDED` → global message → "Too many attempts. Try again later."
+
+Example response (global message):
+```json
+{
+  "success": false,
+  "error": "Please verify your email before logging in.",
+  "code": "EMAIL_NOT_CONFIRMED",
+  "status": 403
+}
+```
+
+#### Profile Update
+- `INVALID_PHONE` → field: `phone` → "Please enter a valid phone number"
+- `INVALID_STREAM` → field: `stream` → "Please enter a valid stream"
+- `NAME_TOO_SHORT` → field: `firstName`/`lastName` → "Name must be at least 2 characters"
+- `NAME_INVALID` → field: `firstName`/`lastName` → "Only letters, spaces, apostrophes, and hyphens allowed"
+
+Example response (first name validation):
+```json
+{
+  "success": false,
+  "error": "Only letters, spaces, apostrophes, and hyphens allowed",
+  "code": "NAME_INVALID",
+  "field": "firstName",
+  "status": 422
+}
+```
+
+#### Response Format Contract
+Backend validation responses SHOULD include:
+- `error` (string): human-friendly message
+- `code` (string): stable machine‑readable identifier
+- `field` (string, optional): camelCase field name when applicable
+- `status` (number): HTTP status code
+
+Frontend SHOULD:
+- Use `field` to set inline errors via `Form.setFields([{ name, errors }])`
+- Show global error messages when `field` is absent
+- Keep request payloads in camelCase; submit enum values (e.g., `userType`) in lowercase
+
+### **401 Unauthorized**
+
+#### **Invalid Token**
+```json
+{
+  "success": false,
+  "error": "Invalid or expired token",
+  "code": "AUTH_TOKEN_INVALID",
+  "details": {
+    "token_type": "jwt",
+    "expired_at": "2024-01-15T10:30:00Z"
+  }
+}
+```
+
+**Causes:**
+- JWT token has expired
+- Token signature is invalid
+- Token format is malformed
+- Token is missing required claims
+
+**Solutions:**
+1. Re-authenticate to get a new token
+2. Check token expiration time
+3. Verify token format and signature
+4. Ensure all required claims are present
+
+#### **Missing Authentication**
+```json
+{
+  "success": false,
+  "error": "Authentication required",
+  "code": "AUTH_REQUIRED",
+  "details": {
+    "endpoint": "/api/books",
+    "method": "POST"
+  }
+}
+```
+
+**Causes:**
+- Missing `Authorization` header
+- Missing `X-XSRF-TOKEN` header
+- Empty or null authentication headers
+
+**Solutions:**
+1. Include `Authorization: Bearer <token>` header
+2. Include `X-XSRF-TOKEN: <csrf_token>` header
+3. Ensure headers are not empty or null
+
+#### **Session Expired**
+```json
+{
+  "success": false,
+  "error": "Session has expired",
+  "code": "SESSION_EXPIRED",
+  "details": {
+    "session_id": "sess_123",
+    "last_activity": "2024-01-15T09:15:00Z",
+    "expires_after": "15 minutes"
+  }
+}
+```
+
+**Causes:**
+- User inactive for more than 15 minutes
+- Session cleanup by system
+- Multiple device login detected
+
+**Solutions:**
+1. Re-authenticate to create new session
+2. Use force logout endpoint if needed
+3. Ensure single device usage
+
+### **403 Forbidden**
+
+#### **Insufficient Permissions**
+```json
+{
+  "success": false,
+  "error": "Insufficient permissions for this operation",
+  "code": "PERMISSION_DENIED",
+  "details": {
+    "required_role": "librarian",
+    "user_role": "student",
+    "resource": "books",
+    "action": "create"
+  }
+}
+```
+
+**Causes:**
+- User role doesn't have required permissions
+- Resource-level permissions not granted
+- Action not allowed for user's role
+
+**Solutions:**
+1. Contact administrator for role upgrade
+2. Check resource-specific permissions
+3. Verify action is allowed for your role
+
+#### **Resource Access Denied**
+```json
+{
+  "success": false,
+  "error": "Access denied to this resource",
+  "code": "RESOURCE_ACCESS_DENIED",
+  "details": {
+    "resource_id": 123,
+    "resource_type": "book",
+    "user_id": 456,
+    "reason": "Resource belongs to different user"
+  }
+}
+```
+
+**Causes:**
+- Resource ownership mismatch
+- Resource-level access control
+- Geographic or organizational restrictions
+
+**Solutions:**
+1. Verify resource ownership
+2. Check access control policies
+3. Contact resource owner or administrator
+
+## 📝 Validation Errors
+
+### **400 Bad Request**
+
+#### **Missing Required Fields**
+```json
+{
+  "success": false,
+  "error": "Validation failed",
+  "code": "VALIDATION_ERROR",
+  "details": {
+    "field": "email",
+    "message": "Email is required",
+    "value": null
+  }
+}
+```
+
+**Common Required Fields:**
+- `email` - User email address
+- `password` - User password
+- `first_name` - User first name
+- `last_name` - User last name
+- `user_type` - User type (student/professor/guest)
+
+**Solutions:**
+1. Include all required fields in request
+2. Check field names and spelling
+3. Ensure fields are not null or empty
+
+#### **Invalid Data Types**
+```json
+{
+  "success": false,
+  "error": "Invalid data type",
+  "code": "TYPE_ERROR",
+  "details": {
+    "field": "publication_year",
+    "expected": "number",
+    "received": "string",
+    "value": "2024"
+  }
+}
+```
+
+**Common Type Errors:**
+- `publication_year` should be number, not string
+- `isbn` should be string, not number
+- `status` should be string from allowed values
+- `due_date` should be ISO 8601 date string
+
+**Solutions:**
+1. Convert data to correct type
+2. Use proper format for dates (ISO 8601)
+3. Check enum values for status fields
+
+#### **Invalid Format**
+```json
+{
+  "success": false,
+  "error": "Invalid format",
+  "code": "FORMAT_ERROR",
+  "details": {
+    "field": "email",
+    "message": "Invalid email format",
+    "value": "invalid-email"
+  }
+}
+```
+
+**Format Requirements:**
+- **Email**: Valid email format (user@domain.com)
+- **ISBN**: 10 or 13 digit ISBN format
+- **Phone**: International format (+1234567890)
+- **Date**: ISO 8601 format (2024-01-15T10:30:00Z)
+
+**Solutions:**
+1. Use correct format for each field
+2. Validate data before sending
+3. Check format examples in documentation
+
+### **422 Unprocessable Entity**
+
+#### **Business Rule Violations**
+```json
+{
+  "success": false,
+  "error": "Business rule violation",
+  "code": "BUSINESS_RULE_VIOLATION",
+  "details": {
+    "rule": "borrow_limit_exceeded",
+    "message": "User has reached maximum borrow limit",
+    "current_loans": 5,
+    "max_allowed": 5
+  }
+}
+```
+
+**Common Business Rules:**
+- Borrow limits (max books per user)
+- Loan duration limits
+- Resource availability checks
+- User status requirements
+
+**Solutions:**
+1. Return borrowed books
+2. Wait for resource availability
+3. Contact administrator for limit increase
+4. Complete required profile information
+
+#### **Data Integrity Violations**
+```json
+{
+  "success": false,
+  "error": "Data integrity violation",
+  "code": "DATA_INTEGRITY_ERROR",
+  "details": {
+    "constraint": "unique_email",
+    "message": "Email address already exists",
+    "existing_user_id": 123
+  }
+}
+```
+
+**Common Constraints:**
+- Unique email addresses
+- Unique ISBN numbers
+- Unique resource names
+- Foreign key relationships
+
+**Solutions:**
+1. Use different unique values
+2. Check existing data first
+3. Update existing record instead of creating new one
+
+## 🔄 Rate Limiting Errors
+
+### **429 Too Many Requests**
+
+#### **Rate Limit Exceeded**
+```json
+{
+  "success": false,
+  "error": "Rate limit exceeded",
+  "code": "RATE_LIMIT_EXCEEDED",
+  "details": {
+    "limit": 100,
+    "window": "1 minute",
+    "retry_after": 30,
+    "endpoint": "/api/books/search"
+  }
+}
+```
+
+**Rate Limits by Endpoint:**
+- **Authentication**: 10 requests per minute
+- **Search**: 100 requests per minute
+- **CRUD Operations**: 50 requests per minute
+- **File Uploads**: 20 requests per minute
+
+**Solutions:**
+1. Wait for rate limit window to reset
+2. Implement exponential backoff
+3. Reduce request frequency
+4. Use bulk operations when possible
+
+## 🚫 Resource Not Found Errors
+
+### **404 Not Found**
+
+#### **Resource Not Found**
+```json
+{
+  "success": false,
+  "error": "Resource not found",
+  "code": "RESOURCE_NOT_FOUND",
+  "details": {
+    "resource_type": "book",
+    "resource_id": 999,
+    "searched_fields": ["id"]
+  }
+}
+```
+
+**Common Causes:**
+- Resource ID doesn't exist
+- Resource was deleted
+- Resource belongs to different tenant
+- Incorrect resource type
+
+**Solutions:**
+1. Verify resource ID exists
+2. Check resource type
+3. Search for similar resources
+4. Contact administrator if resource should exist
+
+#### **Endpoint Not Found**
+```json
+{
+  "success": false,
+  "error": "Endpoint not found",
+  "code": "ENDPOINT_NOT_FOUND",
+  "details": {
+    "requested_url": "/api/nonexistent",
+    "available_endpoints": ["/api/books", "/api/users", "/api/loans"]
+  }
+}
+```
+
+**Solutions:**
+1. Check endpoint URL spelling
+2. Verify endpoint exists in documentation
+3. Use correct HTTP method
+4. Check API version compatibility
+
+## ⚠️ Server Errors
+
+### **500 Internal Server Error**
+
+#### **Unexpected Server Error**
+```json
+{
+  "success": false,
+  "error": "Internal server error",
+  "code": "INTERNAL_SERVER_ERROR",
+  "details": {
+    "error_id": "err_123456",
+    "timestamp": "2024-01-15T10:30:00Z",
+    "component": "database"
+  }
+}
+```
+
+**Causes:**
+- Database connection issues
+- External service failures
+- Configuration errors
+- Unhandled exceptions
+
+**Solutions:**
+1. Retry request after delay
+2. Check system status
+3. Contact support with error ID
+4. Verify system configuration
+
+### **503 Service Unavailable**
+
+#### **Service Temporarily Unavailable**
+```json
+{
+  "success": false,
+  "error": "Service temporarily unavailable",
+  "code": "SERVICE_UNAVAILABLE",
+  "details": {
+    "reason": "maintenance",
+    "estimated_duration": "30 minutes",
+    "maintenance_window": "2024-01-15T10:00:00Z - 2024-01-15T10:30:00Z"
+  }
+}
+```
+
+**Causes:**
+- Scheduled maintenance
+- High system load
+- Database migrations
+- External service outages
+
+**Solutions:**
+1. Wait for service to resume
+2. Check maintenance schedule
+3. Use alternative endpoints if available
+4. Monitor system status
+
+## 🔧 Troubleshooting Guide
+
+### **Common Error Patterns**
+
+#### **Authentication Chain Failures**
+```
+1. 401 Unauthorized → Check token validity
+2. 403 Forbidden → Check user permissions
+3. 404 Not Found → Check resource existence
+4. 422 Validation → Check request data
+```
+
+#### **Rate Limiting Chain**
+```
+1. 429 Too Many Requests → Wait and retry
+2. Implement exponential backoff
+3. Reduce request frequency
+4. Use bulk operations
+```
+
+### **Debugging Steps**
+
+#### **1. Check Request Headers**
+```bash
+# Verify authentication headers
+curl -v -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "X-XSRF-TOKEN: YOUR_CSRF_TOKEN" \
+  -X GET "https://your-worker.your-subdomain.workers.dev/api/auth/me"
+```
+
+#### **2. Validate Request Body**
+```bash
+# Test with minimal valid data
+curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com",
+    "password": "password123",
+    "first_name": "Test",
+    "last_name": "User",
+    "user_type": "student"
+  }'
+```
+
+#### **3. Check Response Headers**
+```bash
+# Look for rate limiting headers
+curl -v -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
+  -H "Authorization: Bearer YOUR_TOKEN"
+```
+
+### **Error Recovery Strategies**
+
+#### **Exponential Backoff**
+```javascript
+const retryWithBackoff = async (apiCall, maxRetries = 3) => {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await apiCall();
+    } catch (error) {
+      if (error.status === 429 && i < maxRetries - 1) {
+        const delay = Math.pow(2, i) * 1000; // 1s, 2s, 4s
+        await new Promise(resolve => setTimeout(resolve, delay));
+        continue;
+      }
+      throw error;
+    }
+  }
+};
+```
+
+#### **Token Refresh Strategy**
+```javascript
+const apiCallWithTokenRefresh = async (apiCall) => {
+  try {
+    return await apiCall();
+  } catch (error) {
+    if (error.status === 401) {
+      // Try to refresh token
+      const newToken = await refreshToken();
+      // Retry with new token
+      return await apiCall(newToken);
+    }
+    throw error;
+  }
+};
+```
+
+## 📊 Error Monitoring
+
+### **Error Tracking**
+- **Error ID**: Unique identifier for each error
+- **Timestamp**: When error occurred
+- **User Context**: User ID, role, session info
+- **Request Details**: URL, method, headers, body
+- **Stack Trace**: For debugging purposes
+
+### **Error Reporting**
+```javascript
+// Report error to monitoring service
+const reportError = (error, context) => {
+  const errorReport = {
+    error_id: error.details?.error_id,
+    timestamp: new Date().toISOString(),
+    user_id: context.userId,
+    endpoint: context.endpoint,
+    error_code: error.code,
+    error_message: error.error,
+    request_details: context.requestDetails
+  };
+  
+  // Send to monitoring service
+  sendToMonitoringService(errorReport);
+};
+```
+
+## 🎯 Best Practices
+
+### **Error Handling**
+1. **Always check response status** before processing data
+2. **Implement retry logic** for transient failures
+3. **Use exponential backoff** for rate limiting
+4. **Log errors** with sufficient context
+5. **Provide user-friendly error messages**
+
+### **Prevention**
+1. **Validate data** before sending requests
+2. **Handle token expiration** gracefully
+3. **Implement proper error boundaries** in UI
+4. **Monitor error rates** and patterns
+5. **Test error scenarios** during development
+
+---
+
+**Last Updated:** November 2025  
+**Version:** 1.0.0  
+**Status:** ✅ Complete

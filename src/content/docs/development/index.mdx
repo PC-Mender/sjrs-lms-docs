@@ -1,0 +1,200 @@
+---
+title: "Overview"
+---
+
+# Development Guide
+
+Welcome to the SJRS LMS development environment. This guide provides essential information for developers working on the project.
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+ 
+- npm or yarn
+- Git
+
+### Setup
+```bash
+git clone <repository-url>
+cd sjrslms
+npm install
+npm run dev
+```
+
+## 📚 Development Resources
+
+### Core Documentation
+- [API Documentation](../api/index.mdx) - API patterns and endpoints
+- [Architecture Guide](../architecture/core-architecture.mdx) - System architecture overview
+- [Security Guide](../security/index.mdx) - Security practices and implementation
+
+### Development Tools
+- [TypeScript Configuration](./typescript-configuration.mdx) - Comprehensive TypeScript setup guide
+- [TypeScript Quick Reference](./typescript-quick-reference.mdx) - Quick fixes for common TypeScript issues
+- [Testing Guide](./testing-guide.mdx) - Testing strategies and best practices
+- [Validation System](./validation-system.mdx) - Form and data validation
+
+### Feature Development
+- [Permissions System](./enhanced-permissions.mdx) - User roles and permissions
+- [Session Management](./session-management.mdx) - Authentication and session handling
+- [Logging System](./logging-system.mdx) - Application logging and monitoring
+- [API Response Standardization](../api/api-response-standardization.mdx) - Consistent API responses
+- [Functions Folder Architecture](../api/functions-folder-architecture.mdx) - Backend structure and patterns
+
+## 🔧 Development Workflow
+
+### Code Quality & Automation
+
+#### Automated Quality Checks
+- **Pre-commit Hooks** (`.husky/pre-commit`):
+  - ✅ ESLint auto-fix on staged files (via `lint-staged`)
+  - ✅ File size warnings (non-blocking) for staged files
+  - Runs automatically before every commit
+
+- **Pre-push Hooks** (`.husky/pre-push`):
+  - ✅ TypeScript type checking (blocks push if errors)
+  - ✅ ESLint validation (blocks push if errors)
+  - ✅ File size checks (warnings only)
+  - Catches issues before code reaches GitHub Actions
+
+- **File Size Standards**:
+  - Utilities/Handlers: ≤ 300 lines
+  - Pages: ≤ 500 lines
+  - Components: ≤ 300 lines
+  - Check manually: `npm run check:file-sizes`
+  - Check staged files: `npm run check:file-sizes -- --staged`
+
+#### Code Quality Tools
+- **TypeScript**: Enhanced configuration with balanced strictness
+- **ESLint**: Code linting and style enforcement
+- **Prettier**: Code formatting
+- **Husky**: Git hooks management
+- **lint-staged**: Run linters on staged files only
+
+### Testing Strategy
+- Unit tests for utility functions
+- Integration tests for API endpoints
+- Component testing for React components
+- End-to-end testing for critical user flows
+
+### Database Management
+- **D1 Database**: Cloudflare's SQLite-based database
+- **Migrations**: Version-controlled schema changes
+- **Seeding**: Test data setup
+
+## 🎯 Current Focus Areas
+
+### TypeScript Enhancement
+- **Status**: 94 errors (down from 318)
+- **Goal**: Gradual improvement toward strict mode
+- **Approach**: Balanced configuration maintaining development productivity
+
+### Performance Optimization
+- Code splitting and lazy loading
+- Database query optimization
+- Caching strategies
+- Bundle size optimization
+
+### Security Improvements
+- Input validation and sanitization
+- CSRF protection
+- Rate limiting
+- Secure session management
+
+## 🚨 Common Issues & Solutions
+
+### TypeScript Errors
+See [TypeScript Quick Reference](./typescript-quick-reference.mdx) for common errors and quick fixes.
+
+### Development Environment
+- Ensure all environment variables are set
+- Check database connectivity
+- Verify API endpoints are accessible
+
+### Build Issues
+- Clear node_modules and reinstall
+- Check TypeScript configuration
+- Verify import/export statements
+
+## 📖 Contributing
+
+### Code Standards
+
+#### File Size Limits
+- **Utilities/Handlers**: ≤ 300 lines
+- **Pages**: ≤ 500 lines
+- **Components**: ≤ 300 lines
+- Files exceeding limits are automatically flagged in pre-commit/pre-push hooks
+- See [File Size Analysis](../architecture/file-size-analysis.mdx) for details
+
+#### Error Handling
+- Use `handleError` from `functions/utilities/logging` for all error logging
+- Use `createErrorResponse` from `functions/utilities/response-builder` for error responses
+- Use `ERROR_CODES` constants (never string literals) for error codes
+- Include component name in error context for better tracking
+- See [API Response Standardization](../api/api-response-standardization.mdx) for patterns
+
+#### General Standards
+- Follow TypeScript best practices
+- Use consistent naming conventions
+- Add appropriate error handling
+- Include JSDoc comments for complex functions
+- Use safe SQL query builders (`buildSafeOrderByClause`, `buildSafeUpdateQuery`)
+
+### Pull Request Process
+1. Create feature branch from main
+2. Implement changes with tests
+3. Ensure TypeScript compilation passes
+4. Submit PR with clear description
+5. Address review feedback
+
+### Testing Requirements
+- All new features must include tests
+- Maintain or improve test coverage
+- Ensure tests pass in CI/CD pipeline
+
+## 🔍 Debugging & Troubleshooting
+
+### Development Tools
+- Browser DevTools for frontend issues
+- Cloudflare Workers logs for backend issues
+- Database query logging
+- Network request monitoring
+
+### Common Debugging Steps
+1. Check browser console for errors
+2. Verify API responses
+3. Check database state
+4. Review TypeScript compilation errors
+
+## 📞 Getting Help
+
+### Internal Resources
+- Check existing documentation
+- Review similar implementations
+- Consult team members
+
+### External Resources
+- TypeScript documentation
+- React documentation
+- Cloudflare Workers documentation
+- D1 database documentation
+
+## 🎉 Success Metrics
+
+### Code Quality
+- TypeScript error count reduction
+- Test coverage improvement
+- Linting rule compliance
+- Performance benchmarks
+
+### Development Experience
+- Build time optimization
+- Development server stability
+- Hot reload reliability
+- Error message clarity
+
+---
+
+**Remember**: Development is iterative. Focus on incremental improvements while maintaining system stability and developer productivity.
+

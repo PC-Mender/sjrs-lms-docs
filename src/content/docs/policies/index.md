@@ -1,7 +1,0 @@
----
-title: Policies
----
-
-This section documents the various policies enforced by the SJRS LMS.
-
-- [Auto-Suspension Policies](./auto-suspension-policies.md)

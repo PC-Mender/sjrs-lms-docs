@@ -1,0 +1,316 @@
+---
+title: "Validation System"
+---
+
+# 🛡️ Validation System
+
+## Overview
+
+The SJRS LMS features a **modern, modular validation system** designed for performance, security, and maintainability. The system provides comprehensive input validation and sanitization across the frontend application.
+
+## 🏗️ Architecture
+
+### **Clean Modular Design**
+```
+src/utilities/validation/
+├── core/
+│   ├── engine.ts           # Main validation orchestration
+│   ├── cache-manager.ts    # Performance optimization
+│   └── config.ts           # Configuration management
+├── validators/
+│   ├── basic-validators.ts    # String, number, boolean
+│   ├── format-validators.ts   # Email, phone, URL, ISBN
+│   ├── password-validators.ts # Password complexity
+│   └── security-validators.ts # Security threat detection
+├── utils/
+│   └── error-creators.ts   # Result creation utilities
+├── types.ts                # TypeScript definitions
+└── index.ts                # Single entry point
+```
+
+## 🚀 Quick Start
+
+### **Basic Usage**
+```typescript
+import { validate, validateForm } from '@/utilities/validation';
+
+// Single field validation
+const emailResult = validate(email, { 
+  type: 'email', 
+  required: true 
+});
+
+// Form validation
+const schema = {
+  email: { type: 'email', required: true },
+  password: { type: 'password', required: true },
+  name: { type: 'name', required: true }
+};
+
+const formResult = validateForm(formData, schema);
+```
+
+### **React Hook Integration**
+```typescript
+// Primary usage via useInputValidation hook
+import { useInputValidation } from '@/hooks/useInputValidation';
+
+const { validateField, validateForm, fieldErrors, isValid } = useInputValidation({
+  schema: {
+    email: { type: 'email', required: true },
+    password: { type: 'password', required: true }
+  }
+});
+```
+
+## 🧩 Advanced Usage
+
+### **Tree-Shakable Validators**
+```typescript
+// Import only what you need for optimal bundle size
+import { FormatValidators } from '@/utilities/validation';
+const emailResult = FormatValidators.validateEmail(email);
+
+import { PasswordValidators } from '@/utilities/validation';
+const strength = PasswordValidators.assessPasswordStrength(password);
+```
+
+### **Convenience Functions**
+```typescript
+// Pre-configured validation functions
+import { validateEmail, validatePassword, validatePhone } from '@/utilities/validation';
+
+const emailResult = validateEmail('user@example.com');
+const passwordResult = validatePassword('SecurePass123!');
+const phoneResult = validatePhone('+1234567890');
+```
+
+## 🛡️ Security Features
+
+### **Comprehensive Threat Detection**
+- **XSS Prevention**: Detects and blocks cross-site scripting attempts
+- **SQL Injection Protection**: Identifies malicious SQL patterns
+- **Command Injection Protection**: Blocks system command execution attempts
+- **Path Traversal Protection**: Prevents directory traversal attacks
+- **LDAP Injection Protection**: Detects LDAP injection patterns
+- **NoSQL Injection Protection**: Blocks NoSQL injection attempts
+
+### **Security Validation Example**
+```typescript
+import { SecurityValidators } from '@/utilities/validation';
+
+const securityResult = SecurityValidators.validateSecurity(userInput);
+if (!securityResult.valid) {
+  console.warn('Security threat detected:', securityResult.errors);
+}
+```
+
+## ⚡ Performance Features
+
+### **Intelligent Caching**
+- **Validation Result Caching**: Avoids re-validation of identical inputs
+- **Security Pattern Caching**: Optimizes repeated security checks
+- **Memory Management**: FIFO cache eviction prevents memory bloat
+- **Configurable Cache Sizes**: Adjustable for different deployment scenarios
+
+### **Cache Management**
+```typescript
+import { clearValidationCache, getCacheStats } from '@/utilities/validation';
+
+// Clear cache when needed
+clearValidationCache();
+
+// Monitor cache performance
+const stats = getCacheStats();
+console.log('Cache stats:', stats);
+```
+
+## 📝 Validation Rules
+
+### **Basic Rules**
+```typescript
+interface ValidationRule {
+  required?: boolean;        // Field is required
+  minLength?: number;        // Minimum string length
+  maxLength?: number;        // Maximum string length
+  min?: number;             // Minimum numeric value
+  max?: number;             // Maximum numeric value
+  pattern?: RegExp;         // Custom regex pattern
+  trimWhitespace?: boolean; // Auto-trim whitespace
+  custom?: (value: any) => boolean | string; // Custom validation
+}
+```
+
+### **Type-Specific Validation**
+```typescript
+// Email validation
+{ type: 'email', required: true }
+
+// Password with complexity requirements
+{ type: 'password', required: true }
+
+// Phone number validation
+{ type: 'phone' }
+
+// URL validation
+{ type: 'url' }
+
+// ISBN validation (10 or 13 digits)
+{ type: 'isbn' }
+
+// Year validation (1900 to current+10)
+{ type: 'year' }
+
+// Name validation (letters, spaces, hyphens)
+{ type: 'name', minLength: 2, maxLength: 50 }
+```
+
+## 🔧 Configuration
+
+### **Global Configuration**
+```typescript
+import { StreamlinedValidationEngine } from '@/utilities/validation';
+
+const engine = StreamlinedValidationEngine.getInstance({
+  enableXSSProtection: true,
+  enableSQLInjectionProtection: true,
+  enableCommandInjectionProtection: true,
+  enableSanitization: true,
+  trimWhitespace: true,
+  strictMode: false,
+  debug: false
+});
+```
+
+### **Available Options**
+- `enableXSSProtection`: Enable XSS detection (default: true)
+- `enableSQLInjectionProtection`: Enable SQL injection detection (default: true)
+- `enableCommandInjectionProtection`: Enable command injection detection (default: true)
+- `enableSanitization`: Enable input sanitization (default: true)
+- `trimWhitespace`: Auto-trim whitespace (default: true)
+- `allowEmpty`: Allow empty values when not required (default: false)
+- `strictMode`: Enable strict validation mode (default: false)
+- `debug`: Enable debug logging (default: DEV mode)
+
+## 📊 Validation Results
+
+### **Result Format**
+```typescript
+interface ValidationResult {
+  valid: boolean;           // Whether validation passed
+  errors: string[];         // Array of error messages
+  sanitizedValue?: any;     // Cleaned/sanitized value
+  originalValue?: any;      // Original input value
+}
+```
+
+### **Form Validation Results**
+```typescript
+interface FormValidationResult {
+  isValid: boolean;                    // Overall form validity
+  errors: Record<string, string[]>;    // Field-specific errors
+  sanitizedData?: Record<string, any>; // Cleaned form data
+}
+```
+
+## 🎯 Best Practices
+
+### **1. Use Type-Specific Validation**
+```typescript
+// ✅ Good: Use specific types
+{ type: 'email', required: true }
+{ type: 'password', required: true }
+
+// ❌ Avoid: Generic validation for specific formats
+{ type: 'string', pattern: /email-regex/ }
+```
+
+### **2. Leverage Tree-Shaking**
+```typescript
+// ✅ Good: Import specific validators for small bundles
+import { FormatValidators } from '@/utilities/validation/validators/format-validators';
+
+// ⚠️ Okay: Convenience imports (slightly larger bundle)
+import { validateEmail } from '@/utilities/validation';
+```
+
+### **3. Handle Validation Results Properly**
+```typescript
+// ✅ Good: Check validity and handle errors
+const result = validate(value, rules);
+if (!result.valid) {
+  setErrors(result.errors);
+  return;
+}
+// Use result.sanitizedValue for further processing
+```
+
+### **4. Use Form-Level Validation**
+```typescript
+// ✅ Good: Validate entire forms at once
+const formResult = validateForm(formData, schema);
+if (formResult.isValid) {
+  // Submit formResult.sanitizedData
+}
+```
+
+## 🔍 Debugging
+
+### **Debug Mode**
+```typescript
+// Enable debug logging
+const engine = StreamlinedValidationEngine.getInstance({ debug: true });
+
+// Validation failures will be logged to console
+const result = validate(value, rules);
+```
+
+### **Cache Statistics**
+```typescript
+import { getCacheStats } from '@/utilities/validation';
+
+const stats = getCacheStats();
+console.log('Validation cache:', stats.validationCache);
+console.log('Security cache:', stats.securityCache);
+```
+
+## 📈 Performance Metrics
+
+### **Bundle Size Impact**
+- **Full system**: ~35KB (gzipped)
+- **Tree-shaken (email only)**: ~10KB (gzipped)
+- **Single validator**: ~5KB (gzipped)
+
+### **Performance Benchmarks**
+- **Cache hit rate**: >90% for repeated validations
+- **Security validation**: &lt;1ms per check
+- **Form validation**: &lt;5ms for typical forms
+- **Memory usage**: &lt;2MB cache limit with auto-cleanup
+
+## 🆕 Recent Improvements
+
+### **Clean Architecture Refactoring**
+- ✅ **73% reduction** in largest file size (1,038 → 280 lines)
+- ✅ **Modular design** with clear separation of concerns
+- ✅ **Tree-shakable exports** for optimal bundle size
+- ✅ **Enhanced performance** with dedicated caching
+- ✅ **Simplified API** with single entry point
+
+### **Security Enhancements**
+- ✅ **Comprehensive threat detection** across all input types
+- ✅ **Password-specific security** with appropriate rules
+- ✅ **Security event logging** for monitoring
+- ✅ **Configurable security levels** for different environments
+
+## 🔗 Related Documentation
+
+- **[useInputValidation Hook](#react-hook-integration)** - React hook for form validation
+- **[Security Best Practices](../security/)** - Application security guidelines
+- **[API Validation](../api/api-response-standardization.mdx)** - Backend validation integration
+- **[Performance Guide](../performance/)** - Optimization strategies
+
+---
+
+**Last Updated**: November 2025  
+**Version**: 2.0.0 (Clean Architecture)  
+**Status**: ✅ Production Ready
