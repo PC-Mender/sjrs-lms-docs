@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.21](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.20...v1.1.21) (2026-03-07)
+
+
+### Documentation
+
+* fix capitalized titles and redundant h1 headings ([96fa315](https://github.com/PC-Mender/sjrs-lms-docs/commit/96fa3156ebb5346b4b0c7671be327d31d07a2cf3))
+
 ### [1.1.20](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.19...v1.1.20) (2026-03-06)
 
 
