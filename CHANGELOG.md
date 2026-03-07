@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.22](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.21...v1.1.22) (2026-03-07)
+
+
+### Documentation
+
+* remove hyphens from sidebar headings ([f0bbdbe](https://github.com/PC-Mender/sjrs-lms-docs/commit/f0bbdbe6024f42b2e4602dccdcf759df3ee671c8))
+
 ### [1.1.21](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.20...v1.1.21) (2026-03-07)
 
 
