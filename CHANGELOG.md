@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.23](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.22...v1.1.23) (2026-03-09)
+
+
+### Documentation
+
+* add data fetching guide, loans refactoring summary, and update query migration details ([7229dfe](https://github.com/PC-Mender/sjrs-lms-docs/commit/7229dfedefc10cfe03778310fa1fccd0c69ca453))
+* add missing index pages for documentation sections ([f40de67](https://github.com/PC-Mender/sjrs-lms-docs/commit/f40de6737d71701e30390ca948daa4f369fa3e40))
+
 ### [1.1.22](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.21...v1.1.22) (2026-03-07)
 
 
