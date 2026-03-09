@@ -1,0 +1,140 @@
+---
+title: Data Fetching Guide
+description: Definitive guide to data fetching in SJRS LMS using the centralized query system.
+sidebar:
+  label: Data Fetching
+  order: 30
+lastUpdated: 2026-03-09
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+# Data Fetching Guide
+
+## Overview
+
+The SJRS LMS uses a centralized data fetching strategy built on top of **TanStack React Query**. This system ensures:
+- Consistent caching behavior across the application.
+- Automatic cache invalidation.
+- Type-safe API interactions.
+- Prevention of common pitfalls like refetch loops.
+
+All data fetching logic is centralized in `src/utilities/query/`.
+
+## Core Hooks
+
+### `useStandardQuery`
+
+The primary hook for fetching data. It wraps `useQuery` and applies pre-configured presets.
+
+```typescript
+import { useStandardQuery } from '@/utilities/query';
+
+const { data, isLoading } = useStandardQuery({
+  queryKey: ['books', id],
+  queryFn: () => fetchBook(id),
+  preset: 'REAL_TIME', // optional, defaults to REAL_TIME
+});
+```
+
+### `useStandardMutation`
+
+The primary hook for modifying data. It wraps `useMutation` and handles automatic cache invalidation.
+
+```typescript
+import { useStandardMutation } from '@/utilities/query';
+
+const mutation = useStandardMutation({
+  mutationFn: (data) => createBook(data),
+  invalidateKeys: [['books']], // Keys to invalidate on success
+  onSuccess: (data) => {
+    console.log('Book created!', data);
+  },
+});
+```
+
+## Query Presets
+
+We use 4 standard presets to define caching behavior. Choose the one that best fits your data:
+
+<CardGrid>
+  <Card title="REAL_TIME" icon="rocket">
+    **Stale Time: 0ms** | **GC Time: 5min**
+    
+    Use for critical data that must always be fresh (e.g., Dashboards, User Actions, Loans).
+    - Refetches on mount, window focus, and reconnect.
+    - Bypasses HTTP cache via timestamp in request params.
+  </Card>
+  
+  <Card title="FREQUENT" icon="refresh">
+    **Stale Time: 30s** | **GC Time: 5min**
+    
+    Use for frequently changing lists (e.g., Students, Logs).
+    - Refetches on mount.
+    - Does NOT refetch on window focus (reduces API load).
+  </Card>
+  
+  <Card title="STATIC" icon="document">
+    **Stale Time: 5min** | **GC Time: 10min**
+    
+    Use for reference data (e.g., Roles, Categories, Settings).
+    - Only refetches on mount.
+  </Card>
+  
+  <Card title="IMMUTABLE" icon="archive">
+    **Stale Time: Infinity** | **GC Time: Infinity**
+    
+    Use for historical records that never change.
+    - Never automatically refetches.
+  </Card>
+</CardGrid>
+
+## CRUD Hook Factory
+
+For standard D1 resources, use `createCrudHooks` to generate a complete set of type-safe hooks.
+
+```typescript
+import { createCrudHooks } from '@/hooks/d1/factories/createCrudHooks';
+
+export const {
+  useQuery: useBooks,
+  useItemQuery: useBook,
+  useCreate: useCreateBook,
+  useUpdate: useUpdateBook,
+  useDelete: useDeleteBook,
+} = createCrudHooks<D1Book>({
+  resource: 'books',
+  queryKey: 'd1-books',
+  preset: 'REAL_TIME', // Defaults to REAL_TIME for lists
+});
+```
+
+## Best Practices
+
+### 1. Stable Query Keys
+**CRITICAL**: Never include non-deterministic values (like `Date.now()`) directly in your `queryKey`. This causes infinite refetch loops in React Query.
+
+Instead, rely on `useStandardQuery` which handles cache-busting via request parameters automatically when using the `REAL_TIME` preset.
+
+### 2. Cache Invalidation
+Always use `invalidateKeys` in mutations to ensure data freshness.
+
+```typescript
+// Good
+invalidateKeys: [['books'], ['dashboard-stats']]
+
+// Bad - relying on manual refetch
+onSuccess: () => {
+  queryClient.refetchQueries(['books']);
+}
+```
+
+### 3. Pagination
+For paginated lists, use `keepPreviousData` (or `placeholderData: keepPreviousData` in v5) to prevent UI flickering.
+
+```typescript
+useStandardQuery({
+  // ...
+  placeholderData: keepPreviousData,
+});
+```

@@ -1,0 +1,86 @@
+---
+title: Loans & Wishlist Refactoring
+description: Summary of the refactoring of Loans and Wishlist modules to use standardized query patterns and improved data structures.
+sidebar:
+  label: Loans & Wishlist
+  order: 40
+lastUpdated: 2026-03-09
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+# Loans & Wishlist Refactoring
+
+## Executive Summary
+
+<Card title="✅ COMPLETED" icon="approve-check">
+  The Loans and Wishlist modules have been successfully refactored to use the new centralized query system, improved table components, and standardized data structures.
+</Card>
+
+## Problem Analysis
+
+Before this refactoring, the Loans and Wishlist modules suffered from:
+- **Inconsistent Data Fetching**: Mixed usage of raw `useQuery` and custom hooks.
+- **Type Safety Issues**: Loose typing on API responses, leading to potential runtime errors.
+- **Pagination Logic**: Complex and duplicated pagination logic in components.
+- **Refetch Loops**: Issues with unstable query keys causing unnecessary re-renders.
+
+## Solution Details
+
+### 1. Standardized Query Hooks
+
+The hooks in `src/hooks/d1/loans.ts` and `src/hooks/d1/wishlist.ts` were updated to use `useStandardQuery` and `useStandardMutation`.
+
+- **Loans Query**:
+  - Uses `REAL_TIME` preset for up-to-date loan status.
+  - Implements `keepPreviousData` for smooth pagination.
+  - Correctly handles both array and paginated object responses.
+- **Wishlist Query**:
+  - Similar standardization with `REAL_TIME` preset.
+  - Improved priority handling.
+
+### 2. Improved Table Components
+
+The UI components were refactored to separate concerns and improve maintainability:
+
+- **`WishlistTableColumnsSimple.tsx`**: separated column definitions.
+- **`WishlistTableActionsSimple.tsx`**: separated action buttons.
+- **`UnifiedTable`**: Refactored for better type safety and generic support.
+
+### 3. Data Normalization
+
+Repository normalizers were updated to ensure consistent data structures between the API and the frontend.
+
+## Technical Implementation
+
+### Query Key Stabilization
+
+A critical part of this refactor (and subsequent fixes) was ensuring query keys remain stable. The `CACHE_BUSTING` utility now adds timestamps to *request parameters* rather than the *query key* itself, preventing infinite refetch loops in React Query.
+
+```typescript
+// src/utilities/query/query-config.ts
+export const CACHE_BUSTING = {
+  // Adds timestamp to request params (bypasses HTTP cache)
+  addTimestamp: (params) => ({ ...params, _t: Date.now() }),
+  
+  // Query keys remain stable (prevents React Query loops)
+  withTimestamp: (key) => key, 
+};
+```
+
+### Response Handling
+
+The hooks now robustly handle different API response formats:
+
+```typescript
+// src/hooks/d1/loans.ts
+const items = Array.isArray(result.data) ? result.data : (result.data?.items ?? []);
+const total = typeof result.data === 'object' ? (result.data?.total ?? 0) : (result.total ?? 0);
+```
+
+## Benefits
+
+- **Consistency**: All data fetching now follows the project-wide standard.
+- **Stability**: Eliminated refetch loops and improved cache management.
+- **Maintainability**: Cleaner components with separated concerns.
+- **Type Safety**: Full TypeScript support for API responses.
