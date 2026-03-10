@@ -1,0 +1,610 @@
+---
+title: Instant-Close Modal Pattern Migration Guide
+description: Comprehensive guide for migrating CRUD modals to the instant-close pattern for better perceived performance
+sidebar:
+  order: 45
+  badge:
+    text: Performance
+    variant: tip
+---
+
+## Overview
+
+This guide explains how to migrate CRUD modals from the legacy "wait-for-response" pattern to the **instant-close pattern** for significantly better perceived performance.
+
+### The Problem with Legacy Pattern
+
+**Legacy Pattern (FORBIDDEN)**:
+```typescript
+// ❌ LEGACY: Modal waits for API response before closing
+const handleEditSubmit = async (values: FormData) => {
+  try {
+    setEditLoading(true);
+    await updateMutation.mutateAsync({ id, variables: values });
+    handleEditModalClose(); // ← Waits for API response
+  } catch (error) {
+    notifyCrudError(error, 'Failed to update');
+  } finally {
+    setEditLoading(false);
+  }
+};
+```
+
+**Issues**:
+- User waits 200-800ms (network latency) for modal to close
+- Perceived as slow/unresponsive
+- Inconsistent UX across application
+- Duplicated error handling logic in every modal
+
+### The Solution: Instant-Close Pattern
+
+**New Pattern (REQUIRED)**:
+```typescript
+// NEW: Modal closes immediately, mutation runs in background
+import { useInstantCloseMutation } from '@/utilities/query';
+
+const handleEditSubmit = useInstantCloseMutation({
+  mutation: updateMutation,
+  record: editingRecord,
+  config: {
+    onClose: handleEditModalClose,
+    reopenModal: (record, formData) => {
+      setEditingRecord(record);
+      editForm.setFieldsValue(formData);
+      setEditModalVisible(true);
+    },
+    setLoading: setEditLoading,
+  },
+  transformVariables: (formData, record) => ({
+    id: record.id,
+    variables: formData,
+  }),
+  onError: (error) => {
+    notifyCrudError(error, 'Failed to update');
+    handleError(error, { operation: 'update' });
+  },
+});
+
+// Use in form
+<Form onFinish={handleEditSubmit} />
+```
+
+**Benefits**:
+- ⚡ **Instant UX**: Modal closes in 0ms
+- 🎯 **DRY Principle**: Centralized logic, no code duplication
+- 🔄 **Auto Error Recovery**: Modal re-opens on failure with original values
+- 🚀 **Background Execution**: Mutation runs asynchronously
+- ✅ **Type-Safe**: Full TypeScript support with generics
+
+---
+
+## Migration Steps
+
+### Step 1: Import the Hook
+
+```typescript
+import { useInstantCloseMutation } from '@/utilities/query';
+```
+
+### Step 2: Identify Your Modal State
+
+Identify these pieces in your component:
+- **Current record**: The entity being edited (e.g., `editingRecord`)
+- **Mutation**: Your update/create mutation (e.g., `updateMutation`)
+- **Close handler**: Function to close modal (e.g., `handleEditModalClose`)
+- **Form instance**: Ant Design form (e.g., `editForm`)
+- **Modal visibility setter**: useState for modal visibility (e.g., `setEditModalVisible`)
+- **Loading state setter**: useState for loading (e.g., `setEditLoading`)
+
+### Step 3: Replace Legacy Handler
+
+**Before**:
+```typescript
+const handleEditSubmit = async (values: FormData) => {
+  if (!editingRecord) return;
+  
+  try {
+    setEditLoading(true);
+    await updateMutation.mutateAsync({
+      id: editingRecord.id,
+      variables: values,
+    });
+    handleEditModalClose(); // ← Waits for response
+  } catch (error) {
+    notifyCrudError(error, 'Failed to update');
+    handleError(error, { operation: 'update' });
+  } finally {
+    setEditLoading(false);
+  }
+};
+```
+
+**After**:
+```typescript
+const handleEditSubmit = useInstantCloseMutation({
+  mutation: updateMutation,
+  record: editingRecord,
+  config: {
+    onClose: handleEditModalClose,
+    reopenModal: (record, formData) => {
+      setEditingRecord(record);
+      editForm.setFieldsValue(formData);
+      setEditModalVisible(true);
+    },
+    setLoading: setEditLoading,
+  },
+  transformVariables: (formData, record) => ({
+    id: record.id,
+    variables: formData,
+  }),
+  onError: (error) => {
+    notifyCrudError(error, 'Failed to update');
+    handleError(error, { operation: 'update' });
+  },
+});
+```
+
+### Step 4: Remove Async/Await Keywords
+
+The hook returns a **synchronous handler** — do not add `async` or `await`:
+
+```typescript
+// ❌ WRONG
+<Form onFinish={async (values) => await handleEditSubmit(values)} />
+
+// ✅ CORRECT
+<Form onFinish={handleEditSubmit} />
+```
+
+---
+
+## Complete Examples
+
+### Example 1: Simple Update Modal
+
+```typescript
+import React, { useState } from 'react';
+import { Modal, Form } from 'antd';
+import { useInstantCloseMutation } from '@/utilities/query';
+import { useD1UpdateAuthor } from '@/hooks/d1/authors';
+import { notifyCrudError } from '@/utilities/notifications/crud-notifications';
+import { handleError } from '@/utilities/error/unified-error-handler';
+
+interface AuthorFormData {
+  name: string;
+  biography?: string;
+}
+
+export const AuthorEditModal: React.FC<Props> = ({ author, visible, onClose }) => {
+  const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
+  const updateMutation = useD1UpdateAuthor();
+
+  const handleSubmit = useInstantCloseMutation({
+    mutation: updateMutation,
+    record: author,
+    config: {
+      onClose,
+      reopenModal: (record, formData) => {
+        // Re-open modal with previous form values for retry
+        form.setFieldsValue(formData);
+        // Parent component controls visibility, so call onClose(false) then onOpen()
+        // Or use a local state if modal is self-contained
+      },
+      setLoading,
+    },
+    transformVariables: (formData, record) => ({
+      id: record.id,
+      variables: formData,
+    }),
+    onError: (error) => {
+      notifyCrudError(error, 'Failed to update author');
+      handleError(error, { operation: 'update_author' });
+    },
+  });
+
+  return (
+    <Modal
+      title="Edit Author"
+      open={visible}
+      onCancel={onClose}
+      footer={null}
+    >
+      <Form
+        form={form}
+        onFinish={handleSubmit}
+        initialValues={author}
+        layout="vertical"
+      >
+        <Form.Item name="name" label="Name" rules={[{ required: true }]}>
+          <Input />
+        </Form.Item>
+        <Form.Item name="biography" label="Biography">
+          <TextArea rows={4} />
+        </Form.Item>
+        <Form.Item>
+          <Button type="primary" htmlType="submit" loading={loading}>
+            Update Author
+          </Button>
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
+};
+```
+
+### Example 2: List Page with Edit Modal
+
+```typescript
+import React, { useState } from 'react';
+import { Form } from 'antd';
+import { useInstantCloseMutation } from '@/utilities/query';
+import { useD1UpdateRole } from '@/hooks/d1/roles';
+
+export const RoleListPage: React.FC = () => {
+  const [editForm] = Form.useForm();
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [editingRecord, setEditingRecord] = useState<Role | null>(null);
+  const [editLoading, setEditLoading] = useState(false);
+  const updateRoleMutation = useD1UpdateRole();
+
+  const handleEditModalOpen = (record: Role) => {
+    setEditingRecord(record);
+    editForm.setFieldsValue({
+      name: record.name,
+      description: record.description,
+    });
+    setEditModalVisible(true);
+  };
+
+  const handleEditModalClose = () => {
+    setEditModalVisible(false);
+    setEditingRecord(null);
+    editForm.resetFields();
+  };
+
+  const handleEditSubmit = useInstantCloseMutation({
+    mutation: updateRoleMutation,
+    record: editingRecord,
+    config: {
+      onClose: handleEditModalClose,
+      reopenModal: (record, formData) => {
+        setEditingRecord(record);
+        editForm.setFieldsValue(formData);
+        setEditModalVisible(true);
+      },
+      setLoading: setEditLoading,
+    },
+    transformVariables: (formData, record) => ({
+      id: record.id,
+      variables: formData,
+    }),
+    onError: (error) => {
+      notifyCrudError(error, 'Failed to update role');
+      handleError(error, { operation: 'update_role' });
+    },
+  });
+
+  return (
+    <>
+      {/* Table with edit action */}
+      <Table onEdit={handleEditModalOpen} />
+      
+      {/* Edit Modal */}
+      <Modal
+        title="Edit Role"
+        open={editModalVisible}
+        onCancel={handleEditModalClose}
+        footer={null}
+      >
+        <Form form={editForm} onFinish={handleEditSubmit}>
+          {/* Form fields */}
+        </Form>
+      </Modal>
+    </>
+  );
+};
+```
+
+### Example 3: Create Modal (No Record)
+
+For **create** operations where there's no existing record:
+
+```typescript
+const handleCreateSubmit = useInstantCloseMutation({
+  mutation: createMutation,
+  record: { id: 'new' } as any, // Dummy record for create operations
+  config: {
+    onClose: handleCreateModalClose,
+    reopenModal: (_, formData) => {
+      createForm.setFieldsValue(formData);
+      setCreateModalVisible(true);
+    },
+    setLoading: setCreateLoading,
+  },
+  transformVariables: (formData) => formData, // No record ID needed
+  onError: (error) => {
+    notifyCrudError(error, 'Failed to create');
+    handleError(error, { operation: 'create' });
+  },
+});
+```
+
+---
+
+## API Reference
+
+### `useInstantCloseMutation` Hook
+
+```typescript
+function useInstantCloseMutation<
+  TData,        // Mutation response type
+  TError,       // Error type
+  TVariables,   // Mutation variables type
+  TRecord,      // Current record type
+  TFormData     // Form data type
+>(options: {
+  mutation: UseMutationResult<TData, TError, TVariables>;
+  record: TRecord | null;
+  config: InstantCloseConfig<TFormData, TRecord>;
+  transformVariables?: (formData: TFormData, record: TRecord) => TVariables;
+  onError?: (error: TError, formData: TFormData, record: TRecord) => void;
+  onSuccess?: (data: TData, formData: TFormData, record: TRecord) => void;
+}): (formData: TFormData) => void;
+```
+
+#### Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `mutation` | `UseMutationResult` | Yes | The mutation from React Query (e.g., `useD1UpdateAuthor()`) |
+| `record` | `TRecord \| null` | Yes | Current record being edited (null check handled internally) |
+| `config` | `InstantCloseConfig` | Yes | Modal state management configuration |
+| `transformVariables` | Function | No | Transform form data to mutation variables |
+| `onError` | Function | No | Custom error handler (receives error, formData, record) |
+| `onSuccess` | Function | No | Custom success handler (receives data, formData, record) |
+
+#### `InstantCloseConfig` Type
+
+```typescript
+interface InstantCloseConfig<TFormData, TRecord> {
+  onClose: () => void;
+  reopenModal?: (record: TRecord, formData: TFormData) => void;
+  setLoading?: (loading: boolean) => void;
+}
+```
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `onClose` | `() => void` | Yes | Function to close the modal immediately |
+| `reopenModal` | Function | No | Function to re-open modal on error for retry |
+| `setLoading` | Function | No | Function to control loading state |
+
+---
+
+## Common Patterns
+
+### Pattern 1: No Error Recovery (Simple Case)
+
+If you don't want the modal to re-open on error:
+
+```typescript
+const handleSubmit = useInstantCloseMutation({
+  mutation: updateMutation,
+  record: editingRecord,
+  config: {
+    onClose: handleEditModalClose,
+    // Omit reopenModal — user won't get retry option
+    setLoading: setEditLoading,
+  },
+  transformVariables: (formData, record) => ({
+    id: record.id,
+    variables: formData,
+  }),
+  onError: (error) => {
+    notifyCrudError(error, 'Failed to update');
+  },
+});
+```
+
+### Pattern 2: Success Callback
+
+Execute custom logic on success:
+
+```typescript
+const handleSubmit = useInstantCloseMutation({
+  mutation: updateMutation,
+  record: editingRecord,
+  config: { /* ... */ },
+  transformVariables: (formData, record) => ({ /* ... */ }),
+  onSuccess: (data, formData, record) => {
+    // Custom success logic (e.g., analytics, navigation)
+    console.log('Updated successfully:', data);
+    // Note: Don't show success toast (per project policy)
+  },
+  onError: (error) => {
+    notifyCrudError(error, 'Failed to update');
+  },
+});
+```
+
+### Pattern 3: Conditional Transformation
+
+Transform variables based on record state:
+
+```typescript
+const handleSubmit = useInstantCloseMutation({
+  mutation: updateMutation,
+  record: editingRecord,
+  config: { /* ... */ },
+  transformVariables: (formData, record) => {
+    const baseData = { id: record.id, variables: formData };
+    
+    // Add conditional fields
+    if (record.type === 'Student') {
+      return {
+        ...baseData,
+        variables: {
+          ...formData,
+          student_fields: { /* ... */ },
+        },
+      };
+    }
+    
+    return baseData;
+  },
+  onError: (error) => {
+    notifyCrudError(error, 'Failed to update');
+  },
+});
+```
+
+---
+
+## Migration Checklist
+
+Use this checklist when migrating a modal:
+
+- [ ] Imported `useInstantCloseMutation` from `@/utilities/query`
+- [ ] Identified current record variable
+- [ ] Identified mutation hook
+- [ ] Identified close handler function
+- [ ] Identified form instance
+- [ ] Implemented `reopenModal` callback
+- [ ] Implemented `transformVariables` if needed
+- [ ] Implemented `onError` callback
+- [ ] Removed `async`/`await` from handler
+- [ ] Removed `try/catch` block (now handled by hook)
+- [ ] Removed manual `setLoading(true/false)` calls
+- [ ] Tested modal closes instantly
+- [ ] Tested error recovery (re-opens modal)
+- [ ] Verified form fields populate correctly on retry
+- [ ] Verified mutation executes in background
+- [ ] Verified cache invalidation still works
+
+---
+
+## Troubleshooting
+
+### Modal doesn't close immediately
+
+**Cause**: Using `async` handler or calling `e.preventDefault()`.
+
+**Solution**: Remove `async` and ensure handler is called directly:
+```typescript
+// ❌ WRONG
+<Form onFinish={async (values) => handleSubmit(values)} />
+
+// ✅ CORRECT
+<Form onFinish={handleSubmit} />
+```
+
+### Modal doesn't re-open on error
+
+**Cause**: `reopenModal` callback not provided or incorrect.
+
+**Solution**: Ensure `reopenModal` sets all modal state:
+```typescript
+reopenModal: (record, formData) => {
+  setEditingRecord(record);        // ← Set record
+  editForm.setFieldsValue(formData); // ← Set form values
+  setEditModalVisible(true);         // ← Show modal
+}
+```
+
+### TypeScript errors with generics
+
+**Cause**: Type inference failing due to complex types.
+
+**Solution**: Explicitly specify generic types:
+```typescript
+const handleSubmit = useInstantCloseMutation<
+  Author,        // TData
+  Error,         // TError
+  UpdateVariables,  // TVariables
+  Author,        // TRecord
+  AuthorFormData // TFormData
+>({
+  // ... options
+});
+```
+
+### Form values lost on retry
+
+**Cause**: `reopenModal` not setting form values correctly.
+
+**Solution**: Ensure form values match the structure:
+```typescript
+reopenModal: (record, formData) => {
+  // Ensure formData structure matches form field names
+  editForm.setFieldsValue({
+    name: formData.name,
+    description: formData.description,
+    // ... all fields
+  });
+  setEditModalVisible(true);
+}
+```
+
+---
+
+## Performance Impact
+
+### Before Migration (Legacy Pattern)
+
+| Metric | Value |
+|--------|-------|
+| **Perceived Close Latency** | 200-800ms (network dependent) |
+| **User Frustration** | High (waiting for modal) |
+| **Code Duplication** | High (error handling in every modal) |
+| **Maintainability** | Low (scattered logic) |
+
+### After Migration (Instant-Close Pattern)
+
+| Metric | Value |
+|--------|-------|
+| **Perceived Close Latency** | **0ms** ⚡ |
+| **User Frustration** | Low (instant feedback) |
+| **Code Duplication** | Minimal (centralized hook) |
+| **Maintainability** | High (single source of truth) |
+
+---
+
+## Reference Implementation
+
+The **gold standard** implementation is in:
+- **File**: `src/pages/borrow-limits/BorrowLimitList.tsx`
+- **Handler**: `handleEditSubmit` (lines 153-180)
+
+This implementation explicitly documents the pattern:
+```typescript
+// Close immediately so UI feels instant; data refresh continues in background.
+handleEditModalClose();
+
+updateBorrowLimitMutation.mutate(updateData, {
+  onError: (error) => {
+    // Re-open with previous values so user can retry immediately.
+    setEditingRecord(recordToEdit);
+    setEditModalVisible(true);
+  },
+});
+```
+
+---
+
+## Related Documentation
+
+- [Query Configuration Architecture](/architecture/query-configuration-architecture)
+- [Performance Engineering](/performance/performance-engineering)
+- [Project Rules - Instant-Close Modal Pattern](/project-rules-app#instant-close-modal-pattern)
+- [React Query Best Practices](/development/data-fetching)
+
+---
+
+## Support
+
+If you encounter issues during migration:
+1. Check the reference implementation in `BorrowLimitList.tsx`
+2. Review the API reference above
+3. Check troubleshooting section
+4. Consult the troubleshooting section in this guide
