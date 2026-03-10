@@ -29,6 +29,37 @@ The SJRS LMS now features **instant-close modal behavior** for all CRUD operatio
 - ✅ **File Size Compliance**: Split large files to comply with 300-line limit
 - ✅ **Maintainability**: Improved code organization and readability
 
+### **Version 5.0.1** (March 9, 2026)
+
+#### **Code Refactoring**
+- ✅ **CRUD Notifications**: Centralized CRUD notifications and mutation sync
+- ✅ **Consistency**: Improved notification handling across all CRUD operations
+
+### **Version 5.0.0** ⭐ **MAJOR UPDATE** (March 9, 2026)
+
+#### **Query Centralization System** ⭐ **BREAKING CHANGE**
+The SJRS LMS now features a **centralized React Query configuration system** that eliminates code duplication and improves consistency across all data fetching operations.
+
+**Key Changes:**
+- ⚠️ **Breaking Change**: All query hooks now use centralized useStandardQuery wrapper
+- ✅ **Code Reduction**: Eliminated 633 lines of repetitive code
+- ✅ **Centralized Configuration**: Single source of truth for query settings
+- ✅ **Improved Performance**: Optimized preset-based query configuration
+- ✅ **Better Maintainability**: Easier to modify global query behavior
+
+**Architecture Changes:**
+- **New**: `src/utilities/query/` - Centralized query configuration utilities
+- **QUERY_PRESETS**: REAL_TIME, FREQUENT, STATIC, IMMUTABLE presets
+- **Standardized Wrappers**: useStandardQuery and useStandardMutation
+- **Migration Summary**: 57 files modified, 38 files now use useStandardQuery
+
+**Benefits:**
+- Single source of truth for query configuration
+- Consistent caching behavior across all features
+- Easy to modify global query behavior
+- Reduced code duplication and improved maintainability
+- Better performance with optimized preset selection
+
 ### **Version 3.52.0** (March 3, 2026)
 
 #### **User Status Enhancements**
