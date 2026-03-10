@@ -8,7 +8,28 @@ slug: changelog
 
 ## 🆕 **Latest Updates**
 
-### **Version 3.52.0** ⭐ **CURRENT** (March 3, 2026)
+### **Version 6.0.0** ⭐ **CURRENT** (March 10, 2026)
+
+#### **Instant-Close Modal Pattern** ⭐ **BREAKING CHANGE**
+The SJRS LMS now features **instant-close modal behavior** for all CRUD operations, providing immediate user feedback and improved UX responsiveness.
+
+**Key Changes:**
+- ⚠️ **Breaking Change**: All CRUD modals now close immediately before API response
+- ✅ **Optimistic UI**: Modals close instantly, providing immediate feedback
+- ✅ **Enhanced UX**: Users experience faster, more responsive interactions
+- ✅ **Error Handling**: Automatic notification display if operations fail
+
+**Implementation Details:**
+- All create, edit, and delete modals now close on form submission
+- Success/error notifications appear after API response
+- Consistent behavior across all CRUD operations
+- Improved perceived performance and user satisfaction
+
+#### **Code Quality Improvements**
+- ✅ **File Size Compliance**: Split large files to comply with 300-line limit
+- ✅ **Maintainability**: Improved code organization and readability
+
+### **Version 3.52.0** (March 3, 2026)
 
 #### **User Status Enhancements**
 - ✅ **Status Handling**: Enhanced user status handling across forms and contexts

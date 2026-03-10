@@ -9,6 +9,195 @@ slug: full-changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0](https://github.com/PC-Mender/sjrslms/compare/v5.0.1...v6.0.0) (2026-03-10)
+
+
+### ⚠ BREAKING CHANGES
+
+* All CRUD modals now close immediately before API response
+
+### Features
+
+* implement instant-close modal pattern for optimistic UI ([866b997](https://github.com/PC-Mender/sjrslms/commit/866b997a01aea04ae703063eca9716cce5af8343))
+
+
+### Code Refactoring
+
+* split large files to comply with 300-line limit ([d0ece9a](https://github.com/PC-Mender/sjrslms/commit/d0ece9afe879f2c64579b5fd7f8efb7ea8e6c6a5))
+
+### [5.0.1](https://github.com/PC-Mender/sjrslms/compare/v5.0.0...v5.0.1) (2026-03-09)
+
+
+### Code Refactoring
+
+* centralize CRUD notifications and mutation sync ([bc4806c](https://github.com/PC-Mender/sjrslms/commit/bc4806c8012f00686489f752f02d091e29a80e92))
+
+## [5.0.0](https://github.com/PC-Mender/sjrslms/compare/v4.2.1...v5.0.0) (2026-03-09)
+
+
+### ⚠ BREAKING CHANGES
+
+* All query hooks now use centralized useStandardQuery wrapper
+
+## Overview
+Complete migration from scattered query configuration to centralized preset-based system.
+Eliminates 633 lines of repetitive code while improving consistency and maintainability.
+
+## Architecture Changes
+- **New**: src/utilities/query/ - Centralized query configuration utilities
+  - query-config.ts: QUERY_PRESETS (REAL_TIME, FREQUENT, STATIC, IMMUTABLE)
+  - query-wrapper.ts: useStandardQuery and useStandardMutation wrappers
+  - index.ts: Public API exports
+
+## Migration Summary
+- 57 files modified (38 files now use useStandardQuery, 91 useStandardMutation instances)
+- 0 raw useQuery/useMutation in production code
+- 0 hardcoded staleTime/gcTime values (centralized in config)
+- 561 insertions(+), 633 deletions(-) - net reduction of 72 lines
+
+## Key Changes
+1. **Query Hooks** (38 files):
+   - Migrated from raw useQuery to useStandardQuery with preset selection
+   - Removed hardcoded staleTime/gcTime values
+   - Applied appropriate presets (REAL_TIME for dashboards, FREQUENT for user lists, STATIC for reference data)
+
+2. **Mutation Hooks** (91 instances):
+   - Migrated to useStandardMutation with automatic cache invalidation
+   - Standardized invalidateKeys/refetchKeys patterns
+
+3. **CRUD Factory** (createCrudHooks.ts):
+   - Adopted preset system for all generated hooks
+   - Removed skipCache overrides from bookCopies, professors, users hooks
+
+4. **Dashboard Components**:
+   - DashboardConfigManager: Migrated 3 queries (FREQUENT/STATIC presets)
+   - DataTable: Migrated pagination queries (FREQUENT preset)
+
+5. **Code Quality**:
+   - Fixed 6 lint warnings (unused variable destructures)
+   - Removed unused imports
+   - Standardized import patterns
+
+## Benefits
+- Single source of truth for query configuration
+- Consistent caching behavior across all features
+- Easy to modify global query behavior
+- Reduced code duplication and improved maintainability
+- Better performance with optimized preset selection
+
+## Testing
+- npm run build: PASSED (40.07s)
+- npm run lint: PASSED (0 errors, 0 warnings)
+- npx wrangler deploy: PASSED
+
+## Documentation
+Comprehensive documentation added to docs site:
+docs/development/query-centralization-migration.mdx
+
+Closes query configuration technical debt initiative.
+
+### Bug Fixes
+
+* **query:** stabilize standard query keys to prevent refetch loops ([920f454](https://github.com/PC-Mender/sjrslms/commit/920f454f207a8c57b429f79c1029f3a474186367))
+
+
+### Code Refactoring
+
+* centralize React Query configuration with preset system ([410e6f5](https://github.com/PC-Mender/sjrslms/commit/410e6f5fceb6593c90dc82c9ddfcd02b680cf5af))
+
+### [4.2.1](https://github.com/PC-Mender/sjrslms/compare/v4.2.0...v4.2.1) (2026-03-09)
+
+
+### Code Refactoring
+
+* improve data fetching and table components for loans and wishlist ([5a71859](https://github.com/PC-Mender/sjrslms/commit/5a7185905ce454602cdd27fb50968e0c54292eb1))
+
+## [4.2.0](https://github.com/PC-Mender/sjrslms/compare/v4.1.1...v4.2.0) (2026-03-09)
+
+
+### Features
+
+* **catalog:** improve quota and reservation wishlist UX ([7a4b72d](https://github.com/PC-Mender/sjrslms/commit/7a4b72d61ed154ee415c6e04d6acbcc7360d9006))
+
+### [4.1.1](https://github.com/PC-Mender/sjrslms/compare/v4.1.0...v4.1.1) (2026-03-09)
+
+
+### Bug Fixes
+
+* enforce IST display and correct relative timestamps ([52d44c3](https://github.com/PC-Mender/sjrslms/commit/52d44c364f8b70708e5bcef288c5de54249074c5))
+* finalize session and order follow-up updates ([31c1d76](https://github.com/PC-Mender/sjrslms/commit/31c1d76aa8477d435bb5b1e731fb781ccd33ef6d))
+
+## [4.1.0](https://github.com/PC-Mender/sjrslms/compare/v4.0.2...v4.1.0) (2026-03-05)
+
+
+### Features
+
+* implement borrow quota management for book requests ([ac53013](https://github.com/PC-Mender/sjrslms/commit/ac530130524cdc72d6e21eedbfd5f9cc1b45e901))
+
+### [4.0.2](https://github.com/PC-Mender/sjrslms/compare/v4.0.1...v4.0.2) (2026-03-04)
+
+
+### Code Refactoring
+
+* split cloudflare-optimizations into focused modules ([1c346ad](https://github.com/PC-Mender/sjrslms/commit/1c346adf6569f6330ac27de896bd7ef72f8bb7ac))
+
+### [4.0.1](https://github.com/PC-Mender/sjrslms/compare/v4.0.0...v4.0.1) (2026-03-04)
+
+
+### Code Refactoring
+
+* enhance loans and orders system with improved filtering, authorization, and frontend UI ([889dcb9](https://github.com/PC-Mender/sjrslms/commit/889dcb9472a36412cdff5c63b8d64b110f281fd7))
+
+## [4.0.0](https://github.com/PC-Mender/sjrslms/compare/v3.52.1...v4.0.0) (2026-03-03)
+
+
+### ⚠ BREAKING CHANGES
+
+* **api:** All API handlers now expect sanitizedData parameter from security middleware
+
+### Features
+
+* **api:** integrate security middleware sanitizedData across all endpoints ([e6213a1](https://github.com/PC-Mender/sjrslms/commit/e6213a1c2af4f8b67e9fa39cd2b7786d788b3c8f))
+
+
+### Bug Fixes
+
+* prevent unauthenticated users from being redirected on public pages ([65cae6d](https://github.com/PC-Mender/sjrslms/commit/65cae6d21ebeb03a0964ac27fb18fdf8b00ff1b8))
+
+### [3.52.1](https://github.com/PC-Mender/sjrslms/compare/v3.52.0...v3.52.1) (2026-03-03)
+
+
+### Tests
+
+* Add comprehensive test suites for security, validation, and performance ([c703d73](https://github.com/PC-Mender/sjrslms/commit/c703d736c6377663ea1062ae9fb0310cbc2f3fb2))
+
+## [3.52.0](https://github.com/PC-Mender/sjrslms/compare/v3.51.1...v3.52.0) (2026-03-03)
+
+
+### Features
+
+* enhance user status handling and form components ([fe3a10e](https://github.com/PC-Mender/sjrslms/commit/fe3a10e479119147b47afd6749870a28ef99ebdf))
+
+### [3.51.1](https://github.com/PC-Mender/sjrslms/compare/v3.51.0...v3.51.1) (2026-03-03)
+
+
+### Tests
+
+* fix failing tests and suppress noisy warnings ([264fd99](https://github.com/PC-Mender/sjrslms/commit/264fd998067363e80444ee298e39d3070f438ff5))
+
+## [3.51.0](https://github.com/PC-Mender/sjrslms/compare/v3.50.3...v3.51.0) (2026-03-03)
+
+
+### Features
+
+* add onboarding status filter to students, professors, and members pages ([117c436](https://github.com/PC-Mender/sjrslms/commit/117c436747ae80b16b859d3ce30a3b0ce216d753))
+* improve guest management UI - keep Status/Onboarding Status in one row, fetch guest profile data, add onboarding status filter ([833c260](https://github.com/PC-Mender/sjrslms/commit/833c2609535abbcb18803b68e8c38505e7a8002b))
+
+
+### Bug Fixes
+
+* align account status precision and UI consistency across management pages ([bf2ff8b](https://github.com/PC-Mender/sjrslms/commit/bf2ff8b8b0aee5e115654a59baccede79a11cdf7))
+
 ### [3.50.3](https://github.com/PC-Mender/sjrslms/compare/v3.50.2...v3.50.3) (2026-03-02)
 
 
