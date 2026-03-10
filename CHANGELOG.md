@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.25](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.23...v1.1.25) (2026-03-10)
+
+
+### Documentation
+
+* add v6.0.0 release documentation and instant-close modal pattern guide ([38b201c](https://github.com/PC-Mender/sjrs-lms-docs/commit/38b201c6564e2f638a35bb22f2af73599ccea23e))
+
 ### [1.1.23](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.22...v1.1.23) (2026-03-09)
 
 
