@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.30](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.29...v1.1.30) (2026-03-12)
+
+
+### Documentation
+
+* sanitize base URLs and secrets ([17b900b](https://github.com/PC-Mender/sjrs-lms-docs/commit/17b900bb8cb417c108c4c92bab41cccc164d543e))
+
 ### [1.1.29](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.28...v1.1.29) (2026-03-12)
 
 
