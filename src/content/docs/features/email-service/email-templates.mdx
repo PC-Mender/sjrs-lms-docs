@@ -37,7 +37,7 @@ This document describes the comprehensive email template system for SJRS LMS, fe
 ```typescript
 const emailContent = generateEmailConfirmationTemplate({
   recipientName: "John Doe",
-  confirmationUrl: "https://your-worker.your-subdomain.workers.dev/email-confirmation?token=abc123"
+  confirmationUrl: "https://your-frontend-domain.com/email-confirmation?token=abc123"
 });
 ```
 
@@ -158,7 +158,7 @@ const emailContent = generateSystemNotificationTemplate({
 ```typescript
 const emailContent = generatePasswordResetTemplate({
   recipientName: "John Doe",
-  resetUrl: "https://your-worker.your-subdomain.workers.dev/resetPassword?token=abc123"
+  resetUrl: "https://your-frontend-domain.com/resetPassword?token=abc123"
 });
 ```
 

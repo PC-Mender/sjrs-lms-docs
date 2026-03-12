@@ -20,7 +20,7 @@ wrangler deploy
 ```
 
 ### Step 2: Access Your Deployed App
-- URL: `https://your-worker.your-subdomain.workers.dev` (or your deployment URL)
+- URL: `https://your-api-domain.com` (or your deployment URL)
 - Login with superuser credentials
 
 ---
@@ -118,15 +118,15 @@ wrangler deploy
 #### 4.1 Test Permission Check API
 ```bash
 # Auth is cookie-based (HttpOnly). Use a cookie jar for curl.
-curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email":"SUPERUSER_EMAIL","password":"SUPERUSER_PASSWORD"}'
 
-curl -i -b cookies.txt -c cookies.txt "https://your-worker.your-subdomain.workers.dev/api/auth/csrf"
+curl -i -b cookies.txt -c cookies.txt "https://your-api-domain.com/api/auth/csrf"
 xsrf=$(grep -E "\tXSRF-TOKEN\t" cookies.txt | tail -n 1 | awk '{print $7}')
 
 # Test superuser permission check
-curl -X POST https://your-worker.your-subdomain.workers.dev/api/permissions/check \
+curl -X POST https://your-api-domain.com/api/permissions/check \
   -b cookies.txt \
   -H "X-XSRF-TOKEN: $xsrf" \
   -H "Content-Type: application/json" \
@@ -138,15 +138,15 @@ curl -X POST https://your-worker.your-subdomain.workers.dev/api/permissions/chec
 #### 4.2 Test Admin Permission Check
 ```bash
 # Login as admin and re-bootstrap CSRF before POST requests
-curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email":"ADMIN_EMAIL","password":"ADMIN_PASSWORD"}'
 
-curl -i -b cookies.txt -c cookies.txt "https://your-worker.your-subdomain.workers.dev/api/auth/csrf"
+curl -i -b cookies.txt -c cookies.txt "https://your-api-domain.com/api/auth/csrf"
 xsrf=$(grep -E "\tXSRF-TOKEN\t" cookies.txt | tail -n 1 | awk '{print $7}')
 
 # Test admin permission check (after granting permission)
-curl -X POST https://your-worker.your-subdomain.workers.dev/api/permissions/check \
+curl -X POST https://your-api-domain.com/api/permissions/check \
   -b cookies.txt \
   -H "X-XSRF-TOKEN: $xsrf" \
   -H "Content-Type: application/json" \
@@ -158,7 +158,7 @@ curl -X POST https://your-worker.your-subdomain.workers.dev/api/permissions/chec
 #### 4.3 Test System Logs API
 ```bash
 # Test system logs access
-curl -X GET https://your-worker.your-subdomain.workers.dev/api/system-logs \
+curl -X GET https://your-api-domain.com/api/system-logs \
   -b cookies.txt
 
 # Expected: System logs JSON response

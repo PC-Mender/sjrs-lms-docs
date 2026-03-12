@@ -102,10 +102,10 @@ Use the test users created in the schema:
 
 | Email | Password | Role |
 |-------|----------|------|
-| admin@yourdomain.com | password123 | Admin |
-| librarian@yourdomain.com | password123 | Librarian |
-| professor@yourdomain.com | password123 | Professor |
-| student@yourdomain.com | password123 | Student |
+| ADMIN_EMAIL | ADMIN_PASSWORD | Admin |
+| LIBRARIAN_EMAIL | LIBRARIAN_PASSWORD | Librarian |
+| PROFESSOR_EMAIL | PROFESSOR_PASSWORD | Professor |
+| STUDENT_EMAIL | STUDENT_PASSWORD | Student |
 
 ### 3. Test Books API
 
@@ -113,7 +113,7 @@ Use the test users created in the schema:
 # Login (cookie-based auth)
 curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
   -H "Content-Type: application/json" \
-  -d '{"email":"admin@yourdomain.com","password":"password123"}'
+  -d '{"email":"ADMIN_EMAIL","password":"ADMIN_PASSWORD"}'
 
 # Get all books
 curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \

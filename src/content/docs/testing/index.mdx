@@ -26,7 +26,7 @@ The SJRS LMS uses a multi-layered testing approach that includes:
 ### Workers Dev Environment Testing
 - **Strategy**: Test on Workers Dev after pushing code to avoid local security issues
 - **Deployment**: `npm run build && npm run deploy`
-- **URL**: `https://your-worker.your-subdomain.workers.dev`
+- **URL**: `https://your-api-domain.com`
 - **Guide**: [Testing Guide - Workers Dev Environment](./testing-guide-workers-dev.mdx)
 
 ### Production Testing
@@ -128,18 +128,18 @@ npm run build
 npm run deploy
 
 # Test specific endpoints
-curl -X POST https://your-worker.your-subdomain.workers.dev/api/auth/login \
+curl -X POST https://your-api-domain.com/api/auth/login \
   -H "Content-Type: application/json" \
-  -d '{"email":"test@example.com","password":"test123"}'
+  -d '{"email":"test@example.com","password":"REPLACE_WITH_YOUR_PASSWORD"}'
 ```
 
 ### Security Testing
 ```bash
 # Test rate limiting
-for i in {1..20}; do curl -s https://your-worker.your-subdomain.workers.dev/api/test; done
+for i in {1..20}; do curl -s https://your-api-domain.com/api/test; done
 
 # Test input validation
-curl -X POST https://your-worker.your-subdomain.workers.dev/api/users \
+curl -X POST https://your-api-domain.com/api/users \
   -H "Content-Type: application/json" \
   -d '{"email":"invalid-email","name":"<script>alert(1)</script>"}'
 ```

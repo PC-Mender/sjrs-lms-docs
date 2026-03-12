@@ -60,7 +60,7 @@ npm run release
    - OR **Alerts** → **Rules** → **Webhooks**
 
 3. **Add Webhook**
-   - **Webhook URL**: `https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
+   - **Webhook URL**: `https://your-api-domain.com/api/notifications/events/ingest`
    - **Custom Header**:
      - Name: `x-notification-ingest-token`
    - Value: `YOUR_NOTIFICATION_INGEST_TOKEN`
@@ -129,7 +129,7 @@ Can be set up later when needed.
 Test the ingest endpoint manually:
 
 ```bash
-curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+curl -X POST https://your-api-domain.com/api/notifications/events/ingest \
   -H "Content-Type: application/json" \
    -H "x-notification-ingest-token: YOUR_NOTIFICATION_INGEST_TOKEN" \
   -d '{
@@ -153,7 +153,7 @@ curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/ev
 
 ### Endpoint
 ```
-POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest
+POST https://your-api-domain.com/api/notifications/events/ingest
 ```
 
 ### Authentication Header

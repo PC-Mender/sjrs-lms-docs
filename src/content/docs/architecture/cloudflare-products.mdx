@@ -89,12 +89,12 @@ compatibility_flags = ["nodejs_compat"]
 NODE_ENV = "production"
 ## JWT (choose single secret or rotation)
 # Single secret
-JWT_SECRET = "your-super-secret-jwt-key"
+JWT_SECRET = "your-jwt-secret-key"
 # Rotation-ready (recommended)
-# JWT_KEYS_JSON = "{\"key-2025-01\":\"super-secret-1\",\"key-2025-07\":\"super-secret-2\"}"
+# JWT_KEYS_JSON = "{\"key-2025-01\":\"REPLACE_WITH_SECRET_1\",\"key-2025-07\":\"REPLACE_WITH_SECRET_2\"}"
 # JWT_DEFAULT_KID = "key-2025-01"
 # JWT_ISS = "your-jwt-issuer"
-# JWT_AUD = "https://your-worker.your-subdomain.workers.dev"
+# JWT_AUD = "https://your-api-domain.com"
 ```
 
 ### **API Structure**
@@ -403,10 +403,10 @@ MAILJET_API_SECRET=your_mailjet_api_secret
 MAILJET_FROM_EMAIL=noreply@yourdomain.com
 
 # Frontend URL
-FRONTEND_URL=https://your-worker.your-subdomain.workers.dev
+FRONTEND_URL=https://your-frontend-domain.com
 
 # API Configuration
-VITE_API_BASE_URL=https://your-worker.your-subdomain.workers.dev
+VITE_API_BASE_URL=https://your-api-domain.com
 ```
 
 ### **Best Practices**

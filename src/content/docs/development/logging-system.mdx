@@ -42,10 +42,10 @@ ENVIRONMENT=development  # Workers environment variable
 # Single secret
 JWT_SECRET=your-secret-here      # JWT signing secret
 # Rotation-ready (recommended)
-# JWT_KEYS_JSON={"key-2025-01":"super-secret-1","key-2025-07":"super-secret-2"}
+# JWT_KEYS_JSON={"key-2025-01":"REPLACE_WITH_SECRET_1","key-2025-07":"REPLACE_WITH_SECRET_2"}
 # JWT_DEFAULT_KID=key-2025-01
 # JWT_ISS=your-jwt-issuer
-# JWT_AUD=https://your-worker.your-subdomain.workers.dev
+# JWT_AUD=https://your-api-domain.com
 ```
 
 **Note**: The logger automatically detects the environment and routes logs accordingly:

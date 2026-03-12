@@ -141,7 +141,7 @@ When a tag is pushed, GitHub Actions automatically:
 - Update API documentation (q4r5s6t)
 
 ---
-**Deployed to**: https://your-worker.your-subdomain.workers.dev
+**Deployed to**: https://your-api-domain.com
 **Deployment Status**: ✅ Success
 ```
 
@@ -173,7 +173,7 @@ GitHub Actions → Notification Payload → Ingest Endpoint → notification_eve
       "version": "3.40.0",
       "environment": "production",
       "status": "success",
-      "deploymentUrl": "https://your-worker.your-subdomain.workers.dev",
+      "deploymentUrl": "https://your-api-domain.com",
       "commitSha": "a1b2c3d...",
       "githubRunId": "123456789",
       "githubRunUrl": "https://github.com/.../actions/runs/123456789"
@@ -233,7 +233,7 @@ NOTIFICATION_INGEST_TOKEN=your_token_here
 
 Default endpoint (can be overridden):
 ```bash
-NOTIFICATION_INGEST_ENDPOINT=https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest
+NOTIFICATION_INGEST_ENDPOINT=https://your-api-domain.com/api/notifications/events/ingest
 ```
 
 ---
@@ -295,7 +295,7 @@ git push origin v3.40.0 --force
 **Debug**:
 ```bash
 # Check notification endpoint
-curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+curl -X POST https://your-api-domain.com/api/notifications/events/ingest \
   -H "Content-Type: application/json" \
   -H "x-notification-ingest-token: YOUR_TOKEN" \
   -d '{"source":"release:pipeline","title":"Test","message":"Test","category":"deployment"}'

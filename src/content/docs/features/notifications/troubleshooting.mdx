@@ -16,7 +16,7 @@ title: "Troubleshooting"
 - For browser testing, use a tool like Postman or curl
 - Example curl command:
   ```bash
-  curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+  curl -X POST https://your-api-domain.com/api/notifications/events/ingest \
     -H "Content-Type: application/json" \
     -H "x-notification-ingest-token: YOUR_TOKEN" \
     -d '{"source":"release:pipeline","title":"Test","message":"Test","category":"deployment","release":{"version":"1.0.0","environment":"production","status":"success"}}'
@@ -91,7 +91,7 @@ title: "Troubleshooting"
 
 3. **Test with global token first**:
    ```bash
-   curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+   curl -X POST https://your-api-domain.com/api/notifications/events/ingest \
      -H "Content-Type: application/json" \
      -H "x-notification-ingest-token: YOUR_GLOBAL_TOKEN" \
      -d '{"source":"release:pipeline",...}'
@@ -138,7 +138,7 @@ title: "Troubleshooting"
 3. **Test manually**:
    ```bash
    # Test the ingest endpoint directly
-   curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+   curl -X POST https://your-api-domain.com/api/notifications/events/ingest \
      -H "Content-Type: application/json" \
      -H "x-notification-ingest-token: YOUR_TOKEN" \
      -d '{"source":"release:pipeline","title":"Test Deployment","message":"Testing","category":"deployment","release":{"version":"1.0.0","environment":"production","status":"success"}}'
@@ -152,10 +152,10 @@ title: "Troubleshooting"
 
 ```bash
 # Test with OPTIONS (should return 204)
-curl -X OPTIONS https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest
+curl -X OPTIONS https://your-api-domain.com/api/notifications/events/ingest
 
 # Test with GET (should return 405)
-curl -X GET https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest
+curl -X GET https://your-api-domain.com/api/notifications/events/ingest
 ```
 
 ### Step 2: Verify Tokens are Set
@@ -169,7 +169,7 @@ Should show all notification tokens.
 ### Step 3: Test with Minimal Payload
 
 ```bash
-curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+curl -X POST https://your-api-domain.com/api/notifications/events/ingest \
   -H "Content-Type: application/json" \
   -H "x-notification-ingest-token: YOUR_TOKEN" \
   -d '{

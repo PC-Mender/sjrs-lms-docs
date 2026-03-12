@@ -15,10 +15,10 @@ This document provides comprehensive testing resources for the SJRS LMS API, inc
 ### **Environment Variables**
 ```json
 {
-  "base_url": "https://your-worker.your-subdomain.workers.dev",
-  "origin": "https://your-worker.your-subdomain.workers.dev",
+  "base_url": "https://your-api-domain.com",
+  "origin": "https://your-api-domain.com",
   "email": "test@example.com",
-  "password": "testpassword123",
+  "password": "REPLACE_WITH_YOUR_PASSWORD",
   "user_id": ""
 }
 ```
@@ -52,14 +52,14 @@ SJRS LMS API
 
 ### **One-Time Setup**
 ```bash
-curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
-    "password": "password123"
+    "password": "REPLACE_WITH_YOUR_PASSWORD"
   }'
 
-curl -i -b cookies.txt -c cookies.txt "https://your-worker.your-subdomain.workers.dev/api/auth/csrf"
+curl -i -b cookies.txt -c cookies.txt "https://your-api-domain.com/api/auth/csrf"
 
 xsrf=$(grep -E "\tXSRF-TOKEN\t" cookies.txt | tail -n 1 | awk '{print $7}')
 ```
@@ -68,21 +68,21 @@ xsrf=$(grep -E "\tXSRF-TOKEN\t" cookies.txt | tail -n 1 | awk '{print $7}')
 
 #### **User Login**
 ```bash
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+curl -X POST "https://your-api-domain.com/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
-    "password": "password123"
+    "password": "REPLACE_WITH_YOUR_PASSWORD"
   }'
 ```
 
 #### **User Registration**
 ```bash
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" \
+curl -X POST "https://your-api-domain.com/api/auth/register" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "newuser@example.com",
-    "password": "password123",
+    "password": "REPLACE_WITH_YOUR_PASSWORD",
     "first_name": "John",
     "last_name": "Doe",
     "user_type": "student"
@@ -91,24 +91,24 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" 
 
 #### **Get Current User Profile**
 ```bash
-curl -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/auth/me"
+curl -b cookies.txt "https://your-api-domain.com/api/auth/me"
 ```
 
 ### **Book Management Endpoints**
 
 #### **Get All Books**
 ```bash
-curl -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/books?page=1&limit=20"
+curl -b cookies.txt "https://your-api-domain.com/api/books?page=1&limit=20"
 ```
 
 #### **Search Books**
 ```bash
-curl -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/books/search?q=harry&category=fiction"
+curl -b cookies.txt "https://your-api-domain.com/api/books/search?q=harry&category=fiction"
 ```
 
 #### **Create Book (Librarian+)**
 ```bash
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/books" \
+curl -X POST "https://your-api-domain.com/api/books" \
   -b cookies.txt \
   -H "X-XSRF-TOKEN: $xsrf" \
   -H "Content-Type: application/json" \
@@ -126,12 +126,12 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/books" \
 
 #### **Get All Loans**
 ```bash
-curl -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/loans?status=active"
+curl -b cookies.txt "https://your-api-domain.com/api/loans?status=active"
 ```
 
 #### **Create Loan (Librarian+)**
 ```bash
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/loans" \
+curl -X POST "https://your-api-domain.com/api/loans" \
   -b cookies.txt \
   -H "X-XSRF-TOKEN: $xsrf" \
   -H "Content-Type: application/json" \
@@ -146,24 +146,24 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/loans" \
 
 #### **Get All Users (Admin/Librarian)**
 ```bash
-curl -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/users?role=student&status=active"
+curl -b cookies.txt "https://your-api-domain.com/api/users?role=student&status=active"
 ```
 
 #### **Get Specific User**
 ```bash
-curl -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/users/123"
+curl -b cookies.txt "https://your-api-domain.com/api/users/123"
 ```
 
 ### **System Management Endpoints**
 
 #### **Check Permissions**
 ```bash
-curl -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/permissions/check?resource=books&action=create"
+curl -b cookies.txt "https://your-api-domain.com/api/permissions/check?resource=books&action=create"
 ```
 
 #### **Get System Logs (Admin+)**
 ```bash
-curl -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/system_logs?level=error&component=auth"
+curl -b cookies.txt "https://your-api-domain.com/api/system_logs?level=error&component=auth"
 ```
 
 ## 🧪 Testing Procedures
@@ -173,11 +173,11 @@ curl -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/system_l
 #### **Test User Registration**
 ```bash
 # 1. Register new user
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" \
+curl -X POST "https://your-api-domain.com/api/auth/register" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "testuser@example.com",
-    "password": "testpass123",
+    "password": "REPLACE_WITH_YOUR_PASSWORD",
     "first_name": "Test",
     "last_name": "User",
     "user_type": "student"
@@ -189,11 +189,11 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" 
 #### **Test User Login**
 ```bash
 # 2. Login with registered user
-curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "testuser@example.com",
-    "password": "testpass123"
+    "password": "REPLACE_WITH_YOUR_PASSWORD"
   }'
 
 # Expected: 200 OK with user data (auth cookie is set)
@@ -202,10 +202,10 @@ curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/a
 #### **Test Protected Endpoint**
 ```bash
 # 3. Bootstrap CSRF (required for unsafe methods)
-curl -i -b cookies.txt -c cookies.txt "https://your-worker.your-subdomain.workers.dev/api/auth/csrf"
+curl -i -b cookies.txt -c cookies.txt "https://your-api-domain.com/api/auth/csrf"
 
 # 4. Test protected endpoint
-curl -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/auth/me"
+curl -b cookies.txt "https://your-api-domain.com/api/auth/me"
 
 # Expected: 200 OK with user profile data
 ```
@@ -216,7 +216,7 @@ curl -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/auth/me"
 ```bash
 # 1. Create book (requires librarian role)
 xsrf=$(grep -E "\tXSRF-TOKEN\t" cookies.txt | tail -n 1 | awk '{print $7}')
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/books" \
+curl -X POST "https://your-api-domain.com/api/books" \
   -b cookies.txt \
   -H "X-XSRF-TOKEN: $xsrf" \
   -H "Content-Type: application/json" \
@@ -234,7 +234,7 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/books" \
 #### **Test Book Retrieval**
 ```bash
 # 2. Get created book
-curl -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/books/BOOK_ID_HERE"
+curl -b cookies.txt "https://your-api-domain.com/api/books/BOOK_ID_HERE"
 
 # Expected: 200 OK with book details
 ```
@@ -244,7 +244,7 @@ curl -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/books/BO
 #### **Test Invalid Authentication**
 ```bash
 # Test without auth cookie
-curl -i "https://your-worker.your-subdomain.workers.dev/api/auth/me"
+curl -i "https://your-api-domain.com/api/auth/me"
 
 # Expected: 401 Unauthorized
 ```
@@ -252,7 +252,7 @@ curl -i "https://your-worker.your-subdomain.workers.dev/api/auth/me"
 #### **Test Missing Required Fields**
 ```bash
 # Test registration without required fields
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" \
+curl -X POST "https://your-api-domain.com/api/auth/register" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "incomplete@example.com"
@@ -264,7 +264,7 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" 
 #### **Test Insufficient Permissions**
 ```bash
 xsrf=$(grep -E "\tXSRF-TOKEN\t" cookies.txt | tail -n 1 | awk '{print $7}')
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/books" \
+curl -X POST "https://your-api-domain.com/api/books" \
   -b cookies.txt \
   -H "X-XSRF-TOKEN: $xsrf" \
   -H "Content-Type: application/json" \
@@ -282,14 +282,14 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/books" \
 
 1. **Create Environment**
    - Name: `SJRS LMS API - Development`
-   - Base URL: `https://your-worker.your-subdomain.workers.dev`
+   - Base URL: `https://your-api-domain.com`
 
 2. **Set Variables**
    ```
-   base_url: https://your-worker.your-subdomain.workers.dev
-   origin: https://your-worker.your-subdomain.workers.dev
+   base_url: https://your-api-domain.com
+   origin: https://your-api-domain.com
    email: test@example.com
-   password: testpass123
+   password: REPLACE_WITH_YOUR_PASSWORD
    user_id: (set after login, optional)
    ```
 
@@ -360,21 +360,21 @@ jobs:
 ```bash
 # Check if CORS headers are present
 curl -H "Origin: https://example.com" \
-  -X GET "https://your-worker.your-subdomain.workers.dev/api/health" \
+  -X GET "https://your-api-domain.com/api/health" \
   -v
 ```
 
 #### **Token Expiration**
 ```bash
 # Check session validity
-curl -v -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/auth/me"
+curl -v -b cookies.txt "https://your-api-domain.com/api/auth/me"
 ```
 
 #### **Rate Limiting**
 ```bash
 # Test rate limiting
 for i in {1..10}; do
-  curl -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/books"
+  curl -b cookies.txt "https://your-api-domain.com/api/books"
   sleep 0.1
 done
 ```

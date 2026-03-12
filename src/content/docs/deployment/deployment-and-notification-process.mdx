@@ -351,7 +351,7 @@ CREATE TABLE notification_events (
    - Filter: Status = "active"
 
 5. **API Endpoint**
-   - Verify endpoint: `https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
+   - Verify endpoint: `https://your-api-domain.com/api/notifications/events/ingest`
    - Check Cloudflare Workers logs for errors
 
 **Fix Applied**: 
@@ -501,7 +501,7 @@ git diff CHANGELOG.md
 # Set environment variables
 export NOTIFICATION_INGEST_TOKEN_RELEASE="your-token"
 export RELEASE_ENVIRONMENT="production"
-export DEPLOYMENT_URL="https://your-worker.your-subdomain.workers.dev"
+export DEPLOYMENT_URL="https://your-api-domain.com"
 
 # Run script
 node scripts/notify-deployment.js

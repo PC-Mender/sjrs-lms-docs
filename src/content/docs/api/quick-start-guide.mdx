@@ -18,7 +18,7 @@ MAILJET_API_SECRET=your_mailjet_api_secret
 ### **2. Test the Health Endpoint** ⏱️ 1 min
 ```bash
 # Test if the API is running
-curl -X GET "https://your-worker.your-subdomain.workers.dev/api/health"
+curl -X GET "https://your-api-domain.com/api/health"
 ```
 
 **Expected Response:**
@@ -31,11 +31,11 @@ curl -X GET "https://your-worker.your-subdomain.workers.dev/api/health"
 
 ### **3. Register a Test User** ⏱️ 1 min
 ```bash
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" \
+curl -X POST "https://your-api-domain.com/api/auth/register" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "test@example.com",
-    "password": "testpass123",
+    "password": "REPLACE_WITH_YOUR_PASSWORD",
     "first_name": "Test",
     "last_name": "User",
     "user_type": "student"
@@ -44,11 +44,11 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" 
 
 ### **4. Login (Cookie-Based Auth)** ⏱️ 1 min
 ```bash
-curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "test@example.com",
-    "password": "testpass123"
+    "password": "REPLACE_WITH_YOUR_PASSWORD"
   }'
 ```
 
@@ -56,7 +56,7 @@ This sets an HttpOnly auth cookie (default name: `secure_authToken`) in `cookies
 
 ### **5. Make Your First API Call** ⏱️ 1 min
 ```bash
-curl -b cookies.txt -X GET "https://your-worker.your-subdomain.workers.dev/api/books"
+curl -b cookies.txt -X GET "https://your-api-domain.com/api/books"
 ```
 
 **🎉 Congratulations! You're now using the SJRS LMS API!**
@@ -85,7 +85,7 @@ npm run dev
 #### **Option 2: Remote API Only**
 ```bash
 # Just set the API base URL
-export VITE_API_BASE_URL=https://your-worker.your-subdomain.workers.dev
+export VITE_API_BASE_URL=https://your-api-domain.com
 ```
 
 ### **Required Environment Variables**
@@ -94,10 +94,10 @@ export VITE_API_BASE_URL=https://your-worker.your-subdomain.workers.dev
 JWT_SECRET=your-secure-jwt-secret-key
 
 # OR for key rotation (recommended)
-JWT_KEYS_JSON={"key-2025-01":"super-secret-1","key-2025-07":"super-secret-2"}
+JWT_KEYS_JSON={"key-2025-01":"REPLACE_WITH_SECRET_1","key-2025-07":"REPLACE_WITH_SECRET_2"}
 JWT_DEFAULT_KID=key-2025-01
 JWT_ISS=your-jwt-issuer
-JWT_AUD=https://your-worker.your-subdomain.workers.dev
+JWT_AUD=https://your-api-domain.com
 
 # Email Service
 MAILJET_API_KEY=your_mailjet_api_key
@@ -114,7 +114,7 @@ DB_NAME=your-database-name
 ```typescript
 // api-client.ts
 class SJRSLMSAPI {
-  private baseUrl = 'https://your-worker.your-subdomain.workers.dev';
+  private baseUrl = 'https://your-api-domain.com';
 
   async login(email: string, password: string) {
     const response = await fetch(`${this.baseUrl}/api/auth/login`, {
@@ -142,7 +142,7 @@ class SJRSLMSAPI {
 
 // Usage
 const api = new SJRSLMSAPI();
-await api.login('user@example.com', 'password123');
+await api.login('user@example.com', 'REPLACE_WITH_YOUR_PASSWORD');
 await api.bootstrapCSRF();
 const books = await api.getBooks();
 ```
@@ -152,7 +152,7 @@ const books = await api.getBooks();
 import requests
 
 class SJRSLMSAPI:
-    def __init__(self, base_url="https://your-worker.your-subdomain.workers.dev"):
+    def __init__(self, base_url="https://your-api-domain.com"):
         self.base_url = base_url
         self.session = requests.Session()
 
@@ -173,7 +173,7 @@ class SJRSLMSAPI:
 
 # Usage
 api = SJRSLMSAPI()
-api.login("user@example.com", "password123")
+api.login("user@example.com", "REPLACE_WITH_YOUR_PASSWORD")
 api.bootstrap_csrf()
 books = api.get_books()
 ```
@@ -183,9 +183,9 @@ books = api.get_books()
 #!/bin/bash
 # api-test.sh
 
-BASE_URL="https://your-worker.your-subdomain.workers.dev"
+BASE_URL="https://your-api-domain.com"
 EMAIL="test@example.com"
-PASSWORD="testpass123"
+PASSWORD="REPLACE_WITH_YOUR_PASSWORD"
 
 echo "🔑 Logging in..."
 curl -s -i -c cookies.txt -X POST "$BASE_URL/api/auth/login" \
@@ -204,20 +204,20 @@ curl -s -b cookies.txt -X GET "$BASE_URL/api/books" | jq '.'
 ### **Quick Test Commands**
 ```bash
 # 1. Health check
-curl -X GET "https://your-worker.your-subdomain.workers.dev/api/health"
+curl -X GET "https://your-api-domain.com/api/health"
 
 # 2. Register user
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" \
+curl -X POST "https://your-api-domain.com/api/auth/register" \
   -H "Content-Type: application/json" \
-  -d '{"email":"test@example.com","password":"test123","first_name":"Test","last_name":"User","user_type":"student"}'
+  -d '{"email":"test@example.com","password":"REPLACE_WITH_YOUR_PASSWORD","first_name":"Test","last_name":"User","user_type":"student"}'
 
 # 3. Login
-curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
   -H "Content-Type: application/json" \
-  -d '{"email":"test@example.com","password":"test123"}'
+  -d '{"email":"test@example.com","password":"REPLACE_WITH_YOUR_PASSWORD"}'
 
 # 4. Get books
-curl -b cookies.txt -X GET "https://your-worker.your-subdomain.workers.dev/api/books"
+curl -b cookies.txt -X GET "https://your-api-domain.com/api/books"
 ```
 
 ### **Expected Results**

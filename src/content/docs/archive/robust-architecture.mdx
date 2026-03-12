@@ -170,10 +170,10 @@ NODE_ENV = "production"
 # Single secret
 JWT_SECRET = "your-secret-key"
 # Rotation-ready (recommended)
-# JWT_KEYS_JSON = "{\"key-2025-01\":\"super-secret-1\",\"key-2025-07\":\"super-secret-2\"}"
+# JWT_KEYS_JSON = "{\"key-2025-01\":\"REPLACE_WITH_SECRET_1\",\"key-2025-07\":\"REPLACE_WITH_SECRET_2\"}"
 # JWT_DEFAULT_KID = "key-2025-01"
 # JWT_ISS = "your-jwt-issuer"
-# JWT_AUD = "https://your-worker.your-subdomain.workers.dev"
+# JWT_AUD = "https://your-api-domain.com"
 MAX_FILE_SIZE = "10485760" # 10MB
 CACHE_TTL = "3600"
 EMAIL_RETRY_ATTEMPTS = "3"
@@ -247,7 +247,7 @@ if (rateLimit && parseInt(rateLimit) > 100) {
 ### **3. CORS Security**
 ```typescript
 // Secure CORS configuration
-const allowedOrigins = ['https://your-worker.your-subdomain.workers.dev'];
+const allowedOrigins = ['https://your-api-domain.com'];
 const origin = request.headers.get('Origin');
 if (!allowedOrigins.includes(origin)) {
   return new Response('Forbidden', { status: 403 });

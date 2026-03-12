@@ -10,7 +10,7 @@ Cloudflare Turnstile CAPTCHA has been integrated into the registration process t
 **✅ Configuration Status: COMPLETE**
 
 - Secret Key: Configured in Cloudflare Workers
-- Site Key: `0x4AAAAAAB_6j49-YlSs-3S6` (configured in environment variables)
+- Site Key: `REPLACE_WITH_YOUR_TURNSTILE_SITE_KEY` (configured in environment variables)
 - Frontend Integration: Complete
 - Backend Validation: Complete
 
@@ -46,18 +46,18 @@ Cloudflare Turnstile CAPTCHA has been integrated into the registration process t
 ```bash
 wrangler secret put TURNSTILE_SECRET_KEY
 ```
-- Secret Key: `0x4AAAAAAB_6jzjomMin2I3PZ_SRxuYQtyo` (stored securely)
+- Secret Key: `REPLACE_WITH_YOUR_TURNSTILE_SECRET_KEY` (stored securely)
 
 ### ✅ Frontend Configuration (Site Key)
 
 **Configured in:**
 - Environment variable: `VITE_TURNSTILE_SITE_KEY`
-- Site Key: `0x4AAAAAAB_6j49-YlSs-3S6`
+- Site Key: `REPLACE_WITH_YOUR_TURNSTILE_SITE_KEY`
 - Added to `env.example` for reference`
 
 **For local development, create a `.env` file:**
 ```bash
-VITE_TURNSTILE_SITE_KEY=0x4AAAAAAB_6j49-YlSs-3S6
+VITE_TURNSTILE_SITE_KEY=REPLACE_WITH_YOUR_TURNSTILE_SITE_KEY
 ```
 
 ### ✅ Frontend Integration

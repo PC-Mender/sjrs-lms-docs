@@ -111,7 +111,7 @@ Policy must permit connections to the Faro collector.
 In `functions/middleware/cors/headers/security-headers.ts`:
 
 ```ts
-"connect-src 'self' http://localhost:* https://localhost:* ws://localhost:* wss://localhost:* https://www.google-analytics.com https://challenges.cloudflare.com https://*.sjrslms.in https://your-grafana-collector-endpoint.grafana.net",
+"connect-src 'self' http://localhost:* https://localhost:* ws://localhost:* wss://localhost:* https://www.google-analytics.com https://challenges.cloudflare.com https://your-frontend-domain.com https://your-grafana-collector-endpoint.grafana.net",
 ```
 
 Ensure the correct collector origin from your Grafana Cloud stack is

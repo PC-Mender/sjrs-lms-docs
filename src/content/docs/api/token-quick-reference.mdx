@@ -13,12 +13,12 @@ JWT_SECRET=your-secure-jwt-secret-key
 
 # 2) Rotation-ready (recommended)
 # JSON map of kid -> secret
-JWT_KEYS_JSON={"key-2025-01":"super-secret-1","key-2025-07":"super-secret-2"}
+JWT_KEYS_JSON={"key-2025-01":"REPLACE_WITH_SECRET_1","key-2025-07":"REPLACE_WITH_SECRET_2"}
 # Which kid to use when signing
 JWT_DEFAULT_KID=key-2025-01
 # Optional strict validation
 JWT_ISS=your-jwt-issuer
-JWT_AUD=https://your-worker.your-subdomain.workers.dev
+JWT_AUD=https://your-api-domain.com
 
 # Mailjet Email Service (for both direct and queue)
 MAILJET_API_KEY=your_mailjet_api_key
@@ -30,8 +30,8 @@ CLOUDFLARE_API_TOKEN=your-cloudflare-api-token
 CLOUDFLARE_ACCOUNT_ID=your-cloudflare-account-id
 
 # API Configuration
-VITE_API_BASE_URL=https://your-worker.your-subdomain.workers.dev
-FRONTEND_URL=https://your-worker.your-subdomain.workers.dev
+VITE_API_BASE_URL=https://your-api-domain.com
+FRONTEND_URL=https://your-frontend-domain.com
 ```
 
 ## Token Types and Usage

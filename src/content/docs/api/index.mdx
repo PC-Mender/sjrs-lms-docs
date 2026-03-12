@@ -160,7 +160,7 @@ The system provides a comprehensive session management API that enforces a singl
 // Request
 {
   "email": "user@example.com",
-  "password": "userpassword"
+  "password": "REPLACE_WITH_YOUR_PASSWORD"
 }
 
 // Response
@@ -252,10 +252,10 @@ const forceLogoutOtherSessions = async (email: string, password: string) => {
 # Single secret
 JWT_SECRET=your-secure-jwt-secret-key
 # Rotation-ready (recommended)
-# JWT_KEYS_JSON={"key-2025-01":"super-secret-1","key-2025-07":"super-secret-2"}
+# JWT_KEYS_JSON={"key-2025-01":"REPLACE_WITH_SECRET_1","key-2025-07":"REPLACE_WITH_SECRET_2"}
 # JWT_DEFAULT_KID=key-2025-01
 # JWT_ISS=your-jwt-issuer
-# JWT_AUD=https://your-worker.your-subdomain.workers.dev
+# JWT_AUD=https://your-api-domain.com
 
 MAILJET_API_KEY=your_mailjet_api_key
 MAILJET_API_SECRET=your_mailjet_api_secret
@@ -267,7 +267,7 @@ MAILJET_FROM_EMAIL=noreply@yourdomain.com
 import { unifiedAPIClient } from '@/utilities/api/unified-api-client';
 
 // Base API configuration
-const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://your-worker.your-subdomain.workers.dev';
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://your-api-domain.com';
 
 await unifiedAPIClient.get('/api/auth/csrf');
 const me = await unifiedAPIClient.get('/api/auth/me');

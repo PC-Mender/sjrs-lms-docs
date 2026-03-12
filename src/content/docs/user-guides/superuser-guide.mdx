@@ -67,8 +67,8 @@ The **Superuser role** is the highest level of access in SJRS LMS, designed for 
 
 ### **Superuser Accounts**
 ```
-🔴 Superuser:           dev@yourdomain.com / dev123
-🔴 Student Superuser:   student.dev@yourdomain.com / dev123
+🔴 Superuser:           SUPERUSER_EMAIL / SUPERUSER_PASSWORD
+🔴 Student Superuser:   STUDENT_SUPERUSER_EMAIL / STUDENT_SUPERUSER_PASSWORD
 ```
 
 ### **Access Level Hierarchy**
@@ -136,7 +136,7 @@ CREATE TABLE emergency_access (
 
 ### **Scenario 1: System Development**
 ```
-Login: dev@yourdomain.com
+Login: SUPERUSER_EMAIL
 Purpose: Testing new features and configurations
 Actions:
 - Override any permission restriction
@@ -147,7 +147,7 @@ Actions:
 
 ### **Scenario 2: Emergency Account Recovery**
 ```
-Login: dev@yourdomain.com
+Login: SUPERUSER_EMAIL
 Purpose: Help user regain access to locked account
 Actions:
 - Impersonate user account
@@ -158,7 +158,7 @@ Actions:
 
 ### **Scenario 3: Security Investigation**
 ```
-Login: dev@yourdomain.com
+Login: SUPERUSER_EMAIL
 Purpose: Investigate suspicious activity
 Actions:
 - Access all audit logs
@@ -169,7 +169,7 @@ Actions:
 
 ### **Scenario 4: Database Maintenance**
 ```
-Login: dev@yourdomain.com
+Login: SUPERUSER_EMAIL
 Purpose: Perform system maintenance
 Actions:
 - Database cleanup operations

@@ -24,7 +24,7 @@ Complete guide for testing SJRS LMS APIs using Postman.
    - In the top-right corner, click the environment dropdown
    - Select: **SJRS LMS - Production**
 
-**Note**: The collection is configured to use `https://your-worker.your-subdomain.workers.dev` (production Workers dev) instead of staging to avoid 403 permission errors. This is the recommended environment for testing.
+**Note**: The collection is configured to use `https://your-api-domain.com`. Update `base_url` to match your deployed API domain.
 
 ### Step 2: Configure Credentials
 
@@ -36,10 +36,10 @@ Complete guide for testing SJRS LMS APIs using Postman.
 **⚠️ Important**: The email and password must be **real credentials** that exist in your database!
 
 **Test Users** (if database was seeded):
-- `admin@yourdomain.com` / `password123` (Admin)
-- `librarian@yourdomain.com` / `password123` (Librarian)
-- `professor@yourdomain.com` / `password123` (Professor)
-- `student@yourdomain.com` / `password123` (Student)
+- `ADMIN_EMAIL` / `ADMIN_PASSWORD` (Admin)
+- `LIBRARIAN_EMAIL` / `LIBRARIAN_PASSWORD` (Librarian)
+- `PROFESSOR_EMAIL` / `PROFESSOR_PASSWORD` (Professor)
+- `STUDENT_EMAIL` / `STUDENT_PASSWORD` (Student)
 
 **Or use your own credentials** that you've registered in the system.
 
@@ -64,7 +64,7 @@ Complete guide for testing SJRS LMS APIs using Postman.
 4. **Verify environment variables**:
    - Click the **eye icon** (👁️) in the top-right
    - Check that `email` and `password` are set
-   - Check that `base_url` is `https://your-worker.your-subdomain.workers.dev`
+   - Check that `base_url` is `https://your-api-domain.com`
 5. Click **Send**
 6. **Check the response**:
    - Status should be **200 OK** for success
@@ -143,7 +143,7 @@ Complete guide for testing SJRS LMS APIs using Postman.
      "data": [
        {
          "id": 1,
-         "email": "admin@yourdomain.com",
+         "email": "admin@example.com",
          "first_name": "Admin",
          "last_name": "User",
          ...
@@ -166,10 +166,10 @@ If your database was set up with seed data, these test users should exist:
 
 | Email | Password | Role |
 |-------|----------|------|
-| `admin@yourdomain.com` | `password123` | Admin |
-| `librarian@yourdomain.com` | `password123` | Librarian |
-| `professor@yourdomain.com` | `password123` | Professor |
-| `student@yourdomain.com` | `password123` | Student |
+| `ADMIN_EMAIL` | `ADMIN_PASSWORD` | Admin |
+| `LIBRARIAN_EMAIL` | `LIBRARIAN_PASSWORD` | Librarian |
+| `PROFESSOR_EMAIL` | `PROFESSOR_PASSWORD` | Professor |
+| `STUDENT_EMAIL` | `STUDENT_PASSWORD` | Student |
 
 ### Option 2: Use Your Own Account
 
@@ -218,7 +218,7 @@ Then use one of those emails and its corresponding password.
    - Check the status code (401, 409, 423, 429)
 
 2. **Verify credentials exist**:
-   - Try logging in through the web interface: https://your-worker.your-subdomain.workers.dev
+   - Try logging in through the web interface: https://your-frontend-domain.com
    - Or check the database for the user
    
 3. **Use correct credentials**:
@@ -238,7 +238,7 @@ Then use one of those emails and its corresponding password.
 6. **Check environment variables**:
    - Click the eye icon (👁️) to view variables
    - Make sure `email` and `password` are set correctly
-   - Make sure `base_url` is `https://your-worker.your-subdomain.workers.dev`
+   - Make sure `base_url` is `https://your-api-domain.com`
 
 ### Issue: "Unauthorized" (401) Errors - Token Issues
 
@@ -263,9 +263,9 @@ Then use one of those emails and its corresponding password.
 3. **CORS issues** - Origin not allowed
 
 **Solutions**:
-1. **Use production URL**: Make sure you're using `https://your-worker.your-subdomain.workers.dev` (not staging)
+1. **Use the correct URL**: Make sure you're using `https://your-api-domain.com` (not a different environment)
    - Check the `base_url` variable in your environment
-   - Should be: `https://your-worker.your-subdomain.workers.dev`
+   - Should be: `https://your-api-domain.com`
    
 2. **Check user permissions**:
    - Try logging in as an admin user

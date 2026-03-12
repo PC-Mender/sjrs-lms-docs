@@ -28,7 +28,7 @@ title: "Sentry Webhook Setup"
 
 **Webhook URL:**
 ```
-https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest
+https://your-api-domain.com/api/notifications/events/ingest
 ```
 
 **Authentication Header:**
@@ -81,7 +81,7 @@ If Sentry doesn't have direct webhook support, use Alert Rules:
 
 3. **Add Action**:
    - Action Type: **Send a notification via webhook**
-   - Webhook URL: `https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
+   - Webhook URL: `https://your-api-domain.com/api/notifications/events/ingest`
    - Custom Headers:
    - `x-notification-ingest-token: YOUR_NOTIFICATION_INGEST_TOKEN`
 
@@ -141,7 +141,7 @@ Sentry will send events in their format. The ingest handler automatically conver
 Test the webhook manually using curl:
 
 ```bash
-curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+curl -X POST https://your-api-domain.com/api/notifications/events/ingest \
   -H "Content-Type: application/json" \
    -H "x-notification-ingest-token: YOUR_NOTIFICATION_INGEST_TOKEN" \
   -d '{

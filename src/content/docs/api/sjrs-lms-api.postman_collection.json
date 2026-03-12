@@ -74,7 +74,7 @@
             "header": [{"key": "Content-Type", "value": "application/json"}],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"newuser@example.com\",\n  \"password\": \"password123\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"userType\": \"student\"\n}"
+              "raw": "{\n  \"email\": \"newuser@example.com\",\n  \"password\": \"REPLACE_WITH_YOUR_PASSWORD\",\n  \"firstName\": \"John\",\n  \"lastName\": \"Doe\",\n  \"userType\": \"student\"\n}"
             },
             "url": {"raw": "{{base_url}}/api/auth/register", "host": ["{{base_url}}"], "path": ["api", "auth", "register"]}
           }
@@ -110,7 +110,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"current_password\": \"oldpassword\",\n  \"new_password\": \"newpassword123\"\n}"
+              "raw": "{\n  \"current_password\": \"REPLACE_WITH_CURRENT_PASSWORD\",\n  \"new_password\": \"REPLACE_WITH_NEW_PASSWORD\"\n}"
             },
             "url": {"raw": "{{base_url}}/api/auth/change-password", "host": ["{{base_url}}"], "path": ["api", "auth", "change-password"]}
           }
@@ -551,7 +551,7 @@
   "variable": [
     {
       "key": "base_url",
-      "value": "https://your-worker.your-subdomain.workers.dev",
+      "value": "https://your-api-domain.com",
       "type": "string"
     }
   ]

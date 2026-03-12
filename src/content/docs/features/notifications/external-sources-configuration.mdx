@@ -40,9 +40,9 @@ NOTIFICATION_INGEST_TOKEN_RELEASE=your_release_pipeline_token_here
 
 #### Endpoint Configuration (Optional):
 ```bash
-# Default: https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest
+# Default: https://your-api-domain.com/api/notifications/events/ingest
 # Override if needed:
-NOTIFICATION_INGEST_ENDPOINT=https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest
+NOTIFICATION_INGEST_ENDPOINT=https://your-api-domain.com/api/notifications/events/ingest
 ```
 
 #### Current Behavior:
@@ -85,7 +85,7 @@ NOTIFICATION_INGEST_TOKEN_SENTRY=your_sentry_webhook_token_here
 
 #### Sentry Webhook Configuration:
 1. **Go to Sentry Dashboard** → Project Settings → Webhooks
-2. **Add Webhook URL**: `https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
+2. **Add Webhook URL**: `https://your-api-domain.com/api/notifications/events/ingest`
 3. **Add Header**: `x-notification-ingest-token: your_sentry_webhook_token_here`
 4. **Select Events**:
    - Issue created
@@ -106,7 +106,7 @@ Sentry will send events in their format. The ingest handler automatically conver
    ```
 
 2. **Configure Sentry Webhook**:
-   - URL: `https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
+   - URL: `https://your-api-domain.com/api/notifications/events/ingest`
    - Header: `x-notification-ingest-token: <your-token>`
    - Events: Select relevant events (errors, issues)
 
@@ -218,7 +218,7 @@ export default {
 
 ### Sentry
 - [ ] Set `NOTIFICATION_INGEST_TOKEN_SENTRY` in Cloudflare Workers secrets
-- [ ] Configure Sentry webhook URL: `https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
+- [ ] Configure Sentry webhook URL: `https://your-api-domain.com/api/notifications/events/ingest`
 - [ ] Add header: `x-notification-ingest-token: <token>`
 - [ ] Select relevant events in Sentry webhook settings
 - [ ] Test by triggering a test error

@@ -121,7 +121,7 @@ You should see all your notification tokens listed.
 
 3. **Add Webhook**
    - Click **Add Webhook** or **Create Webhook**
-   - **Webhook URL**: `https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
+   - **Webhook URL**: `https://your-api-domain.com/api/notifications/events/ingest`
    - **Secret**: Leave empty (we use header-based auth)
 
 4. **Configure Authentication Header**
@@ -218,7 +218,7 @@ Use a service like UptimeRobot, Pingdom, or similar:
 
 1. **Set up monitoring service**
 2. **Configure webhook**:
-   - URL: `https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
+   - URL: `https://your-api-domain.com/api/notifications/events/ingest`
    - Header: `x-notification-ingest-token: <your-token>`
 3. **Set thresholds** for metrics you want to monitor
 
@@ -282,12 +282,12 @@ You should see:
 **Check:**
 1. Token is set: `wrangler secret list`
 2. Deployment logs show notification attempt
-3. Endpoint is accessible: `curl https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest`
+3. Endpoint is accessible: `curl https://your-api-domain.com/api/notifications/events/ingest`
 4. Token is correct (test with curl)
 
 **Test manually:**
 ```bash
-curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+curl -X POST https://your-api-domain.com/api/notifications/events/ingest \
   -H "Content-Type: application/json" \
   -H "x-notification-ingest-token: YOUR_TOKEN" \
   -d '{
@@ -314,7 +314,7 @@ curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/ev
 
 **Test manually:**
 ```bash
-curl -X POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest \
+curl -X POST https://your-api-domain.com/api/notifications/events/ingest \
   -H "Content-Type: application/json" \
   -H "x-notification-ingest-token: YOUR_TOKEN" \
   -d '{
@@ -363,7 +363,7 @@ After configuration:
 
 ### Endpoint
 ```
-POST https://your-worker.your-subdomain.workers.dev/api/notifications/events/ingest
+POST https://your-api-domain.com/api/notifications/events/ingest
 ```
 
 ### Required Header

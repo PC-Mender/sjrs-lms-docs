@@ -521,22 +521,22 @@ Frontend SHOULD:
 #### **1. Check Request Headers**
 ```bash
 # Login (cookie-based auth)
-curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email":"YOUR_EMAIL","password":"YOUR_PASSWORD"}'
 
 # Verify session by calling /me with the cookie jar
-curl -v -b cookies.txt -X GET "https://your-worker.your-subdomain.workers.dev/api/auth/me"
+curl -v -b cookies.txt -X GET "https://your-api-domain.com/api/auth/me"
 ```
 
 #### **2. Validate Request Body**
 ```bash
 # Test with minimal valid data
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" \
+curl -X POST "https://your-api-domain.com/api/auth/register" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "test@example.com",
-    "password": "password123",
+    "password": "REPLACE_WITH_YOUR_PASSWORD",
     "first_name": "Test",
     "last_name": "User",
     "user_type": "student"
@@ -546,7 +546,7 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" 
 #### **3. Check Response Headers**
 ```bash
 # Look for rate limiting headers
-curl -v -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
+curl -v -X GET "https://your-api-domain.com/api/books" \
   -b cookies.txt
 ```
 
