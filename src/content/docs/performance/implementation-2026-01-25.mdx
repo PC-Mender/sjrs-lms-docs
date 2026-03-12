@@ -5,7 +5,7 @@ title: "Implementation 2026 01 25"
 
 ## Completed Changes (January 25, 2026)
 
-All changes implement industry-standard performance patterns from [docs/project-rules.md](../project-rules-app.mdx).
+All changes implement industry-standard performance patterns from [docs/project-rules.md](../project-rules-app).
 
 ### Summary
 - Implemented stale-while-revalidate pattern (instant perceived performance)
@@ -67,7 +67,7 @@ All changes implement industry-standard performance patterns from [docs/project-
 - `src/index.tsx` - Kept initialization call (for future custom metrics)
 
 **New Files:**
-- [docs/performance/cloudflare-web-analytics-setup.md](./cloudflare-web-analytics-setup.mdx) - Setup guide
+- [docs/performance/cloudflare-web-analytics-setup.md](./cloudflare-web-analytics-setup) - Setup guide
 
 **Features:**
 - Automatic Core Web Vitals tracking (LCP, INP, CLS, FCP, TTFB)
@@ -98,7 +98,7 @@ All changes implement industry-standard performance patterns from [docs/project-
 - Removed custom API endpoint logic (Cloudflare beacon handles it)
 - Simplified Performance Widget (links to Cloudflare dashboard)
 
-**Setup:** See [Cloudflare Web Analytics Setup Guide](./cloudflare-web-analytics-setup.mdx)
+**Setup:** See [Cloudflare Web Analytics Setup Guide](./cloudflare-web-analytics-setup)
 
 ---
 
@@ -269,7 +269,7 @@ onMouseEnter={() => {
 
 ## Compliance Check
 
-All changes align with [docs/project-rules.md](../project-rules-app.mdx):
+All changes align with [docs/project-rules.md](../project-rules-app):
 
 - Stale-while-revalidate pattern (industry standard)
 - keepPreviousData for pagination (React Query best practice)

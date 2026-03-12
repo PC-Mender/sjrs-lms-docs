@@ -126,6 +126,80 @@ const fixes = {
   ]
 };
 
+function getAllFiles(dirPath, arrayOfFiles = []) {
+  const files = fs.readdirSync(dirPath);
+
+  files.forEach((file) => {
+    const fullPath = path.join(dirPath, file);
+    if (fs.statSync(fullPath).isDirectory()) {
+      getAllFiles(fullPath, arrayOfFiles);
+      return;
+    }
+    if (file.endsWith('.md') || file.endsWith('.mdx')) {
+      arrayOfFiles.push(fullPath);
+    }
+  });
+
+  return arrayOfFiles;
+}
+
+function normalizeDocsLinkTarget(sourceFile, linkTarget) {
+  if (linkTarget.startsWith('http') || linkTarget.startsWith('mailto:') || linkTarget.startsWith('#')) {
+    return linkTarget;
+  }
+
+  const [pathPart, anchor] = linkTarget.split('#');
+  if (!pathPart || (!pathPart.endsWith('.md') && !pathPart.endsWith('.mdx'))) {
+    return linkTarget;
+  }
+
+  const strippedPathPart = pathPart.replace(/\.mdx?$/, '');
+  const resolvedPath = pathPart.startsWith('/')
+    ? path.join(DOCS_ROOT, pathPart)
+    : path.resolve(path.dirname(sourceFile), pathPart);
+
+  if (!fs.existsSync(resolvedPath)) {
+    return linkTarget;
+  }
+
+  return anchor ? `${strippedPathPart}#${anchor}` : strippedPathPart;
+}
+
+function stripExtensionsOutsideCodeFences(sourceFile, content) {
+  const lines = content.split('\n');
+  let inFence = false;
+
+  const out = lines.map((line) => {
+    const trimmed = line.trimStart();
+    if (trimmed.startsWith('```')) {
+      inFence = !inFence;
+      return line;
+    }
+    if (inFence) return line;
+
+    return line.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, text, target) => {
+      const normalized = normalizeDocsLinkTarget(sourceFile, target);
+      if (normalized === target) return match;
+      return `[${text}](${normalized})`;
+    });
+  });
+
+  return out.join('\n');
+}
+
+function normalizeInternalLinks() {
+  const files = getAllFiles(DOCS_ROOT);
+
+  files.forEach((filePath) => {
+    const original = fs.readFileSync(filePath, 'utf8');
+    const updated = stripExtensionsOutsideCodeFences(filePath, original);
+    if (updated !== original) {
+      fs.writeFileSync(filePath, updated);
+      console.log(`Normalized internal links in ${path.relative(DOCS_ROOT, filePath)}`);
+    }
+  });
+}
+
 function fixDocLinks() {
   for (const [relativePath, replacements] of Object.entries(fixes)) {
     const filePath = path.join(DOCS_ROOT, relativePath);
@@ -151,3 +225,4 @@ function fixDocLinks() {
 }
 
 fixDocLinks();
+normalizeInternalLinks();

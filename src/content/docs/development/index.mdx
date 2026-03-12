@@ -23,23 +23,23 @@ npm run dev
 ## Development Resources
 
 ### Core Documentation
-- [API Documentation](../api/index.mdx) - API patterns and endpoints
-- [Architecture Guide](../architecture/core-architecture.mdx) - System architecture overview
-- [Security Guide](../security/index.mdx) - Security practices and implementation
+- [API Documentation](../api/index) - API patterns and endpoints
+- [Architecture Guide](../architecture/core-architecture) - System architecture overview
+- [Security Guide](../security/index) - Security practices and implementation
 
 ### Development Tools
-- [TypeScript Configuration](./typescript-configuration.mdx) - Comprehensive TypeScript setup guide
-- [TypeScript Quick Reference](./typescript-quick-reference.mdx) - Quick fixes for common TypeScript issues
-- [Testing Guide](./testing-guide.mdx) - Testing strategies and best practices
-- [Validation System](./validation-system.mdx) - Form and data validation
-- [Data Fetching Guide](./data-fetching.mdx) - Centralized query system and caching patterns
+- [TypeScript Configuration](./typescript-configuration) - Comprehensive TypeScript setup guide
+- [TypeScript Quick Reference](./typescript-quick-reference) - Quick fixes for common TypeScript issues
+- [Testing Guide](./testing-guide) - Testing strategies and best practices
+- [Validation System](./validation-system) - Form and data validation
+- [Data Fetching Guide](./data-fetching) - Centralized query system and caching patterns
 
 ### Feature Development
-- [Permissions System](./enhanced-permissions.mdx) - User roles and permissions
-- [Session Management](./session-management.mdx) - Authentication and session handling
-- [Logging System](./logging-system.mdx) - Application logging and monitoring
-- [API Response Standardization](../api/api-response-standardization.mdx) - Consistent API responses
-- [Functions Folder Architecture](../api/functions-folder-architecture.mdx) - Backend structure and patterns
+- [Permissions System](./enhanced-permissions) - User roles and permissions
+- [Session Management](./session-management) - Authentication and session handling
+- [Logging System](./logging-system) - Application logging and monitoring
+- [API Response Standardization](../api/api-response-standardization) - Consistent API responses
+- [Functions Folder Architecture](../api/functions-folder-architecture) - Backend structure and patterns
 
 ## Development Workflow
 
@@ -104,7 +104,7 @@ npm run dev
 ## Common Issues & Solutions
 
 ### TypeScript Errors
-See [TypeScript Quick Reference](./typescript-quick-reference.mdx) for common errors and quick fixes.
+See [TypeScript Quick Reference](./typescript-quick-reference) for common errors and quick fixes.
 
 ### Development Environment
 - Ensure all environment variables are set
@@ -125,14 +125,14 @@ See [TypeScript Quick Reference](./typescript-quick-reference.mdx) for common er
 - **Pages**: ≤ 500 lines
 - **Components**: ≤ 300 lines
 - Files exceeding limits are automatically flagged in pre-commit/pre-push hooks
-- See [File Size Analysis](../architecture/file-size-analysis.mdx) for details
+- See [File Size Analysis](../architecture/file-size-analysis) for details
 
 #### Error Handling
 - Use `handleError` from `functions/utilities/logging` for all error logging
 - Use `createErrorResponse` from `functions/utilities/response-builder` for error responses
 - Use `ERROR_CODES` constants (never string literals) for error codes
 - Include component name in error context for better tracking
-- See [API Response Standardization](../api/api-response-standardization.mdx) for patterns
+- See [API Response Standardization](../api/api-response-standardization) for patterns
 
 #### General Standards
 - Follow TypeScript best practices
