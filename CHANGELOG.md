@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.34](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.33...v1.1.34) (2026-03-12)
+
+
+### Bug Fixes
+
+* **docs:** normalize internal links and add glossary redirects ([066ca4a](https://github.com/PC-Mender/sjrs-lms-docs/commit/066ca4a0c17cde9e8b4de8ba1ee5aa75c5fd78df))
+
 ### [1.1.33](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.32...v1.1.33) (2026-03-12)
 
 
