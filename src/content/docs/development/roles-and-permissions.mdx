@@ -61,7 +61,7 @@ Level 0: Guest
 - Changes are audited (action logs)
 - Permission checks at API layer (middleware) and UI
 
-## 🔐 RBAC Policy: Backend is Single Source of Truth
+## RBAC Policy: Backend is Single Source of Truth
 
 **The backend permissions endpoint (`/api/permissions/check`) is the single source of truth for all permission decisions.**
 
@@ -73,20 +73,20 @@ Level 0: Guest
 ### Implementation Guidelines
 
 ```typescript
-// ✅ Correct: Backend is authoritative
+//  Correct: Backend is authoritative
 const hasPermission = await checkPermission(resource, action);
 if (!hasPermission) {
   // Deny access - backend said no
   return;
 }
 
-// ❌ Incorrect: Client-only check
+//  Incorrect: Client-only check
 if (clientSidePermissionCheck(resource, action)) {
   // This is unsafe - backend must validate
   performAction();
 }
 
-// ✅ Correct: Client check with backend validation
+//  Correct: Client check with backend validation
 const clientCheck = clientSidePermissionCheck(resource, action);
 if (clientCheck) {
   // Optimistic UI update, but backend validates

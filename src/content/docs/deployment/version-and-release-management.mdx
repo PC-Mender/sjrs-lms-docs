@@ -3,13 +3,13 @@ title: "Version And Release Management"
 ---
 
 
-## 🎯 Overview
+## Overview
 
 This document explains how version management, GitHub releases, and notifications work together in the deployment workflow.
 
 ---
 
-## 📋 Complete Workflow
+## Complete Workflow
 
 ### Step-by-Step Process
 
@@ -39,7 +39,7 @@ This document explains how version management, GitHub releases, and notification
 
 ---
 
-## 🔢 Version Consistency
+## Version Consistency
 
 ### How Version Stays Consistent
 
@@ -61,10 +61,10 @@ The workflow includes automatic version verification:
     PACKAGE_VERSION="3.40.0"
     
     if [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
-      echo "⚠️ WARNING: Version mismatch!"
+      echo " WARNING: Version mismatch!"
       exit 1
     else
-      echo "✅ Version consistency verified"
+      echo " Version consistency verified"
     fi
 ```
 
@@ -75,7 +75,7 @@ The workflow includes automatic version verification:
 
 ---
 
-## 📝 Commit Type Analysis
+## Commit Type Analysis
 
 ### How Commit Types Are Analyzed
 
@@ -105,7 +105,7 @@ scripts/...                 → chore (patch version)
 
 ---
 
-## 🏷️ GitHub Releases
+## GitHub Releases
 
 ### Automatic Release Creation
 
@@ -113,11 +113,11 @@ When a tag is pushed, GitHub Actions automatically:
 
 1. **Analyzes commits** since last release
 2. **Categorizes commits** by type:
-   - ⚠️ Breaking Changes
-   - ✨ Features
-   - 🐛 Bug Fixes
-   - 📚 Documentation
-   - 🔧 Other Changes
+   -  Breaking Changes
+   -  Features
+   -  Bug Fixes
+   -  Documentation
+   -  Other Changes
 3. **Creates GitHub Release** with formatted notes
 4. **Includes deployment info**:
    - Deployment URL
@@ -129,25 +129,25 @@ When a tag is pushed, GitHub Actions automatically:
 ```markdown
 ## Release v3.40.0
 
-### ✨ Features
+### Features
 - Add new analytics dashboard (a1b2c3d)
 - Improve user authentication flow (e4f5g6h)
 
-### 🐛 Bug Fixes
+### Bug Fixes
 - Fix login redirect issue (i7j8k9l)
 - Resolve notification display bug (m1n2o3p)
 
-### 📚 Documentation
+### Documentation
 - Update API documentation (q4r5s6t)
 
 ---
 **Deployed to**: https://your-api-domain.com
-**Deployment Status**: ✅ Success
+**Deployment Status**:  Success
 ```
 
 ---
 
-## 📊 Notifications to Database
+## Notifications to Database
 
 ### How Notifications Are Saved
 
@@ -214,7 +214,7 @@ GET /api/notifications/events?category=deployment&limit=1
 
 ---
 
-## 🔧 Configuration
+## Configuration
 
 ### Required GitHub Secrets
 
@@ -238,7 +238,7 @@ NOTIFICATION_INGEST_ENDPOINT=https://your-api-domain.com/api/notifications/event
 
 ---
 
-## ✅ Version Synchronization Checklist
+## Version Synchronization Checklist
 
 ### Before Running `npm run version:prepare`
 
@@ -261,7 +261,7 @@ NOTIFICATION_INGEST_ENDPOINT=https://your-api-domain.com/api/notifications/event
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Version Mismatch
 
@@ -313,7 +313,7 @@ curl -X POST https://your-api-domain.com/api/notifications/events/ingest \
 
 ---
 
-## 📚 Related Documentation
+## Related Documentation
 
 - **[Deployment Quick Reference](./quick-reference.mdx)** - Quick reference guide
 - **[Deployment Flow Explained](./deployment-flow-explained.mdx)** - How deployment works

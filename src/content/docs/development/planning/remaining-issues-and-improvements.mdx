@@ -3,7 +3,7 @@ title: "Remaining Issues And Improvements"
 ---
 
 
-## 🔴 Critical Issues
+## Critical Issues
 
 ### 1. **Order List Shows All Orders to Regular Users**
 **Location**: `src/pages/orders/OrderList.tsx`
@@ -29,8 +29,8 @@ const { data: ordersData, isLoading: loading, error, refetch } = useD1OrdersQuer
 **Location**: `src/pages/wishlist/WishlistList.tsx`
 
 **Issue**: Wishlist has its own `handlePlaceOrder` that directly calls a mutation instead of using the request cart. This creates inconsistency:
-- Book catalog → uses request cart ✅
-- Wishlist → direct order creation ❌
+- Book catalog → uses request cart 
+- Wishlist → direct order creation 
 
 **Current Code**:
 ```typescript
@@ -73,7 +73,7 @@ const res = await fetch('/api/orders', {
 
 ---
 
-## ⚠️ Missing Features
+## Missing Features
 
 ### 4. **No Order Status Change Notifications for Users**
 **Location**: `functions/api/orders/handlers/update-order.ts`
@@ -81,8 +81,8 @@ const res = await fetch('/api/orders', {
 **Issue**: When an order is approved or rejected, the user who created the order doesn't receive a notification. Only admins get notified when orders are created.
 
 **Current**: 
-- ✅ Admins get notified when order is created
-- ❌ Users don't get notified when order is approved/rejected
+- Admins get notified when order is created
+- Users don't get notified when order is approved/rejected
 
 **Fix Needed**: 
 - Add notification creation when order status changes to 'approved' or 'rejected'
@@ -107,7 +107,7 @@ const res = await fetch('/api/orders', {
 
 ---
 
-## 🧹 Code Cleanup
+## Code Cleanup
 
 ### 6. **Unused BookCatalogService.placeOrder Method**
 **Location**: `src/pages/book-catalog/services/book-catalog.service.ts`
@@ -150,17 +150,17 @@ static async placeOrder(
 
 ---
 
-## 📊 Summary
+## Summary
 
 | Priority | Issue | Impact | Effort |
 |----------|-------|--------|--------|
-| 🔴 Critical | Order List User Filtering | HIGH | Medium |
-| ⚠️ Important | Wishlist Cart Integration | MEDIUM | Low |
-| ⚠️ Important | Unified API Client in Cart | MEDIUM | Low |
-| ⚠️ Important | Order Status Notifications | MEDIUM | Medium |
-| 🟡 Enhancement | Order → Loan Linking | LOW | Low |
-| 🧹 Cleanup | Remove Unused Method | LOW | Low |
-| 🧹 Cleanup | Cart Persistence Improvements | LOW | Medium |
+|  Critical | Order List User Filtering | HIGH | Medium |
+|  Important | Wishlist Cart Integration | MEDIUM | Low |
+|  Important | Unified API Client in Cart | MEDIUM | Low |
+|  Important | Order Status Notifications | MEDIUM | Medium |
+|  Enhancement | Order → Loan Linking | LOW | Low |
+|  Cleanup | Remove Unused Method | LOW | Low |
+|  Cleanup | Cart Persistence Improvements | LOW | Medium |
 
 ---
 
@@ -177,7 +177,7 @@ static async placeOrder(
 
 ## Notes
 
-- All critical flow issues from the original analysis have been fixed ✅
+- All critical flow issues from the original analysis have been fixed 
 - These are additional improvements and edge cases
 - The system is functional but could be more polished
 - Security issue (#1) should be prioritized

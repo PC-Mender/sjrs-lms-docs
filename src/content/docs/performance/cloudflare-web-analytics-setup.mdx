@@ -5,10 +5,10 @@ title: "Cloudflare Web Analytics Setup"
 
 ## Overview
 Cloudflare Web Analytics provides automatic Core Web Vitals tracking with zero configuration. It's:
-- ✅ **Free** - No cost, included with Cloudflare
-- ✅ **Privacy-friendly** - No cookies, GDPR compliant
-- ✅ **Automatic** - Tracks LCP, INP, CLS, FCP, TTFB without code
-- ✅ **Real-time** - Live dashboard with device/browser/geo breakdowns
+- **Free** - No cost, included with Cloudflare
+- **Privacy-friendly** - No cookies, GDPR compliant
+- **Automatic** - Tracks LCP, INP, CLS, FCP, TTFB without code
+- **Real-time** - Live dashboard with device/browser/geo breakdowns
 
 ## Setup Steps
 
@@ -93,11 +93,11 @@ Superusers can access the dashboard via:
 ## Privacy & Compliance
 
 ### GDPR Compliant
-- ✅ No cookies used
-- ✅ No personal data collected
-- ✅ Aggregated data only
-- ✅ IP addresses not stored
-- ✅ No cross-site tracking
+- No cookies used
+- No personal data collected
+- Aggregated data only
+- IP addresses not stored
+- No cross-site tracking
 
 ### What's Collected
 - Page URL
@@ -107,11 +107,11 @@ Superusers can access the dashboard via:
 - Performance metrics
 
 ### What's NOT Collected
-- ❌ IP addresses
-- ❌ User IDs
-- ❌ Session IDs
-- ❌ Cookies
-- ❌ Personal information
+- IP addresses
+- User IDs
+- Session IDs
+- Cookies
+- Personal information
 
 ## Troubleshooting
 
@@ -148,11 +148,11 @@ Cloudflare Web Analytics only tracks production. In development:
 ## Migration from Custom Implementation
 
 Our previous custom implementation is now simplified:
-- ✅ Removed custom POST endpoint logic (Cloudflare handles it)
-- ✅ Removed D1 database queries (no storage needed)
-- ✅ Removed complex percentile calculations (Cloudflare aggregates)
-- ✅ Simplified Performance Widget (links to dashboard)
-- ✅ Kept `web-vitals` library (for future custom metrics if needed)
+- Removed custom POST endpoint logic (Cloudflare handles it)
+- Removed D1 database queries (no storage needed)
+- Removed complex percentile calculations (Cloudflare aggregates)
+- Simplified Performance Widget (links to dashboard)
+- Kept `web-vitals` library (for future custom metrics if needed)
 
 ## Future Custom Metrics (Optional)
 
@@ -179,8 +179,8 @@ Use the existing `/api/analytics/web-vitals` endpoint for custom metrics, but ke
 
 ## Next Steps
 
-1. ✅ Get your token from Cloudflare dashboard
-2. ✅ Update index.html with token
-3. ✅ Deploy to production
-4. ✅ Verify data in Cloudflare dashboard
-5. ✅ Share dashboard access with team (optional)
+1. Get your token from Cloudflare dashboard
+2. Update index.html with token
+3. Deploy to production
+4. Verify data in Cloudflare dashboard
+5. Share dashboard access with team (optional)

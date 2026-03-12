@@ -6,7 +6,7 @@ description: "Documentation for the Location Services system providing country, 
 
 The SJRS LMS includes a comprehensive Location Services system that provides standardized geographical data (Countries, States, Cities) to ensure consistent user profile information across the platform.
 
-## 🏗️ Architecture
+## Architecture
 
 The system is built on a backend-first architecture where the API serves as the single source of truth for location data, utilizing the `country-state-city` library to ensure accuracy and standardization.
 
@@ -14,9 +14,9 @@ The system is built on a backend-first architecture where the API serves as the 
 
 The backend exposes a set of RESTful endpoints under `/api/locations` that provide hierarchical data access:
 
-1.  **Countries**: Top-level data with ISO codes and phone codes.
-2.  **States**: Linked to specific countries via ISO country codes.
-3.  **Cities**: Linked to specific states and countries.
+1. **Countries**: Top-level data with ISO codes and phone codes.
+2. **States**: Linked to specific countries via ISO country codes.
+3. **Cities**: Linked to specific states and countries.
 
 This hierarchical structure enables **cascading selectors** on the frontend, where selecting a country filters the available states, and selecting a state filters the available cities.
 
@@ -29,7 +29,7 @@ User profiles in the D1 database have been updated to store location references:
 
 Storing codes instead of full names for countries and states ensures data normalization, while the API handles the resolution of codes to display names.
 
-## 🔌 API Endpoints
+## API Endpoints
 
 | Method | Endpoint | Query Parameters | Description |
 | :--- | :--- | :--- | :--- |
@@ -63,7 +63,7 @@ Storing codes instead of full names for countries and states ensures data normal
 }
 ```
 
-## 💻 Frontend Integration
+## Frontend Integration
 
 The frontend utilizes **React Query** hooks to efficiently fetch and cache location data. These hooks are located in `src/hooks/useLocations.ts`.
 
@@ -104,7 +104,7 @@ const LocationForm = () => {
 };
 ```
 
-## 🔒 Security & Validation
+## Security & Validation
 
 - **Input Validation**: The API validates that required parameters (`country`, `state`) are present before processing requests.
 - **Error Handling**: Standardized error responses (400 Bad Request) are returned for missing parameters.

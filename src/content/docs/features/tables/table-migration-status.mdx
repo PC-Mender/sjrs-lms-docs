@@ -9,35 +9,35 @@ title: "Table Migration Status"
 
 ## Tables That Should Use Server-Side Pagination
 
-### ✅ High Priority (Large Datasets)
+### High Priority (Large Datasets)
 
 | Table | Estimated Rows | Status | Priority |
 |-------|---------------|--------|----------|
-| **Journals** | 47,000+ | ⚠️ Needs Migration | **CRITICAL** |
-| **Books** | 1,000+ | ⚠️ Needs Migration | **HIGH** |
-| **Book Copies** | 5,000+ | ⚠️ Needs Migration | **HIGH** |
-| **Students** | 1,000+ | ⚠️ Needs Migration | **HIGH** |
-| **Professors** | 500+ | ⚠️ Needs Migration | **MEDIUM** |
-| **Users** | 1,000+ | ⚠️ Needs Migration | **HIGH** |
-| **Borrow Records** | 10,000+ | ⚠️ Needs Migration | **HIGH** |
-| **Resources** | 1,000+ | ⚠️ Needs Migration | **MEDIUM** |
+| **Journals** | 47,000+ |  Needs Migration | **CRITICAL** |
+| **Books** | 1,000+ |  Needs Migration | **HIGH** |
+| **Book Copies** | 5,000+ |  Needs Migration | **HIGH** |
+| **Students** | 1,000+ |  Needs Migration | **HIGH** |
+| **Professors** | 500+ |  Needs Migration | **MEDIUM** |
+| **Users** | 1,000+ |  Needs Migration | **HIGH** |
+| **Borrow Records** | 10,000+ |  Needs Migration | **HIGH** |
+| **Resources** | 1,000+ |  Needs Migration | **MEDIUM** |
 
-### ✅ Medium Priority (Medium Datasets)
-
-| Table | Estimated Rows | Status | Priority |
-|-------|---------------|--------|----------|
-| **Publications** | 100-500 | ⚠️ Consider Migration | **LOW** |
-| **Authors** | 100-500 | ⚠️ Consider Migration | **LOW** |
-| **Sections** | 50-200 | ✅ Can stay client-side | **NONE** |
-| **Reference Books** | 500-1,000 | ⚠️ Consider Migration | **MEDIUM** |
-
-### ✅ Low Priority (Small Datasets)
+### Medium Priority (Medium Datasets)
 
 | Table | Estimated Rows | Status | Priority |
 |-------|---------------|--------|----------|
-| **Settings** | &lt;50 | ✅ Client-side OK | **NONE** |
-| **Categories** | &lt;100 | ✅ Client-side OK | **NONE** |
-| **Resource Types** | &lt;50 | ✅ Client-side OK | **NONE** |
+| **Publications** | 100-500 |  Consider Migration | **LOW** |
+| **Authors** | 100-500 |  Consider Migration | **LOW** |
+| **Sections** | 50-200 |  Can stay client-side | **NONE** |
+| **Reference Books** | 500-1,000 |  Consider Migration | **MEDIUM** |
+
+### Low Priority (Small Datasets)
+
+| Table | Estimated Rows | Status | Priority |
+|-------|---------------|--------|----------|
+| **Settings** | &lt;50 |  Client-side OK | **NONE** |
+| **Categories** | &lt;100 |  Client-side OK | **NONE** |
+| **Resource Types** | &lt;50 |  Client-side OK | **NONE** |
 
 ## Migration Checklist
 
@@ -73,7 +73,7 @@ const MyTable = () => {
       data={tableProps.data}
       columns={columns}
       config={{
-        serverSidePagination: true, // ✅ Enable server-side
+        serverSidePagination: true, //  Enable server-side
         pagination: tableProps.pagination,
         loading: tableProps.loading,
       }}
@@ -101,7 +101,7 @@ import { DataTable } from '@/components/ui/organisms/tables/OptimizedTable';
   }}
   columns={columns}
   config={{
-    serverSidePagination: true, // ✅ Enable server-side
+    serverSidePagination: true, //  Enable server-side
     pagination: { current: 1, pageSize: 20 },
   }}
 />
@@ -110,19 +110,19 @@ import { DataTable } from '@/components/ui/organisms/tables/OptimizedTable';
 ## Current Table Implementations
 
 ### Using OptimizedTable
-- ✅ `src/pages/book-copies/index.tsx` - **Needs Migration**
-- ✅ `src/components/auth/session/session-management.tsx` - Check size
-- ✅ `src/pages/borrow-limits/BorrowLimitList.tsx` - Check size
+- `src/pages/book-copies/index.tsx` - **Needs Migration**
+- `src/components/auth/session/session-management.tsx` - Check size
+- `src/pages/borrow-limits/BorrowLimitList.tsx` - Check size
 
 ### Using UnifiedTable
-- ✅ `src/components/ui/organisms/tables/UnifiedTable.tsx` - **Needs Enhancement**
-- ⚠️ Currently does client-side pagination only
+- `src/components/ui/organisms/tables/UnifiedTable.tsx` - **Needs Enhancement**
+- Currently does client-side pagination only
 
 ### Using Ant Design Table Directly
-- ✅ `src/pages/journals/index.tsx` - **Needs Migration** (47k rows!)
-- ✅ `src/pages/students/index.tsx` - **Needs Migration**
-- ✅ `src/pages/guests/GuestListPage.tsx` - Check size
-- ✅ `src/pages/book-views/index.tsx` - Check size
+- `src/pages/journals/index.tsx` - **Needs Migration** (47k rows!)
+- `src/pages/students/index.tsx` - **Needs Migration**
+- `src/pages/guests/GuestListPage.tsx` - Check size
+- `src/pages/book-views/index.tsx` - Check size
 
 ## Migration Priority Order
 
@@ -139,14 +139,14 @@ import { DataTable } from '@/components/ui/organisms/tables/OptimizedTable';
 ## Backend Support Status
 
 All major endpoints support pagination:
-- ✅ `/api/journals` - Supports pagination
-- ✅ `/api/books` - Supports pagination
-- ✅ `/api/book-copies` - Supports pagination
-- ✅ `/api/students` - Supports pagination
-- ✅ `/api/professors` - Supports pagination
-- ✅ `/api/users` - Supports pagination
-- ✅ `/api/resources` - Supports pagination
-- ✅ `/api/borrow-records` - Supports pagination
+- `/api/journals` - Supports pagination
+- `/api/books` - Supports pagination
+- `/api/book-copies` - Supports pagination
+- `/api/students` - Supports pagination
+- `/api/professors` - Supports pagination
+- `/api/users` - Supports pagination
+- `/api/resources` - Supports pagination
+- `/api/borrow-records` - Supports pagination
 
 ## Future Enhancement: Auto-Detect
 
@@ -162,9 +162,9 @@ This would make it more automatic while maintaining backward compatibility.
 **Current State**: Opt-in (explicitly enable `serverSidePagination: true`)
 
 **Recommendation**: 
-- ✅ Migrate all tables with >100 rows
-- ✅ Use `useServerSideTable` hook for new tables
-- ✅ Keep client-side for small datasets (&lt;100 rows)
+- Migrate all tables with >100 rows
+- Use `useServerSideTable` hook for new tables
+- Keep client-side for small datasets (&lt;100 rows)
 
 **Migration Effort**: Low (thanks to centralized hook)
 

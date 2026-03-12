@@ -7,7 +7,7 @@ Complete guide for testing SJRS LMS APIs using Postman.
 
 ---
 
-## 📬 Postman Setup
+## Postman Setup
 
 ### Step 1: Import Collection and Environment
 
@@ -28,12 +28,12 @@ Complete guide for testing SJRS LMS APIs using Postman.
 
 ### Step 2: Configure Credentials
 
-1. **Click the eye icon** (👁️) in the top-right to view environment variables
+1. **Click the eye icon** () in the top-right to view environment variables
 2. **Update credentials** if needed:
    - `email`: Your registered email (or test user email)
    - `password`: Your actual password (or test user password)
 
-**⚠️ Important**: The email and password must be **real credentials** that exist in your database!
+** Important**: The email and password must be **real credentials** that exist in your database!
 
 **Test Users** (if database was seeded):
 - `ADMIN_EMAIL` / `ADMIN_PASSWORD` (Admin)
@@ -45,7 +45,7 @@ Complete guide for testing SJRS LMS APIs using Postman.
 
 ---
 
-## 🔐 Authentication Flow
+## Authentication Flow
 
 ### Step 1: Login (Cookie-Based Auth)
 
@@ -62,7 +62,7 @@ Complete guide for testing SJRS LMS APIs using Postman.
    }
    ```
 4. **Verify environment variables**:
-   - Click the **eye icon** (👁️) in the top-right
+   - Click the **eye icon** () in the top-right
    - Check that `email` and `password` are set
    - Check that `base_url` is `https://your-api-domain.com`
 5. Click **Send**
@@ -84,7 +84,7 @@ Complete guide for testing SJRS LMS APIs using Postman.
 
 ---
 
-## 🧪 Testing Fixed Endpoints
+## Testing Fixed Endpoints
 
 ### Test 1: Notifications Bell Context
 
@@ -158,7 +158,7 @@ Complete guide for testing SJRS LMS APIs using Postman.
 
 ---
 
-## 🔑 Using Your Own Credentials
+## Using Your Own Credentials
 
 ### Option 1: Use Test Users (If Database Was Seeded)
 
@@ -178,7 +178,7 @@ If your database was set up with seed data, these test users should exist:
    - Or register through the web interface
 
 2. **Update environment variables**:
-   - Click the **eye icon** (👁️) in top-right
+   - Click the **eye icon** () in top-right
    - Change `email` to your registered email
    - Change `password` to your actual password
    - Click **Save**
@@ -200,7 +200,7 @@ Then use one of those emails and its corresponding password.
 
 ---
 
-## 🚨 Troubleshooting
+## Troubleshooting
 
 ### Issue: "Unauthorized" (401) Errors - Login Failed
 
@@ -236,7 +236,7 @@ Then use one of those emails and its corresponding password.
    - Or register through the web interface
    
 6. **Check environment variables**:
-   - Click the eye icon (👁️) to view variables
+   - Click the eye icon () to view variables
    - Make sure `email` and `password` are set correctly
    - Make sure `base_url` is `https://your-api-domain.com`
 
@@ -300,7 +300,7 @@ Then use one of those emails and its corresponding password.
 
 ---
 
-## 📊 Testing Checklist
+## Testing Checklist
 
 ### Pre-Testing Setup
 - [ ] Collection imported
@@ -331,18 +331,18 @@ Then use one of those emails and its corresponding password.
 
 ---
 
-## 🎯 Quick Test Workflow
+## Quick Test Workflow
 
 1. **Select environment**: `SJRS LMS - Production` (top-right)
 2. **Run Login**: **Authentication** → **Login** → **Send**
 3. **Run Bootstrap CSRF**: **Authentication** → **Bootstrap CSRF** → **Send**
-4. **Test Notifications**: **Notifications** → **Get Bell Context** → **Send** ✅
-5. **Test Unread Count**: **Notifications** → **Get Unread Count** → **Send** ✅
-6. **Test Users**: **Users** → **Get All Users** → **Send** ✅
+4. **Test Notifications**: **Notifications** → **Get Bell Context** → **Send** 
+5. **Test Unread Count**: **Notifications** → **Get Unread Count** → **Send** 
+6. **Test Users**: **Users** → **Get All Users** → **Send** 
 
 ---
 
-## 📚 Additional Resources
+## Additional Resources
 
 - [API Documentation](../api/)
 - [API Quick Start Guide](../api/quick-start-guide.mdx)

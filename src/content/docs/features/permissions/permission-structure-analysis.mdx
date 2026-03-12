@@ -17,16 +17,16 @@ The permission manager UI displays actions that either:
 
 ### Actions in Database (`permission_actions` table)
 From `sql/d1-schema.sql`:
-1. ✅ `create` - **USED & CHECKED** - Separate permission for creating records
-2. ✅ `read` - **USED & CHECKED** - Separate permission for viewing records
-3. ✅ `update` - **USED & CHECKED** - Separate permission for modifying records
-4. ✅ `delete` - **USED & CHECKED** - Separate permission for removing records
-5. ✅ `approve` - **USED & CHECKED** - Separate permission for approving requests
-6. ✅ `reject` - **USED & CHECKED** - Separate permission for rejecting requests
-7. ✅ `export` - **USED & CHECKED** - Separate permission for exporting data
-8. ❌ `import` - **ORPHANED** (exists in DB, no implementation found)
-9. ❌ `bulk_operations` - **ORPHANED** (exists in DB, never used)
-10. ❌ `configure` - **DOESN'T EXIST ANYWHERE** (shown in UI but not in DB or code) - Not required
+1. `create` - **USED & CHECKED** - Separate permission for creating records
+2. `read` - **USED & CHECKED** - Separate permission for viewing records
+3. `update` - **USED & CHECKED** - Separate permission for modifying records
+4. `delete` - **USED & CHECKED** - Separate permission for removing records
+5. `approve` - **USED & CHECKED** - Separate permission for approving requests
+6. `reject` - **USED & CHECKED** - Separate permission for rejecting requests
+7. `export` - **USED & CHECKED** - Separate permission for exporting data
+8. `import` - **ORPHANED** (exists in DB, no implementation found)
+9. `bulk_operations` - **ORPHANED** (exists in DB, never used)
+10. `configure` - **DOESN'T EXIST ANYWHERE** (shown in UI but not in DB or code) - Not required
 
 **Note**: 
 - **CRUD operations are separate** for granular control. Superusers can grant specific combinations:
@@ -41,13 +41,13 @@ From `sql/d1-schema.sql`:
 
 ## Detailed Analysis
 
-### ✅ Core CRUD Actions (Working Correctly)
+### Core CRUD Actions (Working Correctly)
 - **create, read, update, delete**
 - **Status**: Properly implemented and checked via permission system
 - **Location**: Used throughout codebase via `hasPermission()` checks
 - **Example**: `BaseService.validatePermission()` uses these
 
-### ⚠️ Approve/Reject Actions (Bypass Permission System)
+### Approve/Reject Actions (Bypass Permission System)
 
 **Where they're used:**
 - `src/components/features/loans/components/LoanTable.tsx` - Approve/Reject loans
@@ -56,12 +56,12 @@ From `sql/d1-schema.sql`:
 
 **How they're checked:**
 ```typescript
-// ❌ NOT using permission system
+//  NOT using permission system
 export const canApproveOrder = (orderStatus: string): boolean => {
   return orderStatus?.toLowerCase() === 'pending';
 };
 
-// ❌ NOT using permission system
+//  NOT using permission system
 export const canManageOrders = (userRole: string | undefined): boolean => {
   return ['librarian', 'admin', 'superuser'].includes(userRole.toLowerCase());
 };
@@ -71,7 +71,7 @@ export const canManageOrders = (userRole: string | undefined): boolean => {
 
 **Should be:**
 ```typescript
-// ✅ Should check permissions
+//  Should check permissions
 const canApprove = await hasPermission(env, {
   user,
   resource: 'orders',
@@ -79,7 +79,7 @@ const canApprove = await hasPermission(env, {
 });
 ```
 
-### ⚠️ Export Action (Bypass Permission System)
+### Export Action (Bypass Permission System)
 
 **Where it's used:**
 - `src/hooks/useActionLogs.ts` - `exportActionLogs()`
@@ -88,7 +88,7 @@ const canApprove = await hasPermission(env, {
 
 **How it's checked:**
 ```typescript
-// ❌ NO PERMISSION CHECK AT ALL
+//  NO PERMISSION CHECK AT ALL
 const exportLogs = useCallback(async () => {
   const logs = await fetchLogs();
   await actionLogService.exportActionLogs(logs);
@@ -97,12 +97,12 @@ const exportLogs = useCallback(async () => {
 
 **Problem**: Export functions exist but **never check permissions**. Anyone who can access the page can export data.
 
-### ❌ Orphaned Actions (Exist in DB, Never Used)
+### Orphaned Actions (Exist in DB, Never Used)
 
 #### 1. `manage` Action
-- **In Database**: ✅ Yes
-- **In UI**: ✅ Shown (superuser-exclusive)
-- **In Code**: ✅ **SPECIAL PERMISSION** - Superuser-exclusive, grants all CRUD operations
+- **In Database**:  Yes
+- **In UI**:  Shown (superuser-exclusive)
+- **In Code**:  **SPECIAL PERMISSION** - Superuser-exclusive, grants all CRUD operations
 - **Behavior**: 
   - When checking for `create`, `read`, `update`, or `delete`, if user has `manage` permission, they automatically have access
   - Only superusers can grant the `manage` permission (enforced in API with validation)
@@ -112,21 +112,21 @@ const exportLogs = useCallback(async () => {
 - **Note**: There's a `canManageRoles()` function but it checks role hierarchy, not permissions
 
 #### 2. `import` Action
-- **In Database**: ✅ Yes
-- **In UI**: ❓ Possibly shown
-- **In Code**: ❌ No import functionality found
+- **In Database**:  Yes
+- **In UI**:  Possibly shown
+- **In Code**:  No import functionality found
 - **Problem**: Action exists but feature doesn't exist
 
 #### 3. `bulk_operations` Action
-- **In Database**: ✅ Yes
-- **In UI**: ❓ Possibly shown
-- **In Code**: ❌ Never checked
+- **In Database**:  Yes
+- **In UI**:  Possibly shown
+- **In Code**:  Never checked
 - **Note**: Bulk operations exist (e.g., bulk approve) but don't check this permission
 
 #### 4. `configure` Action
-- **In Database**: ❌ NO
-- **In UI**: ✅ Shown (according to user)
-- **In Code**: ❌ Doesn't exist
+- **In Database**:  NO
+- **In UI**:  Shown (according to user)
+- **In Code**:  Doesn't exist
 - **Problem**: UI shows action that doesn't exist in database or code
 
 ---
@@ -142,7 +142,7 @@ ACTIONS: {
   READ: 'read',
   UPDATE: 'update',
   DELETE: 'delete',
-} // ❌ Missing: approve, reject, export, import, manage, bulk_operations
+} //  Missing: approve, reject, export, import, manage, bulk_operations
 ```
 
 **`PERMISSION_ACTIONS`** (constants/config.ts):
@@ -156,13 +156,13 @@ PERMISSION_ACTIONS = {
   REJECT: 'reject',
   EXPORT: 'export',
   IMPORT: 'import',
-} // ❌ Missing: manage, bulk_operations, configure
+} //  Missing: manage, bulk_operations, configure
 ```
 
 **Database** (sql/d1-schema.sql):
 ```sql
 -- Has: create, read, update, delete, approve, reject, manage, export, import, bulk_operations
--- ❌ Missing: configure
+--  Missing: configure
 ```
 
 ---

@@ -120,7 +120,7 @@ const JournalList = () => {
 ### Before (Client-Side - Loads All Data)
 
 ```tsx
-// ❌ Old way - loads ALL 47k journals
+//  Old way - loads ALL 47k journals
 const { data: journalsData } = useD1JournalsQuery();
 const journals = journalsData?.data || [];
 
@@ -133,7 +133,7 @@ const journals = journalsData?.data || [];
 ### After (Server-Side - Loads Only Current Page)
 
 ```tsx
-// ✅ New way - loads only 20 journals per page
+//  New way - loads only 20 journals per page
 const { tableProps, onSearch, onPaginationChange } = useServerSideTable({
   queryKey: ['journals'],
   queryFn: async (page, pageSize, search) => {
@@ -262,33 +262,33 @@ export const JournalList = () => {
 - Initial Load: ~30-60 seconds
 - Memory: ~200-500 MB
 - Network: ~50-100 MB
-- User Experience: ❌ Unusable
+- User Experience:  Unusable
 
 **After (Server-Side)**:
 - Initial Load: ~0.5-1 second
 - Memory: ~5-10 MB
 - Network: ~100-200 KB
-- User Experience: ✅ Fast and smooth
+- User Experience:  Fast and smooth
 
 **Improvement**: ~98% faster, ~98% less memory
 
 ## When to Use Each Approach
 
 ### Use `useServerSideTable` Hook When:
-- ✅ You want the simplest solution
-- ✅ You're building a new component
-- ✅ You want automatic search/pagination handling
-- ✅ You have large datasets (1000+ rows)
+- You want the simplest solution
+- You're building a new component
+- You want automatic search/pagination handling
+- You have large datasets (1000+ rows)
 
 ### Use Enhanced `DataTable` When:
-- ✅ You prefer component-based approach
-- ✅ You want everything in one component
-- ✅ You're migrating existing `DataTable` usage
+- You prefer component-based approach
+- You want everything in one component
+- You're migrating existing `DataTable` usage
 
 ### Use Manual Implementation When:
-- ✅ You need custom pagination logic
-- ✅ You have complex filtering requirements
-- ✅ You need fine-grained control
+- You need custom pagination logic
+- You have complex filtering requirements
+- You need fine-grained control
 
 ## Best Practices
 
@@ -301,11 +301,11 @@ export const JournalList = () => {
 
 ## Summary
 
-✅ **Centralized Solution**: `useServerSideTable` hook handles everything  
-✅ **Easy Migration**: Simple pattern to follow  
-✅ **Automatic**: Search, pagination, caching all handled  
-✅ **Performance**: Massive improvements for large datasets  
-✅ **Type-Safe**: Full TypeScript support  
+ **Centralized Solution**: `useServerSideTable` hook handles everything  
+ **Easy Migration**: Simple pattern to follow  
+ **Automatic**: Search, pagination, caching all handled  
+ **Performance**: Massive improvements for large datasets  
+ **Type-Safe**: Full TypeScript support  
 
 No need to manually manage pagination state in each component anymore!
 

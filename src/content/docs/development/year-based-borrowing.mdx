@@ -3,11 +3,11 @@ title: "Year Based Borrowing"
 ---
 
 
-## 🎯 **Overview**
+## **Overview**
 
 This guide explains the enhanced borrowing limits system that now supports **year-based limits for students** while maintaining the existing role-based access control.
 
-## 📊 **New Borrowing Limits Structure**
+## **New Borrowing Limits Structure**
 
 ### **Student Year-Based Limits**
 | Year of Study | Max Books | Loan Period | Renewals | Fine/Day |
@@ -24,7 +24,7 @@ This guide explains the enhanced borrowing limits system that now supports **yea
 | **Staff** | 7 books | 21 days | 2 | $1.50 |
 | **Guest** | 2 books | 7 days | 1 | $3.00 |
 
-## 🔧 **Database Schema Changes**
+## **Database Schema Changes**
 
 ### **Updated borrow_limits Table**
 ```sql
@@ -64,7 +64,7 @@ CREATE OR REPLACE FUNCTION validate_borrow_limit(p_user_id INTEGER)
 RETURNS BOOLEAN;
 ```
 
-## 🚀 **Implementation Details**
+## **Implementation Details**
 
 ### **1. Order Placement Process**
 ```typescript
@@ -97,7 +97,7 @@ const borrowLimit = await getBorrowLimit(userTypeForLimit);
 const borrowLimit = await getBorrowLimit(user.user_type);
 ```
 
-## 📋 **API Endpoints**
+## **API Endpoints**
 
 ### **Get User's Borrow Limit**
 ```typescript
@@ -123,25 +123,25 @@ const borrowLimit = await getBorrowLimit(user.user_type);
 ]
 ```
 
-## 🎯 **Benefits**
+## **Benefits**
 
-### **✅ Academic Progression**
+### ** Academic Progression**
 - **1st Year**: Conservative limits for new students
 - **2nd Year**: Increased access as students mature
 - **3rd Year**: Higher limits for advanced students
 - **4th Year**: Maximum access for graduating students
 
-### **✅ Fair Resource Distribution**
+### ** Fair Resource Distribution**
 - Prevents resource hoarding by new students
 - Rewards academic progression
 - Maintains library efficiency
 
-### **✅ Flexible Administration**
+### ** Flexible Administration**
 - Easy to adjust limits per year
 - Supports different academic programs
 - Maintains role-based access control
 
-## 🛠️ **Setup Instructions**
+## **Setup Instructions**
 
 ### **1. Run Database Migration**
 ```sql
@@ -166,7 +166,7 @@ const borrowLimit = await getBorrowLimit(user.user_type);
 4. Create 4th year student → Should get 15 book limit
 ```
 
-## 🔍 **Error Messages**
+## **Error Messages**
 
 ### **Limit Exceeded Messages**
 ```typescript
@@ -177,7 +177,7 @@ const borrowLimit = await getBorrowLimit(user.user_type);
 "User has reached maximum borrow limit for Professor (10 books)"
 ```
 
-## 📊 **Monitoring and Analytics**
+## **Monitoring and Analytics**
 
 ### **Borrowing Statistics by Year**
 ```sql
@@ -196,7 +196,7 @@ GROUP BY s.year_of_study
 ORDER BY s.year_of_study;
 ```
 
-## 🎓 **Real-World Applications**
+## **Real-World Applications**
 
 ### **Academic Libraries**
 - **Freshman Students**: Conservative limits to prevent overwhelming
@@ -210,7 +210,7 @@ ORDER BY s.year_of_study;
 - **Administrative Efficiency**: Automated year-based limits
 - **Fair Access**: Prevents abuse while rewarding progression
 
-## ✅ **Success Metrics**
+## **Success Metrics**
 
 - **Limit Compliance**: >95% of borrows respect year-based limits
 - **Student Satisfaction**: Improved access as students progress
@@ -219,4 +219,4 @@ ORDER BY s.year_of_study;
 
 ---
 
-**This system ensures that students get appropriate borrowing access based on their academic progression while maintaining the flexibility for students to have admin roles!** 🎓📚 
+**This system ensures that students get appropriate borrowing access based on their academic progression while maintaining the flexibility for students to have admin roles!**  

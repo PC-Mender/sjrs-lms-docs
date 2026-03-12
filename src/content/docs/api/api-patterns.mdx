@@ -7,7 +7,7 @@ title: "Api Patterns"
 
 This document outlines the API patterns and architecture used in the SJRS LMS, including the migration from Hono-based APIs to direct function APIs for better performance and consistency.
 
-## 🏗️ API Architecture
+## API Architecture
 
 ### **Direct Function API Pattern**
 
@@ -27,7 +27,7 @@ The project was migrated from Hono-based APIs to direct function APIs for the fo
 3. **Consistency** - All APIs now follow the same pattern
 4. **Cloudflare Native** - Better alignment with Cloudflare Workers architecture
 
-## 📋 API Structure
+## API Structure
 
 ### **Standard API Function Pattern**
 
@@ -172,7 +172,7 @@ export default {
 };
 ```
 
-## 🔧 Error Handling
+## Error Handling
 
 ### **Unified Error Handling**
 
@@ -205,7 +205,7 @@ const response = new Response(JSON.stringify(data), {
 return addCORSHeaders(response, request.headers.get('Origin'));
 ```
 
-## 📊 Migration Summary
+## Migration Summary
 
 ### **Before Migration (Hono-based)**
 ```typescript
@@ -252,7 +252,7 @@ if (path.startsWith('/api/books')) {
 }
 ```
 
-## 🎯 Best Practices
+## Best Practices
 
 ### **1. Consistent Patterns**
 - Use the same routing pattern across all APIs
@@ -279,7 +279,7 @@ if (path.startsWith('/api/books')) {
 - Use appropriate indexes
 - Consider caching for frequently accessed data
 
-## 📋 API Endpoints
+## API Endpoints
 
 ### **Core APIs**
 - **Authentication**: `/api/auth` - Login, registration, session management
@@ -326,44 +326,44 @@ if (path.startsWith('/api/books')) {
   - POST allowed for students, professors, guests, and librarians.
   - PUT/DELETE restricted to librarians.
 
-## 🔄 Migration Status
+## Migration Status
 
 ### **Completed Migrations**
-- ✅ **Authors API** - Migrated from Hono to direct function
-- ✅ **Book Copies API** - Migrated from Hono to direct function
-- ✅ **Book Reviews API** - Migrated from Hono to direct function
-- ✅ **Borrow Limits API** - Migrated from Hono to direct function
-- ✅ **Notifications API** - Migrated from Hono to direct function
-- ✅ **Orders API** - Migrated from Hono to direct function
-- ✅ **Penalties API** - Migrated from Hono to direct function
-- ✅ **Publications API** - Migrated from Hono to direct function
-- ✅ **Upload API** - Migrated from Hono to direct function
-- ✅ **Wishlist API** - Migrated from Hono to direct function
+- **Authors API** - Migrated from Hono to direct function
+- **Book Copies API** - Migrated from Hono to direct function
+- **Book Reviews API** - Migrated from Hono to direct function
+- **Borrow Limits API** - Migrated from Hono to direct function
+- **Notifications API** - Migrated from Hono to direct function
+- **Orders API** - Migrated from Hono to direct function
+- **Penalties API** - Migrated from Hono to direct function
+- **Publications API** - Migrated from Hono to direct function
+- **Upload API** - Migrated from Hono to direct function
+- **Wishlist API** - Migrated from Hono to direct function
 
 ### **Already Direct Function APIs**
-- ✅ **Auth API** - Already using direct function pattern
-- ✅ **Books API** - Already using direct function pattern
-- ✅ **Loans API** - Already using direct function pattern
-- ✅ **Users API** - Already using direct function pattern
-- ✅ **Roles API** - Already using direct function pattern
-- ✅ **Students API** - Already using direct function pattern
-- ✅ **Permissions API** - Already using direct function pattern
+- **Auth API** - Already using direct function pattern
+- **Books API** - Already using direct function pattern
+- **Loans API** - Already using direct function pattern
+- **Users API** - Already using direct function pattern
+- **Roles API** - Already using direct function pattern
+- **Students API** - Already using direct function pattern
+- **Permissions API** - Already using direct function pattern
 
 ### **Special Purpose APIs**
-- ✅ **Migrations API** - Uses direct function pattern for database migrations
-- ✅ **Action Logs API** - Uses direct function pattern for audit logging
-- ✅ **System Logs API** - Structured logs for system events
-- ✅ **Email API** - Trigger email workflows
+- **Migrations API** - Uses direct function pattern for database migrations
+- **Action Logs API** - Uses direct function pattern for audit logging
+- **System Logs API** - Structured logs for system events
+- **Email API** - Trigger email workflows
 
-## 📝 Dependencies
+## Dependencies
 
 ### **Removed Dependencies**
-- ❌ **Hono** - Removed from `package.json` after migration
+- **Hono** - Removed from `package.json` after migration
 
 ### **Required Dependencies**
-- ✅ **Cloudflare Workers** - Native runtime environment
-- ✅ **TypeScript** - Type safety throughout
-- ✅ **D1 Database** - SQLite-based database
+- **Cloudflare Workers** - Native runtime environment
+- **TypeScript** - Type safety throughout
+- **D1 Database** - SQLite-based database
 
 ---
 

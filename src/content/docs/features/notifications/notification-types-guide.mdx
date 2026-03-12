@@ -273,11 +273,11 @@ App Notifications are **automatic user-specific in-app notifications** stored in
   - Intended for privileged/administrative flows only.
   - Regular users should not manually create notifications.
 
-### Automatic Generation - What's Implemented ✅
+### Automatic Generation - What's Implemented 
 
 App Notifications are **automatically created** by the system in the following scenarios:
 
-#### 1. **Loan Notifications** ✅
+#### 1. **Loan Notifications** 
 - **Loan Created** - When a loan is created
   - Type: `success`, Priority: `normal`
   - Recipient: Loan owner
@@ -293,14 +293,14 @@ App Notifications are **automatically created** by the system in the following s
   - Recipient: Loan owner
   - Location: `functions/lib/notifications/transaction-notifications.ts`
 
-#### 2. **Payment Notifications** ✅
+#### 2. **Payment Notifications** 
 - **Payment Received** - When payment is processed
   - Type: `success`, Priority: `normal`
   - Recipient: Payment owner
   - Includes: amount, receipt number, transaction ID, penalty info, payment method
   - Location: `functions/lib/notifications/transaction-notifications.ts`
 
-#### 3. **Order Notifications** ✅
+#### 3. **Order Notifications** 
 - **New Borrow Request** - When an order is created
   - Type: `info`, Priority: `high`
   - Recipient: **Admins/Librarians** (not the requester)
@@ -308,35 +308,35 @@ App Notifications are **automatically created** by the system in the following s
   - Only sends to users with roles: `superuser`, `admin`, `librarian`, `dean`
   - Location: `functions/api/orders/handlers/create-order.ts`
 
-### Automatic Generation - What's Missing ❌
+### Automatic Generation - What's Missing 
 
 The following automatic notifications are **not yet implemented**:
 
-#### 1. **Penalty Notifications** ❌
+#### 1. **Penalty Notifications** 
 - **When**: Penalty is created for a user
 - **Who should receive**: The user who got the penalty
 - **Expected**: Notification with penalty details, amount, reason, due date
 - **Location**: `functions/api/penalties/handlers/create-penalty.ts`
 
-#### 2. **Order Status Notifications** ❌
+#### 2. **Order Status Notifications** 
 - **When**: Order is approved, rejected, or cancelled
 - **Who should receive**: The user who created the order
 - **Expected**: Notification when order status changes
 - **Location**: `functions/api/orders/handlers/update-order.ts`
 
-#### 3. **Borrow Limit Notifications** ❌
+#### 3. **Borrow Limit Notifications** 
 - **When**: User tries to borrow but has reached max books limit
 - **Who should receive**: The user who tried to borrow
 - **Expected**: Notification warning about borrow limit
 - **Location**: `functions/api/orders/handlers/create-order.ts`
 
-#### 4. **Loan Due Date Reminders** ❌
+#### 4. **Loan Due Date Reminders** 
 - **When**: X days before loan due date (e.g., 3 days, 1 day)
 - **Who should receive**: Users with loans approaching due date
 - **Expected**: Scheduled reminders before due date
 - **Note**: Requires scheduled task (cron job) implementation
 
-#### 5. **Wishlist Notifications** ❌
+#### 5. **Wishlist Notifications** 
 - **When**: Book in user's wishlist becomes available (status changes to 'available')
 - **Who should receive**: Users who have the book in their wishlist
 - **Expected**: Notification that book is now available
@@ -344,10 +344,10 @@ The following automatic notifications are **not yet implemented**:
 
 ### User Preferences & Permissions
 
-#### Current Status ⚠️
-- **Order Notifications**: ✅ Checks `order_notifications` and `in_app_notifications` preferences
-- **Loan/Payment Notifications**: ❌ Do not check user preferences yet
-- **Permission-Based Order Notifications**: ⚠️ Uses role names instead of permissions
+#### Current Status 
+- **Order Notifications**:  Checks `order_notifications` and `in_app_notifications` preferences
+- **Loan/Payment Notifications**:  Do not check user preferences yet
+- **Permission-Based Order Notifications**:  Uses role names instead of permissions
 
 #### Recommended Improvements
 - Add preference checks for all notification types (`in_app_notifications`, `loan_notifications`, `order_notifications`)
@@ -362,11 +362,11 @@ The following automatic notifications are **not yet implemented**:
   - `NotificationList` - List view with search and actions (view-only, no create/edit)
   - `NotificationShow` - Detailed view of a single notification
 - **Features**:
-  - ✅ View own notifications
-  - ✅ Mark as read/unread
-  - ✅ Delete own notifications
-  - ✅ Search and filter
-  - ❌ **No create/edit access** (notifications are automatic)
+  -  View own notifications
+  -  Mark as read/unread
+  -  Delete own notifications
+  -  Search and filter
+  -  **No create/edit access** (notifications are automatic)
 
 #### Superuser View (Delivery Log)
 - **Page**: `/dashboard-superuser/app-notifications-log`
@@ -384,15 +384,15 @@ The following automatic notifications are **not yet implemented**:
 - **Reason**: App Notifications are **automatic only** - users cannot manually create/edit them
 
 ### Use Cases
-- ✅ Loan created confirmations
-- ✅ Loan status updates (returned, overdue, approved, rejected)
-- ✅ Payment receipts
-- ✅ New borrow request notifications (to admins)
-- ❌ Loan due date reminders (not yet implemented)
-- ❌ Order status updates (not yet implemented)
-- ❌ Penalty assignments (not yet implemented)
-- ❌ Borrow limit warnings (not yet implemented)
-- ❌ Wishlist availability (not yet implemented)
+- Loan created confirmations
+- Loan status updates (returned, overdue, approved, rejected)
+- Payment receipts
+- New borrow request notifications (to admins)
+- Loan due date reminders (not yet implemented)
+- Order status updates (not yet implemented)
+- Penalty assignments (not yet implemented)
+- Borrow limit warnings (not yet implemented)
+- Wishlist availability (not yet implemented)
 
 ### Example (Automatic Generation)
 ```typescript

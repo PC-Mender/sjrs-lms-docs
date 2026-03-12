@@ -7,7 +7,7 @@ title: "Overdue Status Analysis"
 
 The system has automated overdue status updates via a scheduled task, but there are several gaps that need to be addressed for complete automation.
 
-## Currently Implemented ✅
+## Currently Implemented 
 
 ### 1. Scheduled Overdue Status Updates
 - **Location**: `functions/scheduled/calculate-overdue-penalties.ts`
@@ -49,7 +49,7 @@ async function markLoanAsOverdue(env: Environment, loanId: number): Promise<bool
 - **Schedule**: Daily (same cron trigger)
 - Sends email reminders at 7, 14, and 30 days overdue
 
-## Identified Gaps ❌
+## Identified Gaps 
 
 ### Gap 1: Renewal Doesn't Clear Overdue Status
 **Issue**: When a loan is renewed, the system updates the `due_date` to a future date but **does not change the status from `'overdue'` back to `'active'`**.
@@ -194,15 +194,15 @@ This query correctly identifies overdue loans, but the status update only happen
 ## Summary
 
 **What Works:**
-- ✅ Daily scheduled task marks active loans as overdue
-- ✅ Penalties are calculated automatically
-- ✅ Notifications are sent
+- Daily scheduled task marks active loans as overdue
+- Penalties are calculated automatically
+- Notifications are sent
 
 **What Needs Fixing:**
-- ❌ Renewal doesn't clear overdue status
-- ❌ No real-time overdue detection (only daily)
-- ❌ Manual updates don't validate overdue status
-- ❌ No correction for overdue loans with future due dates
+- Renewal doesn't clear overdue status
+- No real-time overdue detection (only daily)
+- Manual updates don't validate overdue status
+- No correction for overdue loans with future due dates
 
 **Recommended Next Steps:**
 1. Fix renewal to clear overdue status (Priority 1)

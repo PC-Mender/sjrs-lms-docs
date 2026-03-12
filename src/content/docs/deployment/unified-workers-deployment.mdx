@@ -3,11 +3,11 @@ title: "Unified Workers Deployment"
 ---
 
 
-## 🎯 Overview
+## Overview
 
 The SJRS LMS now uses a **unified Cloudflare Workers deployment** with Static Assets, combining both frontend and backend into a single, powerful edge deployment. This architecture provides simplified management, enhanced performance, and cost optimization.
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -30,7 +30,7 @@ The SJRS LMS now uses a **unified Cloudflare Workers deployment** with Static As
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### **wrangler.toml**
 
@@ -71,7 +71,7 @@ binding = "ANALYTICS"
 dataset = "your-analytics-dataset"
 ```
 
-## 🚀 Deployment Process
+## Deployment Process
 
 ### **1. Automatic Deployment with Versioning**
 
@@ -82,14 +82,14 @@ npm run release
 ```
 
 This command:
-- ✅ Analyzes the last commit message
-- ✅ Automatically determines version bump (patch/minor/major)
-- ✅ Updates `package.json` version
-- ✅ Updates `CHANGELOG.md` with changes
-- ✅ Builds the project (`npm run build`)
-- ✅ Deploys to Cloudflare Workers (`wrangler deploy`)
-- ✅ Creates git tags for the release
-- ✅ Commits version changes
+- Analyzes the last commit message
+- Automatically determines version bump (patch/minor/major)
+- Updates `package.json` version
+- Updates `CHANGELOG.md` with changes
+- Builds the project (`npm run build`)
+- Deploys to Cloudflare Workers (`wrangler deploy`)
+- Creates git tags for the release
+- Commits version changes
 
 #### **Version Bump Logic**
 
@@ -127,7 +127,7 @@ wrangler deploy --env staging
 wrangler deploy --env production
 ```
 
-## 🏗️ How It Works
+## How It Works
 
 ### **Request Routing**
 
@@ -168,27 +168,27 @@ for (const route of routeRegistry) {
 }
 ```
 
-## 📊 Benefits of Unified Deployment
+## Benefits of Unified Deployment
 
 ### **Performance Benefits**
-- ✅ **Reduced Latency**: Static assets and API served from same edge location
-- ✅ **Faster Cold Starts**: Single Worker initialization
-- ✅ **Edge Computing**: Both frontend and backend at the edge
-- ✅ **Optimized Caching**: Unified caching strategy
+- **Reduced Latency**: Static assets and API served from same edge location
+- **Faster Cold Starts**: Single Worker initialization
+- **Edge Computing**: Both frontend and backend at the edge
+- **Optimized Caching**: Unified caching strategy
 
 ### **Operational Benefits**
-- ✅ **Simplified Deployment**: Single command deploys everything
-- ✅ **Unified Monitoring**: All logs and metrics in one place
-- ✅ **Easier Debugging**: Single deployment to troubleshoot
-- ✅ **Cost Optimization**: Unified billing and resource usage
+- **Simplified Deployment**: Single command deploys everything
+- **Unified Monitoring**: All logs and metrics in one place
+- **Easier Debugging**: Single deployment to troubleshoot
+- **Cost Optimization**: Unified billing and resource usage
 
 ### **Development Benefits**
-- ✅ **Consistent Environment**: Same deployment model for dev/staging/prod
-- ✅ **Faster Iteration**: Single deployment cycle
-- ✅ **Better DX**: One configuration file to manage
-- ✅ **Simplified CI/CD**: Single deployment pipeline
+- **Consistent Environment**: Same deployment model for dev/staging/prod
+- **Faster Iteration**: Single deployment cycle
+- **Better DX**: One configuration file to manage
+- **Simplified CI/CD**: Single deployment pipeline
 
-## 🔒 Security Features
+## Security Features
 
 ### **Built-in Security Headers**
 
@@ -214,7 +214,7 @@ const corsConfig = {
 };
 ```
 
-## 📈 Monitoring and Analytics
+## Monitoring and Analytics
 
 ### **Built-in Analytics**
 
@@ -242,7 +242,7 @@ await env.ANALYTICS.writeDataPoint({
 enabled = true
 ```
 
-## 🛠️ Development Workflow
+## Development Workflow
 
 ### **Local Development**
 
@@ -264,7 +264,7 @@ npm run preview
 wrangler deploy --dry-run
 ```
 
-## 🚧 Migration from Pages
+## Migration from Pages
 
 ### **What Changed**
 
@@ -280,7 +280,7 @@ wrangler deploy --dry-run
 3. **Database**: Same D1 database
 4. **Environment Variables**: Same configuration
 
-## 📋 Deployment Checklist
+## Deployment Checklist
 
 ### **Pre-Deployment**
 - [ ] Environment variables configured
@@ -302,7 +302,7 @@ wrangler deploy --dry-run
 - [ ] Database operations working
 - [ ] Monitoring data flowing
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### **Common Issues**
 
@@ -331,7 +331,7 @@ wrangler whoami
 wrangler deploy --dry-run --verbose
 ```
 
-## 📚 Related Documentation
+## Related Documentation
 
 - **[Core Architecture](../architecture/core-architecture.mdx)** - System architecture overview
 - **[Cloudflare Products](../architecture/cloudflare-products.mdx)** - Cloudflare services integration

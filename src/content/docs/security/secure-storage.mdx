@@ -55,7 +55,7 @@ const email = await secureStorage.get<string>('pendingUserEmail', 'session');
 Do NOT store tokens in JS storage:
 
 ```ts
-// ❌ BAD
+//  BAD
 await secureStorage.set('accessToken', token, 'session'); // blocked by SecureStorage
 ```
 

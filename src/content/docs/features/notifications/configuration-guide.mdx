@@ -238,8 +238,8 @@ For now, you can skip Cloudflare Analytics monitoring and set it up later when n
    ```
 
 2. **Check deployment logs** for:
-   - ✅ `📣 Posted deployment update to system notifications feed.` = Success
-   - ⚠️ `ℹ️ Notification ingest token is not configured` = Token missing
+   -  ` Posted deployment update to system notifications feed.` = Success
+   -  `ℹ Notification ingest token is not configured` = Token missing
 
 3. **Check System Notifications**:
    - Go to `/dashboard-superuser/system-notifications`
@@ -268,10 +268,10 @@ wrangler secret list | Select-String -Pattern "NOTIFICATION"
 ```
 
 You should see:
-- `NOTIFICATION_INGEST_TOKEN` ✅
-- `NOTIFICATION_INGEST_TOKEN_RELEASE` ✅ (optional)
-- `NOTIFICATION_INGEST_TOKEN_SENTRY` ✅ (optional)
-- `NOTIFICATION_INGEST_TOKEN_CLOUDFLARE` ✅ (optional)
+- `NOTIFICATION_INGEST_TOKEN` 
+- `NOTIFICATION_INGEST_TOKEN_RELEASE`  (optional)
+- `NOTIFICATION_INGEST_TOKEN_SENTRY`  (optional)
+- `NOTIFICATION_INGEST_TOKEN_CLOUDFLARE`  (optional)
 
 ---
 
@@ -351,11 +351,11 @@ curl -X POST https://your-api-domain.com/api/notifications/events/ingest \
 ## Next Steps
 
 After configuration:
-1. ✅ Test deployment pipeline
-2. ✅ Test Sentry webhook
-3. ⚠️ Set up Cloudflare Analytics monitoring (optional, can be done later)
-4. ✅ Monitor System Notifications page for incoming notifications
-5. ✅ Configure permission-based visibility (already set up)
+1. Test deployment pipeline
+2. Test Sentry webhook
+3. Set up Cloudflare Analytics monitoring (optional, can be done later)
+4. Monitor System Notifications page for incoming notifications
+5. Configure permission-based visibility (already set up)
 
 ---
 

@@ -7,15 +7,15 @@ title: "Permission System"
 
 The library management system now uses a comprehensive **role-based permission system** instead of complex RLS policies. This provides better security, easier management, and more granular control over user access.
 
-## 🎯 Key Benefits
+## Key Benefits
 
-- **✅ Granular Control**: Each role has specific permissions for each resource and action
-- **✅ Easy Management**: Visual interface to manage permissions
-- **✅ Audit Trail**: All permission changes are logged
-- **✅ No RLS Complexity**: Avoids infinite recursion and complex database policies
-- **✅ Frontend Integration**: React hooks and components for easy permission checking
+- ** Granular Control**: Each role has specific permissions for each resource and action
+- ** Easy Management**: Visual interface to manage permissions
+- ** Audit Trail**: All permission changes are logged
+- ** No RLS Complexity**: Avoids infinite recursion and complex database policies
+- ** Frontend Integration**: React hooks and components for easy permission checking
 
-## 📋 System Resources
+## System Resources
 
 ### User Management
 - `users` - User Management
@@ -59,14 +59,14 @@ The library management system now uses a comprehensive **role-based permission s
 - `orders` - Order Management
 - `system_settings` - System Settings
 
-## 🔐 Permission Actions
+## Permission Actions
 
 - **create** - Create new records
 - **read** - View and read records
 - **update** - Modify existing records
 - **delete** - Remove records
 
-## 👥 Role Permissions
+## Role Permissions
 
 ### Superuser
 - **Full access** to everything
@@ -102,7 +102,7 @@ The library management system now uses a comprehensive **role-based permission s
 - **No access** to any management features
 - **No access** to user features
 
-## 🛠️ Using Permission System
+## Using Permission System
 
 ### 1. Permission Management Interface
 
@@ -228,7 +228,7 @@ export const BookList: React.FC = () => {
 };
 ```
 
-## 🔧 Setting Up Permissions
+## Setting Up Permissions
 
 ### 1. Run the Migration
 
@@ -264,7 +264,7 @@ This will:
 2. **Add permission checks** to your components
 3. **Test with different user roles**
 
-## 📊 Monitoring and Auditing
+## Monitoring and Auditing
 
 ### Audit Log
 
@@ -281,7 +281,7 @@ View permission statistics:
 - Granted vs denied permissions
 - Resource access by category
 
-## 🚀 Best Practices
+## Best Practices
 
 ### 0. RBAC Policy: Backend is Single Source of Truth
 
@@ -295,32 +295,32 @@ View permission statistics:
 ### 1. Always Check Permissions
 
 ```typescript
-// ✅ Good: Check permissions before showing actions
+//  Good: Check permissions before showing actions
 const { canDelete } = useCanDelete('books');
 if (canDelete) {
   // Show delete button
 }
 
-// ❌ Bad: Show actions without permission checks
+//  Bad: Show actions without permission checks
 <Button onClick={handleDelete}>Delete</Button>
 ```
 
 ### 2. Use Permission Components
 
 ```typescript
-// ✅ Good: Use permission-aware components
+//  Good: Use permission-aware components
 <CreateButton resourceName="books" onClick={handleCreate}>
   Add Book
 </CreateButton>
 
-// ❌ Bad: Manual permission checking
+//  Bad: Manual permission checking
 {canCreate && <Button onClick={handleCreate}>Add Book</Button>}
 ```
 
 ### 3. Provide Fallbacks
 
 ```typescript
-// ✅ Good: Provide meaningful fallbacks
+//  Good: Provide meaningful fallbacks
 <PermissionGuard
   resourceName="books"
   actionName="read"
@@ -341,7 +341,7 @@ import { clearPermissionCache } from '../utilities/permissions';
 clearPermissionCache();
 ```
 
-## 🔒 Security Considerations
+## Security Considerations
 
 ### 1. Backend Validation
 
@@ -363,7 +363,7 @@ All permission changes are automatically logged for security auditing.
 
 Users can only access features they have permission for, preventing unauthorized access.
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -387,14 +387,14 @@ JOIN roles r ON rp.role_id = r.id
 WHERE pr.resource_name = 'books' AND pa.action_name = 'create';
 ```
 
-## 📈 Performance
+## Performance
 
 - Permission checks are cached for performance
 - Batch permission checks when possible
 - Use `useTableActions` for multiple permission checks
 - Clear cache when permissions change
 
-## 🎉 Conclusion
+## Conclusion
 
 The permission system provides:
 - **Granular control** over user access

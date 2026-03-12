@@ -9,25 +9,25 @@ This document analyzes the **App Notifications** feature - user-specific in-app 
 
 ---
 
-## ✅ Current Implementation Status
+## Current Implementation Status
 
 ### What Exists
 
-#### 1. **UI Components** ✅
+#### 1. **UI Components** 
 - **List Page**: `/dashboard/notifications` - Shows user's notifications in a table
 - **Create Page**: `/dashboard/notifications/create` - Form to create new notifications
 - **Edit Page**: `/dashboard/notifications/edit/:id` - Form to edit existing notifications
 - **View Page**: `/dashboard/notifications/show/:id` - Detailed view of notification
 
 **Features**:
-- ✅ Search functionality
-- ✅ Filter by type, priority, read status
-- ✅ Mark as read/unread
-- ✅ Delete notifications
-- ✅ Create/Edit/View notifications
-- ✅ Pagination
+- Search functionality
+- Filter by type, priority, read status
+- Mark as read/unread
+- Delete notifications
+- Create/Edit/View notifications
+- Pagination
 
-#### 2. **API Endpoints** ✅
+#### 2. **API Endpoints** 
 - `GET /api/notifications` - List user's notifications
 - `GET /api/notifications/:id` - Get single notification
 - `POST /api/notifications` - Create notification
@@ -35,17 +35,17 @@ This document analyzes the **App Notifications** feature - user-specific in-app 
 - `DELETE /api/notifications/:id` - Delete notification
 - `PUT /api/notifications/mark-all-read` - Mark all as read
 
-#### 3. **Automatic Generation** ✅
+#### 3. **Automatic Generation** 
 
 **Currently Auto-Generated:**
 
 1. **Loan Notifications** (`functions/lib/notifications/transaction-notifications.ts`)
-   - ✅ **Loan Created** - When loan is created
+   -  **Loan Created** - When loan is created
      - Type: `success`
      - Priority: `normal`
      - Recipient: Loan owner
    
-   - ✅ **Loan Status Changed** - When loan status changes
+   -  **Loan Status Changed** - When loan status changes
      - `returned` → Type: `success`, Priority: `normal`
      - `overdue` (&lt;14 days) → Type: `warning`, Priority: `high`
      - `overdue` (≥14 days) → Type: `error`, Priority: `urgent`
@@ -54,14 +54,14 @@ This document analyzes the **App Notifications** feature - user-specific in-app 
      - Recipient: Loan owner
 
 2. **Payment Notifications** (`functions/lib/notifications/transaction-notifications.ts`)
-   - ✅ **Payment Received** - When payment is processed
+   -  **Payment Received** - When payment is processed
      - Type: `success`
      - Priority: `normal`
      - Recipient: Payment owner
      - Includes: amount, receipt number, transaction ID, penalty info
 
 3. **Order Notifications** (`functions/api/orders/handlers/create-order.ts`)
-   - ✅ **New Borrow Request** - When order is created
+   -  **New Borrow Request** - When order is created
      - Type: `info`
      - Priority: `high`
      - Recipient: **Admins/Librarians** (not the requester)
@@ -70,9 +70,9 @@ This document analyzes the **App Notifications** feature - user-specific in-app 
 
 ---
 
-## ❌ Missing Functionality
+## Missing Functionality
 
-### 1. **Penalty Notifications** ❌
+### 1. **Penalty Notifications** 
 **Issue**: No App Notifications created when penalties are assigned
 - **When**: Penalty is created for a user
 - **Who should receive**: The user who got the penalty
@@ -99,7 +99,7 @@ await createAppNotification(env, {
 });
 ```
 
-### 2. **Borrow Limit Notifications** ❌
+### 2. **Borrow Limit Notifications** 
 **Issue**: No App Notifications when user reaches/exceeds borrow limit
 - **When**: User tries to borrow but has reached max books limit
 - **Who should receive**: The user who tried to borrow
@@ -125,7 +125,7 @@ await createAppNotification(env, {
 });
 ```
 
-### 3. **Wishlist Notifications** ❌
+### 3. **Wishlist Notifications** 
 **Issue**: No App Notifications when wishlist item becomes available
 - **When**: Book in user's wishlist becomes available (status changes to 'available')
 - **Who should receive**: Users who have the book in their wishlist
@@ -158,7 +158,7 @@ for (const user of wishlistUsers.results) {
 }
 ```
 
-### 4. **Loan Due Date Reminders** ⚠️
+### 4. **Loan Due Date Reminders** 
 **Issue**: No automatic reminders before due date
 - **When**: X days before loan due date (e.g., 3 days, 1 day)
 - **Who should receive**: Users with loans approaching due date
@@ -202,7 +202,7 @@ for (const loan of loansDueSoon.results) {
 }
 ```
 
-### 5. **Order Status Notifications** ⚠️
+### 5. **Order Status Notifications** 
 **Issue**: No notifications when order status changes
 - **When**: Order is approved, rejected, or cancelled
 - **Who should receive**: The user who created the order
@@ -230,7 +230,7 @@ if (orderStatusChanged) {
 }
 ```
 
-### 6. **Reservation Notifications** ❌
+### 6. **Reservation Notifications** 
 **Issue**: No notifications for reservations (if reservations exist)
 - **When**: Reservation is created, confirmed, or cancelled
 - **Who should receive**: User who made the reservation
@@ -239,11 +239,11 @@ if (orderStatusChanged) {
 
 ---
 
-## 🔐 Permission & Preference Issues
+## Permission & Preference Issues
 
-### 1. **User Preferences Not Fully Respected** ⚠️
+### 1. **User Preferences Not Fully Respected** 
 **Issue**: Some notifications may not check `in_app_notifications` preference
-- **Current**: Orders check `in_app_notifications` ✅
+- **Current**: Orders check `in_app_notifications` 
 - **Missing**: Loans and payments don't check preferences
 - **Fix**: Add preference check before creating notifications
 
@@ -263,7 +263,7 @@ if (!preferences?.in_app_notifications || !preferences?.loan_notifications) {
 }
 ```
 
-### 2. **Permission-Based Order Notifications** ⚠️
+### 2. **Permission-Based Order Notifications** 
 **Issue**: Order notifications use role names instead of permissions
 - **Current**: Checks roles: `superuser`, `admin`, `librarian`, `dean`
 - **Better**: Check permissions: `orders:read` or `orders:update`
@@ -293,7 +293,7 @@ const adminUsers = await env.DB.prepare(`
 `).all();
 ```
 
-### 3. **No Role-Based Notification Type Filtering** ❌
+### 3. **No Role-Based Notification Type Filtering** 
 **Issue**: Cannot disable specific notification types for specific roles
 - **Current**: All notification types sent to all users (if preferences allow)
 - **Expected**: Superuser can configure which notification types each role receives
@@ -320,30 +320,30 @@ CREATE TABLE role_notification_type_preferences (
 
 ---
 
-## 📊 Notification Types Summary
+## Notification Types Summary
 
-### Currently Auto-Generated ✅
-
-| Type | Trigger | Recipient | Type | Priority | Status |
-|------|---------|-----------|------|----------|--------|
-| **Loan Created** | Loan created | Loan owner | `success` | `normal` | ✅ Working |
-| **Loan Status** | Status changed | Loan owner | `success`/`warning`/`error` | `normal`/`high`/`urgent` | ✅ Working |
-| **Payment Received** | Payment processed | Payment owner | `success` | `normal` | ✅ Working |
-| **New Borrow Request** | Order created | Admins/Librarians | `info` | `high` | ✅ Working |
-
-### Missing ❌
+### Currently Auto-Generated 
 
 | Type | Trigger | Recipient | Type | Priority | Status |
 |------|---------|-----------|------|----------|--------|
-| **Penalty Assigned** | Penalty created | Penalty owner | `warning` | `high` | ❌ Missing |
-| **Borrow Limit Reached** | Limit exceeded | User | `warning` | `normal` | ❌ Missing |
-| **Wishlist Available** | Book available | Wishlist users | `info` | `normal` | ❌ Missing |
-| **Loan Due Reminder** | X days before due | Loan owner | `reminder`/`warning` | `normal`/`high` | ❌ Missing |
-| **Order Status** | Order approved/rejected | Order creator | `success`/`warning` | `normal`/`high` | ❌ Missing |
+| **Loan Created** | Loan created | Loan owner | `success` | `normal` |  Working |
+| **Loan Status** | Status changed | Loan owner | `success`/`warning`/`error` | `normal`/`high`/`urgent` |  Working |
+| **Payment Received** | Payment processed | Payment owner | `success` | `normal` |  Working |
+| **New Borrow Request** | Order created | Admins/Librarians | `info` | `high` |  Working |
+
+### Missing 
+
+| Type | Trigger | Recipient | Type | Priority | Status |
+|------|---------|-----------|------|----------|--------|
+| **Penalty Assigned** | Penalty created | Penalty owner | `warning` | `high` |  Missing |
+| **Borrow Limit Reached** | Limit exceeded | User | `warning` | `normal` |  Missing |
+| **Wishlist Available** | Book available | Wishlist users | `info` | `normal` |  Missing |
+| **Loan Due Reminder** | X days before due | Loan owner | `reminder`/`warning` | `normal`/`high` |  Missing |
+| **Order Status** | Order approved/rejected | Order creator | `success`/`warning` | `normal`/`high` |  Missing |
 
 ---
 
-## 🎯 Recommendations
+## Recommendations
 
 ### Priority 1: Critical Missing Features
 
@@ -397,7 +397,7 @@ CREATE TABLE role_notification_type_preferences (
 
 ---
 
-## 🔧 Implementation Checklist
+## Implementation Checklist
 
 ### Immediate Fixes
 - [ ] Add penalty notification creation
@@ -418,23 +418,23 @@ CREATE TABLE role_notification_type_preferences (
 
 ---
 
-## 📝 Summary
+## Summary
 
 **Current State**: App Notifications are **partially implemented** with basic CRUD functionality and some automatic generation.
 
 **What Works**:
-- ✅ UI for viewing, creating, editing, deleting notifications
-- ✅ Automatic notifications for loans, payments, orders (to admins)
+- UI for viewing, creating, editing, deleting notifications
+- Automatic notifications for loans, payments, orders (to admins)
 
 **What's Missing**:
-- ❌ Penalty notifications
-- ❌ Order status change notifications (to users)
-- ❌ Loan due date reminders
-- ❌ Borrow limit notifications
-- ❌ Wishlist availability notifications
-- ❌ User preference checks for all notifications
-- ❌ Permission-based order notifications
-- ❌ Role-based notification type filtering
+- Penalty notifications
+- Order status change notifications (to users)
+- Loan due date reminders
+- Borrow limit notifications
+- Wishlist availability notifications
+- User preference checks for all notifications
+- Permission-based order notifications
+- Role-based notification type filtering
 
 **Priority Actions**:
 1. Add missing notification types (penalties, order status, reminders)

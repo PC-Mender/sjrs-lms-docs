@@ -6,7 +6,7 @@ description: "Complete reference for user onboarding workflow statuses in SJRS L
 
 The **onboarding status system** tracks users through their registration, verification, and activation workflow. This is separate from (but related to) the account `status` field.
 
-## 📊 Status Fields Overview
+## Status Fields Overview
 
 SJRS LMS uses **two** status fields for user accounts:
 
@@ -23,7 +23,7 @@ SJRS LMS uses **two** status fields for user accounts:
 
 ---
 
-## 🎯 Onboarding Status Values
+## Onboarding Status Values
 
 ### `pending_email_confirmation`
 
@@ -53,7 +53,7 @@ SJRS LMS uses **two** status fields for user accounts:
 - Can resend confirmation email
 - Can delete unverified accounts after timeout
 
-**Color/Badge**: 🔵 Blue / Orange
+**Color/Badge**:  Blue / Orange
 
 ---
 
@@ -89,7 +89,7 @@ SJRS LMS uses **two** status fields for user accounts:
 - Can complete profile on behalf of user
 - Can mark profile as complete manually
 
-**Color/Badge**: 🔵 Blue
+**Color/Badge**:  Blue
 
 ---
 
@@ -123,7 +123,7 @@ SJRS LMS uses **two** status fields for user accounts:
 - Reject → sets `status = 'inactive'`
 - Request more information → contact user
 
-**Color/Badge**: 🟠 Orange
+**Color/Badge**:  Orange
 
 ---
 
@@ -154,11 +154,11 @@ SJRS LMS uses **two** status fields for user accounts:
 - Standard user management (suspend, change role, etc.)
 - Can revert to pending if needed
 
-**Color/Badge**: 🟢 Green
+**Color/Badge**:  Green
 
 ---
 
-## 🔀 Status Transition Flow
+## Status Transition Flow
 
 ```mermaid
 graph TD
@@ -179,7 +179,7 @@ graph TD
 
 ---
 
-## 🎨 Display Colors & Labels
+## Display Colors & Labels
 
 ### Frontend Constants
 
@@ -233,7 +233,7 @@ const label = USER_STATUS_LABELS[status];
 
 ---
 
-## 🔧 Backend Implementation
+## Backend Implementation
 
 ### Database Schema
 
@@ -282,7 +282,7 @@ if (status === 'active') {
 
 ---
 
-## 📋 Admin User Management
+## Admin User Management
 
 ### Viewing Onboarding Status
 
@@ -322,7 +322,7 @@ PUT /api/users/:id
 
 ---
 
-## 🚨 Common Issues & Troubleshooting
+## Common Issues & Troubleshooting
 
 ### Issue: User stuck in `pending_approval`
 
@@ -350,14 +350,14 @@ PUT /api/users/:id
 
 **Cause**: Auth context not updated or fallback logic too aggressive
 
-**Fix**: ✅ **Fixed in latest version**
+**Fix**:  **Fixed in latest version**
 - Backend now checks record existence instead of field values
 - Auth context updates immediately after profile submission
 - Frontend respects `onboarding_status` from database
 
 ---
 
-## 🎓 Best Practices
+## Best Practices
 
 ### For Admins
 
@@ -376,7 +376,7 @@ PUT /api/users/:id
 
 ---
 
-## 🔗 Related Documentation
+## Related Documentation
 
 - [Registration Flow Guide](/user-guides/registration-flow)
 - [User Management](/features/users/)
@@ -385,7 +385,7 @@ PUT /api/users/:id
 
 ---
 
-## 📝 API Reference
+## API Reference
 
 ### Check Onboarding Status (Public)
 

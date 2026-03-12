@@ -5,9 +5,9 @@ title: "Quick Start Guide"
 
 Get started with the SJRS LMS API in **5 minutes** with this step-by-step guide.
 
-## ⚡ Quick Start (5 Minutes)
+## Quick Start (5 Minutes)
 
-### **1. Get Your API Credentials** ⏱️ 1 min
+### **1. Get Your API Credentials** ⏱ 1 min
 ```bash
 # You'll need these environment variables
 JWT_SECRET=your-secure-jwt-secret-key
@@ -15,7 +15,7 @@ MAILJET_API_KEY=your_mailjet_api_key
 MAILJET_API_SECRET=your_mailjet_api_secret
 ```
 
-### **2. Test the Health Endpoint** ⏱️ 1 min
+### **2. Test the Health Endpoint** ⏱ 1 min
 ```bash
 # Test if the API is running
 curl -X GET "https://your-api-domain.com/api/health"
@@ -29,7 +29,7 @@ curl -X GET "https://your-api-domain.com/api/health"
 }
 ```
 
-### **3. Register a Test User** ⏱️ 1 min
+### **3. Register a Test User** ⏱ 1 min
 ```bash
 curl -X POST "https://your-api-domain.com/api/auth/register" \
   -H "Content-Type: application/json" \
@@ -42,7 +42,7 @@ curl -X POST "https://your-api-domain.com/api/auth/register" \
   }'
 ```
 
-### **4. Login (Cookie-Based Auth)** ⏱️ 1 min
+### **4. Login (Cookie-Based Auth)** ⏱ 1 min
 ```bash
 curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
   -H "Content-Type: application/json" \
@@ -54,14 +54,14 @@ curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
 
 This sets an HttpOnly auth cookie (default name: `secure_authToken`) in `cookies.txt`.
 
-### **5. Make Your First API Call** ⏱️ 1 min
+### **5. Make Your First API Call** ⏱ 1 min
 ```bash
 curl -b cookies.txt -X GET "https://your-api-domain.com/api/books"
 ```
 
-**🎉 Congratulations! You're now using the SJRS LMS API!**
+** Congratulations! You're now using the SJRS LMS API!**
 
-## 🔧 Setup for Development
+## Setup for Development
 
 ### **Environment Setup**
 
@@ -108,7 +108,7 @@ MAILJET_FROM_EMAIL=noreply@yourdomain.com
 DB_NAME=your-database-name
 ```
 
-## 📱 Client Setup Examples
+## Client Setup Examples
 
 ### **JavaScript/TypeScript (Frontend)**
 ```typescript
@@ -187,19 +187,19 @@ BASE_URL="https://your-api-domain.com"
 EMAIL="test@example.com"
 PASSWORD="REPLACE_WITH_YOUR_PASSWORD"
 
-echo "🔑 Logging in..."
+echo " Logging in..."
 curl -s -i -c cookies.txt -X POST "$BASE_URL/api/auth/login" \
   -H "Content-Type: application/json" \
   -d "{\"email\":\"$EMAIL\",\"password\":\"$PASSWORD\"}" > /dev/null
 
-echo "🛡️ Bootstrapping CSRF..."
+echo " Bootstrapping CSRF..."
 curl -s -b cookies.txt -c cookies.txt -X GET "$BASE_URL/api/auth/csrf" > /dev/null
 
-echo "📚 Getting books..."
+echo " Getting books..."
 curl -s -b cookies.txt -X GET "$BASE_URL/api/books" | jq '.'
 ```
 
-## 🧪 Testing Your Setup
+## Testing Your Setup
 
 ### **Quick Test Commands**
 ```bash
@@ -221,12 +221,12 @@ curl -b cookies.txt -X GET "https://your-api-domain.com/api/books"
 ```
 
 ### **Expected Results**
-- ✅ **Health Check**: Returns system status
-- ✅ **Registration**: Returns 201 with user data
-- ✅ **Login**: Returns 200 and sets auth cookie
-- ✅ **Books**: Returns 200 with books list
+- **Health Check**: Returns system status
+- **Registration**: Returns 201 with user data
+- **Login**: Returns 200 and sets auth cookie
+- **Books**: Returns 200 with books list
 
-## 🚨 Common Issues & Solutions
+## Common Issues & Solutions
 
 ### **Issue: "Invalid credentials"**
 **Solution:** Check email/password spelling, ensure user exists
@@ -243,7 +243,7 @@ curl -b cookies.txt -X GET "https://your-api-domain.com/api/books"
 ### **Issue: "Service unavailable"**
 **Solution:** Check system status, wait for maintenance to complete
 
-## 📚 Next Steps
+## Next Steps
 
 ### **1. Explore the API**
 - Check [Complete Endpoints List](./endpoints.mdx)
@@ -265,7 +265,7 @@ curl -b cookies.txt -X GET "https://your-api-domain.com/api/books"
 - Monitor [API Performance](./api-testing-collection.mdx#performance-benchmarks)
 - Implement [Rate Limiting Strategies](./error-codes-reference.mdx#rate-limiting-errors)
 
-## 🎯 Success Checklist
+## Success Checklist
 
 - [ ] API health check returns "ok"
 - [ ] User registration successful
@@ -275,7 +275,7 @@ curl -b cookies.txt -X GET "https://your-api-domain.com/api/books"
 - [ ] Environment variables configured
 - [ ] Client library working
 
-## 📞 Need Help?
+## Need Help?
 
 ### **Documentation**
 - **[API README](./index.mdx)** - Main documentation index
@@ -289,10 +289,10 @@ curl -b cookies.txt -X GET "https://your-api-domain.com/api/books"
 
 ---
 
-**⏱️ Time to Complete:** 5 minutes  
-**🎯 Difficulty:** Beginner  
-**📚 Prerequisites:** Basic HTTP knowledge  
+**⏱ Time to Complete:** 5 minutes  
+** Difficulty:** Beginner  
+** Prerequisites:** Basic HTTP knowledge  
 **Last Updated:** November 2025  
 **Version:** 1.0.0  
-**Status:** ✅ Complete
+**Status:**  Complete
 

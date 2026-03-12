@@ -3,7 +3,7 @@ title: "Database Diagram"
 ---
 
 
-## 🗄️ Database Schema Overview
+## Database Schema Overview
 
 ```mermaid
 erDiagram
@@ -89,7 +89,7 @@ erDiagram
     library_users ||--o{ reference_books : "updates"
 ```
 
-## 🔗 Key Relationships
+## Key Relationships
 
 ### 1. Hierarchical Classification
 ```
@@ -109,7 +109,7 @@ library_users (1) → (N) reference_books (updated_by)
 authors (1) → (N) reference_books
 ```
 
-## 📊 Data Flow Diagram
+## Data Flow Diagram
 
 ```mermaid
 flowchart TD
@@ -137,7 +137,7 @@ flowchart TD
     N --> Q[Maintenance Tracking]
 ```
 
-## 🎯 Entity Relationship Details
+## Entity Relationship Details
 
 ### Reference Book Categories
 - **Purpose**: Classify reference materials by type
@@ -163,7 +163,7 @@ flowchart TD
 - **Maintenance Fields**: Track repair and maintenance schedules
 - **Audit Fields**: Track creation and modification
 
-## 🔐 Security Model
+## Security Model
 
 ### Row Level Security (RLS)
 ```sql
@@ -183,7 +183,7 @@ ON reference_books FOR ALL USING (
 );
 ```
 
-## 📈 Performance Indexes
+## Performance Indexes
 
 ### Primary Indexes
 ```sql
@@ -207,7 +207,7 @@ CREATE INDEX idx_reference_resources_name ON reference_resources(name);
 CREATE INDEX idx_reference_book_categories_name ON reference_book_categories(name);
 ```
 
-## 🔄 Migration Notes
+## Migration Notes
 
 ### UUID Migration
 - **Before**: Integer IDs for sections and resources

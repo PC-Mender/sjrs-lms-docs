@@ -11,125 +11,125 @@ title: "Unrefactored Modules"
 ## Refactoring Criteria
 
 A module is considered **refactored** when it has:
-1. ✅ Feature components in `src/components/features/[feature]/`
-2. ✅ Pages organized in `src/pages/[feature]/` with proper structure (components/, hooks/, types/, utils/)
-3. ✅ Backend API organized in `functions/api/[feature]/` with base/, handlers/, index.ts pattern
+1. Feature components in `src/components/features/[feature]/`
+2. Pages organized in `src/pages/[feature]/` with proper structure (components/, hooks/, types/, utils/)
+3. Backend API organized in `functions/api/[feature]/` with base/, handlers/, index.ts pattern
 
 ---
 
-## ✅ Fully Refactored Modules
+## Fully Refactored Modules
 
 These modules have complete feature-based organization:
 
 ### Frontend Components + Pages + Backend API
-1. **analytics** ✅
+1. **analytics** 
    - Components: `src/components/features/analytics/`
    - Pages: `src/pages/analytics/`
    - Backend: `functions/api/analytics/`
 
-2. **announcements** ✅
+2. **announcements** 
    - Components: `src/components/features/announcements/`
    - Pages: `src/pages/announcements/`
    - Backend: `functions/api/` (check if exists)
 
-3. **authors** ✅
+3. **authors** 
    - Components: `src/components/features/authors/`
    - Pages: `src/pages/authors/`
    - Backend: `functions/api/authors/`
 
-4. **books** ✅
+4. **books** 
    - Components: `src/components/features/books/`
    - Pages: `src/pages/books/`
    - Backend: `functions/api/books/`
 
-5. **dashboard** ✅
+5. **dashboard** 
    - Components: `src/components/features/dashboard/`
    - Pages: `src/pages/dashboard*.tsx` (multiple dashboard pages)
    - Backend: N/A (frontend-only feature)
 
-6. **notifications** ✅
+6. **notifications** 
    - Components: `src/components/features/notifications/`
    - Pages: `src/pages/notifications/`
    - Backend: `functions/api/notifications/`
 
-7. **payments** ✅
+7. **payments** 
    - Components: `src/components/features/payments/`
    - Pages: `src/pages/upi-settings/` (related)
    - Backend: `functions/api/payments/`
 
-8. **reference-books** ✅
+8. **reference-books** 
    - Components: `src/components/features/reference-books/`
    - Pages: `src/pages/reference-books/`
    - Backend: `functions/api/reference-books/`
 
-9. **resources** ✅
+9. **resources** 
    - Components: `src/components/features/resources/`
    - Pages: `src/pages/resources/`
    - Backend: `functions/api/resources/`
 
-10. **roles** ✅
+10. **roles** 
     - Components: `src/components/features/roles/`
     - Pages: `src/pages/roles/`
     - Backend: `functions/api/roles/`
 
-11. **users** ✅
+11. **users** 
     - Components: `src/components/features/users/`
     - Pages: `src/pages/members/` (related)
     - Backend: `functions/api/users/`
 
-12. **guests** ✅
+12. **guests** 
     - Components: `src/components/features/guests/`
     - Pages: `src/pages/guests/`
     - Backend: `functions/api/users/`
 
-13. **system-logs** ✅
+13. **system-logs** 
     - Components: `src/components/features/system-logs/`
     - Pages: `src/pages/system-logs/`
     - Backend: `functions/api/system-logs/`
 
-14. **permissions** ✅
+14. **permissions** 
     - Components: `src/components/features/permissions/`
     - Pages: `src/pages/permissions/`
     - Backend: `functions/api/permissions/`
 
 ### Partial Refactoring (Components Only)
-13. **badges** ⚠️
+13. **badges** 
     - Components: `src/components/features/badges/`
     - Pages: `src/pages/my-badges/`, `src/pages/dashboard-superuser/badges.tsx`
     - Backend: `functions/api/badges/`
     - **Status:** Components exist but pages may need refactoring
 
-14. **book-views** ⚠️
+14. **book-views** 
     - Components: `src/components/features/book-views/`
     - Pages: `src/pages/book-views/`
     - Backend: `functions/api/book-views/`
     - **Status:** May need structure review
 
-15. **citations** ⚠️
+15. **citations** 
     - Components: `src/components/features/citations/`
     - Pages: `src/pages/citation-generator/`
     - Backend: `functions/api/citations/`
     - **Status:** May need structure review
 
-16. **digital-book-reads** ⚠️
+16. **digital-book-reads** 
     - Components: `src/components/features/digital-book-reads/`
     - Pages: `src/pages/digital-book-reads/`
     - Backend: `functions/api/digital-book-reads/`
     - **Status:** May need structure review
 
-17. **help** ⚠️
+17. **help** 
     - Components: `src/components/features/help/`
     - Pages: `src/pages/help/`
     - Backend: `functions/api/help/`
     - **Status:** May need structure review
 
-18. **plagiarism** ⚠️
+18. **plagiarism** 
     - Components: `src/components/features/plagiarism/`
     - Pages: `src/pages/plagiarism-checker/`
     - Backend: `functions/api/plagiarism/`
     - **Status:** May need structure review
 
-19. **settings** ⚠️
+19. **settings** 
     - Components: `src/components/features/settings/` (only UPISettings.tsx)
     - Pages: `src/pages/settings/`
     - Backend: `functions/api/system-settings/`
@@ -137,109 +137,109 @@ These modules have complete feature-based organization:
 
 ---
 
-## ❌ Not Refactored Modules
+## Not Refactored Modules
 
 These modules have pages but **NO** feature components in `src/components/features/`:
 
 ### High Priority (Major Features)
 
-1. **book-catalog** ❌
+1. **book-catalog** 
    - Pages: `src/pages/book-catalog/` (has components/, services/)
    - Backend: Uses `functions/api/books/`
    - **Status:** Has page structure but no feature components
    - **Action:** Extract components to `src/components/features/book-catalog/`
 
-2. **book-copies** ❌
+2. **book-copies** 
    - Pages: `src/pages/book-copies/` (has types/, utils/)
    - Backend: `functions/api/book-copies/`
    - **Status:** Has page structure but no feature components
    - **Action:** Extract components to `src/components/features/book-copies/`
 
-3. **book-reviews** ❌
+3. **book-reviews** 
    - Pages: `src/pages/book-reviews/` (has types.ts, utils.ts)
    - Backend: `functions/api/book-reviews/`
    - **Status:** Has page structure but no feature components
    - **Action:** Extract components to `src/components/features/book-reviews/`
 
-4. **borrow-limits** ❌
+4. **borrow-limits** 
    - Pages: `src/pages/borrow-limits/` (has components/, constants/, hooks/, types/, utils/)
    - Backend: `functions/api/borrow-limits/`
    - **Status:** Has page structure but no feature components
    - **Action:** Extract components to `src/components/features/borrow-limits/`
 
-5. **guests** ✅
+5. **guests** 
    - Components: `src/components/features/guests/`
    - Pages: `src/pages/guests/`
    - Backend: `functions/api/users/` (likely)
    - **Status:** Fully refactored with feature components
 
-6. **journals** ❌
+6. **journals** 
    - Pages: `src/pages/journals/` (has articles/, components/, hooks/, types/, utils/)
    - Backend: `functions/api/journals/`
    - **Status:** Has page structure but no feature components
    - **Action:** Extract components to `src/components/features/journals/`
 
-7. **loans** ❌
+7. **loans** 
    - Pages: `src/pages/loans/` (has components/, hooks/, types.ts)
    - Backend: `functions/api/loans/`
    - **Status:** Has page structure but no feature components
    - **Action:** Extract components to `src/components/features/loans/`
 
-8. **members** ❌
+8. **members** 
    - Pages: `src/pages/members/` (has components/, hooks/, types/, utils/)
    - Backend: `functions/api/users/`
    - **Status:** Has page structure but no feature components
    - **Action:** Extract components to `src/components/features/members/`
 
-9. **orders** ❌
+9. **orders** 
    - Pages: `src/pages/orders/` (has components/, constants.ts, types.ts, utils.ts)
    - Backend: `functions/api/orders/`
    - **Status:** Has page structure but no feature components
    - **Action:** Extract components to `src/components/features/orders/`
 
-10. **penalties** ❌
+10. **penalties** 
     - Pages: `src/pages/penalties/` (has components/, hooks/, pages/, types/, utils/)
     - Backend: `functions/api/penalties/`
     - **Status:** Has page structure but no feature components
     - **Action:** Extract components to `src/components/features/penalties/`
 
-11. **permissions** ✅
+11. **permissions** 
     - Components: `src/components/features/permissions/`
     - Pages: `src/pages/permissions/`
     - Backend: `functions/api/permissions/`
     - **Status:** Fully refactored with feature components
 
-12. **professors** ❌
+12. **professors** 
     - Pages: `src/pages/professors/` (has components/, hooks/)
     - Backend: `functions/api/professors/`
     - **Status:** Has page structure but no feature components
     - **Action:** Extract components to `src/components/features/professors/`
 
-13. **publications** ❌
+13. **publications** 
     - Pages: `src/pages/publications/` (has components/)
     - Backend: `functions/api/publications/`
     - **Status:** Has page structure but no feature components
     - **Action:** Extract components to `src/components/features/publications/`
 
-14. **reservations** ❌
+14. **reservations** 
     - Pages: `src/pages/reservations/` (has components/, constants.ts, types.ts, utils.ts)
     - Backend: `functions/api/reservations/`
     - **Status:** Has page structure but no feature components
     - **Action:** Extract components to `src/components/features/reservations/`
 
-15. **sections** ❌
+15. **sections** 
     - Pages: `src/pages/sections/` (has components/, hooks/, types/, utils/)
     - Backend: `functions/api/sections/`
     - **Status:** Has page structure but no feature components
     - **Action:** Extract components to `src/components/features/sections/`
 
-16. **students** ❌
+16. **students** 
     - Pages: `src/pages/students/` (has multiple files)
     - Backend: `functions/api/students/`
     - **Status:** Has page structure but no feature components
     - **Action:** Extract components to `src/components/features/students/`
 
-17. **wishlist** ❌
+17. **wishlist** 
     - Pages: `src/pages/wishlist/` (has multiple files, index.md)
     - Backend: `functions/api/wishlist/`
     - **Status:** Has page structure but no feature components
@@ -247,55 +247,55 @@ These modules have pages but **NO** feature components in `src/components/featur
 
 ### Medium Priority (Supporting Features)
 
-18. **academic-reports** ❌
+18. **academic-reports** 
     - Pages: `src/pages/academic-reports/`
     - Backend: `functions/api/reports/` (likely)
     - **Status:** Single page file, no structure
     - **Action:** Create feature components and organize page structure
 
-19. **book-searches** ❌
+19. **book-searches** 
     - Pages: `src/pages/book-searches/`
     - Backend: Uses `functions/api/books/` (search endpoint)
     - **Status:** Single page file, no structure
     - **Action:** Create feature components and organize page structure
 
-20. **migrations** ❌
+20. **migrations** 
     - Pages: `src/pages/migrations/` (has components/, hooks/, types.ts, utils/)
     - Backend: `functions/api/migrations/`
     - **Status:** Has page structure but no feature components
     - **Action:** Extract components to `src/components/features/migrations/`
 
-21. **profile** ❌
+21. **profile** 
     - Pages: `src/pages/profile/` (has components/, hooks/)
     - Backend: `functions/api/auth/profile.ts`
     - **Status:** Has page structure but no feature components
     - **Action:** Extract components to `src/components/features/profile/`
 
-22. **reference-categories** ❌
+22. **reference-categories** 
     - Pages: `src/pages/reference-categories/` (has components/)
     - Backend: `functions/api/reference-categories/`
     - **Status:** Has page structure but no feature components
     - **Action:** Extract components to `src/components/features/reference-categories/`
 
-23. **reference-resources** ❌
+23. **reference-resources** 
     - Pages: `src/pages/reference-resources/` (has components/)
     - Backend: `functions/api/reference-resources/`
     - **Status:** Has page structure but no feature components
     - **Action:** Extract components to `src/components/features/reference-resources/`
 
-24. **reference-sections** ❌
+24. **reference-sections** 
     - Pages: `src/pages/reference-sections/` (has components/)
     - Backend: `functions/api/reference-sections/`
     - **Status:** Has page structure but no feature components
     - **Action:** Extract components to `src/components/features/reference-sections/`
 
-25. **reports** ❌
+25. **reports** 
     - Pages: `src/pages/reports/`
     - Backend: `functions/api/reports/`
     - **Status:** Single page file, no structure
     - **Action:** Create feature components and organize page structure
 
-26. **subcategories** ❌
+26. **subcategories** 
     - Pages: `src/pages/subcategories/`
     - Backend: `functions/api/` (check if exists)
     - **Status:** Multiple files, no clear structure
@@ -303,13 +303,13 @@ These modules have pages but **NO** feature components in `src/components/featur
 
 ### Low Priority (Simple/Utility Pages)
 
-27. **institution-settings** ❌
+27. **institution-settings** 
     - Pages: `src/pages/institution-settings/`
     - Backend: `functions/api/system-settings/` (likely)
     - **Status:** Single page file
     - **Action:** May not need feature components if simple
 
-28. **my-badges** ❌
+28. **my-badges** 
     - Pages: `src/pages/my-badges/`
     - Backend: `functions/api/badges/`
     - **Status:** Single page file
@@ -320,9 +320,9 @@ These modules have pages but **NO** feature components in `src/components/featur
 ## Summary Statistics
 
 ### Refactored Status
-- ✅ **Fully Refactored:** 14 modules
-- ⚠️ **Partially Refactored:** 7 modules
-- ❌ **Not Refactored:** 26 modules
+- **Fully Refactored:** 14 modules
+- **Partially Refactored:** 7 modules
+- **Not Refactored:** 26 modules
 
 ### Total Modules: 47
 

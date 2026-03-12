@@ -5,7 +5,7 @@ title: "Login Alert Template"
 
 This document describes the login alert email template for SJRS LMS, which sends security notifications to users whenever they log into their account.
 
-## 📧 Template Overview
+## Template Overview
 
 The login alert template is designed to enhance account security by notifying users of new login attempts. This helps users:
 
@@ -14,13 +14,13 @@ The login alert template is designed to enhance account security by notifying us
 - **Take immediate action** if they didn't initiate the login
 - **Maintain awareness** of their account security status
 
-## 🎨 Template Features
+## Template Features
 
 ### **Security-Focused Design**
-- 🔐 Clear security alert styling
-- ⚠️ Prominent warning sections for suspicious activity
-- ✅ Reassuring sections for legitimate logins
-- 📅 Detailed login information display
+- Clear security alert styling
+- Prominent warning sections for suspicious activity
+- Reassuring sections for legitimate logins
+- Detailed login information display
 
 ### **Comprehensive Information**
 - **Login Time**: Exact timestamp of the login
@@ -34,7 +34,7 @@ The login alert template is designed to enhance account security by notifying us
 - **Immediate Actions**: Steps to take if login wasn't authorized
 - **Support Contact**: How to get help with security issues
 
-## 📋 Template Data Structure
+## Template Data Structure
 
 ```typescript
 interface LoginAlertData {
@@ -47,7 +47,7 @@ interface LoginAlertData {
 }
 ```
 
-## 🔧 Usage Examples
+## Usage Examples
 
 ### **Basic Usage**
 ```typescript
@@ -119,29 +119,29 @@ generateLoginAlert(data: any) {
 }
 ```
 
-## 🎯 Template Sections
+## Template Sections
 
 ### **1. Header Section**
-- 🔐 Security alert icon and title
+- Security alert icon and title
 - Clear indication this is a login notification
 - Professional SJRS LMS branding
 
 ### **2. Login Details Card**
-- 📅 **Login Time**: Formatted timestamp
-- 📍 **Location**: Geographic information (if available)
-- 🌐 **IP Address**: Source IP for tracking
-- 💻 **Device**: Browser and device information
+- **Login Time**: Formatted timestamp
+- **Location**: Geographic information (if available)
+- **IP Address**: Source IP for tracking
+- **Device**: Browser and device information
 
 ### **3. Security Guidance**
-- ✅ **"This Was You?"**: Reassurance for legitimate logins
-- ⚠️ **"Not You?"**: Action steps for suspicious activity
-- 🔒 **Security Tips**: Best practices for account protection
+- **"This Was You?"**: Reassurance for legitimate logins
+- **"Not You?"**: Action steps for suspicious activity
+- **Security Tips**: Best practices for account protection
 
 ### **4. Action Buttons**
-- 🔐 **Secure My Account**: Link to security settings
-- 📞 **Contact Support**: Direct support access
+- **Secure My Account**: Link to security settings
+- **Contact Support**: Direct support access
 
-## 🔒 Security Considerations
+## Security Considerations
 
 ### **Privacy Protection**
 - IP addresses are included for legitimate security tracking
@@ -158,7 +158,7 @@ generateLoginAlert(data: any) {
 - Clear distinction between legitimate and suspicious activity
 - Actionable steps for both scenarios
 
-## 🚀 Implementation Steps
+## Implementation Steps
 
 ### **1. Add Template to Email System**
 ```typescript
@@ -190,7 +190,7 @@ await env.EMAIL_QUEUE.send({
 // Navigate to /email-preview and select "Login Alert"
 ```
 
-## 📊 Analytics and Monitoring
+## Analytics and Monitoring
 
 ### **Email Metrics**
 - Track open rates for login alerts
@@ -202,7 +202,7 @@ await env.EMAIL_QUEUE.send({
 - Track device usage patterns
 - Identify potential security threats
 
-## 🔧 Customization Options
+## Customization Options
 
 ### **Template Variations**
 - **Basic Alert**: Essential information only
@@ -215,7 +215,7 @@ await env.EMAIL_QUEUE.send({
 - Region-specific security tips
 - Local support contact information
 
-## 🎨 Design System
+## Design System
 
 ### **Color Scheme**
 - **Primary**: `#667eea` (Security Blue)
@@ -228,7 +228,7 @@ await env.EMAIL_QUEUE.send({
 - Proper hierarchy for information
 - Emphasis on security-related content
 
-## 📱 Responsive Design
+## Responsive Design
 
 ### **Mobile Optimization**
 - Full-width layout on mobile devices
@@ -240,7 +240,7 @@ await env.EMAIL_QUEUE.send({
 - Fallback styling for older clients
 - Consistent rendering across platforms
 
-## 🔄 Future Enhancements
+## Future Enhancements
 
 ### **Advanced Features**
 - **Geolocation Integration**: Real-time location detection
@@ -253,7 +253,7 @@ await env.EMAIL_QUEUE.send({
 - **Information Level**: Choose detail level in alerts
 - **Delivery Preferences**: Email, SMS, or push notifications
 
-## 📞 Support and Maintenance
+## Support and Maintenance
 
 ### **Troubleshooting**
 - Monitor email delivery rates

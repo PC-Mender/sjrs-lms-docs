@@ -6,22 +6,22 @@ description: "Technical setup and architecture overview for developers."
 
 Welcome to the technical documentation for the SJRS Library Management System. This guide covers the architecture, setup, and development workflows.
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 The system is built on a **Serverless Architecture** using the Cloudflare stack:
 
-*   **Frontend**: React (Vite) + TypeScript + Ant Design
-*   **Backend**: Cloudflare Workers (Edge Compute)
-*   **Database**: Cloudflare D1 (SQLite at the Edge)
-*   **Storage**: Cloudflare R2 (Object Storage)
-*   **Auth**: Custom JWT-based authentication with HttpOnly cookies
+* **Frontend**: React (Vite) + TypeScript + Ant Design
+* **Backend**: Cloudflare Workers (Edge Compute)
+* **Database**: Cloudflare D1 (SQLite at the Edge)
+* **Storage**: Cloudflare R2 (Object Storage)
+* **Auth**: Custom JWT-based authentication with HttpOnly cookies
 
-## 🛠️ Development Setup
+## Development Setup
 
 ### **Prerequisites**
-*   Node.js (Latest LTS)
-*   npm or pnpm
-*   Wrangler CLI (`npm install -g wrangler`)
+* Node.js (Latest LTS)
+* npm or pnpm
+* Wrangler CLI (`npm install -g wrangler`)
 
 ### **1. Clone & Install**
 ```bash
@@ -50,21 +50,21 @@ npm run dev
 ```
 The frontend will be available at `http://localhost:5173` (or similar).
 
-## 📂 Project Structure
+## Project Structure
 
-*   `/src`: Frontend React application
-*   `/functions`: Backend Cloudflare Workers API
-*   `/sql`: Database schema and migrations
-*   `/shared`: Shared types and utilities
+* `/src`: Frontend React application
+* `/functions`: Backend Cloudflare Workers API
+* `/sql`: Database schema and migrations
+* `/shared`: Shared types and utilities
 
-## 🧪 Testing
+## Testing
 
-*   **Unit Tests**: `npm run test`
-*   **Integration Tests**: `npm run test:integration`
+* **Unit Tests**: `npm run test`
+* **Integration Tests**: `npm run test:integration`
 
-## 📚 Technical Documentation
+## Technical Documentation
 For deep dives into specific modules, refer to the **Development** section in the sidebar:
-*   [API Documentation](../api/index.mdx)
-*   [Database Schema](../database/index.mdx)
-*   [Security Architecture](../security/index.mdx)
+* [API Documentation](../api/index.mdx)
+* [Database Schema](../database/index.mdx)
+* [Security Architecture](../security/index.mdx)
 

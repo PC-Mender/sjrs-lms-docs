@@ -7,7 +7,7 @@ title: "Overview"
 **Audience**: Developers, QA Engineers, and System Administrators  
 **Last Updated**: November 2025
 
-## 📋 Testing Strategy Overview
+## Testing Strategy Overview
 
 The SJRS LMS uses a multi-layered testing approach that includes:
 - **Unit Testing** - Component and function-level testing
@@ -16,7 +16,7 @@ The SJRS LMS uses a multi-layered testing approach that includes:
 - **Security Testing** - Authentication, authorization, and security feature validation
 - **Performance Testing** - Load and stress testing
 
-## 🚀 Testing Environments
+## Testing Environments
 
 ### Local Development Testing
 - **Tools**: Jest, React Testing Library, Vitest
@@ -34,7 +34,7 @@ The SJRS LMS uses a multi-layered testing approach that includes:
 - **Data**: Use test data, never production user data
 - **Monitoring**: Grafana Cloud (Faro + dashboards) for frontend error tracking and observability
 
-## 🧪 Testing Categories
+## Testing Categories
 
 ### 1. Session Management Testing
 **Location**: `src/testing/session-test.tsx`
@@ -79,7 +79,7 @@ import { SessionTest } from '../testing/session-test';
 - Notifications and email
 - Reports and analytics
 
-## 📊 Testing Checklists
+## Testing Checklists
 
 ### Pre-Deployment Checklist
 - [ ] All unit tests pass
@@ -104,7 +104,7 @@ import { SessionTest } from '../testing/session-test';
 - [ ] Memory usage monitored
 - [ ] Error rates within limits
 
-## 🔧 Testing Tools & Commands
+## Testing Tools & Commands
 
 ### Local Testing
 ```bash
@@ -144,7 +144,7 @@ curl -X POST https://your-api-domain.com/api/users \
   -d '{"email":"invalid-email","name":"<script>alert(1)</script>"}'
 ```
 
-## 📈 Testing Metrics
+## Testing Metrics
 
 ### Code Coverage Targets
 - **Statements**: > 80%
@@ -158,7 +158,7 @@ curl -X POST https://your-api-domain.com/api/users \
 - **Database Query**: < 100ms
 - **Error Rate**: < 1%
 
-## 🚨 Common Issues & Solutions
+## Common Issues & Solutions
 
 ### Session Testing Issues
 - **Problem**: Session not syncing across tabs
@@ -172,7 +172,7 @@ curl -X POST https://your-api-domain.com/api/users \
 - **Problem**: Rate limiting too aggressive
 - **Solution**: Adjust rate limits in security configuration
 
-## 📚 Additional Resources
+## Additional Resources
 
 ### Testing Guides
 - [Workers Dev Environment Testing](./testing-guide-workers-dev.mdx) - Production-like testing

@@ -9,7 +9,7 @@ After a thorough review of the UPI payment implementation, I've identified **7 c
 
 ## Critical Security Vulnerabilities
 
-### 1. ⚠️ **CRITICAL: Missing Amount Validation**
+### 1.  **CRITICAL: Missing Amount Validation**
 **Location:** `functions/api/payments/handlers/create-payment.ts:7`
 
 **Issue:** The backend accepts any amount from the frontend without verifying it matches the actual penalty amount.
@@ -32,7 +32,7 @@ if (penalty.amount !== amount) {
 
 ---
 
-### 2. ⚠️ **CRITICAL: No User Ownership Verification on Payment Creation**
+### 2.  **CRITICAL: No User Ownership Verification on Payment Creation**
 **Location:** `functions/api/payments/handlers/create-payment.ts:4-26`
 
 **Issue:** The backend doesn't verify that the authenticated user owns the penalty before allowing payment creation.
@@ -57,7 +57,7 @@ if (String(penalty.user_id) !== String(user?.id)) {
 
 ---
 
-### 3. ⚠️ **CRITICAL: Transaction ID Reuse Vulnerability**
+### 3.  **CRITICAL: Transaction ID Reuse Vulnerability**
 **Location:** `functions/api/payments/handlers/update-payment.ts:29-32`
 
 **Issue:** No validation to prevent the same transaction ID from being used multiple times across different payments.
@@ -93,7 +93,7 @@ if (transactionId) {
 
 ---
 
-### 4. ⚠️ **CRITICAL: Double Payment Completion Vulnerability**
+### 4.  **CRITICAL: Double Payment Completion Vulnerability**
 **Location:** `functions/api/payments/handlers/update-payment.ts:51-57`
 
 **Issue:** No check to prevent completing a payment that's already completed.
@@ -128,7 +128,7 @@ if (status === 'completed') {
 
 ---
 
-### 5. ⚠️ **CRITICAL: Email/Phone Manipulation Vulnerability**
+### 5.  **CRITICAL: Email/Phone Manipulation Vulnerability**
 **Location:** `src/components/features/payments/BulkUPIPaymentModal.tsx:371-392`
 
 **Issue:** Users can modify email and phone fields in the form, potentially sending receipts to incorrect addresses.
@@ -178,7 +178,7 @@ if (userEmail !== penalty.user.email) {
 
 ---
 
-### 6. ⚠️ **CRITICAL: No Penalty Status Validation**
+### 6.  **CRITICAL: No Penalty Status Validation**
 **Location:** `functions/api/payments/handlers/create-payment.ts:17-26`
 
 **Issue:** Doesn't check if the penalty is already paid before creating a payment record.
@@ -201,7 +201,7 @@ if (!penalty) {
 
 ---
 
-### 7. ⚠️ **CRITICAL: Bulk Payment User Validation Missing**
+### 7.  **CRITICAL: Bulk Payment User Validation Missing**
 **Location:** `src/components/features/payments/BulkUPIPaymentModal.tsx:126-130`
 
 **Issue:** Comment says "assuming all penalties belong to same user" but doesn't verify this.
@@ -267,11 +267,11 @@ await db.batch([
 
 ## Positive Security Features Found
 
-✅ **Authorization checks** - Proper permission-based access control in `functions/api/payments/index.ts`
-✅ **Authentication required** - All endpoints require authentication
-✅ **Input validation** - Basic field validation present
-✅ **Ownership checks** - Implemented for GET requests
-✅ **Rate limiting** - Configured via security middleware
+ **Authorization checks** - Proper permission-based access control in `functions/api/payments/index.ts`
+ **Authentication required** - All endpoints require authentication
+ **Input validation** - Basic field validation present
+ **Ownership checks** - Implemented for GET requests
+ **Rate limiting** - Configured via security middleware
 
 ---
 

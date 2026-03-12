@@ -5,7 +5,7 @@ title: "Badge System Security Analysis"
 
 ## Identified Security Loopholes
 
-### 🔴 **CRITICAL ISSUES**
+### **CRITICAL ISSUES**
 
 #### 1. **Self-Assignment Loophole**
 **Location**: `functions/api/badges/index.ts:152-183`
@@ -72,7 +72,7 @@ await logAction(env, {
 
 ---
 
-### 🟡 **MEDIUM PRIORITY ISSUES**
+### **MEDIUM PRIORITY ISSUES**
 
 #### 4. **Expired Badges in Admin View**
 **Location**: `functions/api/badges/index.ts:216-345`
@@ -162,7 +162,7 @@ if (result.meta.changes === 0) {
 
 ---
 
-### 🟢 **LOW PRIORITY / ENHANCEMENTS**
+### **LOW PRIORITY / ENHANCEMENTS**
 
 #### 8. **No Rate Limiting on Badge Operations**
 **Issue**: No rate limiting on badge assignment/revocation endpoints.

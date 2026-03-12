@@ -3,7 +3,7 @@ title: "Overview"
 ---
 
 
-## 📁 Structure
+## Structure
 
 ```
 src/pages/reference-categories/
@@ -13,7 +13,7 @@ src/pages/reference-categories/
 └── index.md                     # This documentation
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 ### Backend Alignment
 - **API Endpoint**: `/api/reference-categories`
@@ -30,13 +30,13 @@ src/pages/reference-categories/
 - **CategoryList**: Main component handling all CRUD operations
 - **Types**: Proper TypeScript interfaces in `src/types/d1/reference-categories.ts`
 
-## 🔧 Features
+## Features
 
 ### CRUD Operations
-- ✅ **Create**: Modal form for new categories
-- ✅ **Read**: Paginated table with search functionality
-- ✅ **Update**: Inline edit modal
-- ✅ **Delete**: Confirmation modal with validation
+- **Create**: Modal form for new categories
+- **Read**: Paginated table with search functionality
+- **Update**: Inline edit modal
+- **Delete**: Confirmation modal with validation
 
 ### Search & Filtering
 - Real-time search across name and description
@@ -49,7 +49,7 @@ src/pages/reference-categories/
 - Parent category validation
 - Deletion constraints (no children, no referenced books)
 
-## 🚀 Usage
+## Usage
 
 ```tsx
 import { CategoryList } from './components/CategoryList';
@@ -58,21 +58,21 @@ import { CategoryList } from './components/CategoryList';
 <CategoryList />
 ```
 
-## 🔒 Security
+## Security
 
 - Admin/Superuser/Librarian access required for mutations
 - Proper permission checks on backend
 - Input validation and sanitization
 - SQL injection protection
 
-## 📊 Data Flow
+## Data Flow
 
 1. **List**: `GET /api/reference-categories` → Display in table
 2. **Create**: Form submission → `POST /api/reference-categories` → Refresh list
 3. **Update**: Form submission → `PUT /api/reference-categories/:id` → Refresh list
 4. **Delete**: Confirmation → `DELETE /api/reference-categories/:id` → Refresh list
 
-## 🎯 Benefits of New Structure
+## Benefits of New Structure
 
 - **Modular**: Clean separation of concerns
 - **Type-safe**: Proper TypeScript interfaces

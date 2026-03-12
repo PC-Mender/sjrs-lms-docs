@@ -147,15 +147,15 @@ export async function updateUserProfileWithTypeData(
 ```
 
 **Benefits:**
-- ✅ **Atomic**: All updates succeed or all fail
-- ✅ **Performance**: Single round trip to database
-- ✅ **Consistency**: No partial updates
+- **Atomic**: All updates succeed or all fail
+- **Performance**: Single round trip to database
+- **Consistency**: No partial updates
 
 ---
 
 ## When to Use Batch Operations
 
-### ✅ Use Batch Operations For:
+### Use Batch Operations For:
 
 1. **Related Updates**: When updating multiple related tables
    ```typescript
@@ -185,7 +185,7 @@ export async function updateUserProfileWithTypeData(
    ]);
    ```
 
-### ❌ Don't Use Batch Operations For:
+### Don't Use Batch Operations For:
 
 1. **Independent Operations**: When operations don't need to be atomic
    ```typescript

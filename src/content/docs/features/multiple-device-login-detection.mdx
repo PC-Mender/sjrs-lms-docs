@@ -7,7 +7,7 @@ title: "Multiple Device Login Detection"
 
 The SJRS LMS implements a **Single Session Policy** that ensures only one active session per user at any time. This feature prevents account abuse, enhances security, and provides users with control over their sessions through a force logout mechanism.
 
-## 🎯 Key Features
+## Key Features
 
 ### 1. **Single Session Enforcement**
 - **One Session Per User**: Only 1 active session per user account (prevents account abuse)
@@ -39,7 +39,7 @@ The SJRS LMS implements a **Single Session Policy** that ensures only one active
 - **Audit Logging**: Complete session lifecycle logging
 - **Cross-tab Synchronization**: Consistent session state across browser tabs
 
-## 🏗️ Technical Implementation
+## Technical Implementation
 
 ### Database Schema
 
@@ -151,7 +151,7 @@ The `SessionManagement` component provides a comprehensive UI for users to:
 - **Terminate Sessions**: Remove individual or all other sessions
 - **Real-time Updates**: Live session status monitoring
 
-## 🔧 Configuration
+## Configuration
 
 ### Default Settings
 ```typescript
@@ -171,7 +171,7 @@ const DEFAULT_CONFIG = {
 - **Device Detection**: Enable/disable device type detection
 - **Location Tracking**: Optional geographic location logging
 
-## 🚀 User Experience
+## User Experience
 
 ### Login Flow
 1. **Normal Login**: User logs in successfully (no active sessions)
@@ -200,7 +200,7 @@ const DEFAULT_CONFIG = {
 - **Session Details**: Information about existing sessions
 - **Graceful Degradation**: Fallback behavior for edge cases
 
-## 🔒 Security Considerations
+## Security Considerations
 
 ### Session Security
 - **Token Validation**: JWT-based session authentication
@@ -221,7 +221,7 @@ const DEFAULT_CONFIG = {
 - **Audit Logging**: All force logout actions logged
 - **New Session Creation**: Fresh session with new token
 
-## 📊 Monitoring & Analytics
+## Monitoring & Analytics
 
 ### Session Metrics
 - **Active Sessions**: Count of current user sessions (max 1)
@@ -237,7 +237,7 @@ const DEFAULT_CONFIG = {
 - **Device Changes**: Monitor device switching patterns
 - **Force Logout Patterns**: Monitor force logout usage
 
-## 🛠️ Implementation Guide
+## Implementation Guide
 
 ### 1. Database Migration
 Run the migration script to create the `user_sessions` table:
@@ -295,7 +295,7 @@ const sessionConfig = {
 };
 ```
 
-## 🎯 Benefits
+## Benefits
 
 ### For Users
 - **Security Awareness**: Know when and where they're logged in
@@ -318,7 +318,7 @@ const sessionConfig = {
 - **Compliance**: Meet security and audit requirements
 - **User Experience**: Clear, predictable session behavior
 
-## 🔄 Future Enhancements
+## Future Enhancements
 
 ### Planned Features
 - **Geographic Blocking**: Prevent logins from specific regions

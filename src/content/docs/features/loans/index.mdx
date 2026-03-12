@@ -5,7 +5,7 @@ title: "Overview"
 
 This module provides a complete loan management system for the SJRS LMS, following a modular architecture pattern.
 
-## 🏗️ Architecture
+## Architecture
 
 ### Directory Structure
 ```
@@ -32,7 +32,7 @@ src/pages/loans/
 └── hooks/               # Thin re-export shims
 ```
 
-## 🎯 Components
+## Components
 
 ### Core Components
 - **LoanList**: Main listing page with search, filtering, and pagination
@@ -47,31 +47,31 @@ src/pages/loans/
 - **useLoanTable**: Manages table state, filtering (status, date range), pagination, and permissions
 - **useSuperuserLoanTableActions**: Generates table actions for superusers (View, Edit, Approve, Reject, Return, Renew, Delete)
 
-## 🔧 Features
+## Features
 
 ### Loan Management
-- ✅ Create new loans
-- ✅ Edit existing loans
-- ✅ View loan details
-- ✅ Search and filter loans
+- Create new loans
+- Edit existing loans
+- View loan details
+- Search and filter loans
   - **Status Filter**: Filter by pending, approved, returned, etc.
   - **Date Range**: Filter by borrow date
-- ✅ Pagination support (Server-side)
+- Pagination support (Server-side)
 
 ### Loan Actions
-- ✅ **Approve** pending loans (Librarian/Admin/Superuser)
-- ✅ **Reject** pending loans (Librarian/Admin/Superuser)
-- ✅ **Return** approved loans (Librarian/Admin/Superuser)
-- ✅ **Renew** active/overdue loans (Librarian/Admin/Superuser)
-- ✅ **Cancel** pending loans (Students/Professors)
-- ✅ **Delete** loans (Librarian/Admin/Superuser)
+- **Approve** pending loans (Librarian/Admin/Superuser)
+- **Reject** pending loans (Librarian/Admin/Superuser)
+- **Return** approved loans (Librarian/Admin/Superuser)
+- **Renew** active/overdue loans (Librarian/Admin/Superuser)
+- **Cancel** pending loans (Students/Professors)
+- **Delete** loans (Librarian/Admin/Superuser)
 
 ### Permission System
 - **Librarian/Admin/Superuser**: Full access to all loan operations, including renewal and deletion.
 - **Students/Professors**: Can create loans and cancel their own pending loans.
 - **Guests**: Read-only access to loan information.
 
-## 🚀 Usage
+## Usage
 
 ### Basic Import
 ```tsx

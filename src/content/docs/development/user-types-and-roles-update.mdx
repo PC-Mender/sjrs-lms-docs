@@ -7,7 +7,7 @@ title: "User Types And Roles Update"
 
 This document describes the comprehensive update to the SJRS LMS user types and roles system to achieve clear separation between registration requirements and permission management.
 
-## 🎯 **Changes Made**
+## **Changes Made**
 
 ### **1. User Types (Registration Only)**
 - **Before**: 6 user types (Student, Professor, Guest, Librarian, Admin, Superuser)
@@ -24,7 +24,7 @@ This document describes the comprehensive update to the SJRS LMS user types and 
 - **After**: Only Superuser can manage roles
 - **Purpose**: Enhanced security and clear hierarchy
 
-## 📋 **System Structure**
+## **System Structure**
 
 ### **Registration User Types (3)**
 ```typescript
@@ -57,27 +57,27 @@ const USER_TYPE_TO_DEFAULT_ROLE = {
 };
 ```
 
-## 🔐 **Role Management Permissions**
+## **Role Management Permissions**
 
 ### **Superuser**
-- ✅ Can manage all roles
-- ✅ Can assign administrative roles
-- ✅ Can delete roles
-- ✅ Full system access
+- Can manage all roles
+- Can assign administrative roles
+- Can delete roles
+- Full system access
 
 ### **Admin**
-- ❌ Cannot manage roles
-- ❌ Cannot assign administrative roles
-- ❌ Cannot delete roles
-- ✅ Can manage users and most features
+- Cannot manage roles
+- Cannot assign administrative roles
+- Cannot delete roles
+- Can manage users and most features
 
 ### **Other Roles**
-- ❌ Cannot manage roles
-- ❌ Cannot assign administrative roles
-- ❌ Cannot delete roles
-- ✅ Limited to their specific permissions
+- Cannot manage roles
+- Cannot assign administrative roles
+- Cannot delete roles
+- Limited to their specific permissions
 
-## 🗄️ **Database Changes**
+## **Database Changes**
 
 ### **1. User Type Constraint Update**
 ```sql
@@ -118,7 +118,7 @@ INSERT OR IGNORE INTO roles (name, description) VALUES
   ('dean', 'Administrative oversight and management');
 ```
 
-## 🔧 **Code Changes**
+## **Code Changes**
 
 ### **1. Updated Constants**
 - `src/constants/user-types.ts`: Only 3 user types
@@ -133,7 +133,7 @@ INSERT OR IGNORE INTO roles (name, description) VALUES
 - `src/pages/members/MemberEditModal.tsx`: Uses new role management utilities
 - Registration form: Already correctly shows only 3 user types
 
-## 🚀 **Migration Process**
+## **Migration Process**
 
 ### **1. Run Migration Script**
 ```bash
@@ -162,7 +162,7 @@ FROM user_type_role_mapping utrm
 JOIN roles r ON utrm.default_role_id = r.id;
 ```
 
-## 🎯 **Benefits Achieved**
+## **Benefits Achieved**
 
 ### **1. Clear Separation**
 - **User types** = Registration requirements only
@@ -184,33 +184,33 @@ JOIN roles r ON utrm.default_role_id = r.id;
 - **Admin can change roles** without affecting user types
 - **Future-proof** for new roles
 
-## 📋 **Testing Checklist**
+## **Testing Checklist**
 
-### **✅ Registration Testing**
+### ** Registration Testing**
 - [ ] Registration form shows only 3 user types
 - [ ] All 3 user types work correctly
 - [ ] Default roles are assigned properly
 - [ ] Profile completion works for all types
 
-### **✅ Role Management Testing**
+### ** Role Management Testing**
 - [ ] Only superusers can access role management
 - [ ] Admin cannot manage roles
 - [ ] Role assignments work correctly
 - [ ] Permission changes take effect immediately
 
-### **✅ User Management Testing**
+### ** User Management Testing**
 - [ ] Existing users still work
 - [ ] User editing works correctly
 - [ ] Role changes are preserved
 - [ ] Approval workflow functions
 
-### **✅ Permission Testing**
+### ** Permission Testing**
 - [ ] All 7 roles have correct permissions
 - [ ] Role-based access control works
 - [ ] Permission checks are enforced
 - [ ] No unauthorized access
 
-## 🔄 **Rollback Plan**
+## **Rollback Plan**
 
 If issues arise, the system can be rolled back by:
 
@@ -218,7 +218,7 @@ If issues arise, the system can be rolled back by:
 2. **Reverting code changes**
 3. **Running rollback migration**
 
-## 📞 **Support**
+## **Support**
 
 For questions or issues:
 1. Check the migration logs
@@ -230,4 +230,4 @@ For questions or issues:
 
 **Last Updated**: November 2025  
 **Version**: 2.1.0  
-**Status**: ✅ Implemented 
+**Status**:  Implemented 

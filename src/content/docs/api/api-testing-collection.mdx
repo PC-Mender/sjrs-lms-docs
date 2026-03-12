@@ -5,7 +5,7 @@ title: "Api Testing Collection"
 
 This document provides comprehensive testing resources for the SJRS LMS API, including Postman collection, cURL examples, and testing procedures.
 
-## 📦 Postman Collection
+## Postman Collection
 
 ### **Import Instructions**
 1. Download the [SJRS LMS API Collection](./sjrs-lms-api.postman_collection.json)
@@ -26,29 +26,29 @@ This document provides comprehensive testing resources for the SJRS LMS API, inc
 ### **Collection Structure**
 ```
 SJRS LMS API
-├── 🔑 Authentication
+├──  Authentication
 │   ├── Login
 │   ├── Register
 │   ├── Logout
 │   └── Profile Management
-├── 👥 User Management
+├──  User Management
 │   ├── Get Users
 │   ├── Create User
 │   └── Update User
-├── 📚 Book Management
+├──  Book Management
 │   ├── Get Books
 │   ├── Search Books
 │   └── Create Book
-├── 📖 Loan Management
+├──  Loan Management
 │   ├── Get Loans
 │   ├── Create Loan
 │   └── Return Book
-└── ⚖️ System Management
+└──  System Management
     ├── Permissions Check
     └── System Logs
 ```
 
-## 🖥️ cURL Examples
+## cURL Examples
 
 ### **One-Time Setup**
 ```bash
@@ -166,7 +166,7 @@ curl -b cookies.txt "https://your-api-domain.com/api/permissions/check?resource=
 curl -b cookies.txt "https://your-api-domain.com/api/system_logs?level=error&component=auth"
 ```
 
-## 🧪 Testing Procedures
+## Testing Procedures
 
 ### **1. Authentication Testing**
 
@@ -276,7 +276,7 @@ curl -X POST "https://your-api-domain.com/api/books" \
 # Expected: 403 Forbidden
 ```
 
-## 🔧 Testing Tools Setup
+## Testing Tools Setup
 
 ### **Postman Environment Setup**
 
@@ -340,7 +340,7 @@ jobs:
           path: test-results.json
 ```
 
-## 📊 Test Results Analysis
+## Test Results Analysis
 
 ### **Success Criteria**
 - **Authentication**: All auth endpoints return correct status codes
@@ -379,7 +379,7 @@ for i in {1..10}; do
 done
 ```
 
-## 🎯 Testing Checklist
+## Testing Checklist
 
 ### **Pre-Testing Setup**
 - [ ] Environment variables configured
@@ -422,4 +422,4 @@ done
 
 **Last Updated:** November 2025  
 **Version:** 1.0.0  
-**Status:** ✅ Complete
+**Status:**  Complete

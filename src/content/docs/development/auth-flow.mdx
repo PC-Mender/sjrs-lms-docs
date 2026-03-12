@@ -66,15 +66,15 @@ This table shows precisely what happens during login based on account status, em
 
 | Status | Email Verified | Profile Complete | Age > 45 Days | Has Last Login | **Outcome** | **Error Code** | **Next Action** |
 |--------|----------------|------------------|---------------|----------------|-------------|----------------|-----------------|
-| `suspended` | Any | Any | Any | Any | ❌ **BLOCKED** | `ACCOUNT_SUSPENDED` | Contact admin |
-| `inactive` | ❌ No | Any | Any | Any | ❌ **BLOCKED** | `ACCOUNT_INACTIVE` | Reverify email |
-| `inactive` | ✅ Yes | ❌ No | Any | Any | ✅ **ALLOWED** | - | → `/profile-completion` (with `requiresProfileCompletion=true`) |
-| `inactive` | ✅ Yes | ✅ Yes | Any | Any | ✅ **ALLOWED** | - | → Role dashboard (recovery path) |
-| `pending` | ❌ No | Any | ✅ Yes | ❌ No | ❌ **AUTO-DEACTIVATED** | `ACCOUNT_INACTIVE` | Status changed to `inactive`, login blocked |
-| `pending` | ❌ No | Any | ❌ No | Any | ❌ **BLOCKED** | `EMAIL_NOT_CONFIRMED` | Check email for verification link |
-| `pending` | ✅ Yes | ❌ No | Any | Any | ✅ **ALLOWED** | - | → `/profile-completion` (with `requiresProfileCompletion=true`) |
-| `pending` | ✅ Yes | ✅ Yes | Any | Any | ❌ **BLOCKED** | `PENDING_APPROVAL` | Wait for admin approval |
-| `active` | Any | Any | Any | Any | ✅ **ALLOWED** | - | → Role dashboard |
+| `suspended` | Any | Any | Any | Any |  **BLOCKED** | `ACCOUNT_SUSPENDED` | Contact admin |
+| `inactive` |  No | Any | Any | Any |  **BLOCKED** | `ACCOUNT_INACTIVE` | Reverify email |
+| `inactive` |  Yes |  No | Any | Any |  **ALLOWED** | - | → `/profile-completion` (with `requiresProfileCompletion=true`) |
+| `inactive` |  Yes |  Yes | Any | Any |  **ALLOWED** | - | → Role dashboard (recovery path) |
+| `pending` |  No | Any |  Yes |  No |  **AUTO-DEACTIVATED** | `ACCOUNT_INACTIVE` | Status changed to `inactive`, login blocked |
+| `pending` |  No | Any |  No | Any |  **BLOCKED** | `EMAIL_NOT_CONFIRMED` | Check email for verification link |
+| `pending` |  Yes |  No | Any | Any |  **ALLOWED** | - | → `/profile-completion` (with `requiresProfileCompletion=true`) |
+| `pending` |  Yes |  Yes | Any | Any |  **BLOCKED** | `PENDING_APPROVAL` | Wait for admin approval |
+| `active` | Any | Any | Any | Any |  **ALLOWED** | - | → Role dashboard |
 
 ### Auto-Deactivation Rules
 

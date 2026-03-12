@@ -5,7 +5,7 @@ title: "Email Templates"
 
 This document describes the comprehensive email template system for SJRS LMS, featuring modern, responsive designs that enhance user experience and brand consistency.
 
-## 🎨 Design Features
+## Design Features
 
 ### **Modern Visual Design**
 - **Gradient Headers**: Beautiful purple gradient headers with SJRS LMS branding
@@ -21,17 +21,17 @@ This document describes the comprehensive email template system for SJRS LMS, fe
 - **Info Cards**: Highlighted information boxes with color coding
 - **Footer**: Professional footer with links and disclaimers
 
-## 📧 Available Email Templates
+## Available Email Templates
 
 ### **1. Email Confirmation Template**
 **Purpose**: Welcome new users and confirm email addresses
 
 **Features**:
-- 🎉 Welcome message with excitement
-- ✅ Clear confirmation button
-- 🔒 Security notice about link expiration
-- 🎯 "What's Next" section with next steps
-- 📚 Library benefits overview
+- Welcome message with excitement
+- Clear confirmation button
+- Security notice about link expiration
+- "What's Next" section with next steps
+- Library benefits overview
 
 **Usage**:
 ```typescript
@@ -45,11 +45,11 @@ const emailContent = generateEmailConfirmationTemplate({
 **Purpose**: Confirm successful book borrowing
 
 **Features**:
-- 📖 Success celebration
-- 📚 Detailed book information card
-- ✅ Important reminders about returns
-- 📚 Link to browse more books
-- 🎯 Clear due date information
+- Success celebration
+- Detailed book information card
+- Important reminders about returns
+- Link to browse more books
+- Clear due date information
 
 **Usage**:
 ```typescript
@@ -69,11 +69,11 @@ const emailContent = generateBorrowNotificationTemplate({
 **Purpose**: Remind users about upcoming due dates
 
 **Features**:
-- ⚠️ Urgency indicators based on days remaining
-- 🚨 Special styling for urgent reminders (1 day or less)
-- 📚 Book details with due date
-- 💰 Late fee information
-- 🔄 Renewal options
+- Urgency indicators based on days remaining
+- Special styling for urgent reminders (1 day or less)
+- Book details with due date
+- Late fee information
+- Renewal options
 
 **Usage**:
 ```typescript
@@ -89,11 +89,11 @@ const emailContent = generateReturnReminderTemplate({
 **Purpose**: Alert users about overdue books and fines
 
 **Features**:
-- 🚨 Urgent warning styling
-- 💰 Current fine amount display
-- 📊 Days overdue information
-- 💳 Payment options
-- ⚠️ Consequences of non-payment
+- Urgent warning styling
+- Current fine amount display
+- Days overdue information
+- Payment options
+- Consequences of non-payment
 
 **Usage**:
 ```typescript
@@ -109,11 +109,11 @@ const emailContent = generateOverdueNotificationTemplate({
 **Purpose**: Update users on book order status
 
 **Features**:
-- ✅ Color-coded status indicators
-- 📚 Book information
-- 📝 Custom messages for different statuses
-- 🎯 Next steps based on status
-- 📚 Browse more books option
+- Color-coded status indicators
+- Book information
+- Custom messages for different statuses
+- Next steps based on status
+- Browse more books option
 
 **Usage**:
 ```typescript
@@ -129,10 +129,10 @@ const emailContent = generateOrderNotificationTemplate({
 **Purpose**: General system notifications
 
 **Features**:
-- ℹ️ Type-based styling (info, success, warning, error)
-- 📞 Support contact information
-- 🎯 Clear messaging
-- 🔗 Helpful links
+- ℹ Type-based styling (info, success, warning, error)
+- Support contact information
+- Clear messaging
+- Helpful links
 
 **Usage**:
 ```typescript
@@ -148,11 +148,11 @@ const emailContent = generateSystemNotificationTemplate({
 **Purpose**: Secure password reset functionality
 
 **Features**:
-- 🔐 Security-focused design
+- Security-focused design
 - ⏰ Expiration notice
-- 💡 Password tips
-- 🔒 Security warnings
-- ✅ Clear reset button
+- Password tips
+- Security warnings
+- Clear reset button
 
 **Usage**:
 ```typescript
@@ -162,7 +162,7 @@ const emailContent = generatePasswordResetTemplate({
 });
 ```
 
-## 🎨 Design System
+## Design System
 
 ### **Color Palette**
 - **Primary**: `#667eea` (Purple Blue)
@@ -188,7 +188,7 @@ const emailContent = generatePasswordResetTemplate({
 - **Links**: Underlined with hover color changes
 - **Cards**: Subtle shadows and borders
 
-## 📱 Responsive Design
+## Responsive Design
 
 ### **Mobile Optimization**
 - **Breakpoint**: 600px
@@ -198,13 +198,13 @@ const emailContent = generatePasswordResetTemplate({
 - **Spacing**: Reduced padding
 
 ### **Email Client Compatibility**
-- **Gmail**: ✅ Fully supported
-- **Outlook**: ✅ Compatible
-- **Apple Mail**: ✅ Optimized
-- **Thunderbird**: ✅ Tested
-- **Mobile Apps**: ✅ Responsive
+- **Gmail**:  Fully supported
+- **Outlook**:  Compatible
+- **Apple Mail**:  Optimized
+- **Thunderbird**:  Tested
+- **Mobile Apps**:  Responsive
 
-## 🔧 Implementation
+## Implementation
 
 ### **Template Structure**
 ```typescript
@@ -245,7 +245,7 @@ const emailData = {
 };
 ```
 
-## 🚀 Benefits
+## Benefits
 
 ### **User Experience**
 - **Professional Appearance**: Builds trust and credibility
@@ -265,7 +265,7 @@ const emailData = {
 - **Brand Recognition**: Consistent visual identity
 - **Professional Image**: Modern design reflects system quality
 
-## 🔄 Migration Guide
+## Migration Guide
 
 ### **From Old Templates**
 1. **Replace HTML strings** with template function calls
@@ -280,7 +280,7 @@ const emailData = {
 4. **Add to exports** and documentation
 5. **Test thoroughly** in multiple email clients
 
-## 📊 Analytics & Tracking
+## Analytics & Tracking
 
 ### **Email Metrics**
 - **Open Rates**: Track with Mailjet analytics
@@ -294,7 +294,7 @@ const emailData = {
 - **Content Length**: Test concise vs. detailed versions
 - **Visual Elements**: Test different color schemes
 
-## 🔒 Security Considerations
+## Security Considerations
 
 ### **Email Security**
 - **HTTPS Links**: All links use secure protocols
@@ -308,7 +308,7 @@ const emailData = {
 - **User Consent**: Only send to users who opted in
 - **Data Protection**: Secure handling of user information
 
-## 🎯 Best Practices
+## Best Practices
 
 ### **Content Guidelines**
 - **Clear Subject Lines**: Descriptive and action-oriented
@@ -328,7 +328,7 @@ const emailData = {
 - **Visual Hierarchy**: Important information stands out
 - **Mobile First**: Design for mobile, enhance for desktop
 
-## 📈 Future Enhancements
+## Future Enhancements
 
 ### **Planned Features**
 - **Dynamic Content**: Personalized recommendations

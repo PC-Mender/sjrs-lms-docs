@@ -11,7 +11,7 @@ This document proposes fixes for 10 systemic issues affecting all role-based das
 
 ## Issue-by-Issue Fix Proposals
 
-### ✅ Issue 1: API Versioning Violations (CRITICAL)
+### Issue 1: API Versioning Violations (CRITICAL)
 
 **Problem**: All dashboard endpoints are unversioned (`/api/dashboard-stats/*`)
 
@@ -47,7 +47,7 @@ This document proposes fixes for 10 systemic issues affecting all role-based das
 
 ---
 
-### ✅ Issue 2: Full Page Reload (FORBIDDEN)
+### Issue 2: Full Page Reload (FORBIDDEN)
 
 **Problem**: `window.location.reload()` used in QuickAnalyticsWidget
 
@@ -82,7 +82,7 @@ const { refetch } = useQuery(...);
 
 ---
 
-### ✅ Issue 3: React Query Configuration Deviations
+### Issue 3: React Query Configuration Deviations
 
 **Problem**: Dashboards use `staleTime: 30_000, refetchOnWindowFocus: false` (non-standard)
 
@@ -119,7 +119,7 @@ useQuery({
 
 ---
 
-### ✅ Issue 4: Cache-Sync After Mutations (invalidate-only)
+### Issue 4: Cache-Sync After Mutations (invalidate-only)
 
 **Problem**: `badges.tsx` only calls `invalidateQueries()` on assign/revoke
 
@@ -177,7 +177,7 @@ const assignMutation = useMutation({
 
 ---
 
-### ✅ Issue 5: Type Safety Issues (any usage)
+### Issue 5: Type Safety Issues (any usage)
 
 **Problem**: Widespread use of `any` in dashboard hooks and components
 
@@ -253,7 +253,7 @@ const userRole = normalizeRole(user?.role);
 
 ---
 
-### ✅ Issue 6: State Duplication (React Query + useState)
+### Issue 6: State Duplication (React Query + useState)
 
 **Problem**: `useLibrarianDashboard` uses React Query + separate useState/useEffect
 
@@ -305,7 +305,7 @@ return {
 
 ---
 
-### ✅ Issue 7: Backend Response Correctness
+### Issue 7: Backend Response Correctness
 
 **Problem**: `dashboard-stats/index.ts` returns "internal error" for 405/404 cases
 
@@ -377,7 +377,7 @@ import { securityMiddleware, requireAuthenticationOnly } from '../../middleware/
 
 ---
 
-### ✅ Issue 8: Role/Route Boundary UX Concerns
+### Issue 8: Role/Route Boundary UX Concerns
 
 **Problem**: "Access Denied" UI exposes `dashboardType` and `userRole`
 
@@ -418,7 +418,7 @@ import { securityMiddleware, requireAuthenticationOnly } from '../../middleware/
 
 ---
 
-### ✅ Issue 9: Import Boundary Violations
+### Issue 9: Import Boundary Violations
 
 **Problem**: `DashboardContainer.tsx` imports from `../../index` (non-shared location)
 
@@ -448,7 +448,7 @@ import { SessionDebug } from '../../../components/SessionDebug';
 
 ---
 
-### ✅ Issue 10: File Size Limits
+### Issue 10: File Size Limits
 
 **Problem**: `SuperuserSystemHealth.tsx` is at 292 lines (limit: 300)
 
@@ -489,22 +489,22 @@ SuperuserSystemHealth.tsx (292 lines) →
 ## Rollout Strategy
 
 ### Phase 1: Critical Fixes (Week 1)
-- ✅ Fix API versioning (all endpoints + backend)
-- ✅ Fix backend error responses
-- ✅ Remove page reloads
+- Fix API versioning (all endpoints + backend)
+- Fix backend error responses
+- Remove page reloads
 
 ### Phase 2: UX Improvements (Week 2)
-- ✅ Implement proper cache-sync patterns
-- ✅ Standardize React Query config
+- Implement proper cache-sync patterns
+- Standardize React Query config
 
 ### Phase 3: Code Quality (Week 3)
-- ✅ Eliminate state duplication
-- ✅ Progressive type safety improvements
+- Eliminate state duplication
+- Progressive type safety improvements
 
 ### Phase 4: Polish (Week 4)
-- ✅ Fix import boundaries
-- ✅ Improve error messages
-- ✅ Documentation updates
+- Fix import boundaries
+- Improve error messages
+- Documentation updates
 
 ---
 

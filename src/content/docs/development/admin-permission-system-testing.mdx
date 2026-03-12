@@ -199,11 +199,11 @@ SELECT name FROM sqlite_master WHERE type='table' AND name LIKE '%permission%';
 ## Conclusion
 
 The admin permission system now properly respects superuser permission grants:
-- ✅ **No automatic admin bypass**
-- ✅ **Database-driven permissions**
-- ✅ **Real-time permission checking**
-- ✅ **Superuser control over admin access**
-- ✅ **Frontend permission validation**
-- ✅ **Graceful permission degradation**
+- **No automatic admin bypass**
+- **Database-driven permissions**
+- **Real-time permission checking**
+- **Superuser control over admin access**
+- **Frontend permission validation**
+- **Graceful permission degradation**
 
 This ensures that admin users can only access features that superusers have explicitly granted them permission to use.

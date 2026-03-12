@@ -3,7 +3,7 @@ title: "Quick Reference"
 ---
 
 
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 - Node.js 18+ 
@@ -24,7 +24,7 @@ npm run build        # Build for production
 npm run preview      # Preview production build
 ```
 
-## 📁 Key Directories
+## Key Directories
 
 ### Frontend (`src/`)
 ```
@@ -57,7 +57,7 @@ sql/
 └── setup/          # Initial setup scripts
 ```
 
-## 🔧 Core Components
+## Core Components
 
 ### Authentication
 ```typescript
@@ -95,7 +95,7 @@ import { apiClient } from '../utilities/api-client';
 import { useUnifiedQuery } from '../hooks/unified/useUnifiedQuery';
 ```
 
-## 🎯 Common Patterns
+## Common Patterns
 
 ### Creating a New Page
 ```typescript
@@ -175,7 +175,7 @@ INSERT INTO role_permissions (role_id, permission_id) VALUES (1, (SELECT id FROM
 </PermissionGuard>
 ```
 
-## 🔒 Security Patterns
+## Security Patterns
 
 ### Input Validation
 ```typescript
@@ -214,7 +214,7 @@ if (session.isExpired) {
 }
 ```
 
-## 📊 Database Patterns
+## Database Patterns
 
 ### Query Patterns
 ```typescript
@@ -252,7 +252,7 @@ CREATE TABLE IF NOT EXISTS features (
 CREATE INDEX idx_features_name ON features(name);
 ```
 
-## 🎨 UI Patterns
+## UI Patterns
 
 ### Form Components
 ```typescript
@@ -300,7 +300,7 @@ import { OptimizedTable } from '../components/optimized/OptimizedTable';
 />
 ```
 
-## 🔄 State Management
+## State Management
 
 ### React Query for Server State
 ```typescript
@@ -340,7 +340,7 @@ export const ThemeProvider = ({ children }) => {
 export const useTheme = () => useContext(ThemeContext);
 ```
 
-## 🛠️ Development Tools
+## Development Tools
 
 ### Available Scripts
 ```bash
@@ -374,35 +374,35 @@ MAILJET_API_SECRET=your-mailjet-secret
 FRONTEND_URL=https://your-domain.com
 ```
 
-## 📝 Best Practices
+## Best Practices
 
 ### Code Organization
-- ✅ Use TypeScript for all new code
-- ✅ Follow consistent naming conventions
-- ✅ Implement proper error handling
-- ✅ Add comprehensive documentation
-- ✅ Use modular component architecture
+- Use TypeScript for all new code
+- Follow consistent naming conventions
+- Implement proper error handling
+- Add comprehensive documentation
+- Use modular component architecture
 
 ### Security
-- ✅ Validate all inputs
-- ✅ Use parameterized queries
-- ✅ Implement proper authentication
-- ✅ Add CSRF protection
-- ✅ Log security events
+- Validate all inputs
+- Use parameterized queries
+- Implement proper authentication
+- Add CSRF protection
+- Log security events
 
 ### Performance
-- ✅ Use React.memo for expensive components
-- ✅ Implement proper caching
-- ✅ Optimize database queries
-- ✅ Use code splitting
-- ✅ Implement lazy loading
+- Use React.memo for expensive components
+- Implement proper caching
+- Optimize database queries
+- Use code splitting
+- Implement lazy loading
 
 ### Testing
-- ✅ Write unit tests for critical functions
-- ✅ Test API endpoints
-- ✅ Validate user workflows
-- ✅ Test error scenarios
-- ✅ Monitor performance
+- Write unit tests for critical functions
+- Test API endpoints
+- Validate user workflows
+- Test error scenarios
+- Monitor performance
 
 ---
 

@@ -31,7 +31,7 @@ Each feature has its own directory with all related components:
 
 ```
 src/components/features/
-├── books/                    # 📚 Book feature
+├── books/                    #  Book feature
 │   ├── components/
 │   │   ├── BookList.tsx
 │   │   ├── BookForm.tsx
@@ -39,29 +39,29 @@ src/components/features/
 │   │   └── index.ts
 │   └── index.ts
 │
-├── authors/                  # ✍️ Author feature
+├── authors/                  #  Author feature
 │   ├── components/
 │   │   ├── AuthorList.tsx
 │   │   ├── AuthorForm.tsx
 │   │   └── index.ts
 │   └── index.ts
 │
-├── loans/                    # 📖 Loan feature
+├── loans/                    #  Loan feature
 │   ├── components/
 │   └── index.ts
 │
-├── dashboard/                # 📊 Dashboard feature
+├── dashboard/                #  Dashboard feature
 │   ├── ModularDashboard.tsx
 │   ├── tabs/
 │   ├── widgets/
 │   └── index.ts
 │
-├── notifications/            # 🔔 Notification feature
+├── notifications/            #  Notification feature
 │   ├── notification-bell.tsx
 │   ├── notification-preferences.tsx
 │   └── index.ts
 │
-└── payments/                 # 💳 Payment feature
+└── payments/                 #  Payment feature
     ├── PaymentModal.tsx
     ├── UPIPaymentModal.tsx
     └── index.ts
@@ -77,32 +77,32 @@ Pages are also organized by feature:
 
 ```
 src/pages/
-├── books/                    # 📚 Book pages
+├── books/                    #  Book pages
 │   ├── BookListPage.tsx
 │   ├── BookCreatePage.tsx
 │   ├── BookEditPage.tsx
 │   ├── BookShowPage.tsx
 │   └── index.tsx
 │
-├── authors/                 # ✍️ Author pages
+├── authors/                 #  Author pages
 │   ├── AuthorListPage.tsx
 │   ├── AuthorCreatePage.tsx
 │   ├── AuthorEditPage.tsx
 │   ├── AuthorShowPage.tsx
 │   └── index.ts
 │
-├── loans/                    # 📖 Loan pages
+├── loans/                    #  Loan pages
 │   ├── index.tsx            # Page entry / thin exports
 │   └── hooks/               # Page-level hooks (or shims)
 │
-├── members/                 # 👥 Member pages
+├── members/                 #  Member pages
 │   ├── components/
 │   ├── hooks/
 │   ├── types/
 │   ├── utils/
 │   └── index.tsx
 │
-└── journals/                # 📰 Journal pages
+└── journals/                #  Journal pages
     ├── articles/
     ├── components/
     ├── hooks/
@@ -121,7 +121,7 @@ Backend APIs are organized by feature:
 
 ```
 functions/api/
-├── books/                    # 📚 Book API
+├── books/                    #  Book API
 │   ├── base/
 │   │   └── book-utils.ts    # Shared utilities
 │   ├── handlers/
@@ -131,7 +131,7 @@ functions/api/
 │   │   └── delete-book.ts
 │   └── index.ts             # Router
 │
-├── authors/                  # ✍️ Author API
+├── authors/                  #  Author API
 │   ├── base/
 │   │   └── author-utils.ts
 │   ├── handlers/
@@ -140,7 +140,7 @@ functions/api/
 │   │   └── ...
 │   └── index.ts
 │
-├── loans/                    # 📖 Loan API
+├── loans/                    #  Loan API
 │   ├── base/
 │   │   └── loan-utils.ts
 │   ├── handlers/
@@ -150,14 +150,14 @@ functions/api/
 │   │   └── ...
 │   └── index.ts
 │
-├── notifications/            # 🔔 Notification API
+├── notifications/            #  Notification API
 │   ├── base/
 │   ├── handlers/
 │   ├── repositories/
 │   ├── types.ts
 │   └── index.ts
 │
-└── payments/                 # 💳 Payment API
+└── payments/                 #  Payment API
     ├── base/
     ├── handlers/
     └── index.ts
@@ -169,7 +169,7 @@ functions/api/
 
 ## Feature-Based vs. Layer-Based Comparison
 
-### ❌ **Layer-Based Structure** (Alternative Approach)
+### **Layer-Based Structure** (Alternative Approach)
 
 ```
 src/
@@ -196,12 +196,12 @@ src/
 ```
 
 **Problems:**
-- ❌ Hard to find all code for a feature
-- ❌ Changes require editing multiple directories
-- ❌ Difficult to understand feature boundaries
-- ❌ Hard to remove or refactor features
+- Hard to find all code for a feature
+- Changes require editing multiple directories
+- Difficult to understand feature boundaries
+- Hard to remove or refactor features
 
-### ✅ **Feature-Based Structure** (Current Approach)
+### **Feature-Based Structure** (Current Approach)
 
 ```
 src/
@@ -229,10 +229,10 @@ src/
 ```
 
 **Benefits:**
-- ✅ Easy to find all code for a feature
-- ✅ Changes are localized to one directory
-- ✅ Clear feature boundaries
-- ✅ Easy to remove or refactor features
+- Easy to find all code for a feature
+- Changes are localized to one directory
+- Clear feature boundaries
+- Easy to remove or refactor features
 
 ---
 
@@ -274,7 +274,7 @@ functions/api/books/
 └── index.ts                # Router
 ```
 
-**Result:** All book-related code is grouped together! 📚
+**Result:** All book-related code is grouped together! 
 
 ---
 
@@ -306,7 +306,7 @@ functions/api/loans/
 └── index.ts
 ```
 
-**Result:** All loan-related code is grouped together! 📖
+**Result:** All loan-related code is grouped together! 
 
 ---
 
@@ -337,7 +337,7 @@ functions/api/notifications/
 └── index.ts
 ```
 
-**Result:** All notification-related code is grouped together! 🔔
+**Result:** All notification-related code is grouped together! 
 
 ---
 
@@ -346,7 +346,7 @@ functions/api/notifications/
 Here's a complete feature showing the feature-based structure:
 
 ```
-src/pages/book-catalog/          # 📚 Book Catalog Feature
+src/pages/book-catalog/          #  Book Catalog Feature
 ├── components/                 # Feature-specific components
 │   ├── BookCatalogContainer.tsx
 │   ├── BookCatalogTable.tsx
@@ -367,16 +367,16 @@ src/pages/book-catalog/          # 📚 Book Catalog Feature
 ```
 
 **Key Characteristics:**
-- ✅ All book catalog code in one place
-- ✅ Components, services, types together
-- ✅ Self-contained feature module
-- ✅ Easy to understand and maintain
+- All book catalog code in one place
+- Components, services, types together
+- Self-contained feature module
+- Easy to understand and maintain
 
 ---
 
 ## Benefits of Feature-Based Structure
 
-### 1. **Easy to Find Code** ✅
+### 1. **Easy to Find Code** 
 
 **Question:** "Where is the code for creating a book?"
 
@@ -391,7 +391,7 @@ src/pages/book-catalog/          # 📚 Book Catalog Feature
 
 ---
 
-### 2. **Localized Changes** ✅
+### 2. **Localized Changes** 
 
 **Scenario:** Add a new field to books
 
@@ -410,7 +410,7 @@ src/pages/book-catalog/          # 📚 Book Catalog Feature
 
 ---
 
-### 3. **Clear Feature Boundaries** ✅
+### 3. **Clear Feature Boundaries** 
 
 **Feature-Based:**
 ```
@@ -428,7 +428,7 @@ types/          # Unclear: What features are here?
 
 ---
 
-### 4. **Easy to Remove Features** ✅
+### 4. **Easy to Remove Features** 
 
 **Feature-Based:**
 - Delete `src/components/features/books/`
@@ -445,7 +445,7 @@ types/          # Unclear: What features are here?
 
 ---
 
-### 5. **Better Team Collaboration** ✅
+### 5. **Better Team Collaboration** 
 
 **Feature-Based:**
 - Developer A works on `books/` feature
@@ -459,7 +459,7 @@ types/          # Unclear: What features are here?
 
 ---
 
-### 6. **Self-Documenting** ✅
+### 6. **Self-Documenting** 
 
 **Feature-Based:**
 ```
@@ -568,9 +568,9 @@ src/types/                         # Shared types
 ```
 
 **This is the best of both worlds:**
-- ✅ Features are self-contained
-- ✅ Shared code is reusable
-- ✅ Clear separation of concerns
+- Features are self-contained
+- Shared code is reusable
+- Clear separation of concerns
 
 ---
 
@@ -578,19 +578,19 @@ src/types/                         # Shared types
 
 ### Your Structure IS Feature-Based Because:
 
-1. ✅ **Components organized by feature** (`src/components/features/books/`)
-2. ✅ **Pages organized by feature** (`src/pages/books/`)
-3. ✅ **APIs organized by feature** (`functions/api/books/`)
-4. ✅ **Each feature contains all related code** (components, types, utils)
-5. ✅ **Clear feature boundaries** (easy to identify what belongs where)
-6. ✅ **Self-contained features** (can work on a feature independently)
+1. **Components organized by feature** (`src/components/features/books/`)
+2. **Pages organized by feature** (`src/pages/books/`)
+3. **APIs organized by feature** (`functions/api/books/`)
+4. **Each feature contains all related code** (components, types, utils)
+5. **Clear feature boundaries** (easy to identify what belongs where)
+6. **Self-contained features** (can work on a feature independently)
 
 ### It's NOT Layer-Based Because:
 
-- ❌ Components are NOT all in one directory
-- ❌ Pages are NOT all in one directory
-- ❌ APIs are NOT all in one directory
-- ❌ Code is NOT separated by technical concerns
+- Components are NOT all in one directory
+- Pages are NOT all in one directory
+- APIs are NOT all in one directory
+- Code is NOT separated by technical concerns
 
 ### The Result:
 

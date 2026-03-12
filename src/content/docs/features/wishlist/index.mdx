@@ -38,26 +38,26 @@ The system is transitioning to generated CRUD hooks from `src/hooks/d1/wishlist.
 ## Features
 
 ### Core Functionality
-- ✅ Create, read, update, delete wishlist items
-- ✅ Search and filter wishlist items (by title, author, priority, status)
-- ✅ Pagination support (via `ManagementTable`)
-- ✅ Priority management (Low, Normal, High)
-- ✅ Status tracking (Active, Acquired, Removed)
-- ✅ User and book relationship management
+- Create, read, update, delete wishlist items
+- Search and filter wishlist items (by title, author, priority, status)
+- Pagination support (via `ManagementTable`)
+- Priority management (Low, Normal, High)
+- Status tracking (Active, Acquired, Removed)
+- User and book relationship management
 
 ### Enhanced Features
-- ✅ Statistics dashboard (via `WishlistStats`)
-- ✅ Availability checking (backend logic)
-- ❌ **Order placement from wishlist** (Backend supports atomic updates, but Frontend UI is missing)
-- ✅ Custom title, author, and ISBN support
-- ✅ Notes and priority management
+- Statistics dashboard (via `WishlistStats`)
+- Availability checking (backend logic)
+- **Order placement from wishlist** (Backend supports atomic updates, but Frontend UI is missing)
+- Custom title, author, and ISBN support
+- Notes and priority management
 
 ## Integration with Orders
 
 The wishlist system integration with the Order system is partially complete:
 
-1.  **Backend (Atomic Updates)**: When an admin approves an order, the corresponding wishlist item (if it exists) is **automatically updated** to `status: 'acquired'`. This is handled transactionally in `loan-from-order.ts` to ensure data consistency.
-2.  **Frontend (Gap)**: Currently, there is **no direct "Add to Cart" or "Place Order" button** in the Wishlist UI.
+1. **Backend (Atomic Updates)**: When an admin approves an order, the corresponding wishlist item (if it exists) is **automatically updated** to `status: 'acquired'`. This is handled transactionally in `loan-from-order.ts` to ensure data consistency.
+2. **Frontend (Gap)**: Currently, there is **no direct "Add to Cart" or "Place Order" button** in the Wishlist UI.
     - The `WishlistTableActionsSimple` component only provides "Edit" and "Delete" actions.
     - The `WishlistService.placeOrderFromWishlist` method is currently a stub.
     - Users must manually find the book in the catalog and place a request.

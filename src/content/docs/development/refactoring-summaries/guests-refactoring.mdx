@@ -3,11 +3,11 @@ title: "Guests Refactoring"
 ---
 
 
-## 🎯 What Was Accomplished
+## What Was Accomplished
 
 The guests module has been completely refactored from a collection of redundant, inconsistent components into a well-structured, modular system that follows modern React best practices and aligns with the project's backend architecture.
 
-## 🔄 Before vs After
+## Before vs After
 
 ### Before (Problems)
 - **4 separate modal components** with duplicated logic and interfaces
@@ -28,7 +28,7 @@ The guests module has been completely refactored from a collection of redundant,
 - **Reusable validation rules** and form configurations
 - **Better error handling** and user feedback
 
-## 🏗️ New Architecture
+## New Architecture
 
 ```
 src/pages/guests/
@@ -51,7 +51,7 @@ src/pages/guests/
 └── REFACTORING_SUMMARY.md       # This file
 ```
 
-## 🚀 Key Benefits
+## Key Benefits
 
 ### 1. **Maintainability**
 - Single source of truth for types and constants
@@ -73,7 +73,7 @@ src/pages/guests/
 - Better separation of concerns
 - Easier to understand and modify
 
-## 🔧 Technical Improvements
+## Technical Improvements
 
 ### **Type Safety**
 - All components use shared `GuestData` interface
@@ -95,14 +95,14 @@ src/pages/guests/
 - Conditional rendering based on user capabilities
 - Clear access control patterns
 
-## 📋 Files Removed
+## Files Removed
 
 - `GuestActionsDrawer.tsx` (old version)
 - `GuestDeleteModal.tsx`
 - `GuestEditModal.tsx`
 - `GuestViewModal.tsx`
 
-## 📋 Files Created
+## Files Created
 
 - `components/GuestActionsDrawer.tsx` (new modular version)
 - `components/GuestViewTab.tsx`
@@ -116,7 +116,7 @@ src/pages/guests/
 - `index.md`
 - `REFACTORING_SUMMARY.md`
 
-## 🎯 Next Steps
+## Next Steps
 
 ### **Immediate**
 - Test all CRUD operations work correctly
@@ -134,7 +134,7 @@ src/pages/guests/
 - Implement advanced filtering and search
 - Add export functionality
 
-## 🔍 Testing Checklist
+## Testing Checklist
 
 - [ ] Guest list loads correctly
 - [ ] Search and filtering work
@@ -147,7 +147,7 @@ src/pages/guests/
 - [ ] Error handling displays properly
 - [ ] Success messages show correctly
 
-## 📚 Related Documentation
+## Related Documentation
 
 - [index.md](./index.mdx) - Comprehensive module documentation
 - [API Patterns](../../api/api-patterns.mdx) - Backend API structure

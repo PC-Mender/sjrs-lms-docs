@@ -3,7 +3,7 @@ title: "Overview"
 ---
 
 
-## 📁 Structure
+## Structure
 
 ```
 src/pages/subcategories/
@@ -17,7 +17,7 @@ src/pages/subcategories/
 └── index.md                    # This documentation
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 ### Backend Alignment
 - **API Endpoint**: `/api/subcategories`
@@ -35,13 +35,13 @@ src/pages/subcategories/
 - **SubcategoryShow**: Detail view component showing subcategory information and related books
 - **Types**: Proper TypeScript interfaces in `src/types/d1/subcategories.ts`
 
-## 🔧 Features
+## Features
 
 ### CRUD Operations
-- ✅ **Create**: Modal form for new subcategories
-- ✅ **Read**: Paginated table with search functionality
-- ✅ **Update**: Inline edit modal
-- ✅ **Delete**: Confirmation modal with validation
+- **Create**: Modal form for new subcategories
+- **Read**: Paginated table with search functionality
+- **Update**: Inline edit modal
+- **Delete**: Confirmation modal with validation
 
 ### Search & Filtering
 - Real-time search across name and section
@@ -53,7 +53,7 @@ src/pages/subcategories/
 - Name length constraints (2-100 characters)
 - Section selection validation
 
-## 🚀 Usage
+## Usage
 
 ### Basic List View
 ```tsx
@@ -83,49 +83,49 @@ import { SubcategoryShow } from './components/SubcategoryShow';
 <SubcategoryShow />
 ```
 
-## 🔒 Security
+## Security
 
 - Admin/Superuser/Librarian access required for mutations
 - Proper permission checks on backend
 - Input validation and sanitization
 - SQL injection protection
 
-## 📊 Data Flow
+## Data Flow
 
 1. **List**: `GET /api/subcategories` → Display in table
 2. **Create**: Form submission → `POST /api/subcategories` → Refresh list
 3. **Update**: Form submission → `PUT /api/subcategories/:id` → Refresh list
 4. **Delete**: Confirmation → `DELETE /api/subcategories/:id` → Refresh list
 
-## 🔄 State Management
+## State Management
 
 - Uses React Query for server state management
 - Local state for UI interactions (modals, forms)
 - Optimistic updates for better UX
 - Proper error handling and loading states
 
-## 🎨 UI Components
+## UI Components
 
 - **Ant Design**: Consistent UI components
 - **Responsive Design**: Works on all screen sizes
 - **Accessibility**: Proper ARIA labels and keyboard navigation
 - **Loading States**: Skeleton loaders and spinners
 
-## 📝 Form Handling
+## Form Handling
 
 - **Validation**: Client-side validation with Ant Design Form
 - **Error Handling**: User-friendly error messages
 - **Loading States**: Disabled buttons during submission
 - **Reset**: Form resets after successful submission
 
-## 🗑️ Removed Redundancy
+## Removed Redundancy
 
 - Eliminated duplicate page files
 - Consolidated all CRUD operations in one list component
 - Reusable form component for create/edit
 - Clean separation of concerns
 
-## 🔧 Future Enhancements
+## Future Enhancements
 
 - Bulk operations (delete multiple, bulk edit)
 - Advanced filtering (by section, date range)

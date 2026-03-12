@@ -3,13 +3,13 @@ title: "Cloudflare Products"
 ---
 
 
-## 📋 **Overview**
+## **Overview**
 
 This document provides a comprehensive guide to all Cloudflare products used in the SJRS Library Management System, including setup, configuration, and best practices.
 
 **Note**: The SJRS LMS is a **Single Page Application (SPA)** built with React. All client-side routing is handled by React Router, and the server serves the main `index.html` for all routes.
 
-## 🏗️ **Architecture Overview**
+## **Architecture Overview**
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -30,7 +30,7 @@ This document provides a comprehensive guide to all Cloudflare products used in 
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-## 🌐 **Cloudflare Workers with Static Assets**
+## **Cloudflare Workers with Static Assets**
 
 ### **What It Is**
 Cloudflare Workers with Static Assets is a unified deployment model that combines serverless functions with static asset hosting in a single Worker.
@@ -66,7 +66,7 @@ binding = "ASSETS"
 - **Zero Configuration**: Automatic HTTPS, CDN, and security
 - **Easier Maintenance**: One deployment to manage instead of two
 
-## ⚡ **Cloudflare Workers**
+## **Cloudflare Workers**
 
 ### **What It Is**
 Serverless functions that run on Cloudflare's edge network, providing low-latency API endpoints.
@@ -123,7 +123,7 @@ functions/
 - **Cost Effective**: Pay only for requests
 - **Security**: Built-in DDoS protection
 
-## 🗄️ **Cloudflare D1**
+## **Cloudflare D1**
 
 ### **What It Is**
 A serverless SQL database built on SQLite, designed for edge computing.
@@ -166,7 +166,7 @@ CREATE TABLE library_users (
 - **Global Replication**: Data available worldwide
 - **Cost Effective**: No egress fees
 
-## 📦 **Cloudflare R2**
+## **Cloudflare R2**
 
 ### **What It Is**
 Object storage service compatible with Amazon S3 API, with no egress fees.
@@ -205,7 +205,7 @@ const url = env.STORAGE.get(fileName);
 - **Global CDN**: Fast access worldwide
 - **Durability**: 99.999999999% (11 9's) durability
 
-## ⚡ **Cloudflare KV**
+## **Cloudflare KV**
 
 ### **What It Is**
 Global, low-latency key-value data store for caching and session management.
@@ -243,7 +243,7 @@ await env.CACHE.put(`rate_limit:${ip}`, requestTimestamps, {
 - **Automatic Expiration**: TTL-based cleanup
 - **High Availability**: 99.9% uptime SLA
 
-## 🔄 **Cloudflare Queues**
+## **Cloudflare Queues**
 
 ### **What It Is**
 Reliable message queue service for background job processing.
@@ -290,14 +290,14 @@ export default {
 - **Scalable**: Handles high message volumes
 - **Cost Effective**: Pay only for messages processed
 
-## 📧 **Email Service Architecture**
+## **Email Service Architecture**
 
 ### **Overview**
 Our email system uses a **hybrid approach** combining **Mailjet** for email delivery with **Cloudflare Queues** for reliability and scalability.
 
 ### **Architecture Strategy**
 
-#### **📧 Account-Related Emails (Direct Mailjet)**
+#### ** Account-Related Emails (Direct Mailjet)**
 - **Purpose**: Registration confirmation, password reset, email verification
 - **Reason**: Immediate feedback needed, low volume
 - **Implementation**: Direct API calls to Mailjet
@@ -325,7 +325,7 @@ async function sendConfirmationEmail(email: string, firstName: string, token: st
 }
 ```
 
-#### **📧 Transactional Emails (Queue + Mailjet Backend)**
+#### ** Transactional Emails (Queue + Mailjet Backend)**
 - **Purpose**: Loan notifications, return reminders, overdue notices, system notifications
 - **Reason**: Background processing preferred, high volume, reliability needed
 - **Implementation**: Cloudflare Queues with Mailjet backend
@@ -354,13 +354,13 @@ async processEmailMessage(message: EmailQueueMessage, env: any) {
 
 ### **Why This Hybrid Approach?**
 
-#### **✅ Direct Mailjet Benefits (Account Emails)**
+#### ** Direct Mailjet Benefits (Account Emails)**
 - **Immediate Feedback**: User gets instant confirmation
 - **Simple Implementation**: No queue complexity
 - **Low Volume**: Account emails are infrequent
 - **Critical Path**: Registration flow shouldn't be delayed
 
-#### **✅ Queue + Mailjet Benefits (Transactional Emails)**
+#### ** Queue + Mailjet Benefits (Transactional Emails)**
 - **Non-Blocking**: User experience isn't affected
 - **Reliability**: Automatic retries and dead letter queues
 - **Scalability**: Handles traffic spikes automatically
@@ -466,7 +466,7 @@ const response = await fetch('https://api.mailjet.com/v3.1/send', {
 
 This hybrid approach provides the best of both worlds: **immediate feedback for critical account emails** and **reliable, scalable processing for transactional emails**.
 
-## 🎯 **Cloudflare Durable Objects**
+## **Cloudflare Durable Objects**
 
 ### **What It Is**
 Stateful serverless objects for real-time features and distributed coordination.
@@ -504,7 +504,7 @@ await counter.fetch('/increment', { method: 'POST' });
 - **Global Coordination**: Distributed state management
 - **Low Latency**: Edge-based stateful computing
 
-## 📊 **Cloudflare Analytics**
+## **Cloudflare Analytics**
 
 ### **What It Is**
 Real-time analytics and monitoring for performance and security insights.
@@ -543,7 +543,7 @@ await env.ANALYTICS.writeDataPoint({
 - **Performance Metrics**: Response times and throughput
 - **Custom Events**: Application-specific tracking
 
-## 🔒 **Security Features**
+## **Security Features**
 
 ### **Built-in Security**
 - **DDoS Protection**: Automatic protection against attacks
@@ -560,7 +560,7 @@ await env.ANALYTICS.writeDataPoint({
 - **Authentication**: JWT-based authentication
 - **Authorization**: Role-based access control
 
-## 📈 **Performance Benefits**
+## **Performance Benefits**
 
 ### **Edge Computing**
 - **Global CDN**: Content delivered from 200+ locations
@@ -574,7 +574,7 @@ await env.ANALYTICS.writeDataPoint({
 - **Free Tier**: Generous free limits
 - **Predictable Pricing**: Simple, transparent pricing
 
-## 🛠️ **Development Workflow**
+## **Development Workflow**
 
 ### **Local Development**
 ```bash
@@ -612,7 +612,7 @@ wrangler tail
 # Access via Cloudflare Dashboard
 ```
 
-## 📚 **Resources**
+## **Resources**
 
 ### **Documentation**
 - [Cloudflare Workers](https://developers.cloudflare.com/workers/)

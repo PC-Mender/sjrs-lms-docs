@@ -5,20 +5,20 @@ title: "Overview"
 
 This directory contains detailed documentation for specific features and systems within the SJRS LMS, including reference books, email services, and other specialized functionality.
 
-## 📚 Documentation Index
+## Documentation Index
 
-### **📚 Reference Books System**
+### ** Reference Books System**
 - **[Reference Books System Guide](./reference-books/system-guide.mdx)** - Complete guide to the reference books feature
 - **[Reference Books Database Diagram](./reference-books/database-diagram.mdx)** - Database schema and relationships for reference books
 
-### **📧 Email Service**
+### ** Email Service**
 - **[Email Service Documentation](./email-service/)** - Comprehensive email service architecture and implementation
 
-### **📊 Action Logging System**
+### ** Action Logging System**
 - **[Action Logging Documentation](./action-logging.mdx)** - Comprehensive audit trail and monitoring system
 - **[Action Logs User Guide](../user-guides/action-logs-guide.mdx)** - User guide for administrators
 
-### **🔐 Permissions System**
+### ** Permissions System**
 - **[Permissions System Documentation](./permissions/)** - Role-based access control with Zustand optimization
 - **[Permission System Architecture](../architecture/permission-system.mdx)** - System design and database schema
 - **[Roles and Permissions Guide](../development/roles-and-permissions.mdx)** - Role management and hierarchy
@@ -27,23 +27,23 @@ This directory contains detailed documentation for specific features and systems
 - **[Onboarding Status System](./onboarding-status.mdx)** - Complete workflow status reference (pending_email_confirmation, profile_incomplete, pending_approval, complete)
 - **[Registration Flow Guide](../user-guides/registration-flow.mdx)** - User registration and approval process
 
-### **�🔔 Notifications System**
+### **� Notifications System**
 - **[App Notifications Module](./notifications/)** - User-specific in-app notifications
 - **[Notification Types Guide](./notifications/notification-types-guide.mdx)** - Complete guide to Announcements, System Notifications, and App Notifications
 
-### **🏆 Badge System**
+### ** Badge System**
 - **[Badge System Documentation](./badges/)** - Comprehensive gamification and achievement system
 
-### **🌍 Location Services**
+### ** Location Services**
 - **[Location Services Documentation](./locations/)** - Global location data system (Countries, States, Cities)
 
-### **❓ Help & Support**
+### ** Help & Support**
 - **[Frequently Asked Questions](./faqs/)** - Comprehensive FAQs for all user roles
 - **[Notification Types Guide](./notifications/notification-types-guide.mdx)** - Guide to system notifications and announcements
 
 
 
-## 🎯 Quick Navigation
+## Quick Navigation
 
 ### **For Library Staff**
 - Start with [Reference Books System Guide](./reference-books/system-guide.mdx) for managing reference materials
@@ -63,7 +63,7 @@ This directory contains detailed documentation for specific features and systems
 - Use [Notification Types Guide](./notifications/notification-types-guide.mdx) for managing announcements and system notifications
 - Manage [Badge System](./badges/) for user achievements and gamification
 
-## 🔗 Related Documentation
+## Related Documentation
 
 - **[Architecture Documentation](../architecture/)** - Overall system architecture
 - **[API Documentation](../api/)** - API endpoints and integration
@@ -88,7 +88,7 @@ import { Notification, NotificationType } from 'src/types/notifications';
 
 ## �� Features Overview
 
-### **📚 Reference Books System**
+### ** Reference Books System**
 - **Purpose**: Manage reference materials and digital resources
 - **Key Features**: 
   - Digital book management
@@ -97,12 +97,12 @@ import { Notification, NotificationType } from 'src/types/notifications';
   - Access control
 - **Technology**: Cloudflare D1 database with React frontend
 
-### **📧 Email Service**
+### ** Email Service**
 - **Purpose**: Send notifications and communications to users
 - **Architecture**: Direct Mailjet integration
 - **Types**: Account and transactional emails via Mailjet
 
-### **📊 Action Logging System**
+### ** Action Logging System**
 - **Purpose**: Comprehensive audit trail and system monitoring
 - **Key Features**:
   - Automatic action capture
@@ -111,7 +111,7 @@ import { Notification, NotificationType } from 'src/types/notifications';
   - Role-based access control
 - **Technology**: Cloudflare D1 database with comprehensive logging
 
-### **🔐 Permissions System**
+### ** Permissions System**
 - **Purpose**: Role-based access control with performance optimization
 - **Key Features**:
   - Zustand-powered state management
@@ -121,7 +121,7 @@ import { Notification, NotificationType } from 'src/types/notifications';
   - Audit logging for security
 - **Technology**: React hooks with Zustand store, TypeScript support
 
-### **🏆 Badge System**
+### ** Badge System**
 - **Purpose**: Gamification and achievement recognition system
 - **Key Features**:
   - Automatic badge awarding based on user actions
@@ -134,7 +134,7 @@ import { Notification, NotificationType } from 'src/types/notifications';
 
 
 
-## 🚀 Getting Started
+## Getting Started
 
 ### **Reference Books System**
 1. **Read the [System Guide](./reference-books/system-guide.mdx)** to understand the feature
@@ -164,7 +164,7 @@ import { Notification, NotificationType } from 'src/types/notifications';
 
 
 
-## 🔧 Implementation Details
+## Implementation Details
 
 ### **Reference Books Database Schema**
 ```sql
@@ -218,7 +218,7 @@ async function sendLoanNotification(userEmail: string, bookTitle: string) {
 }
 ```
 
-## 🎯 Best Practices
+## Best Practices
 
 ### **Reference Books Management**
 - **Organize by categories** for easy navigation
@@ -240,7 +240,7 @@ async function sendLoanNotification(userEmail: string, bookTitle: string) {
 
 
 
-## 📊 Feature Metrics
+## Feature Metrics
 
 ### **Reference Books System**
 - **Total Books**: Track number of reference materials
@@ -262,7 +262,7 @@ async function sendLoanNotification(userEmail: string, bookTitle: string) {
 
 
 
-## 🔗 Integration Points
+## Integration Points
 
 ### **Reference Books Integration**
 - **User Management**: Access control based on user roles

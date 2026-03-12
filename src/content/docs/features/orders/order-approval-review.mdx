@@ -5,7 +5,7 @@ title: "Order Approval Review"
 
 ## Current Implementation Analysis
 
-### ✅ What Works Well
+### What Works Well
 
 1. **Permission Checks**: Properly checks for `orders:approve` permission before allowing approval
 2. **Race Condition Prevention**: Uses CTE to atomically claim a copy
@@ -13,7 +13,7 @@ title: "Order Approval Review"
 4. **Notifications**: Comprehensive notification system for users
 5. **Due Date Calculation**: Properly calculates due dates based on user type limits
 
-### ❌ Critical Issues Found
+### Critical Issues Found
 
 #### 1. **Non-Atomic Copy Claiming** (CRITICAL)
 
@@ -55,7 +55,7 @@ title: "Order Approval Review"
 - Copy remains in incorrect state
 - No error recovery mechanism
 
-### ✅ Comparison with Similar Implementation
+### Comparison with Similar Implementation
 
 **Reservation Claim** (`claim-reservation.ts`) does it correctly:
 - All operations (copy claim, loan creation, reservation update) in **one atomic batch**
@@ -158,37 +158,37 @@ await env.DB.prepare(`
 
 ## Implementation Plan
 
-1. ✅ **COMPLETED** - Refactor copy claiming to be part of batch operation
-2. ✅ **COMPLETED** - Remove redundant verification step
-3. ✅ **COMPLETED** - Add order status validation
-4. ✅ **COMPLETED** - Improve error messages
-5. ✅ **COMPLETED** - Add audit logging
-6. ⚠️ **PENDING** - Test race condition scenarios (requires manual/integration testing)
-7. ⚠️ **PENDING** - Test error recovery scenarios (requires manual/integration testing)
+1. **COMPLETED** - Refactor copy claiming to be part of batch operation
+2. **COMPLETED** - Remove redundant verification step
+3. **COMPLETED** - Add order status validation
+4. **COMPLETED** - Improve error messages
+5. **COMPLETED** - Add audit logging
+6. **PENDING** - Test race condition scenarios (requires manual/integration testing)
+7. **PENDING** - Test error recovery scenarios (requires manual/integration testing)
 
 ## Implementation Summary
 
 ### Changes Made
 
-1. **Atomic Batch Operation** ✅
+1. **Atomic Batch Operation** 
    - Copy claiming now included in batch operation
    - All three operations (copy claim, loan creation, order update) are atomic
    - Prevents stuck copies if batch fails
 
-2. **Removed Redundant Verification** ✅
+2. **Removed Redundant Verification** 
    - Removed separate verification query (lines 83-90 in old code)
    - Batch operation handles verification through success checks
 
-3. **Order Status Validation** ✅
+3. **Order Status Validation** 
    - Added check for already-completed orders
    - Added check for rejected orders
    - Prevents invalid state transitions
 
-4. **Improved Error Messages** ✅
+4. **Improved Error Messages** 
    - More descriptive error messages
    - Better user guidance when copies unavailable
 
-5. **Audit Logging** ✅
+5. **Audit Logging** 
    - Added action_logs entry for order approvals
    - Tracks who approved, when, and loan ID created
 

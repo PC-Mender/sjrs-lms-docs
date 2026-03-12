@@ -296,7 +296,7 @@ CREATE TABLE notification_events (
 **Displayed in Notification Center**:
 - **Title**: From changelog or commit message
 - **Version**: `v3.40.27`
-- **Commit Type**: `✨ Feature`, `🐛 Bug Fix`, etc.
+- **Commit Type**: ` Feature`, ` Bug Fix`, etc.
 - **Commit Hash**: Short hash (e.g., `34fef53`)
 - **Deployed**: Formatted time
 - **Changelog**: Sections with changes
@@ -332,7 +332,7 @@ CREATE TABLE notification_events (
 1. **Token Configuration**
    ```bash
    # Check GitHub Actions logs for:
-   🔑 Token configured: Yes (***xxxx)
+    Token configured: Yes (***xxxx)
    # If shows "No", add secret:
    # GitHub → Settings → Secrets → NOTIFICATION_INGEST_TOKEN_RELEASE
    ```
@@ -342,7 +342,7 @@ CREATE TABLE notification_events (
    - Cloudflare Workers env var `NOTIFICATION_INGEST_TOKEN_RELEASE`
 
 3. **Notification Status**
-   - Check logs for: `✅ Status: active`
+   - Check logs for: ` Status: active`
    - If status is `'draft'`, notification won't appear
 
 4. **Database Query**

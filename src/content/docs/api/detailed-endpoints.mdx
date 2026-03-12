@@ -5,7 +5,7 @@ title: "Detailed Endpoints"
 
 This document provides detailed documentation for the most important SJRS LMS API endpoints, including request/response examples, parameters, and detailed usage information.
 
-## 🔑 Authentication Endpoints
+## Authentication Endpoints
 
 ### **User Login**
 **Endpoint:** `POST /api/auth/login`  
@@ -156,7 +156,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-## 📚 Book Management Endpoints
+## Book Management Endpoints
 
 ### **Get All Books**
 **Endpoint:** `GET /api/books`  
@@ -323,7 +323,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-## 📚 Resource Management Endpoints
+## Resource Management Endpoints
 
 ### **Get All Resources**
 **Endpoint:** `GET /api/resources`  
@@ -423,7 +423,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-## 📚 Loan Management Endpoints
+## Loan Management Endpoints
 
 ### **Get All Loans**
 **Endpoint:** `GET /api/loans`  
@@ -546,7 +546,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-## 👥 User Management Endpoints
+## User Management Endpoints
 
 ### **Get All Users**
 **Endpoint:** `GET /api/users`  
@@ -615,7 +615,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-## 🔔 User Experience Endpoints
+## User Experience Endpoints
 
 ### **Get User Wishlist**
 **Endpoint:** `GET /api/wishlist`  
@@ -720,14 +720,14 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-## ⚖️ System Management Endpoints
+## System Management Endpoints
 
 ### **Check User Permissions**
 **Endpoint:** `GET /api/permissions/check`  
 **Description:** Check current user's permissions for specific resources  
 **Authentication:** Required (cookie-based session)
 
-**⚠️ RBAC Policy: This endpoint is the single source of truth for all permission decisions. Client-side permission checks are for UI optimization only and deny by default when backend validation is unavailable.**
+** RBAC Policy: This endpoint is the single source of truth for all permission decisions. Client-side permission checks are for UI optimization only and deny by default when backend validation is unavailable.**
 
 #### Query Parameters
 ```
@@ -796,7 +796,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-## 📁 File Management Endpoints
+## File Management Endpoints
 
 ### **Upload File**
 **Endpoint:** `POST /api/upload`  
@@ -830,7 +830,7 @@ description: "Book cover image"
 }
 ```
 
-## 🏥 Health & System Endpoints
+## Health & System Endpoints
 
 ### **Health Check**
 **Endpoint:** `GET /api/health`  
@@ -853,7 +853,7 @@ description: "Book cover image"
 }
 ```
 
-## 📧 Email Service Endpoints
+## Email Service Endpoints
 
 ### **Send Email**
 **Endpoint:** `POST /api/email`  
@@ -890,7 +890,7 @@ description: "Book cover image"
 
 ---
 
-## 🔧 Common Response Patterns
+## Common Response Patterns
 
 ### **Success Response Format**
 ```json
@@ -925,7 +925,7 @@ description: "Book cover image"
 }
 ```
 
-## 🎖️ Badge Management Endpoints
+## Badge Management Endpoints
 
 ### **Get Badge Catalog**
 **Endpoint:** `GET /api/badges/catalog`  
@@ -950,7 +950,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
         "key": "welcome",
         "name": "Welcome Badge",
         "description": "Awarded for joining the platform",
-        "icon": "🎉",
+        "icon": "",
         "color": "#1890ff",
         "level": 1,
         "created_at": "2025-01-15T10:30:00.000Z",
@@ -961,7 +961,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
         "key": "first_loan",
         "name": "First Loan",
         "description": "Borrowed your first library item",
-        "icon": "📚",
+        "icon": "",
         "color": "#52c41a",
         "level": 1,
         "created_at": "2025-01-15T10:30:00.000Z",
@@ -1179,7 +1179,7 @@ GET /api/badges/granted?page=1&limit=20&status=active
         "key": "welcome",
         "name": "Welcome Badge",
         "description": "Awarded for joining the platform",
-        "icon": "🎉",
+        "icon": "",
         "color": "#1890ff",
         "level": 1,
         "first_name": "John",
@@ -1238,7 +1238,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
         "key": "welcome",
         "name": "Welcome Badge",
         "description": "Awarded for joining the platform",
-        "icon": "🎉",
+        "icon": "",
         "color": "#1890ff",
         "level": 1,
         "awarded_at": "2025-02-07T14:30:00.000Z",
@@ -1294,7 +1294,7 @@ GET /api/badges/granted/123
         "key": "welcome",
         "name": "Welcome Badge",
         "description": "Awarded for joining the platform",
-        "icon": "🎉",
+        "icon": "",
         "color": "#1890ff",
         "level": 1,
         "awarded_at": "2025-02-07T14:30:00.000Z",
@@ -1377,7 +1377,7 @@ The system includes automatic badge evaluators that run on specific triggers:
 }
 ```
 
-## 🚨 Common HTTP Status Codes
+## Common HTTP Status Codes
 
 - **200** - Success
 - **201** - Created
@@ -1390,7 +1390,7 @@ The system includes automatic badge evaluators that run on specific triggers:
 - **429** - Rate Limited
 - **500** - Internal Server Error
 
-## 🔐 Authentication Headers
+## Authentication Headers
 
 All authenticated endpoints use a cookie-based session. For state-changing requests (POST/PUT/PATCH/DELETE), include the CSRF header.
 ```

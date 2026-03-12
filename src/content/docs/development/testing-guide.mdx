@@ -7,11 +7,11 @@ title: "Testing Guide"
 **Audience**: Developers and QA Engineers  
 **Last Updated**: November 2025
 
-## 📋 Overview
+## Overview
 
 This guide covers all testing aspects of the SJRS LMS, including unit testing, integration testing, session management testing, and security feature validation.
 
-## 🧪 Testing Components
+## Testing Components
 
 ### Session Management Testing
 The SJRS LMS includes comprehensive session management testing components for validating cross-tab synchronization and security features.
@@ -57,7 +57,7 @@ Centralized exports for all testing components and utilities.
 
 **Location**: `src/testing/index.ts`
 
-## 🎯 Testing Scenarios
+## Testing Scenarios
 
 ### Session Management Tests
 - **Normal Operation**: 15-minute timeout, 2-minute warning
@@ -78,7 +78,7 @@ Centralized exports for all testing components and utilities.
 - **CORS Headers**: Validate CORS implementation
 - **Request Tracking**: Verify request ID generation
 
-## 🔧 Test Configuration
+## Test Configuration
 
 ### Session Test Configuration
 ```tsx
@@ -96,7 +96,7 @@ const maxAttempts = 5;
 const timeWindow = 15 * 60 * 1000; // 15 minutes
 ```
 
-## 🚀 Quick Start Testing
+## Quick Start Testing
 
 ### 1. Session Management Testing
 ```tsx
@@ -134,7 +134,7 @@ console.assert(data.timestamp, 'Response missing timestamp');
 console.assert(data.requestId, 'Response missing requestId');
 ```
 
-## 📋 Testing Checklist
+## Testing Checklist
 
 ### Session Management
 - [ ] Session timeout works correctly
@@ -162,7 +162,7 @@ console.assert(data.requestId, 'Response missing requestId');
 - [ ] Error responses don't leak data
 - [ ] Audit logging captures events
 
-## 🛠️ Manual Testing Procedures
+## Manual Testing Procedures
 
 ### 1. Authentication Flow
 1. **Registration**: Test new user registration
@@ -185,7 +185,7 @@ console.assert(data.requestId, 'Response missing requestId');
 4. **Error Handling**: Test error scenarios
 5. **Permission Checks**: Test role-based access
 
-## 🔍 Debugging Tests
+## Debugging Tests
 
 ### Session Management Debug
 ```tsx
@@ -211,7 +211,7 @@ window.fetch = async (...args) => {
 };
 ```
 
-## 📊 Test Reporting
+## Test Reporting
 
 ### Session Test Results
 ```tsx
@@ -239,7 +239,7 @@ const apiTestReport = {
 };
 ```
 
-## 🎯 Best Practices
+## Best Practices
 
 ### 1. Test Environment
 - Use separate test database
@@ -259,14 +259,14 @@ const apiTestReport = {
 - Monitor test results
 - Document test procedures
 
-## 🔗 Related Documentation
+## Related Documentation
 
 - **[Session Management](./session-management.mdx)** - Session system implementation
 - **[API Response Standardization](../api/api-response-standardization.mdx)** - API testing guidelines
 - **[Security Documentation](../security/index.mdx)** - Security testing procedures
 - **[Functions Folder Architecture](../api/functions-folder-architecture.mdx)** - Backend testing
 
-## 📝 Notes
+## Notes
 
 - Testing components are for **development and testing only**
 - They should **not be included in production builds**
@@ -276,6 +276,6 @@ const apiTestReport = {
 ---
 
 **Last Updated:** November 2025  
-**Status:** ✅ Active  
+**Status:**  Active  
 **Next Review:** January 2026
 

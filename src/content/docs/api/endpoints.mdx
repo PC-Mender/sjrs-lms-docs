@@ -5,7 +5,7 @@ title: "Endpoints"
 
 This document provides comprehensive documentation for all SJRS LMS API endpoints, organized by resource type and functionality.
 
-## 🔑 Authentication Endpoints
+## Authentication Endpoints
 
 ### **User Authentication**
 - **POST** `/api/auth/login` - User login
@@ -57,7 +57,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **POST** `/api/auth/check-status/send-otp` - Send OTP to check account status
 - **POST** `/api/auth/check-status/verify` - Verify OTP and return workflow status
 
-## 👥 User Management Endpoints
+## User Management Endpoints
 
 ### **User Operations**
 - **GET** `/api/users` - Get all users (admin/librarian)
@@ -81,7 +81,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **PUT** `/api/professors/:id` - Update professor
 - **DELETE** `/api/professors/:id` - Delete professor
 
-## 🌍 Location Endpoints
+## Location Endpoints
 
 ### **Location Data**
 - **GET** `/api/locations/countries` - Get all countries
@@ -89,7 +89,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **GET** `/api/locations/districts` - Get districts by state (`?country=CODE&state=CODE`)
 - **GET** `/api/locations/cities` - Get cities by state (`?country=CODE&state=CODE`)
 
-## 📚 Book Management Endpoints
+## Book Management Endpoints
 
 ### **Book Operations**
 - **GET** `/api/books` - Get all books
@@ -127,7 +127,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **PUT** `/api/publications/:id` - Update publication
 - **DELETE** `/api/publications/:id` - Delete publication
 
-## 📖 Reference Material Endpoints
+## Reference Material Endpoints
 
 ### **Reference Books**
 - **GET** `/api/reference-books` - Get reference books
@@ -185,7 +185,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **PUT** `/api/journals/:id` - Update journal
 - **DELETE** `/api/journals/:id` - Delete journal
 
-## 📚 Loan Management Endpoints
+## Loan Management Endpoints
 
 ### **Loan Operations**
 - **GET** `/api/loans` - Get all loans
@@ -215,7 +215,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **PUT** `/api/book-views/:id` - Update book view
 - **DELETE** `/api/book-views/:id` - Delete book view
 
-## 🛒 Order & Payment Endpoints
+## Order & Payment Endpoints
 
 ### **Orders**
 - **GET** `/api/orders` - Get all orders
@@ -238,7 +238,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **PUT** `/api/receipts/:id` - Update receipt
 - **DELETE** `/api/receipts/:id` - Delete receipt
 
-## ⚖️ System Management Endpoints
+## System Management Endpoints
 
 ### **Roles & Permissions**
 - **GET** `/api/roles` - Get all roles
@@ -269,7 +269,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **GET** `/api/migrations` - Get migration status
 - **POST** `/api/migrations` - Run migrations
 
-## 🔔 User Experience Endpoints
+## User Experience Endpoints
 
 ### **Wishlist**
 - **GET** `/api/wishlist` - Get user wishlist
@@ -292,7 +292,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **PUT** `/api/penalties/:id` - Update penalty
 - **DELETE** `/api/penalties/:id` - Delete penalty
 
-## 🏆 Badge System Endpoints
+## Badge System Endpoints
 
 ### **Badge Operations**
 - **GET** `/api/badges` - Get all badges (catalog) - Requires `badges:read` permission
@@ -311,14 +311,14 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - Validates expiration dates
 - Comprehensive audit logging
 
-## 📁 File Management Endpoints
+## File Management Endpoints
 
 ### **Upload**
 - **POST** `/api/upload` - Upload file
 - **GET** `/api/upload/:id` - Get uploaded file
 - **DELETE** `/api/upload/:id` - Delete uploaded file
 
-## 🆘 Help & Support Endpoints
+## Help & Support Endpoints
 
 ### **Help System**
 - **GET** `/api/help` - Get help content
@@ -327,19 +327,19 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **PUT** `/api/help/:id` - Update help article
 - **DELETE** `/api/help/:id` - Delete help article
 
-## 🏥 Health & System Endpoints
+## Health & System Endpoints
 
 ### **Health Check**
 - **GET** `/api/health` - System health status
 
-## 📧 Email Service Endpoints
+## Email Service Endpoints
 
 ### **Email Management**
 - **GET** `/api/email` - Get email configuration
 - **POST** `/api/email` - Send email
 - **PUT** `/api/email` - Update email configuration
 
-## 🔐 Legacy Permission Endpoints
+## Legacy Permission Endpoints
 
 ### **Legacy Permission System**
 - **POST** `/api/role_permissions` - Manage role permissions
@@ -348,7 +348,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **POST** `/api/permission_audit_log` - Access permission audit log
 - **POST** `/api/update_role_permission` - Update role permissions
 
-### **🔐 RBAC Policy: Backend Permission Endpoint is Single Source of Truth**
+### ** RBAC Policy: Backend Permission Endpoint is Single Source of Truth**
 
 **The backend permissions endpoint (`GET /api/permissions/check`) is the single source of truth for all permission decisions.**
 
@@ -359,7 +359,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 
 ---
 
-## 📋 Endpoint Summary by Resource Type
+## Endpoint Summary by Resource Type
 
 | Resource Type | Endpoints | CRUD Operations | Admin Required |
 |---------------|-----------|-----------------|----------------|
@@ -376,7 +376,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 | **File Management** | 3 | Full | Admin+ |
 | **Help & Support** | 5 | Full | Admin+ |
 
-## 🎯 Quick Reference
+## Quick Reference
 
 ### **Public Endpoints** (No Authentication)
 - `GET /api/health` - Health check
@@ -409,7 +409,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 **Last Updated:** November 2025  
 **Version:** 3.41.25
 
-## 🎓 Academic Tools Endpoints
+## Academic Tools Endpoints
 
 ### **Citation Generator**
 - **GET** `/api/citations` — List supported formats and source types

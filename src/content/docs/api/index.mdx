@@ -5,29 +5,29 @@ title: "Overview"
 
 This directory contains comprehensive documentation for the SJRS LMS API, including authentication, token management, and API endpoints.
 
-## 📚 Documentation Index
+## Documentation Index
 
-### **🔑 Authentication & Tokens**
+### ** Authentication & Tokens**
 - **[Token Requirements](./token-requirements.mdx)** - Detailed guide for API token configuration and requirements
 - **[Token Quick Reference](./token-quick-reference.mdx)** - Quick reference for token usage and configuration
 
-### **🏗️ API Architecture**
+### ** API Architecture**
 - **[API Patterns](./api-patterns.mdx)** - Complete guide to API patterns, architecture, and migration details
 - **[API Response Standardization](./api-response-standardization.mdx)** ⭐ **NEW** - Standardized response system
 - **[Functions Folder Architecture](./functions-folder-architecture.mdx)** ⭐ **NEW** - Backend structure and patterns
 
-### **📋 API Endpoints**
+### ** API Endpoints**
 - **[Complete Endpoints List](./endpoints.mdx)** ⭐ **NEW** - Comprehensive list of all API endpoints
 - **[Detailed Endpoints with Examples](./detailed-endpoints.mdx)** ⭐ **NEW** - Detailed documentation with request/response examples
 - **[Documentation Status](./documentation-status.mdx)** ⭐ **NEW** - Current status and coverage overview
 
-### **🧪 Testing & Development**
+### ** Testing & Development**
 - **[API Testing Collection](./api-testing-collection.mdx)** ⭐ **NEW** - Postman collection, cURL examples, and testing procedures
 - **[Quick Start Guide](./quick-start-guide.mdx)** ⭐ **NEW** - Get started in 5 minutes
 - **[Error Codes Reference](./error-codes-reference.mdx)** ⭐ **NEW** - Comprehensive error codes and troubleshooting
 - **[Troubleshooting Guide](./troubleshooting-guide.mdx)** ⭐ **NEW** - Common issues and solutions
 
-## 🎯 Quick Navigation
+## Quick Navigation
 
 ### **For API Integration**
 - Start with [Token Requirements](./token-requirements.mdx) for setup
@@ -46,13 +46,13 @@ This directory contains comprehensive documentation for the SJRS LMS API, includ
 - Test with [API Testing Collection](./api-testing-collection.mdx)
 - Troubleshoot with [Error Codes Reference](./error-codes-reference.mdx)
 
-## 🔗 Related Documentation
+## Related Documentation
 
 - **[Architecture Documentation](../architecture/)** - System architecture and design
 - **[Deployment Guide](../deployment/)** - API deployment and configuration
 - **[Security Documentation](../security/)** - Security best practices and guidelines
 
-## 📋 API Overview
+## API Overview
 
 ### **Authentication Methods**
 - **JWT (Cookie-Based)** - Backend sets an HttpOnly auth cookie; browser sends it automatically (`credentials: 'include'`)
@@ -72,7 +72,7 @@ This directory contains comprehensive documentation for the SJRS LMS API, includ
 - **Permission System** - Permission-based access control
 - **Session Management** - Force logout, session cleanup
 
-## 🏗️ API Architecture
+## API Architecture
 
 ### **Direct Function API Pattern**
 The SJRS LMS uses a **direct function API pattern** optimized for Cloudflare Workers with unified deployment, providing:
@@ -145,7 +145,7 @@ try {
 }
 ```
 
-## 🔐 Session Management API
+## Session Management API
 
 ### **Force Logout Endpoint**
 The system provides a comprehensive session management API that enforces a single session policy while giving users control over their sessions.
@@ -243,7 +243,7 @@ const forceLogoutOtherSessions = async (email: string, password: string) => {
 - **User Choice**: Users can choose to force logout existing sessions
 - **Graceful Handling**: Seamless transition between sessions
 
-## 🚀 Getting Started
+## Getting Started
 
 ### **1. Setup Authentication**
 ```bash
@@ -298,7 +298,7 @@ await sendLoanNotification('borrow_notification', {
 });
 ```
 
-## 🔐 Security Considerations
+## Security Considerations
 
 ### **Token Management**
 - **JWT Tokens** - 24-hour expiration with automatic refresh
@@ -310,7 +310,7 @@ await sendLoanNotification('borrow_notification', {
 - **Queue Security** - Internal Cloudflare Queues with automatic encryption
 - **Error Handling** - Graceful degradation for email failures
 
-## 📊 API Patterns
+## API Patterns
 
 ### **Standard Response Format**
 ```typescript
@@ -389,7 +389,7 @@ export async function newResource(request: Request, env: any) {
 }
 ```
 
-## 🎯 Best Practices
+## Best Practices
 
 - **Session State**: Use `tokenManager` for non-sensitive session/UI state (never `localStorage` directly); use `unifiedAPIClient` for cookie + CSRF handling
 - **Error Handling**: Check response status, implement retry logic, log errors for debugging

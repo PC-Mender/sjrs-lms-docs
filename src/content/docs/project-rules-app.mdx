@@ -175,11 +175,11 @@ These standards are enforced through tooling where possible; deviations must be 
 - **Accurate UI State (Project Policy)**: Show users accurate data timestamps and state:
   - **Last Updated Timestamps**: Use React Query's `dataUpdatedAt` from query results, not `new Date()` on every render
     ```typescript
-    // ✅ Correct - shows when data was actually fetched
+    //  Correct - shows when data was actually fetched
     const { data, dataUpdatedAt } = useD1UsersQuery({ pagination });
     const lastUpdated = dataUpdatedAt ? new Date(dataUpdatedAt).toLocaleTimeString() : 'Never';
     
-    // ❌ Wrong - shows current time on every render, misleading users
+    //  Wrong - shows current time on every render, misleading users
     const lastUpdated = new Date().toLocaleTimeString();
     ```
   - **Manual Tracking**: If using manual refresh tracking (e.g., `lastRefreshTime` state), update it only in refresh handlers, not on every render
@@ -306,7 +306,7 @@ These standards are enforced through tooling where possible; deviations must be 
         record: editingRecord,
         config: {
           onClose: editModal.close,
-          setRefreshTime: onRefresh,  // ✅ onRefresh from useCrudModalState — not expanded inline
+          setRefreshTime: onRefresh,  //  onRefresh from useCrudModalState — not expanded inline
           reopenModal: (record, formData) => {
             editModal.form.setFieldsValue(formData);
             editModal.open(record);
@@ -330,11 +330,11 @@ These standards are enforced through tooling where possible; deviations must be 
       mutation: updateMutation,
       record: editingRecord,
       config: {
-        onClose: editModal.close,         // ✅ hook's close handler
-        setRefreshTime: onRefresh,        // ✅ centralized refresh — not duplicated here
+        onClose: editModal.close,         //  hook's close handler
+        setRefreshTime: onRefresh,        //  centralized refresh — not duplicated here
         reopenModal: (record, formData) => {
           editModal.form.setFieldsValue(formData);
-          editModal.open(record);         // ✅ hook's open handler
+          editModal.open(record);         //  hook's open handler
         },
         setLoading: setEditLoading,
       },
@@ -366,12 +366,12 @@ These standards are enforced through tooling where possible; deviations must be 
     - [ProfessorsPage.tsx](../src/pages/professors/index.tsx) — Complete CUD migration with optimistic updates
   
   - **Common Mistakes (Anti-Patterns)**:
-    - ❌ Using `refreshData` callback (removed; use `setRefreshTime: onRefresh`)
-    - ❌ Expanding refresh inline in mutation config (`setRefreshTime: (time) => { setLastRefreshTime(time); onRefresh(time); }`) — register once at `useCrudModalState` config instead
-    - ❌ Managing modal visibility/form/record directly in the page (use `useCrudModalState`)
-    - ❌ Direct `await mutateAsync()` before close (use `useInstantCloseMutation`)
-    - ❌ `async/await` inside delete `onOk` — use `void onDelete(id)` for instant confirm close
-    - ❌ Keeping `invalidateKeys`/`refetchKeys` on CUD mutations alongside optimistic updates — causes flash/reappear
+    -  Using `refreshData` callback (removed; use `setRefreshTime: onRefresh`)
+    -  Expanding refresh inline in mutation config (`setRefreshTime: (time) => { setLastRefreshTime(time); onRefresh(time); }`) — register once at `useCrudModalState` config instead
+    -  Managing modal visibility/form/record directly in the page (use `useCrudModalState`)
+    -  Direct `await mutateAsync()` before close (use `useInstantCloseMutation`)
+    -  `async/await` inside delete `onOk` — use `void onDelete(id)` for instant confirm close
+    -  Keeping `invalidateKeys`/`refetchKeys` on CUD mutations alongside optimistic updates — causes flash/reappear
   
   - **Benefits**:
     - Modal closes instantly (0ms perceived latency)

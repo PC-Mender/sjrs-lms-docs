@@ -7,16 +7,16 @@ title: "Structure Best Practices"
 
 ---
 
-## 🎯 Core Principles to Remember
+## Core Principles to Remember
 
 ### 1. **Keep Features Self-Contained**
 
-✅ **DO:**
+ **DO:**
 - Put all feature-specific code in the feature directory
 - Keep feature boundaries clear
 - Make features independent where possible
 
-❌ **DON'T:**
+ **DON'T:**
 - Mix feature code with shared code
 - Create circular dependencies between features
 - Put feature-specific code in shared directories
@@ -25,12 +25,12 @@ title: "Structure Best Practices"
 
 ### 2. **Maintain Consistent Patterns**
 
-✅ **DO:**
+ **DO:**
 - Follow the established module pattern (`base/`, `handlers/`, `index.ts`)
 - Use consistent naming conventions
 - Keep file sizes manageable (~100-200 lines)
 
-❌ **DON'T:**
+ **DON'T:**
 - Create new patterns for each feature
 - Mix different organizational styles
 - Let files grow beyond 300 lines without splitting
@@ -39,20 +39,20 @@ title: "Structure Best Practices"
 
 ### 3. **Separate Shared vs. Feature-Specific Code**
 
-✅ **DO:**
+ **DO:**
 - Put reusable components in `src/components/ui/`
 - Put feature-specific components in `src/components/features/[feature]/`
 - Use shared utilities from `src/utilities/`
 - Create feature-specific utilities in feature directories
 
-❌ **DON'T:**
+ **DON'T:**
 - Put reusable code in feature directories
 - Put feature-specific code in shared directories
 - Duplicate shared utilities in features
 
 ---
 
-## 📋 When Adding New Features
+## When Adding New Features
 
 ### Step-by-Step Guide
 
@@ -124,27 +124,27 @@ How to use the feature components.
 
 ---
 
-## ⚠️ Common Pitfalls to Avoid
+## Common Pitfalls to Avoid
 
 ### 1. **Feature Creep**
 
-❌ **Problem:** Adding unrelated functionality to existing features
+ **Problem:** Adding unrelated functionality to existing features
 
 **Example:**
 ```
 books/
 ├── BookList.tsx
 ├── BookForm.tsx
-└── UserProfile.tsx  # ❌ Wrong! This belongs in users/
+└── UserProfile.tsx  #  Wrong! This belongs in users/
 ```
 
-✅ **Solution:** Create a new feature or use shared components
+ **Solution:** Create a new feature or use shared components
 
 ---
 
 ### 2. **Circular Dependencies**
 
-❌ **Problem:** Features depending on each other
+ **Problem:** Features depending on each other
 
 **Example:**
 ```
@@ -152,7 +152,7 @@ books/ → imports from loans/
 loans/ → imports from books/
 ```
 
-✅ **Solution:** 
+ **Solution:** 
 - Extract shared code to `src/components/ui/` (for reusable components) or `src/utilities/` (for utilities)
 - Use dependency injection
 - Create shared types in `src/types/`
@@ -161,17 +161,17 @@ loans/ → imports from books/
 
 ### 3. **Over-Sharing**
 
-❌ **Problem:** Putting everything in shared directories
+ **Problem:** Putting everything in shared directories
 
 **Example:**
 ```
 src/components/ui/
-├── BookList.tsx      # ❌ Should be in features/books/
-├── AuthorList.tsx    # ❌ Should be in features/authors/
-└── LoanList.tsx      # ❌ Should be in features/loans/
+├── BookList.tsx      #  Should be in features/books/
+├── AuthorList.tsx    #  Should be in features/authors/
+└── LoanList.tsx      #  Should be in features/loans/
 ```
 
-✅ **Solution:** Only put truly reusable components in `ui/`
+ **Solution:** Only put truly reusable components in `ui/`
 
 **Rule of Thumb:** If a component is used by 3+ features, it can be shared.
 
@@ -179,16 +179,16 @@ src/components/ui/
 
 ### 4. **Under-Sharing**
 
-❌ **Problem:** Duplicating code across features
+ **Problem:** Duplicating code across features
 
 **Example:**
 ```
 books/utils/validation.ts
-authors/utils/validation.ts  # ❌ Duplicate code
-loans/utils/validation.ts     # ❌ Duplicate code
+authors/utils/validation.ts  #  Duplicate code
+loans/utils/validation.ts     #  Duplicate code
 ```
 
-✅ **Solution:** Extract to `src/utilities/validation/`
+ **Solution:** Extract to `src/utilities/validation/`
 
 **Rule of Thumb:** If code is identical across features, it should be shared.
 
@@ -196,7 +196,7 @@ loans/utils/validation.ts     # ❌ Duplicate code
 
 ### 5. **Inconsistent Structure**
 
-❌ **Problem:** Different features using different patterns
+ **Problem:** Different features using different patterns
 
 **Example:**
 ```
@@ -209,11 +209,11 @@ authors/
 │   └── AuthorList.tsx
 ```
 
-✅ **Solution:** Follow the established pattern consistently
+ **Solution:** Follow the established pattern consistently
 
 ---
 
-## 🔍 When to Refactor
+## When to Refactor
 
 ### Signs You Need to Refactor
 
@@ -244,7 +244,7 @@ authors/
 
 ---
 
-## 📊 Maintaining File Sizes
+## Maintaining File Sizes
 
 ### Guidelines
 
@@ -282,7 +282,7 @@ export function BookList() {
 
 ---
 
-## 🧪 Testing Considerations
+## Testing Considerations
 
 ### Feature Testing Structure
 
@@ -317,11 +317,11 @@ src/pages/books/
 
 ---
 
-## 🚀 Performance Considerations
+## Performance Considerations
 
 ### Code Splitting
 
-✅ **DO:**
+ **DO:**
 - Use lazy loading for features
 - Split large features into chunks
 - Load features on demand
@@ -333,19 +333,19 @@ const BooksPage = lazy(() => import('../pages/books'));
 
 ### Bundle Size
 
-✅ **DO:**
+ **DO:**
 - Keep feature bundles small
 - Avoid importing entire feature libraries
 - Use tree-shaking friendly imports
 
-❌ **DON'T:**
+ **DON'T:**
 - Import entire feature when you only need one component
 - Create circular dependencies
 - Duplicate large dependencies
 
 ---
 
-## 📝 Documentation Standards
+## Documentation Standards
 
 ### Feature Documentation
 
@@ -395,7 +395,7 @@ Document API endpoints and data structures.
 
 ---
 
-## 🔄 Migration Guidelines
+## Migration Guidelines
 
 ### When Migrating Code
 
@@ -421,7 +421,7 @@ Document API endpoints and data structures.
 
 ---
 
-## 🎨 Code Organization Checklist
+## Code Organization Checklist
 
 When adding new code, ask:
 
@@ -436,16 +436,16 @@ When adding new code, ask:
 
 ---
 
-## 🔗 Dependency Management
+## Dependency Management
 
 ### Feature Dependencies
 
-✅ **Allowed:**
+ **Allowed:**
 - Features → Shared code (`src/utilities/`, `src/components/ui/`)
 - Features → Types (`src/types/`)
 - Features → Hooks (`src/hooks/`)
 
-❌ **Avoid:**
+ **Avoid:**
 - Feature → Feature (creates coupling)
 - Circular dependencies
 - Deep dependency chains
@@ -455,10 +455,10 @@ When adding new code, ask:
 If features need to interact:
 
 ```typescript
-// ❌ BAD: Direct import
+//  BAD: Direct import
 import { BookService } from '@/features/books';
 
-// ✅ GOOD: Dependency injection
+//  GOOD: Dependency injection
 function LoanComponent({ bookService }: { bookService: BookService }) {
   // Use injected service
 }
@@ -466,7 +466,7 @@ function LoanComponent({ bookService }: { bookService: BookService }) {
 
 ---
 
-## 📈 Growth Management
+## Growth Management
 
 ### As Codebase Grows
 
@@ -487,7 +487,7 @@ function LoanComponent({ bookService }: { bookService: BookService }) {
 
 ---
 
-## 🛠️ Tooling Recommendations
+## Tooling Recommendations
 
 ### Useful Tools
 
@@ -515,7 +515,7 @@ function LoanComponent({ bookService }: { bookService: BookService }) {
 
 ---
 
-## 🎓 Learning Resources
+## Learning Resources
 
 ### Key Concepts
 
@@ -536,7 +536,7 @@ function LoanComponent({ bookService }: { bookService: BookService }) {
 
 ---
 
-## ✅ Quick Reference
+## Quick Reference
 
 ### File Organization
 
@@ -570,7 +570,7 @@ Shared Code:
 
 ---
 
-## 🎯 Final Checklist
+## Final Checklist
 
 Before committing code:
 

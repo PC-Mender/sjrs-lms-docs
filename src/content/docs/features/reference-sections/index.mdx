@@ -3,7 +3,7 @@ title: "Overview"
 ---
 
 
-## 📁 Structure
+## Structure
 
 ```
 src/pages/reference-sections/
@@ -13,7 +13,7 @@ src/pages/reference-sections/
 └── index.md                           # This documentation
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 ### Backend Alignment
 - **API Endpoint**: `/api/reference-sections`
@@ -30,13 +30,13 @@ src/pages/reference-sections/
 - **Types**: Proper TypeScript interfaces in `src/types/d1/reference-sections.ts`
 - **Service**: API service layer in `src/services/reference-sections.service.ts`
 
-## 🔧 Features
+## Features
 
 ### CRUD Operations
-- ✅ **Create**: Modal form for new sections
-- ✅ **Read**: Paginated table with search functionality
-- ✅ **Update**: Inline edit modal
-- ✅ **Delete**: Confirmation modal with validation
+- **Create**: Modal form for new sections
+- **Read**: Paginated table with search functionality
+- **Update**: Inline edit modal
+- **Delete**: Confirmation modal with validation
 
 ### Search & Filtering
 - Real-time search across name and description
@@ -61,7 +61,7 @@ interface ReferenceSectionsManagerProps {
 }
 ```
 
-## 🚀 Usage
+## Usage
 
 ### Basic Usage
 ```tsx
@@ -89,7 +89,7 @@ import { ReferenceSectionsManager } from './components/ReferenceSectionsManager'
 />
 ```
 
-## 🔒 Security
+## Security
 
 - Admin/Superuser/Librarian access required for mutations
 - Proper permission checks on backend
@@ -97,14 +97,14 @@ import { ReferenceSectionsManager } from './components/ReferenceSectionsManager'
 - SQL injection protection
 - Rate limiting support
 
-## 📊 Data Flow
+## Data Flow
 
 1. **List**: `GET /api/reference-sections` → Display in table
 2. **Create**: Form submission → `POST /api/reference-sections` → Refresh list
 3. **Update**: Form submission → `PUT /api/reference-sections/:id` → Refresh list
 4. **Delete**: Confirmation → `DELETE /api/reference-sections/:id` → Refresh list
 
-## 🧪 Testing
+## Testing
 
 ### Backend Testing
 ```bash
@@ -122,27 +122,27 @@ curl -X POST http://localhost:8787/api/reference-sections \
 - Test error handling
 - Test loading states
 
-## 🔄 Migration from Old System
+## Migration from Old System
 
 The old system had multiple separate components that have been consolidated:
 
-- ❌ `ReferenceSectionList` → ✅ `ReferenceSectionsManager`
-- ❌ `ReferenceSectionCreate` → ✅ Integrated into main component
-- ❌ `ReferenceSectionEdit` → ✅ Integrated into main component  
-- ❌ `ReferenceSectionShow` → ✅ Integrated into main component
+- `ReferenceSectionList` →  `ReferenceSectionsManager`
+- `ReferenceSectionCreate` →  Integrated into main component
+- `ReferenceSectionEdit` →  Integrated into main component  
+- `ReferenceSectionShow` →  Integrated into main component
 
 ### Backward Compatibility
 Legacy exports are maintained for backward compatibility but are deprecated:
 
 ```tsx
-// ❌ Deprecated - use ReferenceSectionsManager instead
+//  Deprecated - use ReferenceSectionsManager instead
 import { ReferenceSectionList } from './index';
 
-// ✅ Recommended
+//  Recommended
 import { ReferenceSectionsManager } from './components/ReferenceSectionsManager';
 ```
 
-## 🎯 Benefits of New Structure
+## Benefits of New Structure
 
 1. **Single Source of Truth**: One component handles all operations
 2. **Better Performance**: Reduced bundle size, no redundant code

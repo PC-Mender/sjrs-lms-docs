@@ -3,7 +3,7 @@ title: "Turnstile Configuration Guide"
 ---
 
 
-## ✅ Configuration Complete
+## Configuration Complete
 
 Turnstile CAPTCHA has been successfully integrated into the registration process!
 
@@ -12,14 +12,14 @@ Turnstile CAPTCHA has been successfully integrated into the registration process
 ## Configuration Details
 
 ### Backend Configuration (Secret Key)
-✅ **Configured via CLI:**
+ **Configured via CLI:**
 ```bash
 wrangler secret put TURNSTILE_SECRET_KEY
 ```
 - Secret Key: `REPLACE_WITH_YOUR_TURNSTILE_SECRET_KEY` (stored securely in Cloudflare Workers)
 
 ### Frontend Configuration (Site Key)
-✅ **Configured in:**
+ **Configured in:**
 - Environment variable: `VITE_TURNSTILE_SITE_KEY`
 - Site Key: `REPLACE_WITH_YOUR_TURNSTILE_SITE_KEY`
 - Added to `env.example` for reference
@@ -33,7 +33,7 @@ VITE_TURNSTILE_SITE_KEY=REPLACE_WITH_YOUR_TURNSTILE_SITE_KEY
 
 ## Implementation Details
 
-### ✅ Completed Features
+### Completed Features
 
 1. **Backend Integration:**
    - Turnstile validation middleware (`functions/middleware/security/turnstile-validation.ts`)

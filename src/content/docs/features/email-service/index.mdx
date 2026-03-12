@@ -5,13 +5,13 @@ title: "Overview"
 
 This directory contains comprehensive documentation for the SJRS LMS email service, including architecture, implementation details, and best practices.
 
-## 📚 Documentation Index
+## Documentation Index
 
-### **🏗️ Architecture**
+### ** Architecture**
 - **[Direct Mailjet Integration](#-account-email-direct-mailjet)** - Account-related emails sent directly via Mailjet
 - **[Queue + Mailjet Integration](#-transactional-email-queue--mailjet)** - Transactional emails processed via Cloudflare Queues
 
-## 🎯 Quick Navigation
+## Quick Navigation
 
 ### **For Developers**
 - Start with [Direct Mailjet Integration](#-account-email-direct-mailjet) for account emails
@@ -25,33 +25,33 @@ This directory contains comprehensive documentation for the SJRS LMS email servi
 - Begin with [Queue + Mailjet Integration](#-transactional-email-queue--mailjet) for background processing
 - Review architecture decisions and scaling strategies
 
-## 🔗 Related Documentation
+## Related Documentation
 
 - **[API Documentation](../../api/)** - API endpoints and authentication
 - **[Architecture Documentation](../../architecture/)** - Overall system architecture
 - **[Deployment Guide](../../deployment/)** - Email service deployment
 
-## 📋 Email Service Overview
+## Email Service Overview
 
 ### **Hybrid Architecture**
 Our email system uses a **hybrid approach** combining **Mailjet** for email delivery with **Cloudflare Queues** for reliability and scalability.
 
 ### **Email Types**
 
-#### **📧 Account-Related Emails (Direct Mailjet)**
+#### ** Account-Related Emails (Direct Mailjet)**
 - **Registration confirmation**
 - **Password reset**
 - **Email verification**
 - **Account status changes**
 
-#### **📧 Transactional Emails (Queue + Mailjet)**
+#### ** Transactional Emails (Queue + Mailjet)**
 - **Loan notifications** (`borrow_notification`)
 - **Return reminders** (`return_reminder`)
 - **Overdue notices** (`overdue_notification`)
 - **System notifications** (`system_notification`)
 - **Order status updates** (`order_notification`)
 
-## 🚀 Getting Started
+## Getting Started
 
 ### **1. Environment Configuration**
 ```bash
@@ -134,28 +134,28 @@ async sendEmailViaMailjet(to: string, content: { subject: string; body: string; 
 }
 ```
 
-## 🎯 Why This Hybrid Approach?
+## Why This Hybrid Approach?
 
-### **✅ Direct Mailjet Benefits (Account Emails)**
+### ** Direct Mailjet Benefits (Account Emails)**
 - **Immediate Feedback**: User gets instant confirmation
 - **Simple Implementation**: No queue complexity
 - **Low Volume**: Account emails are infrequent
 - **Critical Path**: Registration flow shouldn't be delayed
 
-### **✅ Queue + Mailjet Benefits (Transactional Emails)**
+### ** Queue + Mailjet Benefits (Transactional Emails)**
 - **Non-Blocking**: User experience isn't affected
 - **Reliability**: Automatic retries and dead letter queues
 - **Scalability**: Handles traffic spikes automatically
 - **Background Processing**: Emails send in background
 
-## 📊 Email Service Comparison
+## Email Service Comparison
 
 | Approach | Use Case | Benefits | Drawbacks |
 |----------|----------|----------|-----------|
 | **Direct Mailjet** | Account emails | Immediate feedback, simple | No retry logic, can block UI |
 | **Queue + Mailjet** | Transactional emails | Reliable, scalable, non-blocking | More complex, slight delay |
 
-## 🔧 Implementation Examples
+## Implementation Examples
 
 ### **Account Email (Direct Mailjet)**
 ```typescript
@@ -177,7 +177,7 @@ await sendLoanNotification('borrow_notification', {
 });
 ```
 
-## 🔐 Error Handling
+## Error Handling
 
 ### **Direct Mailjet Error Handling**
 ```typescript
@@ -207,7 +207,7 @@ async queue(batch: MessageBatch<EmailQueueMessage>, env: any) {
 }
 ```
 
-## 📈 Monitoring and Metrics
+## Monitoring and Metrics
 
 ### **Direct Mailjet Monitoring**
 - **Delivery Rates**: Monitor Mailjet delivery success
@@ -220,7 +220,7 @@ async queue(batch: MessageBatch<EmailQueueMessage>, env: any) {
 - **Dead Letter Queue**: Monitor failed message handling
 - **Processing Latency**: Track end-to-end delivery times
 
-## 🎯 Best Practices
+## Best Practices
 
 ### **1. Choose the Right Approach**
 - **Account emails** → Direct Mailjet
@@ -240,7 +240,7 @@ async queue(batch: MessageBatch<EmailQueueMessage>, env: any) {
 - Use HTTPS for all API communications
 - Validate email addresses before sending
 
-## 🔄 Migration Guide
+## Migration Guide
 
 ### **From Generic Email Service to Mailjet Backend**
 ```typescript

@@ -17,13 +17,13 @@ This guide outlines best practices for maintaining Cloudflare Workers compatibil
 
 #### Before:
 ```typescript
-// ❌ Not compatible with Cloudflare Workers
+//  Not compatible with Cloudflare Workers
 const url = `${process.env.FRONTEND_URL}/dashboard`;
 ```
 
 #### After:
 ```typescript
-// ✅ Compatible with Cloudflare Workers
+//  Compatible with Cloudflare Workers
 const frontendUrl = env.FRONTEND_URL || 'https://default-url.com';
 const url = `${frontendUrl}/dashboard`;
 ```
@@ -73,10 +73,10 @@ function generateTemplate(data: TemplateData) {
 
 The enhanced quality gates now perform more specific validation:
 
-- ✅ Detects actual Node.js API usage with regex patterns
-- ✅ Provides line numbers for easier debugging
-- ✅ Avoids false positives for standard JavaScript methods
-- ✅ Includes helpful tips for remediation
+- Detects actual Node.js API usage with regex patterns
+- Provides line numbers for easier debugging
+- Avoids false positives for standard JavaScript methods
+- Includes helpful tips for remediation
 
 ## Testing Workers Compatibility
 

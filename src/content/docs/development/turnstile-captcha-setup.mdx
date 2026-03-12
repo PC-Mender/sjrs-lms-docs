@@ -7,7 +7,7 @@ title: "Turnstile Captcha Setup"
 
 Cloudflare Turnstile CAPTCHA has been integrated into the registration process to prevent bot registrations and improve security.
 
-**✅ Configuration Status: COMPLETE**
+** Configuration Status: COMPLETE**
 
 - Secret Key: Configured in Cloudflare Workers
 - Site Key: `REPLACE_WITH_YOUR_TURNSTILE_SITE_KEY` (configured in environment variables)
@@ -18,7 +18,7 @@ Cloudflare Turnstile CAPTCHA has been integrated into the registration process t
 
 ## Backend Implementation
 
-### ✅ Completed
+### Completed
 
 1. **Turnstile Validation Middleware:**
    - Location: `functions/middleware/security/turnstile-validation.ts`
@@ -40,7 +40,7 @@ Cloudflare Turnstile CAPTCHA has been integrated into the registration process t
 
 ## Configuration
 
-### ✅ Backend Configuration (Secret Key)
+### Backend Configuration (Secret Key)
 
 **Configured via CLI:**
 ```bash
@@ -48,7 +48,7 @@ wrangler secret put TURNSTILE_SECRET_KEY
 ```
 - Secret Key: `REPLACE_WITH_YOUR_TURNSTILE_SECRET_KEY` (stored securely)
 
-### ✅ Frontend Configuration (Site Key)
+### Frontend Configuration (Site Key)
 
 **Configured in:**
 - Environment variable: `VITE_TURNSTILE_SITE_KEY`
@@ -60,7 +60,7 @@ wrangler secret put TURNSTILE_SECRET_KEY
 VITE_TURNSTILE_SITE_KEY=REPLACE_WITH_YOUR_TURNSTILE_SITE_KEY
 ```
 
-### ✅ Frontend Integration
+### Frontend Integration
 
 **Implemented in:** `src/pages/register.tsx`
 
@@ -74,15 +74,15 @@ VITE_TURNSTILE_SITE_KEY=REPLACE_WITH_YOUR_TURNSTILE_SITE_KEY
 ## Behavior
 
 ### If Turnstile is Configured:
-- ✅ Registration requires valid Turnstile token
-- ✅ Token is verified with Cloudflare
-- ✅ Invalid/expired tokens are rejected
-- ✅ Clear error messages returned
+- Registration requires valid Turnstile token
+- Token is verified with Cloudflare
+- Invalid/expired tokens are rejected
+- Clear error messages returned
 
 ### If Turnstile is NOT Configured:
-- ❌ Registration is blocked (fail closed)
-- ⚠️ Error logged: "TURNSTILE_SECRET_KEY not configured"
-- ✅ Prevents accidental production deployments without CAPTCHA
+- Registration is blocked (fail closed)
+- Error logged: "TURNSTILE_SECRET_KEY not configured"
+- Prevents accidental production deployments without CAPTCHA
 
 ---
 

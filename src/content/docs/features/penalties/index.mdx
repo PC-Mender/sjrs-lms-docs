@@ -116,7 +116,7 @@ The module now properly aligns with the backend database schema:
 - **due_date**: Optional due date for payment
 - **loan_id**: Optional reference to borrow record
 
-### ⚠️ **Backend Data Limitation**
+### **Backend Data Limitation**
 Currently, the backend penalty handlers only return basic user information (`first_name`, `last_name`). The frontend expects additional fields like `email`, `user_type`, and `phone` for full functionality. These fields are marked as optional in the types to prevent runtime errors.
 
 **Recommended Backend Improvement:**

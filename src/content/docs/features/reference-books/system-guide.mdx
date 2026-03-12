@@ -3,11 +3,11 @@ title: "System Guide"
 ---
 
 
-## 📚 Overview
+## Overview
 
 The Reference Book System is a specialized module within the Library Management System designed to manage non-circulating reference materials. Unlike regular books that can be borrowed, reference books are typically used within the library premises and require a different classification and management approach.
 
-## 🏗️ Database Architecture
+## Database Architecture
 
 ### Core Tables
 
@@ -107,7 +107,7 @@ reference_resources
 └── section_id → reference_sections (required)
 ```
 
-## 🎯 User Workflow
+## User Workflow
 
 ### Phase 1: System Setup (Admin/Superuser)
 
@@ -144,7 +144,7 @@ reference_resources
 - **Features**: Edit, Delete, Status Management
 - **Status Options**: Available, In Use, Under Maintenance, Lost, Deprecated
 
-## 🔍 Search & Management Features
+## Search & Management Features
 
 ### Real-time Search System
 All reference management pages feature:
@@ -166,7 +166,7 @@ All reference management pages feature:
 - **Pagination**: Configurable page sizes with quick jumper
 - **Loading States**: Visual feedback during operations
 
-## 🎨 UI/UX Features
+## UI/UX Features
 
 ### Enhanced User Experience
 - **Modal Forms**: Create/edit operations in modals for better UX
@@ -179,7 +179,7 @@ All reference management pages feature:
 - **Flexible Layout**: Adapts to different screen sizes
 - **Touch-friendly**: Appropriate button sizes for mobile interaction
 
-## 🔐 Permissions & Security
+## Permissions & Security
 
 ### Role-based Access
 - **Superuser/Admin**: Full CRUD access to all reference entities
@@ -204,7 +204,7 @@ FOR ALL USING (
 );
 ```
 
-## 📊 Data Flow
+## Data Flow
 
 ```
 1. Setup Phase
@@ -225,7 +225,7 @@ FOR ALL USING (
    └── Track usage and maintenance
 ```
 
-## 🚀 Key Features
+## Key Features
 
 ### 1. Hierarchical Classification
 - **Categories**: What type (Dictionary, Encyclopedia, Manual)
@@ -251,7 +251,7 @@ FOR ALL USING (
 - Manage maintenance schedules
 - Handle lost/deprecated materials
 
-## 🔧 Technical Implementation
+## Technical Implementation
 
 ### Frontend Technologies
 - **React**: Component-based architecture
@@ -271,7 +271,7 @@ FOR ALL USING (
 - **Lazy Loading**: Load data as needed
 - **Caching**: Reduce database calls
 
-## 📝 Best Practices
+## Best Practices
 
 ### For Administrators
 1. **Plan Your Classification**: Design categories and sections before adding books
@@ -285,7 +285,7 @@ FOR ALL USING (
 3. **Handle Errors**: Implement proper error handling for all operations
 4. **Test Thoroughly**: Verify search and filtering work correctly
 
-## 🔄 Migration History
+## Migration History
 
 ### Recent Updates
 - **UUID Migration**: Updated reference_sections and reference_resources to use UUIDs
@@ -299,7 +299,7 @@ FOR ALL USING (
 - Updated foreign key relationships to use UUIDs
 - Added comprehensive indexes for performance
 
-## 📚 Related Documentation
+## Related Documentation
 
 - **Permission System**: Role-based access control
 - **Security Guide**: Data protection and RLS policies

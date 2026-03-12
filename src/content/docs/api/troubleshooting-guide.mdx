@@ -5,7 +5,7 @@ title: "Troubleshooting Guide"
 
 This guide provides solutions to common issues you may encounter when using the SJRS LMS API.
 
-## 🚨 Quick Diagnosis
+## Quick Diagnosis
 
 ### **Symptom: "Cannot connect to API"**
 - **Check:** Network connectivity, API URL
@@ -19,7 +19,7 @@ This guide provides solutions to common issues you may encounter when using the 
 - **Check:** User role, resource permissions
 - **Solution:** Verify user has required role/permissions
 
-## 🔐 Authentication Issues
+## Authentication Issues
 
 ### **Issue: JWT Token Expired**
 
@@ -85,7 +85,7 @@ curl -i -b cookies.txt "https://your-api-domain.com/api/auth/csrf"
 
 #### **Prevention**
 ```javascript
-// ⚠️ IMPORTANT: Always use unifiedAPIClient - it automatically handles CSRF tokens
+//  IMPORTANT: Always use unifiedAPIClient - it automatically handles CSRF tokens
 import { unifiedAPIClient } from '@/utilities/api/unified-api-client';
 
 // CSRF token is automatically added via request interceptor
@@ -166,9 +166,9 @@ curl -X POST "https://your-api-domain.com/api/auth/login" \
 ```
 
 **Recovery Path (Added 2026-03-02):**
-- ✅ Accounts with `email_verified=true` can now log in even if status is `inactive`
-- ✅ You'll be prompted to complete your profile
-- ✅ After profile completion, admin will review and activate your account
+- Accounts with `email_verified=true` can now log in even if status is `inactive`
+- You'll be prompted to complete your profile
+- After profile completion, admin will review and activate your account
 
 ##### **Case 2: Email Not Verified**
 If you never verified your email:
@@ -186,9 +186,9 @@ curl -X POST "https://your-api-domain.com/api/auth/resend-confirmation" \
 ```
 
 #### **Prevention**
-- ✅ Verify email within 45 days of registration
-- ✅ Complete profile immediately after email verification
-- ✅ Log in at least once to prevent auto-deactivation
+- Verify email within 45 days of registration
+- Complete profile immediately after email verification
+- Log in at least once to prevent auto-deactivation
 
 ### **Issue: Email Not Confirmed (Error Code: EMAIL_NOT_CONFIRMED)**
 
@@ -232,8 +232,8 @@ curl -X POST "https://your-api-domain.com/api/auth/resend-confirmation" \
 
 #### **Explanation**
 This is **not an error** - your account is in the approval queue:
-- ✅ Email verified
-- ✅ Profile completed
+- Email verified
+- Profile completed
 - ⏳ Waiting for admin to approve your account
 
 #### **What's Next**
@@ -271,14 +271,14 @@ Contact library administration:
 
 | Account Status | Email Verified | Profile Complete | Can Login? | Next Action |
 |----------------|----------------|------------------|------------|-------------|
-| `pending` | ❌ No | ❌ No | ❌ No | Verify email |
-| `pending` | ✅ Yes | ❌ No | ✅ Yes* | Complete profile |
-| `pending` | ✅ Yes | ✅ Yes | ❌ No | Wait for admin approval |
-| `inactive` | ❌ No | Any | ❌ No | Resend verification email |
-| `inactive` | ✅ Yes | ❌ No | ✅ Yes* | Complete profile (recovery) |
-| `inactive` | ✅ Yes | ✅ Yes | ✅ Yes* | Contact admin for reactivation |
-| `active` | ✅ Yes | ✅ Yes | ✅ Yes | Full access |
-| `suspended` | Any | Any | ❌ No | Contact admin |
+| `pending` |  No |  No |  No | Verify email |
+| `pending` |  Yes |  No |  Yes* | Complete profile |
+| `pending` |  Yes |  Yes |  No | Wait for admin approval |
+| `inactive` |  No | Any |  No | Resend verification email |
+| `inactive` |  Yes |  No |  Yes* | Complete profile (recovery) |
+| `inactive` |  Yes |  Yes |  Yes* | Contact admin for reactivation |
+| `active` |  Yes |  Yes |  Yes | Full access |
+| `suspended` | Any | Any |  No | Contact admin |
 
 *Allowed as of 2026-03-02 update - recovery path for email-verified accounts
 
@@ -286,7 +286,7 @@ Contact library administration:
 - [Auth Flow - Login Validation & Account Lifecycle](/development/auth-flow#login-validation--account-lifecycle)
 - [Profile Completion UX](/development/profile-completion-ux-proposal)
 
-## �📝 Validation Issues
+## � Validation Issues
 
 ### **Issue: Missing Required Fields**
 
@@ -318,11 +318,11 @@ curl -X POST "https://your-api-domain.com/api/auth/register" \
 ```
 
 #### **Required Fields Checklist**
-- ✅ `email` - Valid email format
-- ✅ `password` - Minimum 8 characters
-- ✅ `first_name` - Non-empty string
-- ✅ `last_name` - Non-empty string
-- ✅ `user_type` - One of: student, professor, guest
+- `email` - Valid email format
+- `password` - Minimum 8 characters
+- `first_name` - Non-empty string
+- `last_name` - Non-empty string
+- `user_type` - One of: student, professor, guest
 
 ### **Issue: Invalid Data Types**
 
@@ -342,12 +342,12 @@ curl -X POST "https://your-api-domain.com/api/auth/register" \
 
 #### **Solutions**
 ```json
-// ❌ Wrong
+//  Wrong
 {
   "publication_year": "2024"
 }
 
-// ✅ Correct
+//  Correct
 {
   "publication_year": 2024
 }
@@ -395,9 +395,9 @@ const validateDate = (date) => {
 };
 ```
 
-## 🔒 Permission Issues
+## Permission Issues
 
-### **🔐 RBAC Policy: Backend is Single Source of Truth**
+### ** RBAC Policy: Backend is Single Source of Truth**
 
 **The backend permissions endpoint (`/api/permissions/check`) is the single source of truth for all permission decisions.**
 
@@ -463,7 +463,7 @@ curl -X GET "https://your-api-domain.com/api/books/123" \
 # Contact resource owner or administrator
 ```
 
-## 🔄 Rate Limiting Issues
+## Rate Limiting Issues
 
 ### **Issue: Too Many Requests**
 
@@ -525,7 +525,7 @@ const bulkOperation = async (items) => {
 };
 ```
 
-## 🚫 Resource Not Found Issues
+## Resource Not Found Issues
 
 ### **Issue: Resource Doesn't Exist**
 
@@ -575,7 +575,7 @@ curl -X GET "https://your-api-domain.com/api/books/search?q=title" \
 # 4. Check API version compatibility
 ```
 
-## ⚠️ Server Errors
+## Server Errors
 
 ### **Issue: Internal Server Error**
 
@@ -618,7 +618,7 @@ curl -X GET "https://your-api-domain.com/api/books/search?q=title" \
 # 4. Monitor system status
 ```
 
-## 🔧 Debugging Techniques
+## Debugging Techniques
 
 ### **1. Enable Verbose Logging**
 
@@ -672,7 +672,7 @@ curl -X GET "https://your-api-domain.com/api/books" \
   -b cookies.txt
 ```
 
-## 📊 Monitoring and Prevention
+## Monitoring and Prevention
 
 ### **Error Tracking**
 ```javascript
@@ -728,13 +728,13 @@ setInterval(checkAPIHealth, 5 * 60 * 1000);
 5. **Monitor error rates** and patterns
 6. **Test error scenarios** during development
 
-## 🆘 Getting Help
+## Getting Help
 
 ### **Before Contacting Support**
-1. ✅ Check this troubleshooting guide
-2. ✅ Review [Error Codes Reference](./error-codes-reference.mdx)
-3. ✅ Test with [API Testing Collection](./api-testing-collection.mdx)
-4. ✅ Verify your setup with [Quick Start Guide](./quick-start-guide.mdx)
+1. Check this troubleshooting guide
+2. Review [Error Codes Reference](./error-codes-reference.mdx)
+3. Test with [API Testing Collection](./api-testing-collection.mdx)
+4. Verify your setup with [Quick Start Guide](./quick-start-guide.mdx)
 
 ### **Information to Provide**
 - **Error Code**: From response body
@@ -755,4 +755,4 @@ setInterval(checkAPIHealth, 5 * 60 * 1000);
 
 **Last Updated:** November 2025  
 **Version:** 1.0.0  
-**Status:** ✅ Complete
+**Status:**  Complete

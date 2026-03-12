@@ -7,7 +7,7 @@ title: "Core Architecture"
 
 The SJRS LMS (Library Management System) is a modern, cloud-native **Single Page Application (SPA)** built with React/TypeScript frontend and Cloudflare Workers backend, using D1 database for persistence. This document outlines the core architecture and key components after the comprehensive refactoring work.
 
-## 🏗️ System Architecture
+## System Architecture
 
 ### Technology Stack
 - **Frontend**: React 18 + TypeScript + Vite + Ant Design (Single Page Application)
@@ -32,7 +32,7 @@ The SJRS LMS (Library Management System) is a modern, cloud-native **Single Page
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## 📁 Core File Structure
+## Core File Structure
 
 ### Root Configuration Files
 ```
@@ -114,7 +114,7 @@ sql/
 └── setup/                  # Initial setup scripts
 ```
 
-## 🔧 Key Components
+## Key Components
 
 ### 1. Authentication System
 - **Multi-factor authentication (MFA)**
@@ -147,7 +147,7 @@ sql/
 - **Penalty system**
 - **Return tracking**
 
-## 🏗️ API Architecture
+## API Architecture
 
 ### **Direct Function API Pattern**
 The SJRS LMS uses a **direct function API pattern** optimized for Cloudflare Workers, providing:
@@ -234,7 +234,7 @@ if (path.startsWith('/api/books')) {
 // ... other routes
 ```
 
-## 🚀 Development Workflow
+## Development Workflow
 
 ### Scripts Available
 ```bash
@@ -257,7 +257,7 @@ npm run test:app-functionality
 - **Consistent environment**: No local database dependencies
 - **Production-like**: Local development mirrors production behavior
 
-## 🔒 Security Features
+## Security Features
 
 ### Authentication & Authorization
 - **JWT tokens** with configurable expiration
@@ -277,7 +277,7 @@ npm run test:app-functionality
 - **Session monitoring**
 - **Error tracking and reporting**
 
-## 📊 Database Schema
+## Database Schema
 
 ### Core Tables
 - **users**: User accounts and profiles
@@ -294,7 +294,7 @@ npm run test:app-functionality
 - **User-Loan**: One-to-many for borrowing history
 - **Loan-Copy**: Many-to-one for specific copy tracking
 
-## 🎯 Performance Optimizations
+## Performance Optimizations
 
 ### Frontend
 - **Code splitting** for route-based loading
@@ -314,7 +314,7 @@ npm run test:app-functionality
 - **Pagination** for large result sets
 - **Optimized schema** for common operations
 
-## 🔄 Deployment Strategy
+## Deployment Strategy
 
 ### Unified Cloudflare Workers Deployment
 - **Workers with Static Assets**: Unified backend API, business logic, and frontend hosting
@@ -331,7 +331,7 @@ npm run test:app-functionality
 - **Single release command**: `npm run release` deploys everything
 - **Built-in monitoring**: Analytics Engine and observability
 
-## 📈 Scalability Considerations
+## Scalability Considerations
 
 ### Horizontal Scaling
 - **Stateless workers** for easy scaling
@@ -345,7 +345,7 @@ npm run test:app-functionality
 - **Performance metrics** collection
 - **User behavior** analytics
 
-## 🛠️ Maintenance & Operations
+## Maintenance & Operations
 
 ### Database Migrations
 - **Version-controlled** schema changes
@@ -365,7 +365,7 @@ npm run test:app-functionality
 - **Security monitoring** for threats
 - **User experience** tracking
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 ### Planned Features
 - **Advanced analytics** and reporting

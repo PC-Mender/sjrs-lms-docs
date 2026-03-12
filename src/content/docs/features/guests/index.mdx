@@ -11,12 +11,12 @@ The guests module has been refactored into a well-structured, modular system tha
 ## Version History
 
 ### v3.49.0 (March 2, 2026) - Enhanced Status Management
-- ✅ **Onboarding Status Field**: Added to guest edit modal with proper constraints
-- ✅ **Restricted Status Options**: Onboarding selector limited to onboarding-only values (in-progress, completed, skipped)
-- ✅ **Status Display**: Guest table columns now show Account Status and Onboarding Status
-- ✅ **Database Integration**: D1 migration added for onboarding_status field
+- **Onboarding Status Field**: Added to guest edit modal with proper constraints
+- **Restricted Status Options**: Onboarding selector limited to onboarding-only values (in-progress, completed, skipped)
+- **Status Display**: Guest table columns now show Account Status and Onboarding Status
+- **Database Integration**: D1 migration added for onboarding_status field
 
-## 🏗️ New Architecture
+## New Architecture
 
 ### Directory Structure
 ```
@@ -37,7 +37,7 @@ src/pages/guests/
 └── index.tsx            # Module entry point
 ```
 
-## 🔧 Key Improvements
+## Key Improvements
 
 ### 1. **Modular Component Architecture**
 - **GuestActionsDrawer**: Central container with tabbed interface
@@ -59,7 +59,7 @@ src/pages/guests/
 - **Consistent Forms**: Standardized form layouts and validation
 - **Better Feedback**: Improved error handling and success messages
 
-## 📋 Component Details
+## Component Details
 
 ### GuestActionsDrawer
 - **Purpose**: Main container for all guest actions
@@ -101,7 +101,7 @@ src/pages/guests/
   - Warning messages
   - API integration for deletion
 
-## 🎯 Usage Examples
+## Usage Examples
 
 ### Basic Usage
 ```tsx
@@ -127,7 +127,7 @@ const canCreateGuest = hasPermission('guests', 'create');
 )}
 ```
 
-## 🔒 Permission System
+## Permission System
 
 The module integrates with the existing permission system:
 - **Read**: View guest details
@@ -135,7 +135,7 @@ The module integrates with the existing permission system:
 - **Update**: Edit guest information
 - **Delete**: Remove guest accounts
 
-## 🚀 Future Enhancements
+## Future Enhancements
 
 ### Backend Integration
 - **Dedicated Guests API**: Create specific endpoints for guest operations
@@ -147,7 +147,7 @@ The module integrates with the existing permission system:
 - **Export Functionality**: Export guest data in various formats
 - **Bulk Actions**: Select and modify multiple guests at once
 
-## 📚 Related Documentation
+## Related Documentation
 
 - **[Account Status & Onboarding Management](/features/account-management)** - Comprehensive guide to status tracking
 - [API Patterns](../../api/api-patterns.mdx)
@@ -155,7 +155,7 @@ The module integrates with the existing permission system:
 - [User Management](../users/index.mdx)
 - [Database Schema](../../database/d1-schema.sql)
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 1. **Permission Errors**: Ensure user has appropriate role and permissions

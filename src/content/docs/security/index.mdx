@@ -3,25 +3,25 @@ title: "Overview"
 ---
 
 
-## 🔒 Comprehensive Security System
+## Comprehensive Security System
 
 This directory contains comprehensive security enhancements for the SJRS Library Management System, including login security, session management, rate limiting, and advanced security features.
 
-## 📁 Files Overview
+## Files Overview
 
 ### Core Security Files
 - **`index.md`** - This security overview and implementation guide
 - **`csrf-implementation-verification.md`** - Complete CSRF protection verification and testing guide
 - **Session Management** - Advanced session security and cross-tab synchronization
 
-## 🚀 New Features Implemented
+## New Features Implemented
 
 ### 1. Rate Limiting System
 - **Client-side rate limiting** with secure storage (via `tokenManager` and `secureStorage`)
 - **Exponential backoff** for progressive lockout periods
 - **5 failed attempts** maximum within 15 minutes
 - **30-minute lockout** with automatic reset on success
-- **⚠️ Important**: Never use `localStorage` directly - always use secure storage utilities
+- ** Important**: Never use `localStorage` directly - always use secure storage utilities
 
 ### 2. Enhanced Error Messages
 - **User-friendly error messages** without revealing system details
@@ -55,7 +55,7 @@ This directory contains comprehensive security enhancements for the SJRS Library
 
 
 
-## 🛠️ Implementation Details
+## Implementation Details
 
 ### Frontend Components
 ```typescript
@@ -88,7 +88,7 @@ const RATE_LIMIT_CONFIG = {
 };
 ```
 
-## 🎯 Security Benefits
+## Security Benefits
 
 ### Attack Prevention
 - **Brute force protection** through rate limiting
@@ -103,7 +103,7 @@ const RATE_LIMIT_CONFIG = {
 - **Cross-tab synchronization** of security state
 
 
-## 🔧 Current Stack Security
+## Current Stack Security
 
 ### Authentication System
 - **PBKDF2 Password Hashing**: Secure password storage using industry-standard hashing
@@ -123,15 +123,15 @@ const RATE_LIMIT_CONFIG = {
 - **Input Sanitization**: All inputs are sanitized before processing
 - **Error Handling**: Secure error responses without information leakage
 
-## 📊 Security Metrics
+## Security Metrics
 
 ### Current Implementation
-- ✅ **Rate Limiting**: 5 attempts per 15 minutes
-- ✅ **Password Security**: PBKDF2 with salt
-- ✅ **Session Management**: JWT with expiration + advanced session manager
-- ✅ **Input Validation**: Client and server-side validation
-- ✅ **Error Handling**: Secure error messages
-- ✅ **Audit Logging**: Comprehensive security logging
+- **Rate Limiting**: 5 attempts per 15 minutes
+- **Password Security**: PBKDF2 with salt
+- **Session Management**: JWT with expiration + advanced session manager
+- **Input Validation**: Client and server-side validation
+- **Error Handling**: Secure error messages
+- **Audit Logging**: Comprehensive security logging
 
 ### Monitoring
 - **Failed Login Attempts**: Tracked and logged
@@ -140,7 +140,7 @@ const RATE_LIMIT_CONFIG = {
 
 - **System Performance**: Security impact monitoring
 
-## 🚀 Future Enhancements
+## Future Enhancements
 
 ### Planned Features
 - [ ] **Multi-factor Authentication**: SMS or email-based 2FA

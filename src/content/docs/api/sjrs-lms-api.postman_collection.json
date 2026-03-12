@@ -27,7 +27,7 @@
   ],
   "item": [
     {
-      "name": "🔑 Authentication",
+      "name": " Authentication",
       "item": [
         {
           "name": "Login",
@@ -42,7 +42,7 @@
                   "    if (userId) {",
                   "        pm.environment.set(\"user_id\", userId.toString());",
                   "    }",
-                  "    console.log(\"✓ Login success (auth cookie set)\");",
+                  "    console.log(\" Login success (auth cookie set)\");",
                   "}"
                 ],
                 "type": "text/javascript"
@@ -179,7 +179,7 @@
       ]
     },
     {
-      "name": "🛡️ Superuser",
+      "name": " Superuser",
       "item": [
         {
           "name": "Get Actions",
@@ -320,7 +320,7 @@
       ]
     },
     {
-      "name": "👥 User Management",
+      "name": " User Management",
       "item": [
         {
           "name": "Get All Users",
@@ -373,7 +373,7 @@
       ]
     },
     {
-      "name": "🎓 Students",
+      "name": " Students",
       "item": [
         {"name": "Get All Students", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/students", "host": ["{{base_url}}"], "path": ["api", "students"]}}},
         {"name": "Get Student by ID", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/students/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "students", "{{user_id}}"]}}},
@@ -383,7 +383,7 @@
       ]
     },
     {
-      "name": "👨‍🏫 Professors",
+      "name": " Professors",
       "item": [
         {"name": "Get All Professors", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/professors", "host": ["{{base_url}}"], "path": ["api", "professors"]}}},
         {"name": "Get Professor by ID", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/professors/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "professors", "{{user_id}}"]}}},
@@ -393,7 +393,7 @@
       ]
     },
     {
-      "name": "📚 Books",
+      "name": " Books",
       "item": [
         {"name": "Get All Books", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/books?page=1&limit=20", "host": ["{{base_url}}"], "path": ["api", "books"], "query": [{"key": "page", "value": "1"}, {"key": "limit", "value": "20"}]}}},
         {"name": "Search Books", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/books/search?q=test", "host": ["{{base_url}}"], "path": ["api", "books", "search"], "query": [{"key": "q", "value": "test"}]}}},
@@ -404,7 +404,7 @@
       ]
     },
     {
-      "name": "📖 Loans",
+      "name": " Loans",
       "item": [
         {"name": "Get All Loans", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/loans?page=1&limit=20", "host": ["{{base_url}}"], "path": ["api", "loans"], "query": [{"key": "page", "value": "1"}, {"key": "limit", "value": "20"}]}}},
         {"name": "Get Loan by ID", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/loans/1", "host": ["{{base_url}}"], "path": ["api", "loans", "1"]}}},
@@ -414,7 +414,7 @@
       ]
     },
     {
-      "name": "🔔 Notifications",
+      "name": " Notifications",
       "item": [
         {
           "name": "Get Bell Context",
@@ -458,7 +458,7 @@
       ]
     },
     {
-      "name": "⚖️ Roles & Permissions",
+      "name": " Roles & Permissions",
       "item": [
         {"name": "Get All Roles", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/roles", "host": ["{{base_url}}"], "path": ["api", "roles"]}}},
         {"name": "Get Role by ID", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/roles/1", "host": ["{{base_url}}"], "path": ["api", "roles", "1"]}}},
@@ -469,7 +469,7 @@
       ]
     },
     {
-      "name": "📝 Reference Materials",
+      "name": " Reference Materials",
       "item": [
         {"name": "Get Reference Books", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/reference-books", "host": ["{{base_url}}"], "path": ["api", "reference-books"]}}},
         {"name": "Get Reference Categories", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/reference-categories", "host": ["{{base_url}}"], "path": ["api", "reference-categories"]}}},
@@ -484,7 +484,7 @@
       ]
     },
     {
-      "name": "🏆 Badges",
+      "name": " Badges",
       "item": [
         {"name": "Get All Badges", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/badges", "host": ["{{base_url}}"], "path": ["api", "badges"]}}},
         {"name": "Get My Badges", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/badges/me", "host": ["{{base_url}}"], "path": ["api", "badges", "me"]}}},
@@ -494,14 +494,14 @@
       ]
     },
     {
-      "name": "📧 Email",
+      "name": " Email",
       "item": [
         {"name": "Get Email Config", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/email", "host": ["{{base_url}}"], "path": ["api", "email"]}}},
         {"name": "Send Email", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"to\": \"user@example.com\",\n  \"subject\": \"Test Email\",\n  \"body\": \"Test message\"\n}"}, "url": {"raw": "{{base_url}}/api/email", "host": ["{{base_url}}"], "path": ["api", "email"]}}}
       ]
     },
     {
-      "name": "📁 File Upload",
+      "name": " File Upload",
       "item": [
         {"name": "Upload File", "request": {"method": "POST", "header": [], "body": {"mode": "formdata", "formdata": [{"key": "file", "type": "file", "src": []}]}, "url": {"raw": "{{base_url}}/api/upload", "host": ["{{base_url}}"], "path": ["api", "upload"]}}},
         {"name": "Get File", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/upload/1", "host": ["{{base_url}}"], "path": ["api", "upload", "1"]}}},
@@ -509,7 +509,7 @@
       ]
     },
     {
-      "name": "🎓 Academic Tools",
+      "name": " Academic Tools",
       "item": [
         {"name": "Get Citation Formats", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/citations", "host": ["{{base_url}}"], "path": ["api", "citations"]}}},
         {"name": "Generate Citation", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"source_type\": \"book\",\n  \"format\": \"apa\",\n  \"source_data\": {\n    \"title\": \"Test Book\",\n    \"author\": \"Test Author\"\n  }\n}"}, "url": {"raw": "{{base_url}}/api/citations", "host": ["{{base_url}}"], "path": ["api", "citations"]}}},
@@ -519,7 +519,7 @@
       ]
     },
     {
-      "name": "🛒 Orders & Payments",
+      "name": " Orders & Payments",
       "item": [
         {"name": "Get All Orders", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/orders", "host": ["{{base_url}}"], "path": ["api", "orders"]}}},
         {"name": "Get Order by ID", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/orders/1", "host": ["{{base_url}}"], "path": ["api", "orders", "1"]}}},
@@ -528,7 +528,7 @@
       ]
     },
     {
-      "name": "📊 System Management",
+      "name": " System Management",
       "item": [
         {"name": "Get System Logs", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/system_logs", "host": ["{{base_url}}"], "path": ["api", "system_logs"]}}},
         {"name": "Get Action Logs", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/action_logs", "host": ["{{base_url}}"], "path": ["api", "action_logs"]}}},
@@ -537,7 +537,7 @@
       ]
     },
     {
-      "name": "🏥 Health & Utilities",
+      "name": " Health & Utilities",
       "item": [
         {"name": "Health Check", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/health", "host": ["{{base_url}}"], "path": ["api", "health"]}}},
         {"name": "Get Help", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/help", "host": ["{{base_url}}"], "path": ["api", "help"]}}},

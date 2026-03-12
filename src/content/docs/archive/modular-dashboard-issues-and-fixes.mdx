@@ -3,9 +3,9 @@ title: "Modular Dashboard Issues And Fixes"
 ---
 
 
-## 🔍 Issues Found
+## Issues Found
 
-### 1. **Stale Widget Preferences After Role Change** ⚠️ MEDIUM
+### 1. **Stale Widget Preferences After Role Change**  MEDIUM
 **Issue**: If user's role changes, their widget preferences might reference widgets from old role that don't exist for new role.
 
 **Scenario**:
@@ -20,7 +20,7 @@ title: "Modular Dashboard Issues And Fixes"
 
 ---
 
-### 2. **Tab Order Contains Invalid Widget IDs** ⚠️ LOW
+### 2. **Tab Order Contains Invalid Widget IDs**  LOW
 **Issue**: `tabOrder` array can contain widget IDs that:
 - Don't exist anymore (widget removed from registry)
 - Are disabled (user disabled them)
@@ -34,7 +34,7 @@ title: "Modular Dashboard Issues And Fixes"
 
 ---
 
-### 3. **Empty Widgets Edge Case** ⚠️ LOW
+### 3. **Empty Widgets Edge Case**  LOW
 **Issue**: If all widgets are disabled, `orderedWidgets[0]?.id` is undefined, fallback to 'overview' might not exist.
 
 **Current Code**:
@@ -50,7 +50,7 @@ const activeTab = (urlTab && validTabIds.includes(urlTab))
 
 ---
 
-### 4. **Race Condition in Settings** ⚠️ MEDIUM
+### 4. **Race Condition in Settings**  MEDIUM
 **Issue**: If user rapidly toggles widgets, multiple API calls could be in flight, causing:
 - Inconsistent state
 - Last write wins (could lose intermediate changes)
@@ -64,7 +64,7 @@ const activeTab = (urlTab && validTabIds.includes(urlTab))
 
 ---
 
-### 5. **Permission Check Timing** ⚠️ LOW
+### 5. **Permission Check Timing**  LOW
 **Issue**: Permission checks happen at render time. If permissions change while user is viewing dashboard:
 - Widget might still be visible until refresh
 - No real-time permission updates
@@ -75,7 +75,7 @@ const activeTab = (urlTab && validTabIds.includes(urlTab))
 
 ---
 
-### 6. **Widget ID Collision** ⚠️ LOW
+### 6. **Widget ID Collision**  LOW
 **Issue**: No validation that widget IDs are unique across roles. If two roles have widgets with same ID:
 - Preferences might conflict
 - Settings might show wrong widget
@@ -88,7 +88,7 @@ const activeTab = (urlTab && validTabIds.includes(urlTab))
 
 ---
 
-### 7. **Preferences Merge Issue** ⚠️ LOW
+### 7. **Preferences Merge Issue**  LOW
 **Issue**: When updating preferences, we merge with existing preferences. If preference structure changes:
 - Old invalid data might persist
 - Settings might show inconsistent state
@@ -107,7 +107,7 @@ dashboard_widgets: {
 
 ---
 
-### 8. **Settings Shows Widgets That Will Be Filtered** ⚠️ LOW
+### 8. **Settings Shows Widgets That Will Be Filtered**  LOW
 **Issue**: Settings shows `availableWidgets` which includes widgets user might not have permission for. User can enable widget, but it gets filtered out due to permissions.
 
 **Impact**: Low - Widget just won't appear, but user might be confused why.
@@ -116,7 +116,7 @@ dashboard_widgets: {
 
 ---
 
-### 9. **No Validation of Widget Component** ⚠️ LOW
+### 9. **No Validation of Widget Component**  LOW
 **Issue**: No runtime check that `widget.component` is actually a valid React component. If registry has invalid component:
 - Error only shows when widget is rendered
 - Could crash dashboard
@@ -127,7 +127,7 @@ dashboard_widgets: {
 
 ---
 
-### 10. **Duplicate Widget IDs in Same Role** ⚠️ LOW
+### 10. **Duplicate Widget IDs in Same Role**  LOW
 **Issue**: No validation that widget IDs are unique within a role's widget array.
 
 **Impact**: Low - Developer error, but could cause issues.
@@ -136,7 +136,7 @@ dashboard_widgets: {
 
 ---
 
-## 🔧 Recommended Fixes
+## Recommended Fixes
 
 ### Priority 1 (High Impact)
 1. **Clean up stale preferences on role change**

@@ -20,17 +20,17 @@ Fixed the confusion where **loan and payment transactions were incorrectly creat
 - `createBulkAppNotifications()` - Creates multiple App Notifications in bulk
 
 **Features:**
-- ✅ Type-safe with TypeScript
-- ✅ Proper error handling
-- ✅ Supports all notification fields (type, priority, actionUrl, metadata)
-- ✅ Inserts into `notifications` table (not `notification_events`)
+- Type-safe with TypeScript
+- Proper error handling
+- Supports all notification fields (type, priority, actionUrl, metadata)
+- Inserts into `notifications` table (not `notification_events`)
 
 ### 2. Updated Transaction Notifications (`functions/lib/notifications/transaction-notifications.ts`)
 
 **Changes:**
-- ❌ **Removed**: System Notification creation (`createNotificationEvent`)
-- ✅ **Added**: App Notification creation (`createAppNotification`)
-- ✅ **Updated**: All three functions now create App Notifications:
+- **Removed**: System Notification creation (`createNotificationEvent`)
+- **Added**: App Notification creation (`createAppNotification`)
+- **Updated**: All three functions now create App Notifications:
   - `publishLoanCreatedNotification()` - Creates App Notification when loan is created
   - `publishLoanStatusNotification()` - Creates App Notification when loan status changes
   - `publishPaymentReceiptNotification()` - Creates App Notification when payment is received
@@ -62,7 +62,7 @@ Fixed the confusion where **loan and payment transactions were incorrectly creat
 
 ## Impact
 
-### ✅ What's Fixed
+### What's Fixed
 
 1. **Correct Notification Type**: Loans and payments now create App Notifications (user-specific)
 2. **Proper Storage**: Notifications stored in `notifications` table, not `notification_events`
@@ -70,7 +70,7 @@ Fixed the confusion where **loan and payment transactions were incorrectly creat
 4. **Better UX**: Action URLs point to relevant dashboard pages
 5. **Type Safety**: Proper TypeScript types for notification types and priorities
 
-### ✅ What Remains Unchanged
+### What Remains Unchanged
 
 1. **Email Notifications**: Still sent as before (no changes)
 2. **Handler Functions**: All handlers (`create-loan.ts`, `update-loan.ts`, `create-receipt.ts`) work the same
@@ -125,10 +125,10 @@ Fixed the confusion where **loan and payment transactions were incorrectly creat
 
 ## Summary
 
-✅ **Fixed**: Transaction notifications now correctly create App Notifications instead of System Notifications  
-✅ **No Breaking Changes**: All existing handlers continue to work  
-✅ **Better Architecture**: Clear separation between System Notifications (platform events) and App Notifications (user transactions)  
-✅ **Type Safe**: Proper TypeScript types throughout  
+ **Fixed**: Transaction notifications now correctly create App Notifications instead of System Notifications  
+ **No Breaking Changes**: All existing handlers continue to work  
+ **Better Architecture**: Clear separation between System Notifications (platform events) and App Notifications (user transactions)  
+ **Type Safe**: Proper TypeScript types throughout  
 
-**Status**: ✅ **Complete and Ready for Testing**
+**Status**:  **Complete and Ready for Testing**
 

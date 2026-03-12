@@ -3,11 +3,11 @@ title: "Publications Backend Alignment"
 ---
 
 
-## ✅ **Complete Backend Alignment Confirmed**
+## **Complete Backend Alignment Confirmed**
 
 The publications module is now fully aligned with the backend API and database schema.
 
-## 🔄 **Data Flow & Field Mapping**
+## **Data Flow & Field Mapping**
 
 ### Frontend → Backend Transformation
 
@@ -67,7 +67,7 @@ const backendData = {
 - Includes all new and legacy fields
 - Maintains backward compatibility
 
-## 🗄️ **Database Schema**
+## **Database Schema**
 
 ### Current Schema (after migration)
 ```sql
@@ -122,7 +122,7 @@ CREATE INDEX idx_publications_email ON publications(email);
 CREATE INDEX idx_publications_website ON publications(website);
 ```
 
-## 🔧 **Technical Implementation Details**
+## **Technical Implementation Details**
 
 ### Date Handling
 - **Frontend**: Uses Ant Design `DatePicker` component with dayjs
@@ -149,7 +149,7 @@ CREATE INDEX idx_publications_website ON publications(website);
 - Data migration preserves existing information
 - New fields are optional and don't break existing functionality
 
-## ✅ **Verification Checklist**
+## **Verification Checklist**
 
 - [x] **Frontend Form**: All fields properly mapped
 - [x] **Date Handling**: DatePicker with proper formatting
@@ -161,7 +161,7 @@ CREATE INDEX idx_publications_website ON publications(website);
 - [x] **Backward Compatibility**: Legacy fields maintained
 - [x] **Performance**: Proper database indexing
 
-## 🚀 **Ready for Production**
+## **Ready for Production**
 
 The publications module is now:
 1. **Fully aligned** with backend API expectations

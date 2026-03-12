@@ -7,7 +7,7 @@ title: "Overview"
 
 The SJRS Library Management System implements a comprehensive role-based access control (RBAC) system with optimized performance through Zustand state management.
 
-## 📁 System Components
+## System Components
 
 ### Core Files
 - **Feature Module**: `src/components/features/permissions/` - Complete permissions feature module
@@ -25,7 +25,7 @@ The SJRS Library Management System implements a comprehensive role-based access 
 - **Middleware**: `functions/middleware/permissions/` - Permission validation middleware
 - **Database**: Role and permission tables in D1 database
 
-## 🚀 usePermissionsOptimized Hook
+## usePermissionsOptimized Hook
 
 ### Purpose
 Drop-in replacement for the original `usePermissions` hook using Zustand for better performance and state management.
@@ -156,7 +156,7 @@ const useOptimizedPermissions = useFeatureFlag('optimized-permissions');
 const hook = useOptimizedPermissions ? usePermissionsOptimized : usePermissions;
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 ### State Management Flow
 ```
@@ -202,7 +202,7 @@ interface PermissionsStore {
 3. **Database Query**: Role-based permission lookup
 4. **Audit Logging**: All changes are logged for security
 
-## 🔐 RBAC Policy
+## RBAC Policy
 
 ### Single Source of Truth
 **The backend permissions endpoint (`/api/permissions/check`) is the single source of truth for all permission decisions.**
@@ -214,20 +214,20 @@ interface PermissionsStore {
 
 ### Implementation Guidelines
 ```typescript
-// ✅ Correct: Backend is authoritative
+//  Correct: Backend is authoritative
 const hasPermission = await checkPermission(resource, action);
 if (!hasPermission) {
   // Deny access - backend said no
   return;
 }
 
-// ❌ Incorrect: Client-only check
+//  Incorrect: Client-only check
 if (clientSidePermissionCheck(resource, action)) {
   // This is unsafe - backend must validate
   performAction();
 }
 
-// ✅ Correct: Client check with backend validation
+//  Correct: Client check with backend validation
 const clientCheck = clientSidePermissionCheck(resource, action);
 if (clientCheck) {
   // Optimistic UI update, but backend validates
@@ -240,7 +240,7 @@ if (clientCheck) {
 }
 ```
 
-## 🔒 Security Features
+## Security Features
 
 ### Access Control
 - **Superuser Only**: Permission management restricted to superusers
@@ -260,7 +260,7 @@ if (actionName === 'delete') {
 }
 ```
 
-## 📊 Performance Metrics
+## Performance Metrics
 
 ### Before Optimization
 - **Re-renders**: ~50-100 per permission change
@@ -272,7 +272,7 @@ if (actionName === 'delete') {
 - **Memory Usage**: Reduced by ~60% through selective subscriptions
 - **Load Time**: &lt;1 second for large datasets (70% improvement)
 
-## 🧪 Testing
+## Testing
 
 ### Unit Tests
 ```bash
@@ -289,14 +289,14 @@ npm test -- permissions-integration
 npm run test:performance -- permissions
 ```
 
-## 🔗 Related Documentation
+## Related Documentation
 
 - **[Permission System Architecture](../../architecture/permission-system.mdx)** - System design and database schema
 - **[Roles and Permissions](../../development/roles-and-permissions.mdx)** - Role management and hierarchy
 - **[API Documentation](../../api/endpoints.mdx#permissions)** - Permission API endpoints
 - **[Security Documentation](../../security/index.mdx)** - Security best practices
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -314,8 +314,8 @@ const handleUpdate = async () => {
 #### Performance Issues
 ```typescript
 // Use selective subscriptions
-const loading = usePermissionsLoading(); // ✅ Good
-const state = usePermissionsStore(); // ❌ Avoid - subscribes to everything
+const loading = usePermissionsLoading(); //  Good
+const state = usePermissionsStore(); //  Avoid - subscribes to everything
 ```
 
 #### Type Errors
@@ -334,4 +334,4 @@ import type { Permission, PermissionResource } from '../types';
 
 **Last Updated**: November 2025  
 **Version**: 1.0.0 (Zustand Optimization)  
-**Status**: ✅ Production Ready
+**Status**:  Production Ready

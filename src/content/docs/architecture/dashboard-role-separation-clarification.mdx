@@ -3,7 +3,7 @@ title: "Dashboard Role Separation Clarification"
 ---
 
 
-## ⚠️ CRITICAL: Role Isolation is PRESERVED
+## CRITICAL: Role Isolation is PRESERVED
 
 ### Current System Roles
 
@@ -45,27 +45,27 @@ This shows personal user data, NOT system-wide stats:
 
 ---
 
-## 🚨 What My Proposal DOES NOT DO
+## What My Proposal DOES NOT DO
 
-### ❌ **WILL NOT Mix Roles**
+### **WILL NOT Mix Roles**
 - Each role keeps its DEDICATED endpoint
 - Each role keeps its DEDICATED hook  
 - Each role keeps its DEDICATED data model
 - NO cross-contamination between roles
 
-### ❌ **WILL NOT Create United Endpoint**
+### **WILL NOT Create United Endpoint**
 - I am **NOT** proposing a single `/api/dashboard` for all roles
 - Each role-specific endpoint remains independent
 - Path separation preserved: `/admin`, `/librarian`, `/dean`, `/superuser`
 
-### ❌ **WILL NOT Change Authorization**
+### **WILL NOT Change Authorization**
 - Backend still validates user role on EVERY request
 - Permission checks stay exactly as they are
 - Superuser/admin fallback permissions preserved
 
 ---
 
-## ✅ What My Proposal DOES Do
+## What My Proposal DOES Do
 
 ### **Shared Implementation Pattern (DRY Principle)**
 
@@ -97,7 +97,7 @@ export const useLibrarianDashboard = () => {
   // ...more duplication...
 };
 
-// useDeanDashboard.ts (48 lines, uses useBaseDashboard ✅)
+// useDeanDashboard.ts (48 lines, uses useBaseDashboard )
 export const useDeanDashboard = () => {
   return useBaseDashboard<DeanStats, DeanDashboardData>({
     queryKey: 'dean-dashboard-stats',
@@ -170,7 +170,7 @@ export const useLibrarianDashboard = () => {
   });
 };
 
-// useDeanDashboard.ts (Already uses this pattern! ✅)
+// useDeanDashboard.ts (Already uses this pattern! )
 export const useDeanDashboard = () => {
   return useBaseDashboard<DeanStats, DeanDashboardData>({
     queryKey: 'dean-dashboard-stats',
@@ -196,14 +196,14 @@ export const useSuperuserDashboard = () => {
 
 ---
 
-## 🔐 Role Isolation Guarantees
+## Role Isolation Guarantees
 
 ### **Backend Enforcement (EXISTS NOW, STAYS)**
 ```typescript
 // functions/api/dashboard-stats/index.ts
 
 if (path === '/admin') {
-  // ✅ Only admin + superuser can access
+  //  Only admin + superuser can access
   if (!['admin', 'superuser'].includes(userRole)) {
     return createForbiddenResponse('Access denied');
   }
@@ -212,7 +212,7 @@ if (path === '/admin') {
 }
 
 if (path === '/librarian') {
-  // ✅ Only librarian + admin + superuser can access
+  //  Only librarian + admin + superuser can access
   if (!['librarian', 'admin', 'superuser'].includes(userRole)) {
     return createForbiddenResponse('Access denied');
   }
@@ -221,7 +221,7 @@ if (path === '/librarian') {
 }
 
 if (path === '/dean') {
-  // ✅ Only dean + admin + superuser can access
+  //  Only dean + admin + superuser can access
   if (!['dean', 'admin', 'superuser'].includes(userRole)) {
     return createForbiddenResponse('Access denied');
   }
@@ -230,7 +230,7 @@ if (path === '/dean') {
 }
 
 if (path === '/superuser') {
-  // ✅ ONLY superuser can access
+  //  ONLY superuser can access
   if (userRole !== 'superuser') {
     return createForbiddenResponse('Access denied');
   }
@@ -244,7 +244,7 @@ if (path === '/superuser') {
 // src/router/components/DashboardSubRouter.tsx
 
 const dashboardRoles = DASHBOARD_ROLE_MAP[dashboardSuffix] ?? [];
-// ✅ Each dashboard checks user's role before rendering
+//  Each dashboard checks user's role before rendering
 if (dashboardRoles.length > 0 && !dashboardRoles.includes(userRole)) {
   return <Navigate to={getDashboardPathForRole(userRole)} replace />;
 }
@@ -252,28 +252,28 @@ if (dashboardRoles.length > 0 && !dashboardRoles.includes(userRole)) {
 
 ---
 
-## 📊 Endpoint & Data Isolation Matrix
+## Endpoint & Data Isolation Matrix
 
 | **Role** | **Can Call Endpoint** | **Returns Data For** | **Shared Code?** | **Data Mixing?** |
 |----------|----------------------|---------------------|------------------|------------------|
-| Superuser | `/api/v1/dashboard-stats/superuser` | System health, all users, audit logs | ✅ useBaseDashboard | ❌ NO |
-| Admin | `/api/v1/dashboard-stats/admin` | User management, role distribution | ✅ useBaseDashboard | ❌ NO |
-| Librarian | `/api/v1/dashboard-stats/librarian` | Book inventory, loans, overdue | ✅ useBaseDashboard | ❌ NO |
-| Dean | `/api/v1/dashboard-stats/dean` | Faculty, academic overview | ✅ useBaseDashboard | ❌ NO |
-| Professor | `/api/users/{id}/stats` (personal) | Own profile, own loans | ❌ Different pattern | ❌ NO |
-| Student | `/api/users/{id}/stats` (personal) | Own profile, own loans | ❌ Different pattern | ❌ NO |
-| Guest | `/api/users/{id}/stats` (personal) | Limited personal data | ❌ Different pattern | ❌ NO |
+| Superuser | `/api/v1/dashboard-stats/superuser` | System health, all users, audit logs |  useBaseDashboard |  NO |
+| Admin | `/api/v1/dashboard-stats/admin` | User management, role distribution |  useBaseDashboard |  NO |
+| Librarian | `/api/v1/dashboard-stats/librarian` | Book inventory, loans, overdue |  useBaseDashboard |  NO |
+| Dean | `/api/v1/dashboard-stats/dean` | Faculty, academic overview |  useBaseDashboard |  NO |
+| Professor | `/api/users/{id}/stats` (personal) | Own profile, own loans |  Different pattern |  NO |
+| Student | `/api/users/{id}/stats` (personal) | Own profile, own loans |  Different pattern |  NO |
+| Guest | `/api/users/{id}/stats` (personal) | Limited personal data |  Different pattern |  NO |
 
 **Key Points:**
-- ✅ Each role calls a DIFFERENT endpoint
-- ✅ Each endpoint returns DIFFERENT data
-- ✅ Backend validates role on EVERY request
-- ✅ useBaseDashboard is just SHARED IMPLEMENTATION (like a utility function)
-- ✅ No data mixing whatsoever
+- Each role calls a DIFFERENT endpoint
+- Each endpoint returns DIFFERENT data
+- Backend validates role on EVERY request
+- useBaseDashboard is just SHARED IMPLEMENTATION (like a utility function)
+- No data mixing whatsoever
 
 ---
 
-## 🛡️ Additional Roles (Professor, Student, Guest)
+## Additional Roles (Professor, Student, Guest)
 
 These roles use the **"User Dashboard"** which has a **completely different architecture**:
 
@@ -303,35 +303,35 @@ const { recommendations } = useRecommendations(userId); // → /api/recommendati
 
 ---
 
-## 🎯 Summary: What Changes vs What Stays
+## Summary: What Changes vs What Stays
 
 ### **STAYS THE SAME (NO CHANGES):**
-- ✅ 4 separate administrative dashboard endpoints
-- ✅ 1 separate user dashboard (for professor/student/guest)
-- ✅ Backend role validation on every request
-- ✅ Frontend routing and permission checks
-- ✅ Each role's data model and query logic
-- ✅ Authorization hierarchy (superuser > admin > dean/librarian)
+- 4 separate administrative dashboard endpoints
+- 1 separate user dashboard (for professor/student/guest)
+- Backend role validation on every request
+- Frontend routing and permission checks
+- Each role's data model and query logic
+- Authorization hierarchy (superuser > admin > dean/librarian)
 
 ### **CHANGES (STANDARDIZATION ONLY):**
-- ✅ All admin hooks use `useBaseDashboard` pattern (eliminate duplication)
-- ✅ Consistent React Query configuration across dashboards
-- ✅ Unified error handling pattern
-- ✅ Unified loading/refetch/dataUpdatedAt interface
-- ✅ Version all endpoints `/api/v1/...`
-- ✅ Fix type safety (eliminate `any`)
+- All admin hooks use `useBaseDashboard` pattern (eliminate duplication)
+- Consistent React Query configuration across dashboards
+- Unified error handling pattern
+- Unified loading/refetch/dataUpdatedAt interface
+- Version all endpoints `/api/v1/...`
+- Fix type safety (eliminate `any`)
 
 ### **RESULT:**
-- ✅ Same role separation
-- ✅ Same endpoints
-- ✅ Same authorization
-- ✅ Better code quality
-- ✅ Easier maintenance
-- ✅ NO risk of role mixing
+- Same role separation
+- Same endpoints
+- Same authorization
+- Better code quality
+- Easier maintenance
+- NO risk of role mixing
 
 ---
 
-## 🔍 Analogy: Shared Base Class
+## Analogy: Shared Base Class
 
 Think of `useBaseDashboard` like a base class in OOP:
 
@@ -370,15 +370,15 @@ const librarianDash = new LibrarianDashboard();  // ← Calls /librarian only
 
 ---
 
-## ✅ Conclusion
+## Conclusion
 
 **My proposal:**
-1. ✅ Keeps all roles COMPLETELY SEPARATED
-2. ✅ Each role keeps its own endpoint
-3. ✅ Each role keeps its own hook
-4. ✅ Each role keeps its own data model
-5. ✅ Only shares the IMPLEMENTATION PATTERN (to reduce duplication)
-6. ✅ Fixes bugs while preserving architecture
+1. Keeps all roles COMPLETELY SEPARATED
+2. Each role keeps its own endpoint
+3. Each role keeps its own hook
+4. Each role keeps its own data model
+5. Only shares the IMPLEMENTATION PATTERN (to reduce duplication)
+6. Fixes bugs while preserving architecture
 
 **Professor/Student/Guest roles are unaffected** - they use a different pattern (user-specific endpoints, not role-based admin stats).
 

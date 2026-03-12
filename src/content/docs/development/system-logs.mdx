@@ -7,7 +7,7 @@ title: "System Logs"
 
 The System Logs page provides comprehensive system monitoring and audit capabilities for Superusers in the SJRS LMS. This feature allows Superusers to monitor all system activities, track superuser actions, manage emergency access requests, and view system health metrics.
 
-## 🎯 Features Implemented
+## Features Implemented
 
 ### 1. Comprehensive Log Monitoring
 - **Action Logs**: View all system actions performed by users
@@ -29,7 +29,7 @@ The System Logs page provides comprehensive system monitoring and audit capabili
 - **Detailed View**: Modal popup for complete log details
 - **Statistics Dashboard**: Overview of system activity
 
-## 🔧 Database Structure
+## Database Structure
 
 ### Tables Created
 
@@ -74,7 +74,7 @@ CREATE TABLE superuser_permissions (
 );
 ```
 
-## 🛡️ Security Implementation
+## Security Implementation
 
 ### Row Level Security (RLS)
 - All tables have RLS enabled
@@ -96,7 +96,7 @@ USING (
 );
 ```
 
-## 📊 System Health Monitoring
+## System Health Monitoring
 
 ### Metrics Tracked
 - **Database Connections**: Active connection count
@@ -108,11 +108,11 @@ USING (
 - **Last Backup**: System backup timestamp
 
 ### Health Indicators
-- 🟢 **Healthy**: All systems operational
-- 🟡 **Warning**: Elevated resource usage
-- 🔴 **Critical**: System issues detected
+- **Healthy**: All systems operational
+- **Warning**: Elevated resource usage
+- **Critical**: System issues detected
 
-## 🚀 Usage Guide
+## Usage Guide
 
 ### For Superusers
 
@@ -151,7 +151,7 @@ USING (
 2. Update `fetchSystemHealth` function
 3. Add visual indicators in the UI
 
-## 🔄 Integration Points
+## Integration Points
 
 ### Navigation
 - Added to Superuser menu: "System" → "System Logs"
@@ -173,7 +173,7 @@ const SystemLogs = lazy(() => import("./pages/system-logs/index.tsx"));
 SUPERUSER_SYSTEM_LOGS: '/dashboard-superuser/system-logs',
 ```
 
-## 📈 Performance Considerations
+## Performance Considerations
 
 ### Database Optimization
 - **Indexes**: Created on frequently queried columns
@@ -189,7 +189,7 @@ CREATE INDEX idx_superuser_actions_created_at ON superuser_actions(created_at);
 CREATE INDEX idx_superuser_actions_action_type ON superuser_actions(action_type);
 ```
 
-## 🧪 Testing
+## Testing
 
 ### Sample Data
 The setup script includes sample data for testing:
@@ -204,7 +204,7 @@ The setup script includes sample data for testing:
 4. **Detail View**: Verify modal popup works correctly
 5. **System Health**: Check real-time metrics display
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 ### Planned Features
 - **Real-time Updates**: WebSocket integration for live data
@@ -219,7 +219,7 @@ The setup script includes sample data for testing:
 - **Caching Layer**: Redis integration for faster queries
 - **Compression**: Archive old logs for storage efficiency
 
-## 📋 Maintenance
+## Maintenance
 
 ### Regular Tasks
 - **Log Rotation**: Archive old logs monthly
@@ -233,13 +233,13 @@ The setup script includes sample data for testing:
 - **Access Denied**: Confirm user has Superuser role
 - **Missing Data**: Check database connection
 
-## 🎯 Conclusion
+## Conclusion
 
 The System Logs implementation provides Superusers with comprehensive system monitoring capabilities while maintaining strict security controls. The feature is designed to be scalable, performant, and user-friendly while providing the detailed audit trail necessary for system administration and security compliance.
 
 **Key Benefits:**
-- ✅ **Complete Visibility**: All system activities tracked
-- ✅ **Security Compliance**: Detailed audit trail
-- ✅ **Performance Monitoring**: Real-time system health
-- ✅ **Emergency Management**: Controlled access procedures
-- ✅ **User-Friendly**: Intuitive interface for complex data 
+- **Complete Visibility**: All system activities tracked
+- **Security Compliance**: Detailed audit trail
+- **Performance Monitoring**: Real-time system health
+- **Emergency Management**: Controlled access procedures
+- **User-Friendly**: Intuitive interface for complex data 

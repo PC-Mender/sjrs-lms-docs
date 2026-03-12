@@ -7,7 +7,7 @@ title: "Role Descriptions"
 
 This document describes the implementation of role descriptions in the SJRS Library Management System, which adds meaningful descriptions to each role to improve clarity and user understanding.
 
-## 🎯 **Problem Statement**
+## **Problem Statement**
 
 The original roles table only contained `id` and `name` columns, making it difficult for users to understand:
 - What each role can do
@@ -15,7 +15,7 @@ The original roles table only contained `id` and `name` columns, making it diffi
 - The differences between similar roles
 - The appropriate role to assign to new users
 
-## ✅ **Solution Implemented**
+## **Solution Implemented**
 
 ### **1. Database Schema Enhancement**
 
@@ -35,11 +35,11 @@ ADD COLUMN IF NOT EXISTS description TEXT;
 ### **2. Frontend Enhancements**
 
 #### **Roles Management Interface:**
-- ✅ **List View**: Added description column with truncated display
-- ✅ **Search Functionality**: Extended to search by description text
-- ✅ **Create Form**: Added description textarea with character limit (500 chars)
-- ✅ **Edit Form**: Added description field for role updates
-- ✅ **Show View**: Displays full description in role details
+- **List View**: Added description column with truncated display
+- **Search Functionality**: Extended to search by description text
+- **Create Form**: Added description textarea with character limit (500 chars)
+- **Edit Form**: Added description field for role updates
+- **Show View**: Displays full description in role details
 
 #### **UI Improvements:**
 - **Responsive Design**: Description column adapts to screen size
@@ -71,7 +71,7 @@ ROLES: {
 }
 ```
 
-## 🚀 **Benefits Achieved**
+## **Benefits Achieved**
 
 ### **1. Improved User Experience**
 - **Role Clarity**: Users can understand what each role does
@@ -88,7 +88,7 @@ ROLES: {
 - **Consistency**: Standardized role descriptions across the system
 - **Scalability**: Easy to add new roles with clear descriptions
 
-## 📋 **Implementation Details**
+## **Implementation Details**
 
 ### **Migration File:**
 - **File**: `sql/migrations/add-role-descriptions.sql`
@@ -106,7 +106,7 @@ ROLES: {
 - **Required Fields**: Only role name is required
 - **Character Counter**: Real-time feedback on remaining characters
 
-## 🎨 **User Interface Features**
+## **User Interface Features**
 
 ### **Roles List View:**
 ```
@@ -130,7 +130,7 @@ ROLES: {
 - **Formatted Layout**: Clean, readable presentation
 - **Responsive Design**: Adapts to different screen sizes
 
-## 🔍 **Search Functionality**
+## **Search Functionality**
 
 ### **Enhanced Search:**
 - **Search by ID**: Find roles by their numeric ID
@@ -142,7 +142,7 @@ ROLES: {
 - `"user management"` → Finds roles with user management capabilities
 - `"student"` → Finds student-related roles
 
-## 🛠️ **Technical Implementation**
+## **Technical Implementation**
 
 ### **Database Migration:**
 ```sql
@@ -177,7 +177,7 @@ const columns = [
 ];
 ```
 
-## ✅ **Testing Checklist**
+## **Testing Checklist**
 
 ### **Database Testing:**
 - [ ] Migration runs successfully
@@ -199,7 +199,7 @@ const columns = [
 - [ ] Forms provide good user feedback
 - [ ] Responsive design works on different screens
 
-## 🚀 **Future Enhancements**
+## **Future Enhancements**
 
 ### **Potential Improvements:**
 1. **Role Templates**: Pre-defined role templates for common scenarios
@@ -214,22 +214,22 @@ const columns = [
 3. **Audit Logging**: Track when role descriptions are modified
 4. **API Documentation**: Include role descriptions in API responses
 
-## 📊 **Impact Assessment**
+## **Impact Assessment**
 
 ### **Before Implementation:**
-- ❌ Role names only (Superuser, Admin, Librarian, etc.)
-- ❌ No context about role capabilities
-- ❌ Difficult to choose appropriate roles
-- ❌ Limited search functionality
+- Role names only (Superuser, Admin, Librarian, etc.)
+- No context about role capabilities
+- Difficult to choose appropriate roles
+- Limited search functionality
 
 ### **After Implementation:**
-- ✅ Clear role descriptions with capabilities
-- ✅ Better role selection for new users
-- ✅ Enhanced search by role capabilities
-- ✅ Improved system documentation
-- ✅ Better user experience for administrators
+- Clear role descriptions with capabilities
+- Better role selection for new users
+- Enhanced search by role capabilities
+- Improved system documentation
+- Better user experience for administrators
 
-## 🎯 **Conclusion**
+## **Conclusion**
 
 The role descriptions implementation significantly improves the clarity and usability of the role management system. By providing meaningful descriptions for each role, users can better understand the system's permission structure and make informed decisions about role assignments.
 

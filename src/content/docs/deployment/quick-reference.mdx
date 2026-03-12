@@ -3,7 +3,7 @@ title: "Quick Reference"
 ---
 
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Recommended Workflow
 
@@ -28,24 +28,24 @@ npm run release
 
 ---
 
-## 📋 Workflow Comparison
+## Workflow Comparison
 
 | Aspect | Legacy (`npm run release`) | New (`npm run version:prepare`) |
 |--------|---------------------------|--------------------------------|
-| **Version Bump** | ✅ Yes | ✅ Yes |
-| **Changelog Update** | ✅ Yes | ✅ Yes |
-| **Quality Gates** | ✅ Local | ✅ CI/CD |
-| **Build** | ✅ Local | ✅ CI/CD |
-| **Deploy** | ✅ Local | ✅ CI/CD |
-| **Git Operations** | ✅ Yes | ✅ Yes |
-| **Notifications** | ✅ Local script | ✅ CI/CD |
-| **Deployment Tracking** | ❌ No | ✅ GitHub Actions |
-| **Rollback** | ❌ Difficult | ✅ Easier |
-| **Credentials** | ❌ Local required | ✅ GitHub Secrets |
+| **Version Bump** |  Yes |  Yes |
+| **Changelog Update** |  Yes |  Yes |
+| **Quality Gates** |  Local |  CI/CD |
+| **Build** |  Local |  CI/CD |
+| **Deploy** |  Local |  CI/CD |
+| **Git Operations** |  Yes |  Yes |
+| **Notifications** |  Local script |  CI/CD |
+| **Deployment Tracking** |  No |  GitHub Actions |
+| **Rollback** |  Difficult |  Easier |
+| **Credentials** |  Local required |  GitHub Secrets |
 
 ---
 
-## 🔑 Required Secrets
+## Required Secrets
 
 | Secret Name | Purpose | Where to Get |
 |------------|---------|--------------|
@@ -57,7 +57,7 @@ npm run release
 
 ---
 
-## 📋 Commit Types
+## Commit Types
 
 | Type | Version Bump | Example |
 |------|-------------|---------|
@@ -67,7 +67,7 @@ npm run release
 
 ---
 
-## 🔄 Workflow Steps
+## Workflow Steps
 
 ### New Workflow (Recommended)
 
@@ -87,10 +87,10 @@ npm run version:prepare
 - Pushes to GitHub
 
 **What it does NOT do:**
-- ❌ Build the project
-- ❌ Deploy to Cloudflare Workers
-- ❌ Send notifications
-- ❌ Run quality gates
+- Build the project
+- Deploy to Cloudflare Workers
+- Send notifications
+- Run quality gates
 
 #### Step 2: Automated Deployment (CI/CD)
 
@@ -108,7 +108,7 @@ npm run version:prepare
 
 ---
 
-## 📊 Deployment Status
+## Deployment Status
 
 ### Check Deployment Status
 
@@ -129,7 +129,7 @@ curl https://your-api-domain.com/api/health
 
 ---
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Version Preparation Fails
 
@@ -162,7 +162,7 @@ git remote -v
 
 ### Notifications Not Appearing?
 
-1. Check token: GitHub Actions logs should show `🔑 Token configured: Yes`
+1. Check token: GitHub Actions logs should show ` Token configured: Yes`
 2. Verify secret: `NOTIFICATION_INGEST_TOKEN_RELEASE` in GitHub Secrets
 3. Check status: Notification must be `'active'` to appear
 4. View in app: Notification Center → Filter by "deployment"
@@ -175,7 +175,7 @@ git remote -v
 
 ---
 
-## 📍 Key Locations
+## Key Locations
 
 - **Workflow**: `.github/workflows/deploy.yml`
 - **Notification Script**: `scripts/notify-deployment.js`
@@ -185,7 +185,7 @@ git remote -v
 
 ---
 
-## ✅ Verification Checklist
+## Verification Checklist
 
 After deployment, verify:
 
@@ -199,7 +199,7 @@ After deployment, verify:
 
 ---
 
-## 📚 Related Documentation
+## Related Documentation
 
 - **[Deployment Flow Explained](./deployment-flow-explained.mdx)** - How deployment works
 - **[Unified Workers Deployment](./unified-workers-deployment.mdx)** - Deployment architecture

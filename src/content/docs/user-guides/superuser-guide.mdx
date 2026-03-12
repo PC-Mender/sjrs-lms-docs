@@ -3,83 +3,83 @@ title: "Superuser Guide"
 ---
 
 
-## 📋 Overview
+## Overview
 
 The **Superuser role** is the highest level of access in SJRS LMS, designed for system developers, security personnel, and emergency situations. This role can override any restriction and access any part of the system.
 
-## 🎯 When Superuser Access is Needed
+## When Superuser Access is Needed
 
 ### **Development Scenarios**
-- 🔧 **System Development**: Testing new features and configurations
-- 🐛 **Debugging**: Investigating system issues and user problems
-- 🔄 **Database Maintenance**: Performing system-level operations
-- ⚙️ **Configuration Changes**: Modifying system settings
+- **System Development**: Testing new features and configurations
+- **Debugging**: Investigating system issues and user problems
+- **Database Maintenance**: Performing system-level operations
+- **Configuration Changes**: Modifying system settings
 
 ### **Security Scenarios**
-- 🚨 **Emergency Access**: Urgent access to locked accounts
-- 🛡️ **Security Investigations**: Investigating suspicious activities
-- 🔍 **Data Recovery**: Recovering lost or corrupted data
-- 🚪 **Account Recovery**: Helping users regain access
+- **Emergency Access**: Urgent access to locked accounts
+- **Security Investigations**: Investigating suspicious activities
+- **Data Recovery**: Recovering lost or corrupted data
+- **Account Recovery**: Helping users regain access
 
 ### **Administrative Scenarios**
-- 👥 **Role Management**: Creating and modifying user roles
-- 🔐 **Permission Overrides**: Bypassing normal restrictions
-- 📊 **System Audits**: Comprehensive system analysis
-- 🛠️ **Troubleshooting**: Resolving complex system issues
+- **Role Management**: Creating and modifying user roles
+- **Permission Overrides**: Bypassing normal restrictions
+- **System Audits**: Comprehensive system analysis
+- **Troubleshooting**: Resolving complex system issues
 
-## 🔴 Superuser Capabilities
+## Superuser Capabilities
 
 ### **System-Level Access**
 ```
-✅ Override any permission or restriction
-✅ Access any user account (impersonation)
-✅ Modify system configuration
-✅ Manage all roles and permissions
-✅ Emergency access to any data
-✅ Database maintenance operations
-✅ Developer tools and debugging
-✅ Full audit log access
-✅ Security override capabilities
-✅ System-level troubleshooting
+ Override any permission or restriction
+ Access any user account (impersonation)
+ Modify system configuration
+ Manage all roles and permissions
+ Emergency access to any data
+ Database maintenance operations
+ Developer tools and debugging
+ Full audit log access
+ Security override capabilities
+ System-level troubleshooting
 ```
 
 ### **Inherited Access Levels**
 ```
-🟡 ADMIN LEVEL ACCESS (inherited):
-✅ All admin features (Books, Orders, Members, etc.)
-✅ Full library management
-✅ User management
-✅ System analytics
+ ADMIN LEVEL ACCESS (inherited):
+ All admin features (Books, Orders, Members, etc.)
+ Full library management
+ User management
+ System analytics
 
-🟢 LIBRARY LEVEL ACCESS (inherited):
-✅ Order management
-✅ Book copy management
-✅ Basic library operations
+ LIBRARY LEVEL ACCESS (inherited):
+ Order management
+ Book copy management
+ Basic library operations
 
-🔵 USER LEVEL ACCESS (inherited):
-✅ Browse books
-✅ Place orders
-✅ Manage wishlist
-✅ Personal loan history
+ USER LEVEL ACCESS (inherited):
+ Browse books
+ Place orders
+ Manage wishlist
+ Personal loan history
 ```
 
-## 🧪 Test Accounts
+## Test Accounts
 
 ### **Superuser Accounts**
 ```
-🔴 Superuser:           SUPERUSER_EMAIL / SUPERUSER_PASSWORD
-🔴 Student Superuser:   STUDENT_SUPERUSER_EMAIL / STUDENT_SUPERUSER_PASSWORD
+ Superuser:           SUPERUSER_EMAIL / SUPERUSER_PASSWORD
+ Student Superuser:   STUDENT_SUPERUSER_EMAIL / STUDENT_SUPERUSER_PASSWORD
 ```
 
 ### **Access Level Hierarchy**
 ```
-🔴 Superuser     → System Level (Override Everything)
-🟡 Admin         → Admin Level (Library Management)
-🟢 Librarian     → Library Level (Order Management)
-🔵 User          → User Level (Basic Access)
+ Superuser     → System Level (Override Everything)
+ Admin         → Admin Level (Library Management)
+ Librarian     → Library Level (Order Management)
+ User          → User Level (Basic Access)
 ```
 
-## 🛡️ Security Features
+## Security Features
 
 ### **Action Logging**
 - **All superuser actions** are logged in `superuser_actions` table
@@ -99,7 +99,7 @@ The **Superuser role** is the highest level of access in SJRS LMS, designed for 
 - **Permission audit logs** for tracking changes
 - **Emergency permission override** capabilities
 
-## 🔧 Database Structure
+## Database Structure
 
 ### **Superuser Tables**
 ```sql
@@ -132,7 +132,7 @@ CREATE TABLE emergency_access (
 );
 ```
 
-## 🚀 Usage Scenarios
+## Usage Scenarios
 
 ### **Scenario 1: System Development**
 ```
@@ -178,20 +178,20 @@ Actions:
 - Performance optimization
 ```
 
-## 📊 Access Level Comparison
+## Access Level Comparison
 
 | Feature | Superuser | Admin | Librarian | User |
 |---------|-----------|-------|-----------|------|
-| **System Override** | ✅ Full | ❌ None | ❌ None | ❌ None |
-| **User Impersonation** | ✅ Any User | ❌ None | ❌ None | ❌ None |
-| **Role Management** | ✅ Full | ❌ None | ❌ None | ❌ None |
-| **Emergency Access** | ✅ Full | ❌ None | ❌ None | ❌ None |
-| **Library Management** | ✅ Full | ✅ Full | ✅ Limited | ❌ None |
-| **Order Management** | ✅ Full | ✅ Full | ✅ Full | ✅ Own |
-| **Book Browsing** | ✅ Full | ✅ Full | ✅ Full | ✅ Full |
-| **Personal Features** | ✅ Full | ✅ Full | ✅ Full | ✅ Full |
+| **System Override** |  Full |  None |  None |  None |
+| **User Impersonation** |  Any User |  None |  None |  None |
+| **Role Management** |  Full |  None |  None |  None |
+| **Emergency Access** |  Full |  None |  None |  None |
+| **Library Management** |  Full |  Full |  Limited |  None |
+| **Order Management** |  Full |  Full |  Full |  Own |
+| **Book Browsing** |  Full |  Full |  Full |  Full |
+| **Personal Features** |  Full |  Full |  Full |  Full |
 
-## ⚠️ Security Best Practices
+## Security Best Practices
 
 ### **For Superusers**
 1. **Use sparingly**: Only use superuser access when absolutely necessary
@@ -214,7 +214,7 @@ Actions:
 4. **Regular reviews**: Periodic review of superuser permissions
 5. **Backup procedures**: Ensure superuser access doesn't create single points of failure
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 ### **Advanced Security Features**
 - **Multi-factor authentication** for superuser accounts
@@ -237,15 +237,15 @@ Actions:
 - **System rollback** capabilities
 - **Disaster recovery** tools
 
-## 🎯 Conclusion
+## Conclusion
 
 The **Superuser role** provides the highest level of system access for development, security, and emergency situations. While powerful, it should be used responsibly with proper logging, monitoring, and security measures in place.
 
 **Key Principles:**
-- ✅ **Use only when necessary**
-- ✅ **Log all actions**
-- ✅ **Maintain security**
-- ✅ **Follow procedures**
-- ✅ **Regular audits**
+- **Use only when necessary**
+- **Log all actions**
+- **Maintain security**
+- **Follow procedures**
+- **Regular audits**
 
 This role ensures that SJRS LMS can be properly maintained, secured, and developed while maintaining accountability and security standards. 

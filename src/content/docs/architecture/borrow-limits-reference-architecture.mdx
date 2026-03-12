@@ -4,28 +4,28 @@ title: "Borrow Limits Reference Architecture"
 
 
 **Last Updated**: February 2, 2026  
-**Status**: ✅ Production-Ready Reference Implementation
+**Status**:  Production-Ready Reference Implementation
 
 This document serves as a **step-by-step verification guide** for the borrow-limits module, demonstrating the correct implementation of all architectural principles. Use this as a reference when refactoring other modules.
 
 ---
 
-## ✅ Step-by-Step Verification
+## Step-by-Step Verification
 
-### 1. Security & Permission Guards ✅
+### 1. Security & Permission Guards 
 
 #### BorrowLimitList.tsx
 ```tsx
-// ✅ Imports permission hook
+//  Imports permission hook
 import { usePermissions } from '../../hooks/usePermissions';
 
-// ✅ Checks all CRUD permissions
+//  Checks all CRUD permissions
 const canRead = hasPermission('borrow_limits', 'read');
 const canCreate = hasPermission('borrow_limits', 'create');
 const canUpdate = hasPermission('borrow_limits', 'update');
 const canDelete = hasPermission('borrow_limits', 'delete');
 
-// ✅ Shows Access Denied for unauthorized users
+//  Shows Access Denied for unauthorized users
 if (!canRead) {
   return (
     <Alert
@@ -37,7 +37,7 @@ if (!canRead) {
   );
 }
 
-// ✅ Conditionally renders actions based on permissions
+//  Conditionally renders actions based on permissions
 <ManagementTable
   actions={canUpdate || canDelete ? tableActions : []}
   onCreate={canCreate ? handleCreateModalOpen : undefined}
@@ -45,15 +45,15 @@ if (!canRead) {
 ```
 
 **Verification Points**:
-- ✅ `usePermissions()` hook imported
-- ✅ Permission checks for read/create/update/delete
-- ✅ Access Denied UI for unauthorized users
-- ✅ Conditional rendering of Create button
-- ✅ Conditional rendering of Edit/Delete actions
+- `usePermissions()` hook imported
+- Permission checks for read/create/update/delete
+- Access Denied UI for unauthorized users
+- Conditional rendering of Create button
+- Conditional rendering of Edit/Delete actions
 
 #### BorrowLimitCreate.tsx
 ```tsx
-// ✅ Permission guard at component start
+//  Permission guard at component start
 const canCreate = hasPermission('borrow_limits', 'create');
 
 if (!canCreate) {
@@ -63,7 +63,7 @@ if (!canCreate) {
 
 #### BorrowLimitEdit.tsx
 ```tsx
-// ✅ Permission guard at component start
+//  Permission guard at component start
 const canUpdate = hasPermission('borrow_limits', 'update');
 
 if (!canUpdate) {
@@ -73,7 +73,7 @@ if (!canUpdate) {
 
 #### BorrowLimitShow.tsx
 ```tsx
-// ✅ Permission guards for read and update
+//  Permission guards for read and update
 const canRead = hasPermission('borrow_limits', 'read');
 const canUpdate = hasPermission('borrow_limits', 'update');
 
@@ -81,7 +81,7 @@ if (!canRead) {
   return <Alert message="Access Denied" ... />;
 }
 
-// ✅ Conditionally show Edit button
+//  Conditionally show Edit button
 {canUpdate && (
   <Button onClick={() => navigate(...)}>Edit</Button>
 )}
@@ -91,20 +91,20 @@ if (!canRead) {
 
 ---
 
-### 2. Import Structure: Clean Paths ✅
+### 2. Import Structure: Clean Paths 
 
 #### Pages Import Directly from Shared
 ```tsx
-// ✅ BorrowLimitList.tsx - Direct imports from shared
+//  BorrowLimitList.tsx - Direct imports from shared
 import {
   useD1BorrowLimitsQuery,
   useD1DeleteBorrowLimit,
   useD1CreateBorrowLimit,
   useD1UpdateBorrowLimit,
-} from '../../hooks/d1/borrowLimits';  // ✅ Direct from shared
+} from '../../hooks/d1/borrowLimits';  //  Direct from shared
 
 import {
-  useBorrowLimitTableColumns,    // ✅ UI components from feature
+  useBorrowLimitTableColumns,    //  UI components from feature
   useBorrowLimitTableActions,
   BorrowLimitLoading,
   BorrowLimitErrorBoundary,
@@ -113,20 +113,20 @@ import {
 ```
 
 ```tsx
-// ✅ BorrowLimitEdit.tsx - Direct type import
-import type { BorrowLimit } from '../../types/circulation';  // ✅ Direct from shared
-import { useD1BorrowLimitQuery } from '../../hooks/d1/borrowLimits';  // ✅ Direct from shared
+//  BorrowLimitEdit.tsx - Direct type import
+import type { BorrowLimit } from '../../types/circulation';  //  Direct from shared
+import { useD1BorrowLimitQuery } from '../../hooks/d1/borrowLimits';  //  Direct from shared
 ```
 
 **Verification Points**:
-- ✅ No deep relative imports (`../../../../`) in pages
-- ✅ Hooks imported from `src/hooks/d1/borrowLimits` (shared)
-- ✅ Types imported from `src/types/circulation` (shared)
-- ✅ UI components imported from feature module
+- No deep relative imports (`../../../../`) in pages
+- Hooks imported from `src/hooks/d1/borrowLimits` (shared)
+- Types imported from `src/types/circulation` (shared)
+- UI components imported from feature module
 
 #### Feature Module: Only One Deep Import (Acceptable)
 ```tsx
-// ✅ BorrowLimitFormFields.tsx - One acceptable deep import
+//  BorrowLimitFormFields.tsx - One acceptable deep import
 import { BORROW_LIMITS_CONFIG } from '../../../../constants/borrow-limits';
 ```
 
@@ -139,22 +139,22 @@ import { BORROW_LIMITS_CONFIG } from '../../../../constants/borrow-limits';
 
 ---
 
-### 3. Feature Module: Presentation Logic Only ✅
+### 3. Feature Module: Presentation Logic Only 
 
 #### Feature Structure
 ```
 src/components/features/borrow-limits/
-├── components/              ✅ UI components (forms, tables, loading states)
+├── components/               UI components (forms, tables, loading states)
 │   ├── BorrowLimitForm.tsx
 │   ├── BorrowLimitFormFields.tsx
 │   ├── BorrowLimitTableColumns.tsx
 │   ├── BorrowLimitTableActions.tsx
 │   ├── BorrowLimitLoading.tsx
 │   └── BorrowLimitErrorBoundary.tsx
-├── utils/                   ✅ Display utilities & UI constants
+├── utils/                    Display utilities & UI constants
 │   ├── borrow-limit.utils.ts      // formatFineAmount, formatStatus
 │   └── borrow-limit.constants.ts  // USER_TYPE_OPTIONS (UI-specific)
-└── index.ts                 ✅ Exports only components & utils
+└── index.ts                  Exports only components & utils
 ```
 
 **Note**: No `hooks/` or `types/` folders - if a feature doesn't need them, don't create empty placeholders. This avoids confusion and misleading boundaries.
@@ -173,7 +173,7 @@ export * from './utils/borrow-limit.constants';
 
 #### Utils - Display Formatters
 ```typescript
-// ✅ borrow-limit.utils.ts - Presentation logic only
+//  borrow-limit.utils.ts - Presentation logic only
 export const formatFineAmount = (fine?: number): string => {
   if (!fine) return '-';
   return `₹${fine.toFixed(2)}`;
@@ -193,7 +193,7 @@ export const formatUserType = (userType: string): string => {
 
 #### Utils - Feature-Specific UI Constants
 ```typescript
-// ✅ borrow-limit.constants.ts - UI dropdown options
+//  borrow-limit.constants.ts - UI dropdown options
 export const USER_TYPE_OPTIONS = [
   { label: 'Student (1st Year)', value: 'Student_1' },
   { label: 'Student (2nd Year)', value: 'Student_2' },
@@ -205,34 +205,34 @@ export const USER_TYPE_OPTIONS = [
 ```
 
 **Verification Points**:
-- ✅ Components: UI presentation only
-- ✅ Utils: Display formatters and UI constants
-- ✅ Hooks: Empty (no thin wrappers)
-- ✅ Types: Empty (no thin wrappers)
-- ✅ No data fetching logic in feature
-- ✅ No domain types in feature
-- ✅ No re-export indirection
+- Components: UI presentation only
+- Utils: Display formatters and UI constants
+- Hooks: Empty (no thin wrappers)
+- Types: Empty (no thin wrappers)
+- No data fetching logic in feature
+- No domain types in feature
+- No re-export indirection
 
 **Result**: Feature module is purely for presentation, no business logic or data access.
 
 ---
 
-### 4. Backend Alignment ✅
+### 4. Backend Alignment 
 
 #### Backend Permission Checks
 ```typescript
 // functions/api/borrow-limits/index.ts
 
-// ✅No hooks/ folder (no thin wrappers, no empty placeholders)
-- ✅ No types/ folder (no thin wrappers, no empty placeholders)
-- ✅ No data fetching logic in feature
-- ✅ No domain types in feature
-- ✅ No re-export indirection
-- ✅ No empty folders that mislead developers
+// No hooks/ folder (no thin wrappers, no empty placeholders)
+- No types/ folder (no thin wrappers, no empty placeholders)
+- No data fetching logic in feature
+- No domain types in feature
+- No re-export indirection
+- No empty folders that mislead developers
 });
 if (!allowed) return createForbiddenResponse(...);
 
-// ✅ POST/PUT/DELETE use enforceMutatingPermission
+//  POST/PUT/DELETE use enforceMutatingPermission
 const denied = await enforceMutatingPermission({ 
   env, 
   request, 
@@ -246,30 +246,30 @@ if (denied) return denied;
 #### Frontend Permission Checks Match
 ```tsx
 // src/pages/borrow-limits/BorrowLimitList.tsx
-const canRead = hasPermission('borrow_limits', 'read');     // ✅ Matches backend
-const canCreate = hasPermission('borrow_limits', 'create'); // ✅ Matches backend
-const canUpdate = hasPermission('borrow_limits', 'update'); // ✅ Matches backend
-const canDelete = hasPermission('borrow_limits', 'delete'); // ✅ Matches backend
+const canRead = hasPermission('borrow_limits', 'read');     //  Matches backend
+const canCreate = hasPermission('borrow_limits', 'create'); //  Matches backend
+const canUpdate = hasPermission('borrow_limits', 'update'); //  Matches backend
+const canDelete = hasPermission('borrow_limits', 'delete'); //  Matches backend
 ```
 
 **Verification Points**:
-- ✅ Frontend permission keys match backend exactly
-- ✅ Backend enforces security (no role bypasses)
-- ✅ Frontend provides good UX (fail fast)
-- ✅ Both use same resource name: `'borrow_limits'`
+- Frontend permission keys match backend exactly
+- Backend enforces security (no role bypasses)
+- Frontend provides good UX (fail fast)
+- Both use same resource name: `'borrow_limits'`
 
 **Result**: Perfect alignment between frontend UX checks and backend security enforcement.
 
 ---
 
-### 5. Pagination: Server-Side Implementation ✅
+### 5. Pagination: Server-Side Implementation 
 
 #### Backend Expects: `page` + `limit`
 ```typescript
 // functions/api/borrow-limits/handlers/get-borrow-limits.ts
 const rawFilters = {
   page: searchParams.page ? parseInt(searchParams.page) : 1,
-  limit: searchParams.limit ? parseInt(searchParams.limit) : 20  // ✅ 'limit'
+  limit: searchParams.limit ? parseInt(searchParams.limit) : 20  //  'limit'
 };
 ```
 
@@ -279,7 +279,7 @@ const rawFilters = {
 const params: Record<string, string | number> = {};
 if (pagination) {
   params.page = pagination.current;
-  params.limit = pagination.pageSize;  // ✅ Matches backend 'limit'
+  params.limit = pagination.pageSize;  //  Matches backend 'limit'
 }
 ```
 
@@ -292,8 +292,8 @@ const [pagination, setPagination] = useState({
   total: 0,
 });
 
-// ✅ Pass pagination to enable server-side pagination
-// ✅ Use React Query defaults (no aggressive polling)
+//  Pass pagination to enable server-side pagination
+//  Use React Query defaults (no aggressive polling)
 const { data: limitsData, isLoading, error } = useD1BorrowLimitsQuery({ 
   pagination,
 });
@@ -303,7 +303,7 @@ const { data: limitsData, isLoading, error } = useD1BorrowLimitsQuery({
 // - Manual invalidation after mutations
 // No aggressive polling needed - this is optimal for performance
 
-// ✅ Update total from server response
+//  Update total from server response
 useEffect(() => {
   if (limitsData?.total !== undefined) {
     setPagination(prev => ({
@@ -313,7 +313,7 @@ useEffect(() => {
   }
 }, [limitsData?.total]);
 
-// ✅ Handle page changes
+//  Handle page changes
 const handleTableChange = (page: number, pageSize: number) => {
   setPagination((prev) => ({
     ...prev,
@@ -324,24 +324,24 @@ const handleTableChange = (page: number, pageSize: number) => {
 ```
 
 **Verification Points**:
-- ✅ Backend parameter name matches frontend: `limit` (not `pageSize`)
-- ✅ List page passes `pagination` state to query
-- ✅ **No aggressive polling**: Uses React Query defaults (refetchOnMount, refetchOnWindowFocus)
-- ✅ Mutations trigger cache invalidation (automatic refresh)
+- Backend parameter name matches frontend: `limit` (not `pageSize`)
+- List page passes `pagination` state to query
+- **No aggressive polling**: Uses React Query defaults (refetchOnMount, refetchOnWindowFocus)
+- Mutations trigger cache invalidation (automatic refresh)
 
 **Result**: Proper server-side pagination with optimal performance - no unnecessary polling
-- ✅ No unbounded dataset fetching
-- ✅ Follows "Backend-First" and "Pagination" principles
+- No unbounded dataset fetching
+- Follows "Backend-First" and "Pagination" principles
 
 **Result**: Proper server-side pagination - no unbounded datasets, backend controls data flow.
 
 ---
 
-## 📋 Refactoring Checklist for Other Modules
+## Refactoring Checklist for Other Modules
 
 Use this checklist when refactoring other feature modules:
 
-### Phase 1: Security ✅
+### Phase 1: Security 
 - [ ] Add `usePermissions()` hook to all pages
 - [ ] Check `canRead`, `canCreate`, `canUpdate`, `canDelete` permissions
 - [ ] Add "Access Denied" UI for unauthorized users (Alert component)
@@ -349,7 +349,7 @@ Use this checklist when refactoring other feature modules:
 - [ ] Conditionally render Edit/Delete actions based on permissions
 - [ ] Verify permission keys match backend exactly
 
-### Phase 2: Remove Thin Wrappers ✅` (or delete folder entirely if no feature-specific hooks)
+### Phase 2: Remove Thin Wrappers ` (or delete folder entirely if no feature-specific hooks)
 - [ ] Remove type re-exports from `features/{module}/types/` (or delete folder entirely if no feature-specific types)
 - [ ] Keep feature-specific UI constants (dropdowns, labels)
 - [ ] Remove shared config re-exports (import from `src/constants/` instead)
@@ -357,14 +357,14 @@ Use this checklist when refactoring other feature modules:
 - [ ] **Don't create empty folders** - if there are no feature-specific hooks/types, don't have those folders at allad)
 - [ ] Update feature `index.ts` to only export components & display utils
 
-### Phase 3: Fix Imports ✅
+### Phase 3: Fix Imports 
 - [ ] Pages import hooks from `src/hooks/d1/*` (not from feature)
 - [ ] Pages import types from `src/types/*` (not from feature)
 - [ ] Pages import UI components from `features/{module}/components`
 - [ ] Feature components can have ONE acceptable deep import for shared config
 - [ ] No `../../../../` imports in pages
 
-### Phase 4: Clean Up Feature Module ✅
+### Phase 4: Clean Up Feature Module 
 - [ ] Feature contains: components, display utils, UI constants
 - [ ] Feature does NOT contain: data hooks, domain types, business logic
 - [ ] **Delete empty folders** - don't leave `hooks/` or `types/` folders if they're not needed
@@ -372,7 +372,7 @@ Use this checklist when refactoring other feature modules:
 - [ ] UI constants: dropdown options, display labels
 - [ ] Add comments in empty files explaining where to import from
 
-### Phase 5: Verify ✅
+### Phase 5: Verify 
 - [ ] Run TypeScript type check: `tsc --noEmit`
 - [ ] Check for ESLint errors
 - [ ] Test all CRUD operations work
@@ -384,7 +384,7 @@ Use this checklist when refactoring other feature modules:
 
 ---
 
-## 🎯 What Makes This a Good Example
+## What Makes This a Good Example
 
 ### 1. **Security First**
 - Every page checks permissions before rendering
@@ -426,7 +426,7 @@ Use this checklist when refactoring other feature modules:
 
 ---
 
-## 🚀 Common Patterns You'll Apply
+## Common Patterns You'll Apply
 
 ### Pattern 1: Permission Guard in Page
 ```tsxServer-Side Pagination
@@ -440,19 +440,19 @@ const [pagination, setPagination] = useState({
 
 // Pass to q3: Direct Hook Import
 ```tsx
-// ❌ DON'T: Import from feature
+//  DON'T: Import from feature
 import { useD1ResourceQuery } from '../../components/features/resource';
 
-// ✅ DO: Import directly from shared
+//  DO: Import directly from shared
 import { useD1ResourceQuery } from '../../hooks/d1/resource';
 ```
 
 ### Pattern 4: Direct Type Import
 ```tsx
-// ❌ DON'T: Import from feature
+//  DON'T: Import from feature
 import type { Resource } from '../../components/features/resource';
 
-// ✅ DO: Import directly from shared
+//  DO: Import directly from shared
 import type { Resource } from '../../types/domain';
 ```
 
@@ -476,19 +476,19 @@ if (!canRead) {
 
 ### Pattern 2: Direct Hook Import
 ```tsx
-// ❌ DON'T: Import from feature
+//  DON'T: Import from feature
 import { useD1ResourceQuery } from '../../components/features/resource';
 
-// ✅ DO: Import directly from shared
+//  DO: Import directly from shared
 import { useD1ResourceQuery } from '../../hooks/d1/resource';
 ```
 
 ### Pattern 3: Direct Type Import
 ```tsx
-// ❌ DON'T: Import from feature
+//  DON'T: Import from feature
 import type { Resource } from '../../components/features/resource';
 
-// ✅ DO: Import directly from shared
+//  DO: Import directly from shared
 import type { Resource } from '../../types/domain';
 ```
 
@@ -508,9 +508,9 @@ export * from './utils/ui-constants';
 
 ---
 
-## 📊 Before vs. After Comparison
+## Before vs. After Comparison
 
-### Before Refactoring ❌
+### Before Refactoring 
 ```
 Feature Module:
 ├── hooks/index.ts           → Re-exports from ../../../../hooks/d1/
@@ -529,7 +529,7 @@ Pages:
 - Deep relative imports (hard to maintain)
 - Empty folders with comments (misleading boundaries)
 
-### After Refactoring ✅
+### After Refactoring 
 ```
 Feature Module:
 ├── utils/constants.ts       → ONLY UI-specific constants
@@ -544,17 +544,17 @@ Pages:
 ```
 
 **Benefits**:
-- ✅ Security-first with permission guards
-- ✅ Clean import paths
-- ✅ Clear separation of concerns
-- ✅ Easy to maintain and refactor
-- ✅ Follows architectural principles
-- ✅ No misleading empty folders or unnecessary comment- ✅ **Server-side pagination** properly implemented
-- ✅ **Backend-first**: Backend controls data flow, no unbounded datasets- ✅ Follows architectural principles
+- Security-first with permission guards
+- Clean import paths
+- Clear separation of concerns
+- Easy to maintain and refactor
+- Follows architectural principles
+- No misleading empty folders or unnecessary comment-  **Server-side pagination** properly implemented
+- **Backend-first**: Backend controls data flow, no unbounded datasets-  Follows architectural principles
 
 ---
 
-## ✅ Final Verification
+## Final Verification
 
 Run these commands to verify the refactoring:
 
@@ -578,17 +578,17 @@ ls src/components/features/borrow-limits/
 ```
 
 **Expected Results**:
-- ✅ 0 TypeScript errors
-- ✅ 0 ESLint errors
-- ✅ 0 deep imports in pages
-- ✅ 0 or 1 deep import in feature (for shared config)
-- ✅ Permission checks in all 4 pages
-- ✅ Only folders that contain actual code (components/, utils/)or shared config)
-- ✅ Permission checks in all 4 pages
+- 0 TypeScript errors
+- 0 ESLint errors
+- 0 deep imports in pages
+- 0 or 1 deep import in feature (for shared config)
+- Permission checks in all 4 pages
+- Only folders that contain actual code (components/, utils/)or shared config)
+- Permission checks in all 4 pages
 
 ---
 
-## 🎓 Key Takeaways
+## Key Takeaways
 
 1. **Feature Modules = UI Presentation Only**
    - Components, forms, tables, loading states

@@ -51,7 +51,7 @@ const result = await securityMiddleware(request, env, securityConfig);
 ### Before (Role-Based - Deprecated)
 
 ```typescript
-// ❌ OLD: Hardcoded role check
+//  OLD: Hardcoded role check
 const securityConfig = {
   ...SECURITY_CONFIGS.ADMIN, // Hardcoded ['admin', 'superuser']
   // ...
@@ -61,7 +61,7 @@ const securityConfig = {
 ### After (Permission-Based - Preferred)
 
 ```typescript
-// ✅ NEW: Database-driven permission check
+//  NEW: Database-driven permission check
 import { requireReadPermission } from '../../middleware/security';
 
 const securityConfig = requireReadPermission('books');

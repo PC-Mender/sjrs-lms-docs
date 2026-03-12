@@ -53,9 +53,9 @@ function mapWorkflowToDatabase(workflowStatus: string): string
 ### 2. Frontend Changes
 
 #### Status Constants (src/constants/status.ts)
-- ✅ Fixed incorrect status mappings
-- ✅ Added helper functions for UI display
-- ✅ Proper TypeScript types for all statuses
+- Fixed incorrect status mappings
+- Added helper functions for UI display
+- Proper TypeScript types for all statuses
 
 **Added Functions:**
 ```typescript
@@ -65,21 +65,21 @@ export const getWorkflowStatusLabel = (status: string, email_verified: boolean, 
 ```
 
 #### User Service (src/services/user.service.ts)
-- ✅ Updated statistics to use workflow mapping
-- ✅ Proper status counting with email_verified field
-- ✅ Fixed import issues and D1 client method calls
+- Updated statistics to use workflow mapping
+- Proper status counting with email_verified field
+- Fixed import issues and D1 client method calls
 
 #### Auth Context (src/contexts/auth-context-d1.tsx)
-- ✅ Updated login redirect logic to use workflow status
-- ✅ Proper status checking for pending_approval
+- Updated login redirect logic to use workflow status
+- Proper status checking for pending_approval
 
 #### Type Definitions (src/types/users.ts)
-- ✅ Updated UserStatus type to include workflow statuses
-- ✅ Added `pending_email_confirmation` to type definition
+- Updated UserStatus type to include workflow statuses
+- Added `pending_email_confirmation` to type definition
 
 #### Member List Component (src/pages/members/MemberList.tsx)
-- ✅ Updated status column to show workflow status
-- ✅ Proper status mapping with email_verified field
+- Updated status column to show workflow status
+- Proper status mapping with email_verified field
 
 ## API Response Examples
 
@@ -128,22 +128,22 @@ export const getWorkflowStatusLabel = (status: string, email_verified: boolean, 
 
 ## Benefits Achieved
 
-1. **✅ Clear separation** - Account status vs onboarding stage
-2. **✅ DB-authoritative onboarding** - Onboarding stage is stored as a persisted field
-3. **✅ Backward compatible** - Clients can still rely on `workflowStatus` / `workflow_status` when present
-4. **✅ Type safety** - Optional `onboarding_status` added to relevant TS types
+1. ** Clear separation** - Account status vs onboarding stage
+2. ** DB-authoritative onboarding** - Onboarding stage is stored as a persisted field
+3. ** Backward compatible** - Clients can still rely on `workflowStatus` / `workflow_status` when present
+4. ** Type safety** - Optional `onboarding_status` added to relevant TS types
 
 ## Testing Results
 
 ### Build Status
-- ✅ TypeScript compilation: **SUCCESS**
-- ✅ Vite build: **SUCCESS**
-- ✅ No linter errors: **SUCCESS**
+- TypeScript compilation: **SUCCESS**
+- Vite build: **SUCCESS**
+- No linter errors: **SUCCESS**
 
 ### Deployment Status
-- ✅ Cloudflare Workers deployment: **SUCCESS**
-- ✅ API endpoints working: **SUCCESS**
-- ✅ Email confirmation flow: **WORKING**
+- Cloudflare Workers deployment: **SUCCESS**
+- API endpoints working: **SUCCESS**
+- Email confirmation flow: **WORKING**
 
 ## User Experience
 

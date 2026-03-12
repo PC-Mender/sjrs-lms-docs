@@ -7,14 +7,14 @@ title: "Configuration Status"
 
 ---
 
-## ✅ Tokens Configured
+## Tokens Configured
 
 All notification ingest tokens have been successfully set in Cloudflare Workers:
 
-- ✅ `NOTIFICATION_INGEST_TOKEN` - Global token (works for all sources)
-- ✅ `NOTIFICATION_INGEST_TOKEN_RELEASE` - Deployment pipeline specific
-- ✅ `NOTIFICATION_INGEST_TOKEN_SENTRY` - Sentry webhook specific
-- ✅ `NOTIFICATION_INGEST_TOKEN_CLOUDFLARE` - Cloudflare Analytics specific
+- `NOTIFICATION_INGEST_TOKEN` - Global token (works for all sources)
+- `NOTIFICATION_INGEST_TOKEN_RELEASE` - Deployment pipeline specific
+- `NOTIFICATION_INGEST_TOKEN_SENTRY` - Sentry webhook specific
+- `NOTIFICATION_INGEST_TOKEN_CLOUDFLARE` - Cloudflare Analytics specific
 
 **Verification**: All tokens are visible in `wrangler secret list`
 
@@ -22,13 +22,13 @@ All notification ingest tokens have been successfully set in Cloudflare Workers:
 
 ## Configuration Status
 
-### 1. Deployment Pipeline ✅ READY
+### 1. Deployment Pipeline  READY
 
-**Status**: ✅ **Fully Configured**
+**Status**:  **Fully Configured**
 
-- ✅ Token set in Cloudflare Workers
-- ✅ Code integrated in `scripts/auto-version.js`
-- ✅ Automatically called after deployments
+- Token set in Cloudflare Workers
+- Code integrated in `scripts/auto-version.js`
+- Automatically called after deployments
 
 **Next Step**: Test by running a deployment:
 ```bash
@@ -41,13 +41,13 @@ npm run release
 
 ---
 
-### 2. Sentry ⚠️ NEEDS WEBHOOK CONFIGURATION
+### 2. Sentry  NEEDS WEBHOOK CONFIGURATION
 
-**Status**: ⚠️ **Token Set, Webhook Not Configured**
+**Status**:  **Token Set, Webhook Not Configured**
 
-- ✅ Token set in Cloudflare Workers: `NOTIFICATION_INGEST_TOKEN_SENTRY`
-- ✅ Code ready in ingest handler
-- ❌ **Sentry webhook not configured yet**
+- Token set in Cloudflare Workers: `NOTIFICATION_INGEST_TOKEN_SENTRY`
+- Code ready in ingest handler
+- **Sentry webhook not configured yet**
 
 **Next Steps**:
 
@@ -66,10 +66,10 @@ npm run release
    - Value: `YOUR_NOTIFICATION_INGEST_TOKEN`
 
 4. **Select Events**
-   - ✅ Issue Created
-   - ✅ Issue Resolved
-   - ✅ Issue Updated
-   - ✅ Event Created (for critical errors)
+   -  Issue Created
+   -  Issue Resolved
+   -  Issue Updated
+   -  Event Created (for critical errors)
 
 5. **Test**
    - Trigger a test error in your application
@@ -80,13 +80,13 @@ npm run release
 
 ---
 
-### 3. Cloudflare Analytics ⚠️ NEEDS MONITORING SETUP
+### 3. Cloudflare Analytics  NEEDS MONITORING SETUP
 
-**Status**: ⚠️ **Token Set, Monitoring Not Implemented**
+**Status**:  **Token Set, Monitoring Not Implemented**
 
-- ✅ Token set in Cloudflare Workers: `NOTIFICATION_INGEST_TOKEN_CLOUDFLARE`
-- ✅ Code ready in ingest handler
-- ❌ **Monitoring solution not implemented yet**
+- Token set in Cloudflare Workers: `NOTIFICATION_INGEST_TOKEN_CLOUDFLARE`
+- Code ready in ingest handler
+- **Monitoring solution not implemented yet**
 
 **Options**:
 
@@ -113,7 +113,7 @@ Can be set up later when needed.
    npm run release
    ```
 3. **Check logs** for:
-   - ✅ `📣 Posted deployment update to system notifications feed.`
+   -  ` Posted deployment update to system notifications feed.`
 4. **Check System Notifications**:
    - Go to `/dashboard-superuser/system-notifications`
    - Should see deployment notification with source: `release:pipeline`
@@ -162,9 +162,9 @@ x-notification-ingest-token: <token>
 ```
 
 ### Supported Sources
-- `release:pipeline` - ✅ Ready
-- `monitoring:sentry` - ⚠️ Needs webhook config
-- `analytics:cloudflare` - ⚠️ Needs monitoring setup
+- `release:pipeline` -  Ready
+- `monitoring:sentry` -  Needs webhook config
+- `analytics:cloudflare` -  Needs monitoring setup
 
 ### View Notifications
 - Admin: `/dashboard-superuser/system-notifications`
@@ -174,9 +174,9 @@ x-notification-ingest-token: <token>
 
 ## Next Actions
 
-1. ✅ **Deployment Pipeline** - Ready to test
-2. ⚠️ **Sentry** - Configure webhook (see steps above)
-3. ⚠️ **Cloudflare Analytics** - Can be set up later (optional)
+1. **Deployment Pipeline** - Ready to test
+2. **Sentry** - Configure webhook (see steps above)
+3. **Cloudflare Analytics** - Can be set up later (optional)
 
 ---
 
@@ -201,10 +201,10 @@ x-notification-ingest-token: <token>
 
 ## Security Notes
 
-- ✅ All tokens are stored as secrets in Cloudflare Workers
-- ✅ Tokens are never exposed in code or logs
-- ✅ Ingest endpoint requires token authentication
-- ⚠️ **Important**: Keep tokens secure, rotate periodically
+- All tokens are stored as secrets in Cloudflare Workers
+- Tokens are never exposed in code or logs
+- Ingest endpoint requires token authentication
+- **Important**: Keep tokens secure, rotate periodically
 
 ---
 

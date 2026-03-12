@@ -103,21 +103,21 @@ Route constants are defined in `src/constants/config.ts`:
 
 ## Verification Checklist
 
-✅ **Routes Generated for All Dashboards**
+ **Routes Generated for All Dashboards**
 - Routes are in `ADDITIONAL_ROUTES` without `requiresSpecificRoles`
 - `generateDashboardRoutes()` creates routes for all dashboard types
 
-✅ **Menu Items Visible to Admins**
+ **Menu Items Visible to Admins**
 - `canAccessReservations()` checks `reservations:read` permission
 - Menu item added to Circulation section
 - `ROUTE_MAP` includes `'reservations': 'reservations'`
 
-✅ **Admin Users Can See All Reservations**
+ **Admin Users Can See All Reservations**
 - `ReservationList.tsx` checks if user is admin
 - If admin, `user_id` filter is not applied to API query
 - API returns all reservations for admin users
 
-✅ **Permission System Integration**
+ **Permission System Integration**
 - `canAccessReservations` added to `usePermissions` hook
 - Permission checks use `reservations:read` resource
 - Default permissions granted via migration

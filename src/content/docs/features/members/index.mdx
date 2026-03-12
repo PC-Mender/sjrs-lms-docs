@@ -11,14 +11,14 @@ The Members module has been refactored to follow a modular, maintainable archite
 ## Version History
 
 ### v3.49.0 (March 2, 2026) - Enhanced Directory Layout
-- ✅ **Improved 3-Up Grid Layout**: Better visual organization with card-based view
-- ✅ **Status Visibility**: Clear separation of Account Status and Onboarding Status
-- ✅ **Enhanced Row Grouping**: Organized information display:
+- **Improved 3-Up Grid Layout**: Better visual organization with card-based view
+- **Status Visibility**: Clear separation of Account Status and Onboarding Status
+- **Enhanced Row Grouping**: Organized information display:
   - Row 1: User type, Account status
   - Row 2: Onboarding status, Role
   - Row 3: Phone, Registration year
-- ✅ **Status Badges**: Color-coded visual indicators for quick identification
-- ✅ **Better Card Design**: Clearer information hierarchy and improved readability
+- **Status Badges**: Color-coded visual indicators for quick identification
+- **Better Card Design**: Clearer information hierarchy and improved readability
 
 ## Architecture
 
@@ -141,25 +141,25 @@ function CustomMemberView() {
 
 ### Before (Old Structure)
 ```tsx
-// ❌ Old way - duplicate interfaces
+//  Old way - duplicate interfaces
 interface MemberData { /* ... */ }
 
-// ❌ Old way - direct API calls
+//  Old way - direct API calls
 const { data: members } = useD1UsersQuery();
 
-// ❌ Old way - inline utility functions
+//  Old way - inline utility functions
 const getStatusColor = (status: string) => { /* ... */ };
 ```
 
 ### After (New Structure)
 ```tsx
-// ✅ New way - centralized types
+//  New way - centralized types
 import { MemberData } from './components/features/members/types';
 
-// ✅ New way - centralized hook
+//  New way - centralized hook
 const { members, handleSearch } = useMembers();
 
-// ✅ New way - utility functions
+//  New way - utility functions
 import { getStatusColor } from './components/features/members/utils/member.utils';
 ```
 

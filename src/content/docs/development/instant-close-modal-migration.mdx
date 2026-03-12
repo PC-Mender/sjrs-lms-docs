@@ -16,7 +16,7 @@ This guide explains how to migrate CRUD modals from the legacy "wait-for-respons
 
 **Legacy Pattern (FORBIDDEN)**:
 ```typescript
-// ❌ LEGACY: Modal waits for API response before closing
+//  LEGACY: Modal waits for API response before closing
 const handleEditSubmit = async (values: FormData) => {
   try {
     setEditLoading(true);
@@ -70,11 +70,11 @@ const handleEditSubmit = useInstantCloseMutation({
 ```
 
 **Benefits**:
-- ⚡ **Instant UX**: Modal closes in 0ms
-- 🎯 **DRY Principle**: Centralized logic, no code duplication
-- 🔄 **Auto Error Recovery**: Modal re-opens on failure with original values
-- 🚀 **Background Execution**: Mutation runs asynchronously
-- ✅ **Type-Safe**: Full TypeScript support with generics
+- **Instant UX**: Modal closes in 0ms
+- **DRY Principle**: Centralized logic, no code duplication
+- **Auto Error Recovery**: Modal re-opens on failure with original values
+- **Background Execution**: Mutation runs asynchronously
+- **Type-Safe**: Full TypeScript support with generics
 
 ---
 
@@ -149,10 +149,10 @@ const handleEditSubmit = useInstantCloseMutation({
 The hook returns a **synchronous handler** — do not add `async` or `await`:
 
 ```typescript
-// ❌ WRONG
+//  WRONG
 <Form onFinish={async (values) => await handleEditSubmit(values)} />
 
-// ✅ CORRECT
+//  CORRECT
 <Form onFinish={handleEditSubmit} />
 ```
 
@@ -492,10 +492,10 @@ Use this checklist when migrating a modal:
 
 **Solution**: Remove `async` and ensure handler is called directly:
 ```typescript
-// ❌ WRONG
+//  WRONG
 <Form onFinish={async (values) => handleSubmit(values)} />
 
-// ✅ CORRECT
+//  CORRECT
 <Form onFinish={handleSubmit} />
 ```
 
@@ -563,7 +563,7 @@ reopenModal: (record, formData) => {
 
 | Metric | Value |
 |--------|-------|
-| **Perceived Close Latency** | **0ms** ⚡ |
+| **Perceived Close Latency** | **0ms**  |
 | **User Frustration** | Low (instant feedback) |
 | **Code Duplication** | Minimal (centralized hook) |
 | **Maintainability** | High (single source of truth) |

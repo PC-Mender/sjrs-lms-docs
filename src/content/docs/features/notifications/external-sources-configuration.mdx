@@ -13,21 +13,21 @@ System Notifications are auto-generated from external sources. This document tra
 
 | Source | Code Ready | Token Configured | Webhook Configured | Status |
 |--------|-----------|-----------------|-------------------|--------|
-| **Deployment Pipeline** | ✅ Yes | ⚠️ Needs Check | ✅ Integrated | ⚠️ **Needs Token** |
-| **Sentry** | ✅ Yes | ⚠️ Needs Check | ❌ Not Configured | ❌ **Not Configured** |
-| **Cloudflare Analytics** | ✅ Yes | ⚠️ Needs Check | ❌ Not Configured | ❌ **Not Configured** |
+| **Deployment Pipeline** |  Yes |  Needs Check |  Integrated |  **Needs Token** |
+| **Sentry** |  Yes |  Needs Check |  Not Configured |  **Not Configured** |
+| **Cloudflare Analytics** |  Yes |  Needs Check |  Not Configured |  **Not Configured** |
 
 ---
 
 ## 1. Deployment Pipeline (Release Pipeline)
 
-### ✅ Code Implementation
+### Code Implementation
 - **Location**: `scripts/auto-version.js`
 - **Function**: `notifyDeploymentEvent()`
 - **Called**: After successful/failed deployments (lines 496-504, 518-524)
-- **Status**: ✅ **Fully implemented**
+- **Status**:  **Fully implemented**
 
-### ⚠️ Configuration Required
+### Configuration Required
 
 #### Environment Variables Needed:
 ```bash
@@ -46,10 +46,10 @@ NOTIFICATION_INGEST_ENDPOINT=https://your-api-domain.com/api/notifications/event
 ```
 
 #### Current Behavior:
-- ✅ Code is integrated into deployment script
-- ✅ Automatically called after deployments
-- ⚠️ **If token is missing**: Logs message and skips notification (non-blocking)
-- ⚠️ **If token is present**: Sends notification to ingest endpoint
+- Code is integrated into deployment script
+- Automatically called after deployments
+- **If token is missing**: Logs message and skips notification (non-blocking)
+- **If token is present**: Sends notification to ingest endpoint
 
 #### How to Configure:
 1. Set `NOTIFICATION_INGEST_TOKEN` or `NOTIFICATION_INGEST_TOKEN_RELEASE` in your deployment environment
@@ -59,20 +59,20 @@ NOTIFICATION_INGEST_ENDPOINT=https://your-api-domain.com/api/notifications/event
 
 #### Verification:
 - Check if token is set: `echo $NOTIFICATION_INGEST_TOKEN`
-- Check deployment logs for: `📣 Posted deployment update to system notifications feed.`
-- If you see: `ℹ️ Notification ingest token is not configured; skipping system notification.` → Token is missing
+- Check deployment logs for: ` Posted deployment update to system notifications feed.`
+- If you see: `ℹ Notification ingest token is not configured; skipping system notification.` → Token is missing
 
 ---
 
 ## 2. Sentry
 
-### ✅ Code Implementation
+### Code Implementation
 - **Location**: `functions/api/notifications/handlers/ingest-notification-event.ts`
 - **Handler**: `buildSentryEvent()` (lines 286-365)
 - **Source**: `monitoring:sentry`
-- **Status**: ✅ **Code ready, webhook not configured**
+- **Status**:  **Code ready, webhook not configured**
 
-### ❌ Configuration Required
+### Configuration Required
 
 #### Environment Variables Needed:
 ```bash
@@ -121,13 +121,13 @@ Sentry will send events in their format. The ingest handler automatically conver
 
 ## 3. Cloudflare Analytics
 
-### ✅ Code Implementation
+### Code Implementation
 - **Location**: `functions/api/notifications/handlers/ingest-notification-event.ts`
 - **Handler**: `buildAnalyticsEvent()` (lines 367-447)
 - **Source**: `analytics:cloudflare`
-- **Status**: ✅ **Code ready, webhook not configured**
+- **Status**:  **Code ready, webhook not configured**
 
-### ❌ Configuration Required
+### Configuration Required
 
 #### Environment Variables Needed:
 ```bash

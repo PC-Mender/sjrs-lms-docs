@@ -7,7 +7,7 @@ title: "Environment Variables"
 
 This project uses Cloudflare Workers for deployment, and environment variables are managed through Cloudflare's Workers settings rather than local `.env` files.
 
-## 🔧 Configuration Locations
+## Configuration Locations
 
 ### Cloudflare Workers Dashboard
 - **Secrets**: Sensitive data like API keys, database credentials
@@ -20,7 +20,7 @@ This project uses Cloudflare Workers for deployment, and environment variables a
 - **wrangler.toml**: Contains some public configuration (non-sensitive)
 - **Local Testing**: Use `wrangler dev` to simulate the Workers environment
 
-## 📋 Required Environment Variables
+## Required Environment Variables
 
 ### Database Configuration
 ```
@@ -47,7 +47,7 @@ SMS_API_KEY=your-sms-api-key
 SMS_SENDER_ID=your-sender-id
 ```
 
-## 🚀 Setup Instructions
+## Setup Instructions
 
 ### 1. Cloudflare Workers Dashboard
 1. Navigate to your Workers & Pages dashboard
@@ -73,7 +73,7 @@ wrangler dev
 # The local server will automatically use your configured variables
 ```
 
-## 🔍 Verification
+## Verification
 
 ### Check Current Variables
 ```bash
@@ -90,14 +90,14 @@ The quality gates system (`scripts/enhanced-quality-gates.js`) validates environ
 - Validating D1 database connectivity
 - Ensuring all required bindings are configured
 
-## ⚠️ Important Notes
+## Important Notes
 
 1. **No Local .env Required**: Unlike traditional Node.js applications, this project doesn't require local environment files
 2. **Secrets vs Variables**: Use secrets for sensitive data, environment variables for public configuration
 3. **Development vs Production**: Use different Workers for different environments
 4. **Quality Gates**: Environment validation is part of the automated quality gates process
 
-## 🔗 Related Documentation
+## Related Documentation
 
 - [Cloudflare Workers Environment Variables](https://developers.cloudflare.com/workers/configuration/environment-variables/)
 - [Wrangler CLI Documentation](https://developers.cloudflare.com/workers/wrangler/)

@@ -9,13 +9,13 @@ The `OptimizedTable` component now supports **server-side pagination** for handl
 
 ## When to Use Server-Side Pagination
 
-- ✅ **Use server-side pagination** when:
+- **Use server-side pagination** when:
   - Dataset has 1000+ rows
   - Data is fetched from backend API
   - Backend supports pagination (most endpoints do)
   - You want faster initial page load
 
-- ❌ **Use client-side pagination** when:
+- **Use client-side pagination** when:
   - Dataset has &lt;100 rows
   - All data is already loaded in memory
   - No backend API calls needed
@@ -210,7 +210,7 @@ onPaginationChange={(page: number, pageSize: number) => {
 ### Before (Client-Side)
 
 ```tsx
-// ❌ Old way - loads all data
+//  Old way - loads all data
 const { data: allBooks } = useD1BooksQuery();
 const filteredBooks = allBooks.filter(/* ... */);
 
@@ -223,7 +223,7 @@ const filteredBooks = allBooks.filter(/* ... */);
 ### After (Server-Side)
 
 ```tsx
-// ✅ New way - loads only current page
+//  New way - loads only current page
 const [page, setPage] = useState(1);
 const { data } = useD1BooksQuery({ 
   pagination: { current: page, pageSize: 20 } 
