@@ -127,8 +127,16 @@ WHERE transaction_id IS NOT NULL;
 ### Option 2: Via API
 ```bash
 # If migration endpoint exists
+curl -i -c cookies.txt -X POST "https://your-domain.com/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"SUPERUSER_EMAIL","password":"SUPERUSER_PASSWORD"}'
+
+curl -i -b cookies.txt -c cookies.txt "https://your-domain.com/api/auth/csrf"
+xsrf=$(grep -E "\tXSRF-TOKEN\t" cookies.txt | tail -n 1 | awk '{print $7}')
+
 curl -X POST /api/migrations/transaction-id-unique \
-  -H "Authorization: Bearer YOUR_TOKEN"
+  -b cookies.txt \
+  -H "X-XSRF-TOKEN: $xsrf"
 ```
 
 ### Option 3: Manual SQL Execution

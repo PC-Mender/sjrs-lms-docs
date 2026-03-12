@@ -25,8 +25,7 @@ curl -X GET "https://your-worker.your-subdomain.workers.dev/api/health"
 ```json
 {
   "status": "ok",
-  "timestamp": "2024-01-15T10:30:00Z",
-  "version": "2.2.0"
+  "timestamp": "..."
 }
 ```
 
@@ -43,9 +42,9 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" 
   }'
 ```
 
-### **4. Login and Get Token** ⏱️ 1 min
+### **4. Login (Cookie-Based Auth)** ⏱️ 1 min
 ```bash
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "test@example.com",
@@ -53,13 +52,11 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
   }'
 ```
 
-**Save the JWT token from the response!**
+This sets an HttpOnly auth cookie (default name: `secure_authToken`) in `cookies.txt`.
 
 ### **5. Make Your First API Call** ⏱️ 1 min
 ```bash
-# Replace YOUR_JWT_TOKEN with the token from step 4
-curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+curl -b cookies.txt -X GET "https://your-worker.your-subdomain.workers.dev/api/books"
 ```
 
 **🎉 Congratulations! You're now using the SJRS LMS API!**
@@ -118,87 +115,66 @@ DB_NAME=your-database-name
 // api-client.ts
 class SJRSLMSAPI {
   private baseUrl = 'https://your-worker.your-subdomain.workers.dev';
-  private token: string | null = null;
-  private csrfToken: string | null = null;
 
   async login(email: string, password: string) {
     const response = await fetch(`${this.baseUrl}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
       body: JSON.stringify({ email, password })
     });
 
-    const data = await response.json();
-    if (data.success) {
-      this.token = data.token;
-      this.csrfToken = data.csrf_token;
-    }
-    return data;
+    return response.json();
   }
 
   async getBooks() {
-    if (!this.token) throw new Error('Not authenticated');
-
     const response = await fetch(`${this.baseUrl}/api/books`, {
-      headers: {
-        'Authorization': `Bearer ${this.token}`,
-        'X-XSRF-TOKEN': this.csrfToken || ''
-      }
+      credentials: 'include',
     });
 
     return response.json();
+  }
+
+  async bootstrapCSRF() {
+    await fetch(`${this.baseUrl}/api/auth/csrf`, { credentials: 'include' });
   }
 }
 
 // Usage
 const api = new SJRSLMSAPI();
 await api.login('user@example.com', 'password123');
+await api.bootstrapCSRF();
 const books = await api.getBooks();
 ```
 
 ### **Python**
 ```python
 import requests
-import json
 
 class SJRSLMSAPI:
     def __init__(self, base_url="https://your-worker.your-subdomain.workers.dev"):
         self.base_url = base_url
-        self.token = None
-        self.csrf_token = None
+        self.session = requests.Session()
 
     def login(self, email, password):
-        response = requests.post(
+        response = self.session.post(
             f"{self.base_url}/api/auth/login",
             json={"email": email, "password": password}
         )
-        
-        data = response.json()
-        if data.get("success"):
-            self.token = data["token"]
-            self.csrf_token = data.get("csrf_token")
-        
-        return data
+        return response.json()
+
+    def bootstrap_csrf(self):
+        self.session.get(f"{self.base_url}/api/auth/csrf")
+        return self.session.cookies.get("XSRF-TOKEN")
 
     def get_books(self):
-        if not self.token:
-            raise Exception("Not authenticated")
-
-        headers = {
-            "Authorization": f"Bearer {self.token}",
-            "X-XSRF-TOKEN": self.csrf_token or ""
-        }
-        
-        response = requests.get(
-            f"{self.base_url}/api/books",
-            headers=headers
-        )
-        
+        response = self.session.get(f"{self.base_url}/api/books")
         return response.json()
 
 # Usage
 api = SJRSLMSAPI()
 api.login("user@example.com", "password123")
+api.bootstrap_csrf()
 books = api.get_books()
 ```
 
@@ -212,17 +188,15 @@ EMAIL="test@example.com"
 PASSWORD="testpass123"
 
 echo "🔑 Logging in..."
-LOGIN_RESPONSE=$(curl -s -X POST "$BASE_URL/api/auth/login" \
+curl -s -i -c cookies.txt -X POST "$BASE_URL/api/auth/login" \
   -H "Content-Type: application/json" \
-  -d "{\"email\":\"$EMAIL\",\"password\":\"$PASSWORD\"}")
+  -d "{\"email\":\"$EMAIL\",\"password\":\"$PASSWORD\"}" > /dev/null
 
-TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.token')
-CSRF_TOKEN=$(echo $LOGIN_RESPONSE | jq -r '.csrf_token')
+echo "🛡️ Bootstrapping CSRF..."
+curl -s -b cookies.txt -c cookies.txt -X GET "$BASE_URL/api/auth/csrf" > /dev/null
 
 echo "📚 Getting books..."
-curl -s -X GET "$BASE_URL/api/books" \
-  -H "Authorization: Bearer $TOKEN" \
-  -H "X-XSRF-TOKEN: $CSRF_TOKEN" | jq '.'
+curl -s -b cookies.txt -X GET "$BASE_URL/api/books" | jq '.'
 ```
 
 ## 🧪 Testing Your Setup
@@ -238,19 +212,18 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" 
   -d '{"email":"test@example.com","password":"test123","first_name":"Test","last_name":"User","user_type":"student"}'
 
 # 3. Login
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","password":"test123"}'
 
-# 4. Get books (replace YOUR_TOKEN)
-curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
-  -H "Authorization: Bearer YOUR_TOKEN"
+# 4. Get books
+curl -b cookies.txt -X GET "https://your-worker.your-subdomain.workers.dev/api/books"
 ```
 
 ### **Expected Results**
 - ✅ **Health Check**: Returns system status
 - ✅ **Registration**: Returns 201 with user data
-- ✅ **Login**: Returns 200 with JWT token
+- ✅ **Login**: Returns 200 and sets auth cookie
 - ✅ **Books**: Returns 200 with books list
 
 ## 🚨 Common Issues & Solutions
@@ -259,7 +232,7 @@ curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
 **Solution:** Check email/password spelling, ensure user exists
 
 ### **Issue: "Authentication required"**
-**Solution:** Include `Authorization: Bearer <token>` header
+**Solution:** Ensure cookies are enabled and you are sending the auth cookie (`credentials: 'include'` / `-b cookies.txt`).
 
 ### **Issue: "CORS error"**
 **Solution:** API supports CORS, check your client configuration
@@ -296,7 +269,7 @@ curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
 
 - [ ] API health check returns "ok"
 - [ ] User registration successful
-- [ ] User login returns JWT token
+- [ ] User login sets auth cookie
 - [ ] Authenticated API call works
 - [ ] Error handling implemented
 - [ ] Environment variables configured

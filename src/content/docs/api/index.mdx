@@ -55,8 +55,8 @@ This directory contains comprehensive documentation for the SJRS LMS API, includ
 ## 📋 API Overview
 
 ### **Authentication Methods**
-- **JWT Tokens** - Primary authentication method
-- **CSRF Protection** - Cross-site request forgery protection
+- **JWT (Cookie-Based)** - Backend sets an HttpOnly auth cookie; browser sends it automatically (`credentials: 'include'`)
+- **CSRF Protection** - Double-submit cookie pattern for state-changing methods (`X-XSRF-TOKEN` header matches `XSRF-TOKEN` cookie)
 - **API Keys** - For external service integrations
 
 ### **Email Service Integration**
@@ -69,7 +69,7 @@ This directory contains comprehensive documentation for the SJRS LMS API, includ
 - **User Management** - CRUD operations for users
 - **Library Operations** - Books, loans, returns
 - **Resource Management** - Study rooms, equipment, facilities
-- **Permission System** - Role-based access control
+- **Permission System** - Permission-based access control
 - **Session Management** - Force logout, session cleanup
 
 ## 🏗️ API Architecture
@@ -176,7 +176,6 @@ The system provides a comprehensive session management API that enforces a singl
     "status": "active",
     "user_type": "student"
   },
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
   "sessionInfo": {
     "id": 456,
     "device_info": "Desktop - Windows",
@@ -213,24 +212,15 @@ const forceLogoutOtherSessions = async (email: string, password: string) => {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: 'include',
       body: JSON.stringify({ email, password }),
     });
 
     const data = await response.json();
 
     if (response.ok && data.success) {
-      // ⚠️ IMPORTANT: Always use tokenManager, never localStorage directly
-      import { tokenManager } from '@/utilities/auth/token-manager';
-      
-      // Store new authentication data (uses secure storage)
-      await tokenManager.setToken(data.token, 'cookie');
-      await tokenManager.setSession(data.user, 'cookie');
-      
-      // Update application state
-      setUser(data.user);
-      setToken(data.token);
-      
-      return { success: true };
+      await fetch(`${API_BASE_URL}/api/auth/me`, { credentials: 'include' });
+      return { success: true, user: data.user };
     } else {
       return { success: false, error: data.error };
     }
@@ -274,27 +264,23 @@ MAILJET_FROM_EMAIL=noreply@yourdomain.com
 
 ### **2. Configure API Client**
 ```typescript
-// ⚠️ IMPORTANT: Always use tokenManager, never localStorage directly
-import { tokenManager } from '@/utilities/auth/token-manager';
 import { unifiedAPIClient } from '@/utilities/api/unified-api-client';
 
 // Base API configuration
 const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'https://your-worker.your-subdomain.workers.dev';
 
-// Get token from secure storage
-const token = await tokenManager.getToken('cookie');
-
-// Recommended: Use unifiedAPIClient which automatically includes both JWT and CSRF tokens
-// No manual headers needed - unifiedAPIClient handles everything automatically
+await unifiedAPIClient.get('/api/auth/csrf');
+const me = await unifiedAPIClient.get('/api/auth/me');
 const response = await unifiedAPIClient.get('/api/books');
 
-// If you must use fetch directly, manually add headers:
+// If you must use fetch directly:
 import { addCSRFToHeaders } from '@/utilities/security/csrf-protection';
+
+await fetch(`${apiBaseUrl}/api/auth/csrf`, { credentials: 'include' });
 const headers = await addCSRFToHeaders({
-  'Authorization': `Bearer ${token}`,
   'Content-Type': 'application/json'
 });
-// CSRF token is automatically added to headers via addCSRFToHeaders()
+await fetch(`${apiBaseUrl}/api/books`, { credentials: 'include', headers });
 ```
 
 ### **3. Email Service Setup**
@@ -405,7 +391,7 @@ export async function newResource(request: Request, env: any) {
 
 ## 🎯 Best Practices
 
-- **Token Management**: Always use `tokenManager` (never `localStorage` directly); use `unifiedAPIClient` for automatic token handling
+- **Session State**: Use `tokenManager` for non-sensitive session/UI state (never `localStorage` directly); use `unifiedAPIClient` for cookie + CSRF handling
 - **Error Handling**: Check response status, implement retry logic, log errors for debugging
 - **Security**: Use HTTPS, validate CSRF tokens, sanitize user inputs
 - **Email Service**: Use direct Mailjet for account emails, queues for transactional emails

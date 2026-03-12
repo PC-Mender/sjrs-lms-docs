@@ -18,28 +18,20 @@ JWT (JSON Web Tokens) are used for user authentication and session management ac
 - **Encoding**: base64url for header, payload, and signature
 - **Claims enforced**: `iss`, `aud`, `iat`, `nbf` (optional), `exp`, `jti`
 - **Key rotation**: Supported via `JWT_KEYS_JSON` and `JWT_DEFAULT_KID`
-- **Storage**: Use `tokenManager` from `src/utilities/auth/token-manager.ts` (secure storage)
-- **⚠️ Important**: Do NOT use `localStorage` directly. Always use `tokenManager` methods.
-- **Header Format**: `Authorization: Bearer <token>` (automatically handled by `unifiedAPIClient`)
+- **Storage**: The backend sets an HttpOnly auth cookie (default name: `secure_authToken`). The browser sends it automatically.
+- **Client access**: JavaScript cannot read the JWT (by design). Auth state is determined by calling `GET /api/auth/me`.
 
 ### Usage Examples
 ```typescript
-// ⚠️ IMPORTANT: Always use tokenManager, never localStorage directly
-import { tokenManager } from '@/utilities/auth/token-manager';
-
-// Client-side token storage (uses secure storage)
-await tokenManager.setToken(token, 'cookie');
-
-// Get token (from secure storage)
-const token = await tokenManager.getToken('cookie');
-
-// API requests with token (automatically handled by unifiedAPIClient)
-// No manual header needed - unifiedAPIClient adds Authorization header automatically
 import { unifiedAPIClient } from '@/utilities/api/unified-api-client';
-const response = await unifiedAPIClient.get('/api/users');
 
-// Server-side verification
-const user = await validateUserToken(token, env); // returns user or null
+await unifiedAPIClient.post('/api/auth/login', {
+  email,
+  password,
+});
+
+const me = await unifiedAPIClient.get('/api/auth/me');
+const users = await unifiedAPIClient.get('/api/users');
 ```
 
 ### Environment Variables
@@ -67,49 +59,32 @@ JWT_AUD=https://your-worker.your-subdomain.workers.dev
 Cross-Site Request Forgery (CSRF) tokens protect against unauthorized form submissions and API calls.
 
 ### Implementation
-- **Location**: `src/utilities/security/csrf-protection.ts`
-- **Token Generation**: Cryptographically secure random tokens
-- **Expiration**: 30 minutes
-- **Storage**: Secure memory storage with cookie backup
-- **Automatic Header Injection**: CSRF token is automatically added to all requests via request interceptor in `src/utilities/api/unified-api-client.ts` (lines 735-743)
+- **Bootstrap Endpoint**: `GET /api/auth/csrf` issues the `XSRF-TOKEN` cookie (double-submit pattern)
+- **Enforcement**: Required on state-changing methods (POST/PUT/PATCH/DELETE) for cookie-authenticated requests
+- **Validation**: Backend requires `X-XSRF-TOKEN` header to match the `XSRF-TOKEN` cookie, plus Origin/Referer allowlist
+- **Automatic Header Injection**: Requests made via `unifiedAPIClient` automatically include the CSRF header
+- **Cookie note**: `XSRF-TOKEN` is intentionally not HttpOnly (double-submit cookie pattern)
 
 ### Configuration
+Frontend cookie configuration (used when the client refreshes/creates the token locally). Backend-issued CSRF cookies are set by `GET /api/auth/csrf` and use server-chosen `SameSite` (Strict in prod, None for localhost) and `Secure`.
 ```typescript
 const CSRF_CONFIG = {
-  TOKEN: {
-    length: 32,
-    alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
-    expiryMinutes: 30,
-  },
   COOKIE: {
     name: 'XSRF-TOKEN',
     path: '/',
-    secure: true,
-    sameSite: 'strict'
+    secure: typeof window !== 'undefined' && window.location.protocol === 'https:',
+    sameSite: 'lax'
   }
 };
 ```
 
 ### Usage Examples
 ```typescript
-// Import CSRF protection utilities
 import { csrfProtection, addCSRFToHeaders, getCSRFToken } from '@/utilities/security/csrf-protection';
 
-// Generate CSRF token (usually done automatically on app initialization)
-const csrfToken = await csrfProtection.createToken();
-
-// Get current token (creates if doesn't exist)
-const token = await getCSRFToken();
-
-// Validate token in requests (client-side validation)
-const validation = await csrfProtection.validateToken(headerToken);
-
-// Manually add to headers (usually not needed - handled automatically by unifiedAPIClient)
 const headers = await addCSRFToHeaders({ 'Content-Type': 'application/json' });
-// Result: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': '<token>' }
-
-// Note: CSRF token is automatically added to all API requests via
-// request interceptor in src/utilities/api/unified-api-client.ts
+const token = await getCSRFToken();
+await csrfProtection.validateToken(token);
 ```
 
 ## 3. Email Service API Keys
@@ -315,9 +290,10 @@ CLOUDFLARE_ACCOUNT_ID=your-cloudflare-account-id
 Secure API client for making authenticated requests to the backend.
 
 ### Implementation
-- **Location**: `src/utilities/client/d1-api.ts`
-- **Base URL**: Remote API endpoint (even in development)
-- **Token Management**: Automatic token inclusion in requests
+- **Primary Client**: `src/utilities/api/unified-api-client.ts`
+- **Base URL**: `VITE_API_BASE_URL` (defaults to production Workers URL)
+- **Cookie Auth**: Uses `credentials: 'include'` so the browser sends HttpOnly auth cookie
+- **CSRF**: Adds `X-XSRF-TOKEN` automatically via request interceptor (`src/utilities/api/api-interceptors-setup.ts`)
 
 ### Configuration
 ```typescript
@@ -325,17 +301,6 @@ Secure API client for making authenticated requests to the backend.
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 
   'https://your-worker.your-subdomain.workers.dev';
 
-// Token management (use tokenManager instead)
-import { tokenManager } from '@/utilities/auth/token-manager';
-
-// Set token (uses secure storage)
-await tokenManager.setToken(token, 'cookie');
-
-// Clear token
-await tokenManager.clearAuth();
-
-// Automatic token inclusion (handled by unifiedAPIClient)
-// No manual header needed - unifiedAPIClient automatically adds Authorization header
 import { unifiedAPIClient } from '@/utilities/api/unified-api-client';
 const response = await unifiedAPIClient.get('/api/users');
 ```
@@ -345,67 +310,22 @@ const response = await unifiedAPIClient.get('/api/users');
 VITE_API_BASE_URL=https://your-worker.your-subdomain.workers.dev
 ```
 
-## 6. Secure API Client
+## 6. Frontend Session State
 
 ### Purpose
-Enhanced API client with CSRF protection and security headers.
+Keep the UI hydrated with user/session data without storing credentials in JS-accessible storage.
 
 ### Implementation
-- **Location**: `src/utilities/api-client.ts`
-- **Features**: CSRF protection, retry logic, error handling
-- **Security**: Automatic security header inclusion
-
-### Usage Examples
-```typescript
-// Secure API client instance
-const apiClient = SecureAPIClient.getInstance();
-
-// Making authenticated requests
-const response = await apiClient.request({
-  method: 'POST',
-  url: '/api/books',
-  data: bookData,
-  headers: customHeaders
-});
-
-// Helper functions
-const result = await securePost('/api/books', bookData);
-```
-
-## 7. Session Management
-
-### Purpose
-Manage user sessions and token lifecycle.
-
-### Implementation
-- **Location**: `src/utilities/session-manager.ts`
-- **Features**: Token validation, session persistence, automatic logout
-
-### Token Validation Process
-```typescript
-// ⚠️ IMPORTANT: Always use tokenManager, never localStorage directly
-import { tokenManager } from '@/utilities/auth/token-manager';
-
-// Check token validity
-const token = await tokenManager.getToken('cookie');
-if (token) {
-  // D1 uses JWT tokens that are stateless
-  // We just need to ensure the token is still valid
-  const isValid = await validateToken(token);
-  if (!isValid) {
-    await tokenManager.clearAuth();
-    // Redirect to login
-  }
-}
-```
+- **Session Engine**: `src/utilities/session/core/session-engine.ts`
+- **Session Store**: `src/utilities/auth/token-manager.ts` (session data only)
+- **Auth Source**: `GET /api/auth/me` is the canonical auth check
 
 ## Security Best Practices
 
 ### 1. Token Storage
-- **⚠️ Always use `tokenManager`** from `src/utilities/auth/token-manager.ts` for token storage
-- Never use `localStorage` directly - it's deprecated and less secure
-- `tokenManager` uses secure storage (cookies with HttpOnly when possible)
-- Implement token rotation for long-lived sessions
+- **Do not store auth tokens in JS-accessible storage** (`localStorage`, `sessionStorage`, or `document.cookie`)
+- The backend sets the JWT in an HttpOnly cookie; the browser sends it automatically
+- `tokenManager` is for non-sensitive session/UI state only (not the JWT)
 
 ### 2. Token Validation
 - Always validate tokens on the server side
@@ -429,8 +349,9 @@ if (token) {
 JWT_SECRET=your-secure-jwt-secret-key
 
 # Email Service
-EMAIL_API_KEY=your-email-service-api-key
-FROM_EMAIL=noreply@yourdomain.com
+MAILJET_API_KEY=your_mailjet_api_key
+MAILJET_API_SECRET=your_mailjet_api_secret
+MAILJET_FROM_EMAIL=noreply@yourdomain.com
 
 # Cloudflare Deployment
 CLOUDFLARE_API_TOKEN=your-cloudflare-api-token
@@ -457,15 +378,15 @@ VITE_API_BASE_URL=https://your-worker.your-subdomain.workers.dev
 ## Troubleshooting
 
 ### Common Issues
-1. **401 Unauthorized**: Check JWT token validity and expiration
-2. **CSRF Token Mismatch**: Ensure tokens are properly generated and validated
+1. **401 Unauthorized**: Missing/expired auth cookie. Re-login and retry `GET /api/auth/me`.
+2. **403 CSRF validation failed**: Ensure you called `GET /api/auth/csrf` and are sending `X-XSRF-TOKEN` matching the `XSRF-TOKEN` cookie for POST/PUT/PATCH/DELETE.
 3. **Email Delivery Failures**: Verify email service API key and configuration
 4. **Deployment Failures**: Check Cloudflare API token permissions
 
 ### Debug Steps
 1. Check browser console for token-related errors
 2. Verify environment variables are properly set
-3. Test API endpoints with proper authentication headers
+3. Test API endpoints with cookies enabled and CSRF header for unsafe methods
 4. Monitor server logs for authentication failures
 
 ## Related Documentation

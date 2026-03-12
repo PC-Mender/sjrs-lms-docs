@@ -35,12 +35,12 @@ This document provides detailed documentation for the most important SJRS LMS AP
     "email_verified": true,
     "onboarding_status": "complete",
     "workflowStatus": "active"
-  },
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+  }
 }
 ```
 
 Note:
+- On success, the backend sets the auth JWT in an HttpOnly cookie. Clients should not expect a token in the JSON body.
 - `onboarding_status`: Persisted onboarding stage (`pending_email_confirmation | profile_incomplete | pending_approval | complete`).
 - `workflowStatus`: Compatibility field used by some clients. When present, it should match `onboarding_status` for onboarding stages, or match `status` for terminal states.
   - `pending_email_confirmation`
@@ -93,12 +93,11 @@ Notes:
 ### **Get Current User Profile**
 **Endpoint:** `GET /api/auth/me`  
 **Description:** Get current authenticated user's profile  
-**Authentication:** Required (Bearer token)
+**Authentication:** Required (cookie-based session)
 
 #### Request Headers
 ```
-Authorization: Bearer <jwt_token>
-X-XSRF-TOKEN: <csrf_token>
+Cookie: secure_authToken=<HttpOnly cookie set on login>
 ```
 
 #### Response (Success - 200)
@@ -128,7 +127,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Update User Profile**
 **Endpoint:** `PUT /api/auth/profile`  
 **Description:** Update current user's profile information  
-**Authentication:** Required (Bearer token)
+**Authentication:** Required (cookie-based session)
 
 #### Request Body
 ```json
@@ -162,7 +161,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Get All Books**
 **Endpoint:** `GET /api/books`  
 **Description:** Retrieve list of all books with pagination and filtering  
-**Authentication:** Required (Bearer token)
+**Authentication:** Required (cookie-based session)
 
 #### Query Parameters
 ```
@@ -201,7 +200,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Search Books**
 **Endpoint:** `GET /api/books/search`  
 **Description:** Search books by various criteria  
-**Authentication:** Required (Bearer token)
+**Authentication:** Required (cookie-based session)
 
 #### Query Parameters
 ```
@@ -236,7 +235,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Get Specific Book**
 **Endpoint:** `GET /api/books/:id`  
 **Description:** Retrieve detailed information about a specific book  
-**Authentication:** Required (Bearer token)
+**Authentication:** Required (cookie-based session)
 
 #### Response (Success - 200)
 ```json
@@ -281,7 +280,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Create Book**
 **Endpoint:** `POST /api/books`  
 **Description:** Create a new book (Librarian+ only)  
-**Authentication:** Required (Bearer token + Librarian role)
+**Authentication:** Required (cookie-based session + Librarian role)
 
 #### Request Body
 ```json
@@ -329,7 +328,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Get All Resources**
 **Endpoint:** `GET /api/resources`  
 **Description:** Retrieve list of all resources with pagination and filtering  
-**Authentication:** Required (Bearer token)
+**Authentication:** Required (cookie-based session)
 
 #### Query Parameters
 ```
@@ -368,7 +367,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Get Specific Resource**
 **Endpoint:** `GET /api/resources/:id`  
 **Description:** Retrieve detailed information about a specific resource  
-**Authentication:** Required (Bearer token)
+**Authentication:** Required (cookie-based session)
 
 #### Response (Success - 200)
 ```json
@@ -392,7 +391,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Create Resource**
 **Endpoint:** `POST /api/resources`  
 **Description:** Create a new resource (Admin/Librarian only)  
-**Authentication:** Required (Bearer token + appropriate permissions)
+**Authentication:** Required (cookie-based session + appropriate permissions)
 
 #### Request Body
 ```json
@@ -429,7 +428,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Get All Loans**
 **Endpoint:** `GET /api/loans`  
 **Description:** Retrieve list of all loans with filtering options  
-**Authentication:** Required (Bearer token)
+**Authentication:** Required (cookie-based session)
 
 #### Query Parameters
 ```
@@ -479,7 +478,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Create Loan**
 **Endpoint:** `POST /api/loans`  
 **Description:** Create a new loan (Librarian+ only)  
-**Authentication:** Required (Bearer token + Librarian role)
+**Authentication:** Required (cookie-based session + Librarian role)
 
 #### Request Body
 ```json
@@ -522,7 +521,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Update Loan (Return Book)**
 **Endpoint:** `PUT /api/loans/:id`  
 **Description:** Update loan status (e.g., return book)  
-**Authentication:** Required (Bearer token + Librarian role)
+**Authentication:** Required (cookie-based session + Librarian role)
 
 #### Request Body
 ```json
@@ -552,7 +551,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Get All Users**
 **Endpoint:** `GET /api/users`  
 **Description:** Retrieve list of all users (Admin/Librarian only)  
-**Authentication:** Required (Bearer token + Admin/Librarian role)
+**Authentication:** Required (cookie-based session + Admin/Librarian role)
 
 #### Query Parameters
 ```
@@ -590,7 +589,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Get Specific User**
 **Endpoint:** `GET /api/users/:id`  
 **Description:** Retrieve detailed information about a specific user  
-**Authentication:** Required (Bearer token + Admin/Librarian role or own profile)
+**Authentication:** Required (cookie-based session + Admin/Librarian role or own profile)
 
 #### Response (Success - 200)
 ```json
@@ -621,7 +620,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Get User Wishlist**
 **Endpoint:** `GET /api/wishlist`  
 **Description:** Retrieve current user's wishlist  
-**Authentication:** Required (Bearer token)
+**Authentication:** Required (cookie-based session)
 
 #### Response (Success - 200)
 ```json
@@ -650,7 +649,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Add to Wishlist**
 **Endpoint:** `POST /api/wishlist`  
 **Description:** Add a book to user's wishlist  
-**Authentication:** Required (Bearer token)
+**Authentication:** Required (cookie-based session)
 
 #### Request Body
 - `book_id`: ID of the book (required)
@@ -683,7 +682,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Get User Notifications**
 **Endpoint:** `GET /api/notifications`  
 **Description:** Retrieve current user's notifications  
-**Authentication:** Required (Bearer token)
+**Authentication:** Required (cookie-based session)
 
 #### Query Parameters
 ```
@@ -726,7 +725,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Check User Permissions**
 **Endpoint:** `GET /api/permissions/check`  
 **Description:** Check current user's permissions for specific resources  
-**Authentication:** Required (Bearer token)
+**Authentication:** Required (cookie-based session)
 
 **⚠️ RBAC Policy: This endpoint is the single source of truth for all permission decisions. Client-side permission checks are for UI optimization only and deny by default when backend validation is unavailable.**
 
@@ -759,7 +758,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Get System Logs**
 **Endpoint:** `GET /api/system_logs`  
 **Description:** Retrieve system logs (Admin+ only)  
-**Authentication:** Required (Bearer token + Admin role)
+**Authentication:** Required (cookie-based session + Admin role)
 
 #### Query Parameters
 ```
@@ -802,7 +801,7 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Upload File**
 **Endpoint:** `POST /api/upload`  
 **Description:** Upload a file to the system  
-**Authentication:** Required (Bearer token + appropriate permissions)
+**Authentication:** Required (cookie-based session + appropriate permissions)
 
 #### Request Body (Multipart Form Data)
 ```
@@ -859,7 +858,7 @@ description: "Book cover image"
 ### **Send Email**
 **Endpoint:** `POST /api/email`  
 **Description:** Send an email through the system  
-**Authentication:** Required (Bearer token + appropriate permissions)
+**Authentication:** Required (cookie-based session + appropriate permissions)
 
 #### Request Body
 ```json
@@ -931,13 +930,12 @@ description: "Book cover image"
 ### **Get Badge Catalog**
 **Endpoint:** `GET /api/badges/catalog`  
 **Description:** Get all available badges in the system  
-**Authentication:** Required (Bearer token)  
+**Authentication:** Required (cookie-based session)  
 **Permissions:** Superuser only
 
 #### Request Headers
 ```
-Authorization: Bearer <jwt_token>
-X-XSRF-TOKEN: <csrf_token>
+Cookie: secure_authToken=<HttpOnly cookie set on login>
 ```
 
 #### Response (Success - 200)
@@ -985,12 +983,12 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Assign Badge to User**
 **Endpoint:** `POST /api/badges/assign`  
 **Description:** Manually assign a badge to a user  
-**Authentication:** Required (Bearer token)  
+**Authentication:** Required (cookie-based session)  
 **Permissions:** Superuser or appropriate level-based permissions
 
 #### Request Headers
 ```
-Authorization: Bearer <jwt_token>
+Cookie: secure_authToken=<HttpOnly cookie set on login>
 X-XSRF-TOKEN: <csrf_token>
 Content-Type: application/json
 ```
@@ -1086,12 +1084,12 @@ Content-Type: application/json
 ### **Revoke Badge from User**
 **Endpoint:** `POST /api/badges/revoke`  
 **Description:** Revoke a badge from a user  
-**Authentication:** Required (Bearer token)  
+**Authentication:** Required (cookie-based session)  
 **Permissions:** Superuser only
 
 #### Request Headers
 ```
-Authorization: Bearer <jwt_token>
+Cookie: secure_authToken=<HttpOnly cookie set on login>
 X-XSRF-TOKEN: <csrf_token>
 Content-Type: application/json
 ```
@@ -1147,13 +1145,12 @@ Content-Type: application/json
 ### **Get Granted Badges (All Users)**
 **Endpoint:** `GET /api/badges/granted`  
 **Description:** Get paginated list of all granted badges across all users  
-**Authentication:** Required (Bearer token)  
+**Authentication:** Required (cookie-based session)  
 **Permissions:** Superuser only
 
 #### Request Headers
 ```
-Authorization: Bearer <jwt_token>
-X-XSRF-TOKEN: <csrf_token>
+Cookie: secure_authToken=<HttpOnly cookie set on login>
 ```
 
 #### Query Parameters
@@ -1221,12 +1218,11 @@ GET /api/badges/granted?page=1&limit=20&status=active
 ### **Get User's Badges**
 **Endpoint:** `GET /api/badges/my-badges`  
 **Description:** Get all badges for the current authenticated user  
-**Authentication:** Required (Bearer token)
+**Authentication:** Required (cookie-based session)
 
 #### Request Headers
 ```
-Authorization: Bearer <jwt_token>
-X-XSRF-TOKEN: <csrf_token>
+Cookie: secure_authToken=<HttpOnly cookie set on login>
 ```
 
 #### Response (Success - 200)
@@ -1266,13 +1262,12 @@ X-XSRF-TOKEN: <csrf_token>
 ### **Get Specific User's Granted Badges**
 **Endpoint:** `GET /api/badges/granted/:userId`  
 **Description:** Get all badges for a specific user  
-**Authentication:** Required (Bearer token)  
+**Authentication:** Required (cookie-based session)  
 **Permissions:** Superuser or viewing own badges
 
 #### Request Headers
 ```
-Authorization: Bearer <jwt_token>
-X-XSRF-TOKEN: <csrf_token>
+Cookie: secure_authToken=<HttpOnly cookie set on login>
 ```
 
 #### URL Parameters
@@ -1397,14 +1392,14 @@ The system includes automatic badge evaluators that run on specific triggers:
 
 ## 🔐 Authentication Headers
 
-All authenticated endpoints require these headers:
+All authenticated endpoints use a cookie-based session. For state-changing requests (POST/PUT/PATCH/DELETE), include the CSRF header.
 ```
-Authorization: Bearer <jwt_token>
-X-XSRF-TOKEN: <csrf_token>
+Cookie: secure_authToken=<HttpOnly cookie set on login>
+X-XSRF-TOKEN: <csrf_token> (required for POST/PUT/PATCH/DELETE)
 Content-Type: application/json
 ```
 
 ---
 
 **Last Updated:** November 2025  
-**Version:** 3.41.25
+**Version:** 6.3.3

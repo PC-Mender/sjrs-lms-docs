@@ -45,8 +45,8 @@ These standards are enforced through tooling where possible; deviations must be 
 - **TypeScript Errors & Warnings**: Resolve all TypeScript errors before committing.
   - Usage of `any` requires explicit justification or a lint suppression comment explaining why it is safe.
 - **TypeScript Strict Mode**:
-  - **Target Configuration**: `strict: true` with all related strict flags enabled.
-  - **Current State**: If strict mode is disabled, enable flags incrementally following `docs/development/typescript-configuration.md`.
+  - **Project Policy - Baseline Requirement**: The main TypeScript configuration must keep `strict: true`.
+  - **Current Repository Constraint - Current Project Reality**: Some strict-adjacent flags are intentionally staged between `tsconfig.json` and `tsconfig.strict.json`; tighten them incrementally rather than destabilizing production code.
   - Newly added files must not introduce new strict-mode violations.
 
 ## Backend-First Architecture
@@ -138,7 +138,7 @@ These standards are enforced through tooling where possible; deviations must be 
   Use Content Security Policy as defense-in-depth.
 - **CSRF Protection**: State-changing operations (POST/PUT/PATCH/DELETE) must be CSRF-protected; GET endpoints must be side-effect free.
   - **Cookie-Based Auth**: CSRF protection is critical when authentication uses cookies (session cookies or JWTs stored in HttpOnly cookies) because browsers automatically send cookies with requests, making them vulnerable to cross-site attacks
-  - **Header-Only Token Auth**: CSRF protection is less critical when using purely token-based authentication in headers only (e.g., `Authorization: Bearer <token>`) because browsers don't automatically send custom headers, providing inherent protection
+  - **Header-Only Token Auth**: CSRF protection is less critical when using purely token-based authentication in headers only (i.e., an `Authorization` header) because browsers don't automatically send custom headers, providing inherent protection
   - **This Application**: Uses JWTs in HttpOnly cookies, so CSRF protection is required and implemented via double-submit cookie pattern
   - **Implementation**: Enforce double-submit token (`X-XSRF-TOKEN` header matches `XSRF-TOKEN` cookie); enforce allowed `Origin/Referer` (defense-in-depth)
   - Only allow CSRF relaxations in development with explicit flags (`ALLOW_CSRF_DEV_FALLBACK=true`)
@@ -268,16 +268,145 @@ These standards are enforced through tooling where possible; deviations must be 
     - Prefer skeletons/placeholders over spinners or blank states
   - **Streaming Data**: 
     - For very large datasets, stream or chunk responses to render partial results immediately
-- **React Query Configuration (Industry Standard)**:
-  - **Default Settings**:
-    - `staleTime: 0` (always revalidate)
-    - `cacheTime: 5 * 60 * 1000` (5 minutes for instant UI)
-    - `refetchOnMount: true`
-    - `refetchOnWindowFocus: true`
-  - **Pagination UX**: 
-    - Use `placeholderData: keepPreviousData` to prevent UI flicker
-  - **Prefetching Strategy**: 
-    - Prefetch likely next pages or detail views on hover or after initial render
+- **Instant-Close Modal Pattern (Project Policy — Required for all CRUD modals)**:
+  - **Two-Layer Architecture (Required for all CRUD modals)**:
+    1. **Modal Controller Layer** (`useCrudModalState`): Centralizes UI orchestration (visibility, form instances, selected records, field hydration)
+    2. **Mutation Layer** (`useInstantCloseMutation`): Standardizes submit lifecycle (close → mutate → reopen on error → refresh)
+  
+  - **Layer 1: Modal Controller Hook** (`useCrudModalState`)
+    - **What it owns**: Modal visibility state, form instances, selected record, field hydration, close/reset logic, and centralized refresh strategy
+    - **Location**: `src/utilities/crud/use-crud-modal-state.ts`
+    - **Usage**:
+      ```typescript
+      import { useCrudModalState } from '@/utilities/query';
+
+      // Register refresh strategy ONCE at hook config — not in each mutation
+      const { createModal, editModal, editingRecord, onRefresh } = useCrudModalState<MyEntity>({
+        setRefreshTime: setLastRefreshTime, // for timestamp-keyed queries
+        refetch,                            // for explicit refetch queries
+      });
+
+      // Access modal state
+      <Modal open={createModal.isOpen} onCancel={createModal.close} />
+      <Form form={createModal.form} />
+
+      // Open modal (with record for edit mode)
+      <Button onClick={() => editModal.open(record)}>Edit</Button>
+      ```
+    - **Benefits**: DRY principle, refresh registered once, consistent UX across features
+  
+  - **Layer 2: Mutation Lifecycle** (`useInstantCloseMutation`)
+    - **What it owns**: Submit flow (close modal immediately, execute mutation in background, reopen on error, trigger refresh on success)
+    - **Location**: `src/utilities/query/instant-close-hooks.ts`
+    - **Correct API**: Use `setRefreshTime` (not `refreshData`) for data refresh callbacks
+    - **Usage**:
+      ```typescript
+      const handleSubmit = useInstantCloseMutation({
+        mutation: updateMutation,
+        record: editingRecord,
+        config: {
+          onClose: editModal.close,
+          setRefreshTime: onRefresh,  // ✅ onRefresh from useCrudModalState — not expanded inline
+          reopenModal: (record, formData) => {
+            editModal.form.setFieldsValue(formData);
+            editModal.open(record);
+          },
+          setLoading: setEditLoading,
+        },
+        // ... rest of config
+      });
+      ```
+  
+  - **Integration Pattern (Standard CRUD)**:
+    ```typescript
+    // 1. Register refresh strategy ONCE at hook setup
+    const { createModal, editModal, editingRecord, onRefresh } = useCrudModalState<Entity>({
+      setRefreshTime: setLastRefreshTime, // for timestamp-keyed queries
+      refetch,                            // for explicit-refetch queries (omit if not needed)
+    });
+
+    // 2. Wire mutations — pass onRefresh directly, do NOT expand it inline
+    const handleEditSubmit = useInstantCloseMutation({
+      mutation: updateMutation,
+      record: editingRecord,
+      config: {
+        onClose: editModal.close,         // ✅ hook's close handler
+        setRefreshTime: onRefresh,        // ✅ centralized refresh — not duplicated here
+        reopenModal: (record, formData) => {
+          editModal.form.setFieldsValue(formData);
+          editModal.open(record);         // ✅ hook's open handler
+        },
+        setLoading: setEditLoading,
+      },
+      transformVariables: (formData, record) => ({ /* ... */ }),
+      onError: (error) => { /* ... */ },
+    });
+
+    // 3. Wire JSX
+    <Modal open={editModal.isOpen} onCancel={editModal.close}>
+      <Form form={editModal.form} onFinish={handleEditSubmit} />
+    </Modal>
+    ```
+
+  - **Data Layer (Optimistic CUD pattern — required per resource)**:
+    - Each resource's mutation hook (`src/hooks/d1/<resource>.ts`) must implement:
+      - **Create**: `onMutate` (optimistic insert with `tempId = -Date.now()`), `onError` (rollback), `onSuccess` (replace tempId with server record)
+      - **Update**: `onMutate` (snapshot + optimistic field merge), `onError` (rollback), `onSuccess` (reconcile with server response)
+      - **Delete**: `onMutate` (snapshot + optimistic row removal), `onError` (rollback), `onSuccess` (confirm removal)
+    - Remove `invalidateKeys`/`refetchKeys` from CUD mutations — cache is managed via optimistic pattern
+    - Reference implementation: `src/hooks/d1/roles.ts`
+
+  - **Delete Confirm Modal**:
+    - `onOk` must be non-awaited: `onOk: () => { void onDelete(record.id); }`
+    - Never `async/await` inside `onOk` — confirm closes instantly; deletion runs in background
+  
+  - **Reference Implementations**:
+    - [RoleListPage.tsx](../src/pages/roles/RoleListPage.tsx) — First official implementation
+    - [BorrowLimitList.tsx](../src/pages/borrow-limits/BorrowLimitList.tsx) — Reference for patterns
+    - [ProfessorsPage.tsx](../src/pages/professors/index.tsx) — Complete CUD migration with optimistic updates
+  
+  - **Common Mistakes (Anti-Patterns)**:
+    - ❌ Using `refreshData` callback (removed; use `setRefreshTime: onRefresh`)
+    - ❌ Expanding refresh inline in mutation config (`setRefreshTime: (time) => { setLastRefreshTime(time); onRefresh(time); }`) — register once at `useCrudModalState` config instead
+    - ❌ Managing modal visibility/form/record directly in the page (use `useCrudModalState`)
+    - ❌ Direct `await mutateAsync()` before close (use `useInstantCloseMutation`)
+    - ❌ `async/await` inside delete `onOk` — use `void onDelete(id)` for instant confirm close
+    - ❌ Keeping `invalidateKeys`/`refetchKeys` on CUD mutations alongside optimistic updates — causes flash/reappear
+  
+  - **Benefits**:
+    - Modal closes instantly (0ms perceived latency)
+    - Mutation executes in background (non-blocking)
+    - Automatic error recovery (re-opens modal on failure)
+    - Immediate data refresh on success for real-time UX (via `setRefreshTime`)
+    - Consistent UX across all CRUD operations
+    - DRY principle: centralized logic in two reusable, composable hooks
+  
+  - **Migration Path**: All existing modal pages must adopt `useCrudModalState` + `useInstantCloseMutation` together as the standard
+- **Project Policy - Centralized Query Configuration**:
+  - **Use Centralized System**: ALL new React Query hooks must use the centralized configuration system in `src/utilities/query/`
+  - **Standard Hooks**:
+    - Import: `import { useStandardQuery, useStandardMutation } from '@/utilities/query';`
+    - Use `useStandardQuery` instead of raw `useQuery` for consistent configuration
+    - Use `useStandardMutation` instead of raw `useMutation` for automatic cache invalidation
+  - **Configuration Presets** (Strategy Pattern):
+    - `REAL_TIME`: User-facing mutable data (loans, students, borrow-limits, penalties, reservations) - `staleTime: 0`, always refetch
+    - `FREQUENT`: Moderately changing data (books, announcements, notifications) - `staleTime: 30s`, refetch on mount
+    - `STATIC`: Reference data (user settings, enums, categories, roles) - `staleTime: 5min`, minimal refetch
+    - `IMMUTABLE`: Data that never changes (historical records, archived data) - cache forever
+  - **Declarative Mutations**:
+    - Use `invalidateKeys: [['query-key']]` instead of manual `queryClient.invalidateQueries()`
+    - Use `refetchKeys: [['query-key']]` instead of manual `queryClient.refetchQueries()`
+    - Centralized wrapper handles all cache invalidation automatically
+  - **Benefits**:
+    - Single source of truth (DRY principle)
+    - Consistent configuration across 100+ hooks
+    - Change global behavior by editing one file
+    - Type-safe preset selection
+    - Automatic cache invalidation after mutations
+  - **Migration Path**:
+    - Existing hooks should be migrated gradually during feature work
+    - All new hooks MUST use centralized configuration from day one
+    - See the docs site migration and architecture guides for detailed implementation guidance
   - **Background Sync**: 
     - Let React Query manage background updates
     - Show subtle refresh indicators during `isRefetching`

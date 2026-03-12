@@ -12,8 +12,8 @@ This guide provides solutions to common issues you may encounter when using the 
 - **Solution:** Verify `https://your-worker.your-subdomain.workers.dev` is accessible
 
 ### **Symptom: "Authentication failed"**
-- **Check:** JWT token validity, expiration
-- **Solution:** Re-authenticate to get new token
+- **Check:** Auth cookie present, session expired, account status
+- **Solution:** Re-authenticate (cookie-based login) and retry `GET /api/auth/me`
 
 ### **Symptom: "Permission denied"**
 - **Check:** User role, resource permissions
@@ -40,7 +40,7 @@ This guide provides solutions to common issues you may encounter when using the 
 #### **Solutions**
 ```bash
 # 1. Re-authenticate
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
@@ -48,7 +48,7 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
   }'
 
 # 2. Force logout other sessions if needed
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/force-logout-other-sessions" \
+curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/force-logout-other-sessions" \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
@@ -58,26 +58,9 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/force-logo
 
 #### **Prevention**
 ```javascript
-// ⚠️ IMPORTANT: Always use tokenManager, never localStorage directly
-import { tokenManager } from '@/utilities/auth/token-manager';
+import { unifiedAPIClient } from '@/utilities/api/unified-api-client';
 
-// Implement automatic token refresh
-const refreshTokenIfNeeded = async () => {
-  const token = await tokenManager.getToken('cookie');
-  if (token) {
-    // Decode token to check expiry (JWT tokens contain expiry in payload)
-    try {
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const tokenExpiry = payload.exp * 1000; // Convert to milliseconds
-      if (Date.now() > tokenExpiry - 300000) { // 5 minutes before expiry
-        await refreshToken();
-      }
-    } catch (error) {
-      // If token is invalid, clear auth and redirect to login
-      await tokenManager.clearAuth();
-    }
-  }
-};
+await unifiedAPIClient.get('/api/auth/me');
 ```
 
 ### **Issue: CSRF Token Missing/Invalid**
@@ -93,10 +76,11 @@ const refreshTokenIfNeeded = async () => {
 
 #### **Solutions**
 ```bash
-# Include CSRF token in headers
-curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
-  -H "X-XSRF-TOKEN: YOUR_CSRF_TOKEN"
+# Bootstrap CSRF so the XSRF-TOKEN cookie exists
+curl -i -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/auth/csrf"
+
+# For state-changing requests (POST/PUT/PATCH/DELETE), include X-XSRF-TOKEN header
+# matching the XSRF-TOKEN cookie value.
 ```
 
 #### **Prevention**
@@ -110,17 +94,14 @@ const response = await unifiedAPIClient.post('/api/books', bookData);
 
 // If you must use fetch directly, use addCSRFToHeaders:
 import { addCSRFToHeaders } from '@/utilities/security/csrf-protection';
-import { tokenManager } from '@/utilities/auth/token-manager';
 
 const makeRequest = async (endpoint, options = {}) => {
-  const token = await tokenManager.getToken('cookie');
   const headers = await addCSRFToHeaders({
-    'Authorization': `Bearer ${token}`,
     'Content-Type': 'application/json',
     ...options.headers
   });
   
-  return fetch(`${baseUrl}${endpoint}`, { ...options, headers });
+  return fetch(`${baseUrl}${endpoint}`, { ...options, credentials: 'include', headers });
 };
 ```
 
@@ -140,15 +121,15 @@ const makeRequest = async (endpoint, options = {}) => {
 #### **Solutions**
 ```bash
 # Check session status
-curl -X GET "https://your-worker.your-subdomain.workers.dev/api/auth/validate-session" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+curl -b cookies.txt "https://your-worker.your-subdomain.workers.dev/api/auth/validate-session"
 
 # Clean up expired sessions (admin only)
 curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/sessions/cleanup" \
-  -H "Authorization: Bearer ADMIN_JWT_TOKEN"
+  -b cookies.txt \
+  -H "Content-Type: application/json"
 ```
 
-## � Account Status & Email Verification Issues
+## Account Status & Email Verification Issues
 
 ### **Issue: Account Inactive Error (Error 5013)**
 
@@ -449,7 +430,7 @@ Superuser > Admin > Librarian > Student/Professor/Guest
 ```bash
 # Check user permissions (backend is authoritative)
 curl -X GET "https://your-worker.your-subdomain.workers.dev/api/permissions/check?resource=books&action=create" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -b cookies.txt
 
 # Contact administrator for role upgrade
 # Or use appropriate role for the operation
@@ -476,7 +457,7 @@ curl -X GET "https://your-worker.your-subdomain.workers.dev/api/permissions/chec
 ```bash
 # Check resource ownership
 curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books/123" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -b cookies.txt
 
 # Verify resource exists and is accessible
 # Contact resource owner or administrator
@@ -565,11 +546,11 @@ const bulkOperation = async (items) => {
 ```bash
 # 1. Verify resource ID
 curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -b cookies.txt
 
 # 2. Search for similar resources
 curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books/search?q=title" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -b cookies.txt
 
 # 3. Check if resource was deleted
 # 4. Contact administrator if resource should exist
@@ -644,13 +625,13 @@ curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books/search?q=t
 #### **cURL Verbose Mode**
 ```bash
 curl -v -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -b cookies.txt
 ```
 
 #### **Check Response Headers**
 ```bash
 curl -I -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -b cookies.txt
 ```
 
 ### **2. Test with Minimal Data**
@@ -682,13 +663,13 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" 
   -d '{"email":"test@example.com","password":"test123","first_name":"Test","last_name":"User","user_type":"student"}'
 
 # 3. Test login (no auth required)
-curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email":"test@example.com","password":"test123"}'
 
 # 4. Test protected endpoint (auth required)
 curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -b cookies.txt
 ```
 
 ## 📊 Monitoring and Prevention

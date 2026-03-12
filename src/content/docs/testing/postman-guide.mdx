@@ -47,7 +47,7 @@ Complete guide for testing SJRS LMS APIs using Postman.
 
 ## 🔐 Authentication Flow
 
-### Step 1: Login to Get Token
+### Step 1: Login (Cookie-Based Auth)
 
 1. **Open Postman Console** (View → Show Postman Console) - This helps debug issues
 2. Open the collection: **SJRS LMS API** → **Authentication** → **Login**
@@ -68,19 +68,19 @@ Complete guide for testing SJRS LMS APIs using Postman.
 5. Click **Send**
 6. **Check the response**:
    - Status should be **200 OK** for success
-   - Response body should have `"success": true` and a `"token"` field
+   - Response body should have `"success": true`
+   - Auth token is set via HttpOnly cookie (not returned in JSON)
    - Check the Console tab for any error messages
-7. The token will be **automatically saved** to your environment!
+7. Verify cookies are set:
+   - Click **Cookies** (under the Send button) for `{{base_url}}`
+   - Confirm `secure_authToken` exists
 
-### Step 2: Verify Token is Saved
+### Step 2: Bootstrap CSRF (Required for POST/PUT/PATCH/DELETE)
 
-1. Click the **eye icon** (👁️) in the top-right
-2. Check that `auth_token` shows a value (not empty)
-3. If empty:
-   - Check the **Console** tab for error messages
-   - Check the **Tests** tab in the Login request - it should have auto-save script
-   - Look at the response body - the token should be in the `token` field (not nested under `data`)
-   - Manually copy the token from the response and paste it into the environment variable
+1. Open: **Authentication** → **Bootstrap CSRF**
+2. Click **Send**
+3. Click **Cookies** for `{{base_url}}`
+4. Confirm `XSRF-TOKEN` exists
 
 ---
 
@@ -92,11 +92,6 @@ Complete guide for testing SJRS LMS APIs using Postman.
 2. Check the request:
    - **Method**: `GET`
    - **URL**: `{{base_url}}/api/notifications/bell-context`
-   - **Headers**:
-     ```
-     Authorization: Bearer {{auth_token}}
-     Content-Type: application/json
-     ```
 3. Click **Send**
 4. **Expected Response** (200 OK):
    ```json
@@ -124,11 +119,6 @@ Complete guide for testing SJRS LMS APIs using Postman.
 2. Check the request:
    - **Method**: `GET`
    - **URL**: `{{base_url}}/api/notifications/unread-count?user_id={{user_id}}`
-   - **Headers**:
-     ```
-     Authorization: Bearer {{auth_token}}
-     Content-Type: application/json
-     ```
 3. Click **Send**
 4. **Expected Response** (200 OK):
    ```json
@@ -146,11 +136,6 @@ Complete guide for testing SJRS LMS APIs using Postman.
 2. Check the request:
    - **Method**: `GET`
    - **URL**: `{{base_url}}/api/users`
-   - **Headers**:
-     ```
-     Authorization: Bearer {{auth_token}}
-     Content-Type: application/json
-     ```
 3. Click **Send**
 4. **Expected Response** (200 OK):
    ```json
@@ -259,9 +244,16 @@ Then use one of those emails and its corresponding password.
 
 **Solution**:
 1. Make sure you've run the Login request first
-2. Check that `auth_token` is set in your environment (eye icon)
-3. Verify the token format: `Bearer {{auth_token}}`
-4. Token might have expired - login again
+2. Verify cookies are present for `{{base_url}}` (Cookies button)
+3. If cookies are missing, enable cookies in Postman and re-run Login
+4. Session might have expired - login again
+
+### Issue: "Forbidden" (403) Errors - CSRF Validation Failed
+
+**Solution**:
+1. Run **Authentication** → **Bootstrap CSRF**
+2. Ensure `XSRF-TOKEN` cookie exists for `{{base_url}}`
+3. Ensure requests include `X-XSRF-TOKEN` header matching `XSRF-TOKEN` cookie (collection pre-request script handles this)
 
 ### Issue: "Forbidden" (403) Errors
 
@@ -315,7 +307,8 @@ Then use one of those emails and its corresponding password.
 - [ ] Environment imported and selected
 - [ ] Credentials configured (email/password)
 - [ ] Login request working
-- [ ] Token saved in environment
+- [ ] Auth cookie set (`secure_authToken`)
+- [ ] CSRF bootstrapped (`XSRF-TOKEN`)
 - [ ] Base URL is correct
 
 ### Notifications Endpoints
@@ -332,7 +325,6 @@ Then use one of those emails and its corresponding password.
 - [ ] No 500 errors
 
 ### Error Handling
-- [ ] Invalid token returns 401
 - [ ] Missing auth returns 401
 - [ ] Invalid user_id returns appropriate error
 - [ ] Missing permissions returns 403
@@ -343,7 +335,7 @@ Then use one of those emails and its corresponding password.
 
 1. **Select environment**: `SJRS LMS - Production` (top-right)
 2. **Run Login**: **Authentication** → **Login** → **Send**
-3. **Verify token saved**: Click eye icon, check `auth_token` has value
+3. **Run Bootstrap CSRF**: **Authentication** → **Bootstrap CSRF** → **Send**
 4. **Test Notifications**: **Notifications** → **Get Bell Context** → **Send** ✅
 5. **Test Unread Count**: **Notifications** → **Get Unread Count** → **Send** ✅
 6. **Test Users**: **Users** → **Get All Users** → **Send** ✅

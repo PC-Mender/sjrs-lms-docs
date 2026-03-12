@@ -40,8 +40,16 @@ This migration adds `updated_at` columns to the following tables that were missi
 
 ### Option 2: Using the API Directly
 ```bash
+curl -i -c cookies.txt -X POST "https://your-domain.com/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"SUPERUSER_EMAIL","password":"SUPERUSER_PASSWORD"}'
+
+curl -i -b cookies.txt -c cookies.txt "https://your-domain.com/api/auth/csrf"
+xsrf=$(grep -E "\tXSRF-TOKEN\t" cookies.txt | tail -n 1 | awk '{print $7}')
+
 curl -X POST /api/migrations/updated-at \
-  -H "Authorization: Bearer YOUR_TOKEN" \
+  -b cookies.txt \
+  -H "X-XSRF-TOKEN: $xsrf" \
   -H "Content-Type: application/json"
 ```
 

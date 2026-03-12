@@ -246,7 +246,7 @@ async queue(batch: MessageBatch<EmailQueueMessage>, env: any) {
 ```typescript
 // Before (generic email service)
 const response = await fetch('https://api.email-service.com/send', {
-  headers: { 'Authorization': `Bearer ${env.EMAIL_API_KEY}` }
+  headers: { 'X-API-Key': env.EMAIL_API_KEY }
 });
 
 // After (Mailjet backend)

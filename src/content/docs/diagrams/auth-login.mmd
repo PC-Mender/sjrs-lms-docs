@@ -3,7 +3,7 @@ flowchart TD
     A["Login page (src/pages/login.tsx)"]
     B["Auth context (src/contexts/auth-context-d1.tsx)"]
     C["unified-api-client (src/utilities/api/unified-api-client.ts)"]
-    D["tokenManager (secure storage)"]
+    D["tokenManager (session/UI state only)"]
     G["AuthGuard/redirect to dashboards"]
   end
 
@@ -24,23 +24,23 @@ flowchart TD
   F --> H
   H --> I
   I --> J
-  I -->|"JWT token + user"| K
+  I -->|"Set HttpOnly auth cookie + JSON user"| K
   K --> C
   C -->|"HTTP 200 JSON"| B
-  B -->|"tokenManager.setToken()"| D
+  B -->|"store hydrated session state"| D
   B -->|"set state isAuthenticated"| G
 
   %% Session check on mount
-  B -->|"GET /api/auth/me with Authorization: Bearer token"| C
+  B -->|"GET /api/auth/me (cookie auth)"| C
   C --> E --> F -->|"me handler"| K --> C --> B
 
   %% Token refresh
-  B -->|"POST /api/auth/refresh with Bearer token"| C
-  C --> E --> F -->|"refresh handler"| K --> C --> B -->|"update"| D
+  B -->|"refreshToken() (cookie auth)"| C
+  C --> E --> F -->|"refresh/me handler"| K --> C --> B -->|"update"| D
 
   %% Force logout other sessions
   B -->|"POST /api/auth/force-logout-other-sessions"| C
-  C --> E --> F -->|"force logout handler"| K --> C --> B -->|"update"| D
+  C --> E --> F -->|"force logout handler"| K --> C --> B -->|"update state"| D
 
   %% Login alert email (essential data passed, no extra DB query)
   H -->|"queue login_alert with essential data"| L["Email templates (functions/email-templates/index.ts)"]

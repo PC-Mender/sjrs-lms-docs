@@ -37,9 +37,9 @@ FRONTEND_URL=https://your-worker.your-subdomain.workers.dev
 ## Token Types and Usage
 
 ### 1. JWT Authentication Tokens
-- **Storage**: Use `tokenManager` from `src/utilities/auth/token-manager.ts` (uses secure storage)
-- **⚠️ Important**: Do NOT use `localStorage` directly. Always use `tokenManager.getToken()`, `tokenManager.setToken()`, or `tokenManager.clearAuth()`
-- **Header**: `Authorization: Bearer <token>` (automatically handled by `unifiedAPIClient`)
+- **Storage**: Auth is cookie-based. The backend sets an HttpOnly auth cookie (default name: `secure_authToken`).
+- **Client access**: JavaScript cannot read the auth token (by design). Auth state is checked via `GET /api/auth/me`.
+- **Frontend state**: `tokenManager` stores session/user data only (not the JWT).
 - **Expiration**: 24 hours
 - **Location**: `functions/middleware/auth/tokens/jwt.ts`
 
@@ -48,7 +48,8 @@ FRONTEND_URL=https://your-worker.your-subdomain.workers.dev
 - **Header**: `X-XSRF-TOKEN: <token>`
 - **Expiration**: 30 minutes
 - **Location**: `src/utilities/security/csrf-protection.ts`
-- **Automatic Injection**: CSRF token is automatically added to all requests via request interceptor in `src/utilities/api/unified-api-client.ts` (lines 735-743)
+- **Bootstrap Endpoint**: `GET /api/auth/csrf` sets the `XSRF-TOKEN` cookie for the double-submit pattern
+- **Automatic Injection**: CSRF token is automatically added to requests made via `unifiedAPIClient` (request interceptor)
 
 ### 3. Mailjet Email Service API Keys
 - **Storage**: Environment variables
@@ -120,32 +121,21 @@ async sendEmailViaMailjet(to: string, content: { subject: string; body: string; 
 
 ## Common Token Operations
 
-### Client-Side Token Management
+### Client-Side Session Management
 ```typescript
-// ⚠️ IMPORTANT: Always use tokenManager, never localStorage directly
 import { tokenManager } from '@/utilities/auth/token-manager';
 
-// Store token (uses secure storage)
-await tokenManager.setToken(token, 'cookie');
-
-// Get token (from secure storage)
-const token = await tokenManager.getToken('cookie');
-
-// Clear token and session
+await tokenManager.setSession(sessionData);
 await tokenManager.clearAuth();
 
 // Get session data
 const session = await tokenManager.getSession('cookie');
-
-// Include in requests (automatically handled by unifiedAPIClient)
-// No manual header needed - unifiedAPIClient adds Authorization header automatically
 ```
 
 **⚠️ Security Note**: Direct `localStorage` usage is deprecated. Always use `tokenManager` which:
-- Uses secure storage (cookies with HttpOnly when possible)
-- Handles token refresh automatically
-- Provides unified session lifecycle management
-- Is the single source of truth for authentication state
+- Stores non-sensitive session state (user info, role, UI hydration)
+- Avoids putting auth credentials in JS-accessible storage
+- Is the single source of truth for frontend session lifecycle
 
 ### Server-Side Token Validation
 ```typescript

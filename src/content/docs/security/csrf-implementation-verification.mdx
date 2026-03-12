@@ -332,11 +332,11 @@ This allows requests with only `X-XSRF-TOKEN` header (no cookie) **only** when:
 
 With this implementation, the application is protected against:
 
-1. ✅ **CSRF Attacks**: Attacker cannot forge state-changing requests because they cannot access the `XSRF-TOKEN` cookie (HttpOnly, SameSite)
+1. ✅ **CSRF Attacks**: Attacker cannot forge state-changing requests because cross-site pages cannot read the `XSRF-TOKEN` cookie and cannot set a matching `X-XSRF-TOKEN` header (double-submit + Origin/Referer allowlist)
 2. ✅ **Timing Attacks**: Constant-time string comparison prevents attackers from guessing token via timing analysis
 3. ✅ **Cross-Origin Attacks**: Origin/Referer validation ensures requests come from allowed domains
 4. ✅ **Token Guessing**: Cryptographically secure random token generation (64 characters, 32 bytes of entropy)
-5. ✅ **Replay Attacks**: Tokens expire after configured duration (default: 60 minutes)
+5. ✅ **Replay Attacks**: Tokens expire after configured duration (default: 30 minutes)
 
 ---
 

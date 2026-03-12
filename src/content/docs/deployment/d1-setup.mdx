@@ -110,17 +110,22 @@ Use the test users created in the schema:
 ### 3. Test Books API
 
 ```bash
+# Login (cookie-based auth)
+curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"admin@yourdomain.com","password":"password123"}'
+
 # Get all books
 curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -b cookies.txt
 
 # Search books
 curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books/search?q=harry" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -b cookies.txt
 
 # Get specific book
 curl -X GET "https://your-worker.your-subdomain.workers.dev/api/books/1" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -b cookies.txt
 ```
 
 ## Sample Data

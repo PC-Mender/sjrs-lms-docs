@@ -1,11 +1,30 @@
 {
   "info": {
     "name": "SJRS LMS API - Complete Collection",
-    "description": "Complete API collection for SJRS Library Management System with all endpoints",
+    "description": "API collection for SJRS Library Management System (cookie auth + CSRF via XSRF-TOKEN / X-XSRF-TOKEN). Includes authentication, superuser, and core feature endpoints.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "sjrs-lms",
     "version": "2.0.0"
   },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.request.headers.remove('Authorization');",
+          "const origin = pm.environment.get('origin') || pm.environment.get('base_url');",
+          "if (origin) {",
+          "  pm.request.headers.upsert({ key: 'Origin', value: origin });",
+          "}",
+          "const xsrf = pm.cookies.get('XSRF-TOKEN');",
+          "if (xsrf) {",
+          "  pm.request.headers.upsert({ key: 'X-XSRF-TOKEN', value: xsrf });",
+          "}"
+        ]
+      }
+    }
+  ],
   "item": [
     {
       "name": "🔑 Authentication",
@@ -19,15 +38,11 @@
                 "exec": [
                   "if (pm.response.code === 200) {",
                   "    const jsonData = pm.response.json();",
-                  "    const token = jsonData.data?.token || jsonData.token;",
-                  "    if (token) {",
-                  "        pm.environment.set(\"auth_token\", token);",
-                  "        console.log(\"✓ Token saved successfully\");",
-                  "    }",
                   "    const userId = jsonData.data?.user?.id || jsonData.user?.id;",
                   "    if (userId) {",
                   "        pm.environment.set(\"user_id\", userId.toString());",
                   "    }",
+                  "    console.log(\"✓ Login success (auth cookie set)\");",
                   "}"
                 ],
                 "type": "text/javascript"
@@ -42,6 +57,14 @@
               "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}"
             },
             "url": {"raw": "{{base_url}}/api/auth/login", "host": ["{{base_url}}"], "path": ["api", "auth", "login"]}
+          }
+        },
+        {
+          "name": "Bootstrap CSRF",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "url": {"raw": "{{base_url}}/api/auth/csrf", "host": ["{{base_url}}"], "path": ["api", "auth", "csrf"]}
           }
         },
         {
@@ -60,7 +83,7 @@
           "name": "Get Current User",
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+            "header": [],
             "url": {"raw": "{{base_url}}/api/auth/me", "host": ["{{base_url}}"], "path": ["api", "auth", "me"]}
           }
         },
@@ -69,7 +92,6 @@
           "request": {
             "method": "PUT",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{auth_token}}"},
               {"key": "Content-Type", "value": "application/json"}
             ],
             "body": {
@@ -84,7 +106,6 @@
           "request": {
             "method": "PUT",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{auth_token}}"},
               {"key": "Content-Type", "value": "application/json"}
             ],
             "body": {
@@ -98,7 +119,7 @@
           "name": "Logout",
           "request": {
             "method": "POST",
-            "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+            "header": [],
             "url": {"raw": "{{base_url}}/api/auth/logout", "host": ["{{base_url}}"], "path": ["api", "auth", "logout"]}
           }
         },
@@ -143,7 +164,7 @@
           "name": "Get Sessions",
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+            "header": [],
             "url": {"raw": "{{base_url}}/api/auth/sessions", "host": ["{{base_url}}"], "path": ["api", "auth", "sessions"]}
           }
         },
@@ -151,8 +172,149 @@
           "name": "Validate Session",
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+            "header": [],
             "url": {"raw": "{{base_url}}/api/auth/validate-session", "host": ["{{base_url}}"], "path": ["api", "auth", "validate-session"]}
+          }
+        }
+      ]
+    },
+    {
+      "name": "🛡️ Superuser",
+      "item": [
+        {
+          "name": "Get Actions",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/superuser/actions?limit=50&offset=0",
+              "host": ["{{base_url}}"],
+              "path": ["api", "superuser", "actions"],
+              "query": [
+                {"key": "limit", "value": "50"},
+                {"key": "offset", "value": "0"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Log Action",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"action_type\": \"manual_action\",\n  \"target_user_id\": {{user_id}},\n  \"action_details\": {\n    \"reason\": \"Postman test\"\n  }\n}"
+            },
+            "url": {"raw": "{{base_url}}/api/superuser/actions", "host": ["{{base_url}}"], "path": ["api", "superuser", "actions"]}
+          }
+        },
+        {
+          "name": "Emergency Access - Request",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"target_user_id\": {{user_id}},\n  \"reason\": \"Support\",\n  \"duration_hours\": 24\n}"
+            },
+            "url": {"raw": "{{base_url}}/api/superuser/emergency-access/request", "host": ["{{base_url}}"], "path": ["api", "superuser", "emergency-access", "request"]}
+          }
+        },
+        {
+          "name": "Emergency Access - Approve",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"request_id\": 1\n}"
+            },
+            "url": {"raw": "{{base_url}}/api/superuser/emergency-access/approve", "host": ["{{base_url}}"], "path": ["api", "superuser", "emergency-access", "approve"]}
+          }
+        },
+        {
+          "name": "Emergency Access - Reject",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"request_id\": 1,\n  \"rejection_reason\": \"Insufficient justification\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/api/superuser/emergency-access/reject", "host": ["{{base_url}}"], "path": ["api", "superuser", "emergency-access", "reject"]}
+          }
+        },
+        {
+          "name": "Emergency Access - List",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/api/superuser/emergency-access/list?limit=50&offset=0",
+              "host": ["{{base_url}}"],
+              "path": ["api", "superuser", "emergency-access", "list"],
+              "query": [
+                {"key": "limit", "value": "50"},
+                {"key": "offset", "value": "0"}
+              ]
+            }
+          }
+        },
+        {
+          "name": "Emergency Access - Revoke",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"request_id\": 1\n}"
+            },
+            "url": {"raw": "{{base_url}}/api/superuser/emergency-access/revoke", "host": ["{{base_url}}"], "path": ["api", "superuser", "emergency-access", "revoke"]}
+          }
+        },
+        {
+          "name": "Impersonate - Start",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"target_user_id\": {{user_id}},\n  \"reason\": \"Support\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/api/superuser/impersonate/start", "host": ["{{base_url}}"], "path": ["api", "superuser", "impersonate", "start"]}
+          }
+        },
+        {
+          "name": "Impersonate - Stop",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"superuser_id\": {{user_id}}\n}"
+            },
+            "url": {"raw": "{{base_url}}/api/superuser/impersonate/stop", "host": ["{{base_url}}"], "path": ["api", "superuser", "impersonate", "stop"]}
+          }
+        },
+        {
+          "name": "Impersonate - Active",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {"raw": "{{base_url}}/api/superuser/impersonate/active", "host": ["{{base_url}}"], "path": ["api", "superuser", "impersonate", "active"]}
+          }
+        },
+        {
+          "name": "Rate Limit - Clear",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"identifier\": \"test@example.com\"\n}"
+            },
+            "url": {"raw": "{{base_url}}/api/superuser/rate-limit/clear", "host": ["{{base_url}}"], "path": ["api", "superuser", "rate-limit", "clear"]}
           }
         }
       ]
@@ -165,7 +327,6 @@
           "request": {
             "method": "GET",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{auth_token}}"},
               {"key": "Content-Type", "value": "application/json"}
             ],
             "url": {
@@ -183,7 +344,7 @@
           "name": "Get User by ID",
           "request": {
             "method": "GET",
-            "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+            "header": [],
             "url": {"raw": "{{base_url}}/api/users/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "users", "{{user_id}}"]}
           }
         },
@@ -192,7 +353,6 @@
           "request": {
             "method": "PUT",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{auth_token}}"},
               {"key": "Content-Type", "value": "application/json"}
             ],
             "body": {
@@ -206,7 +366,7 @@
           "name": "Delete User",
           "request": {
             "method": "DELETE",
-            "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}],
+            "header": [],
             "url": {"raw": "{{base_url}}/api/users/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "users", "{{user_id}}"]}
           }
         }
@@ -215,42 +375,42 @@
     {
       "name": "🎓 Students",
       "item": [
-        {"name": "Get All Students", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/students", "host": ["{{base_url}}"], "path": ["api", "students"]}}},
-        {"name": "Get Student by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/students/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "students", "{{user_id}}"]}}},
-        {"name": "Create Student", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"email\": \"student@example.com\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\"\n}"}, "url": {"raw": "{{base_url}}/api/students", "host": ["{{base_url}}"], "path": ["api", "students"]}}},
-        {"name": "Update Student", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": {"raw": "{{base_url}}/api/students/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "students", "{{user_id}}"]}}},
-        {"name": "Delete Student", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/students/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "students", "{{user_id}}"]}}}
+        {"name": "Get All Students", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/students", "host": ["{{base_url}}"], "path": ["api", "students"]}}},
+        {"name": "Get Student by ID", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/students/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "students", "{{user_id}}"]}}},
+        {"name": "Create Student", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"email\": \"student@example.com\",\n  \"first_name\": \"John\",\n  \"last_name\": \"Doe\"\n}"}, "url": {"raw": "{{base_url}}/api/students", "host": ["{{base_url}}"], "path": ["api", "students"]}}},
+        {"name": "Update Student", "request": {"method": "PUT", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": {"raw": "{{base_url}}/api/students/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "students", "{{user_id}}"]}}},
+        {"name": "Delete Student", "request": {"method": "DELETE", "header": [], "url": {"raw": "{{base_url}}/api/students/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "students", "{{user_id}}"]}}}
       ]
     },
     {
       "name": "👨‍🏫 Professors",
       "item": [
-        {"name": "Get All Professors", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/professors", "host": ["{{base_url}}"], "path": ["api", "professors"]}}},
-        {"name": "Get Professor by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/professors/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "professors", "{{user_id}}"]}}},
-        {"name": "Create Professor", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"email\": \"professor@example.com\",\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Smith\"\n}"}, "url": {"raw": "{{base_url}}/api/professors", "host": ["{{base_url}}"], "path": ["api", "professors"]}}},
-        {"name": "Update Professor", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": {"raw": "{{base_url}}/api/professors/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "professors", "{{user_id}}"]}}},
-        {"name": "Delete Professor", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/professors/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "professors", "{{user_id}}"]}}}
+        {"name": "Get All Professors", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/professors", "host": ["{{base_url}}"], "path": ["api", "professors"]}}},
+        {"name": "Get Professor by ID", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/professors/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "professors", "{{user_id}}"]}}},
+        {"name": "Create Professor", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"email\": \"professor@example.com\",\n  \"first_name\": \"Jane\",\n  \"last_name\": \"Smith\"\n}"}, "url": {"raw": "{{base_url}}/api/professors", "host": ["{{base_url}}"], "path": ["api", "professors"]}}},
+        {"name": "Update Professor", "request": {"method": "PUT", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{}"}, "url": {"raw": "{{base_url}}/api/professors/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "professors", "{{user_id}}"]}}},
+        {"name": "Delete Professor", "request": {"method": "DELETE", "header": [], "url": {"raw": "{{base_url}}/api/professors/{{user_id}}", "host": ["{{base_url}}"], "path": ["api", "professors", "{{user_id}}"]}}}
       ]
     },
     {
       "name": "📚 Books",
       "item": [
-        {"name": "Get All Books", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/books?page=1&limit=20", "host": ["{{base_url}}"], "path": ["api", "books"], "query": [{"key": "page", "value": "1"}, {"key": "limit", "value": "20"}]}}},
-        {"name": "Search Books", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/books/search?q=test", "host": ["{{base_url}}"], "path": ["api", "books", "search"], "query": [{"key": "q", "value": "test"}]}}},
-        {"name": "Get Book by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/books/1", "host": ["{{base_url}}"], "path": ["api", "books", "1"]}}},
-        {"name": "Create Book", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"title\": \"New Book\",\n  \"author\": \"Author Name\",\n  \"isbn\": \"978-1234567890\"\n}"}, "url": {"raw": "{{base_url}}/api/books", "host": ["{{base_url}}"], "path": ["api", "books"]}}},
-        {"name": "Update Book", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"title\": \"Updated Title\"\n}"}, "url": {"raw": "{{base_url}}/api/books/1", "host": ["{{base_url}}"], "path": ["api", "books", "1"]}}},
-        {"name": "Delete Book", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/books/1", "host": ["{{base_url}}"], "path": ["api", "books", "1"]}}}
+        {"name": "Get All Books", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/books?page=1&limit=20", "host": ["{{base_url}}"], "path": ["api", "books"], "query": [{"key": "page", "value": "1"}, {"key": "limit", "value": "20"}]}}},
+        {"name": "Search Books", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/books/search?q=test", "host": ["{{base_url}}"], "path": ["api", "books", "search"], "query": [{"key": "q", "value": "test"}]}}},
+        {"name": "Get Book by ID", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/books/1", "host": ["{{base_url}}"], "path": ["api", "books", "1"]}}},
+        {"name": "Create Book", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"title\": \"New Book\",\n  \"author\": \"Author Name\",\n  \"isbn\": \"978-1234567890\"\n}"}, "url": {"raw": "{{base_url}}/api/books", "host": ["{{base_url}}"], "path": ["api", "books"]}}},
+        {"name": "Update Book", "request": {"method": "PUT", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"title\": \"Updated Title\"\n}"}, "url": {"raw": "{{base_url}}/api/books/1", "host": ["{{base_url}}"], "path": ["api", "books", "1"]}}},
+        {"name": "Delete Book", "request": {"method": "DELETE", "header": [], "url": {"raw": "{{base_url}}/api/books/1", "host": ["{{base_url}}"], "path": ["api", "books", "1"]}}}
       ]
     },
     {
       "name": "📖 Loans",
       "item": [
-        {"name": "Get All Loans", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/loans?page=1&limit=20", "host": ["{{base_url}}"], "path": ["api", "loans"], "query": [{"key": "page", "value": "1"}, {"key": "limit", "value": "20"}]}}},
-        {"name": "Get Loan by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/loans/1", "host": ["{{base_url}}"], "path": ["api", "loans", "1"]}}},
-        {"name": "Create Loan", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"user_id\": 1,\n  \"book_copy_id\": 1,\n  \"due_date\": \"2024-12-31T23:59:59Z\"\n}"}, "url": {"raw": "{{base_url}}/api/loans", "host": ["{{base_url}}"], "path": ["api", "loans"]}}},
-        {"name": "Update Loan", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"status\": \"returned\"\n}"}, "url": {"raw": "{{base_url}}/api/loans/1", "host": ["{{base_url}}"], "path": ["api", "loans", "1"]}}},
-        {"name": "Delete Loan", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/loans/1", "host": ["{{base_url}}"], "path": ["api", "loans", "1"]}}}
+        {"name": "Get All Loans", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/loans?page=1&limit=20", "host": ["{{base_url}}"], "path": ["api", "loans"], "query": [{"key": "page", "value": "1"}, {"key": "limit", "value": "20"}]}}},
+        {"name": "Get Loan by ID", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/loans/1", "host": ["{{base_url}}"], "path": ["api", "loans", "1"]}}},
+        {"name": "Create Loan", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"user_id\": 1,\n  \"book_copy_id\": 1,\n  \"due_date\": \"2024-12-31T23:59:59Z\"\n}"}, "url": {"raw": "{{base_url}}/api/loans", "host": ["{{base_url}}"], "path": ["api", "loans"]}}},
+        {"name": "Update Loan", "request": {"method": "PUT", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"status\": \"returned\"\n}"}, "url": {"raw": "{{base_url}}/api/loans/1", "host": ["{{base_url}}"], "path": ["api", "loans", "1"]}}},
+        {"name": "Delete Loan", "request": {"method": "DELETE", "header": [], "url": {"raw": "{{base_url}}/api/loans/1", "host": ["{{base_url}}"], "path": ["api", "loans", "1"]}}}
       ]
     },
     {
@@ -261,7 +421,6 @@
           "request": {
             "method": "GET",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{auth_token}}"},
               {"key": "Content-Type", "value": "application/json"}
             ],
             "url": {"raw": "{{base_url}}/api/notifications/bell-context", "host": ["{{base_url}}"], "path": ["api", "notifications", "bell-context"]}
@@ -272,7 +431,6 @@
           "request": {
             "method": "GET",
             "header": [
-              {"key": "Authorization", "value": "Bearer {{auth_token}}"},
               {"key": "Content-Type", "value": "application/json"}
             ],
             "url": {
@@ -283,110 +441,110 @@
             }
           }
         },
-        {"name": "Get All Notifications", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/notifications", "host": ["{{base_url}}"], "path": ["api", "notifications"]}}},
-        {"name": "Get Notification by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/notifications/1", "host": ["{{base_url}}"], "path": ["api", "notifications", "1"]}}},
-        {"name": "Create Notification", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"title\": \"Test Notification\",\n  \"message\": \"Test message\"\n}"}, "url": {"raw": "{{base_url}}/api/notifications", "host": ["{{base_url}}"], "path": ["api", "notifications"]}}},
-        {"name": "Update Notification", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"read\": true\n}"}, "url": {"raw": "{{base_url}}/api/notifications/1", "host": ["{{base_url}}"], "path": ["api", "notifications", "1"]}}},
-        {"name": "Delete Notification", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/notifications/1", "host": ["{{base_url}}"], "path": ["api", "notifications", "1"]}}}
+        {"name": "Get All Notifications", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/notifications", "host": ["{{base_url}}"], "path": ["api", "notifications"]}}},
+        {"name": "Get Notification by ID", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/notifications/1", "host": ["{{base_url}}"], "path": ["api", "notifications", "1"]}}},
+        {"name": "Create Notification", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"title\": \"Test Notification\",\n  \"message\": \"Test message\"\n}"}, "url": {"raw": "{{base_url}}/api/notifications", "host": ["{{base_url}}"], "path": ["api", "notifications"]}}},
+        {"name": "Update Notification", "request": {"method": "PUT", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"read\": true\n}"}, "url": {"raw": "{{base_url}}/api/notifications/1", "host": ["{{base_url}}"], "path": ["api", "notifications", "1"]}}},
+        {"name": "Delete Notification", "request": {"method": "DELETE", "header": [], "url": {"raw": "{{base_url}}/api/notifications/1", "host": ["{{base_url}}"], "path": ["api", "notifications", "1"]}}}
       ]
     },
     {
       "name": "⭐ Wishlist",
       "item": [
-        {"name": "Get Wishlist", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/wishlist", "host": ["{{base_url}}"], "path": ["api", "wishlist"]}}},
-        {"name": "Get Wishlist Item", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/wishlist/1", "host": ["{{base_url}}"], "path": ["api", "wishlist", "1"]}}},
-        {"name": "Add to Wishlist", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"book_id\": 1\n}"}, "url": {"raw": "{{base_url}}/api/wishlist", "host": ["{{base_url}}"], "path": ["api", "wishlist"]}}},
-        {"name": "Remove from Wishlist", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/wishlist/1", "host": ["{{base_url}}"], "path": ["api", "wishlist", "1"]}}}
+        {"name": "Get Wishlist", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/wishlist", "host": ["{{base_url}}"], "path": ["api", "wishlist"]}}},
+        {"name": "Get Wishlist Item", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/wishlist/1", "host": ["{{base_url}}"], "path": ["api", "wishlist", "1"]}}},
+        {"name": "Add to Wishlist", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"book_id\": 1\n}"}, "url": {"raw": "{{base_url}}/api/wishlist", "host": ["{{base_url}}"], "path": ["api", "wishlist"]}}},
+        {"name": "Remove from Wishlist", "request": {"method": "DELETE", "header": [], "url": {"raw": "{{base_url}}/api/wishlist/1", "host": ["{{base_url}}"], "path": ["api", "wishlist", "1"]}}}
       ]
     },
     {
       "name": "⚖️ Roles & Permissions",
       "item": [
-        {"name": "Get All Roles", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/roles", "host": ["{{base_url}}"], "path": ["api", "roles"]}}},
-        {"name": "Get Role by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/roles/1", "host": ["{{base_url}}"], "path": ["api", "roles", "1"]}}},
-        {"name": "Create Role", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"name\": \"New Role\"\n}"}, "url": {"raw": "{{base_url}}/api/roles", "host": ["{{base_url}}"], "path": ["api", "roles"]}}},
-        {"name": "Update Role", "request": {"method": "PUT", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"name\": \"Updated Role\"\n}"}, "url": {"raw": "{{base_url}}/api/roles/1", "host": ["{{base_url}}"], "path": ["api", "roles", "1"]}}},
-        {"name": "Delete Role", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/roles/1", "host": ["{{base_url}}"], "path": ["api", "roles", "1"]}}},
-        {"name": "Check Permissions", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/permissions/check?resource=books&action=read", "host": ["{{base_url}}"], "path": ["api", "permissions", "check"], "query": [{"key": "resource", "value": "books"}, {"key": "action", "value": "read"}]}}}
+        {"name": "Get All Roles", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/roles", "host": ["{{base_url}}"], "path": ["api", "roles"]}}},
+        {"name": "Get Role by ID", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/roles/1", "host": ["{{base_url}}"], "path": ["api", "roles", "1"]}}},
+        {"name": "Create Role", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"name\": \"New Role\"\n}"}, "url": {"raw": "{{base_url}}/api/roles", "host": ["{{base_url}}"], "path": ["api", "roles"]}}},
+        {"name": "Update Role", "request": {"method": "PUT", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"name\": \"Updated Role\"\n}"}, "url": {"raw": "{{base_url}}/api/roles/1", "host": ["{{base_url}}"], "path": ["api", "roles", "1"]}}},
+        {"name": "Delete Role", "request": {"method": "DELETE", "header": [], "url": {"raw": "{{base_url}}/api/roles/1", "host": ["{{base_url}}"], "path": ["api", "roles", "1"]}}},
+        {"name": "Check Permissions", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/permissions/check?resource=books&action=read", "host": ["{{base_url}}"], "path": ["api", "permissions", "check"], "query": [{"key": "resource", "value": "books"}, {"key": "action", "value": "read"}]}}}
       ]
     },
     {
       "name": "📝 Reference Materials",
       "item": [
-        {"name": "Get Reference Books", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/reference-books", "host": ["{{base_url}}"], "path": ["api", "reference-books"]}}},
-        {"name": "Get Reference Categories", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/reference-categories", "host": ["{{base_url}}"], "path": ["api", "reference-categories"]}}},
-        {"name": "Get Reference Sections", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/reference-sections", "host": ["{{base_url}}"], "path": ["api", "reference-sections"]}}},
-        {"name": "Get Reference Resources", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/reference-resources", "host": ["{{base_url}}"], "path": ["api", "reference-resources"]}}},
-        {"name": "Get Sections", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/sections", "host": ["{{base_url}}"], "path": ["api", "sections"]}}},
-        {"name": "Get Resource Types", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/resource-types", "host": ["{{base_url}}"], "path": ["api", "resource-types"]}}},
-        {"name": "Get Resources", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/resources", "host": ["{{base_url}}"], "path": ["api", "resources"]}}},
-        {"name": "Get Journals", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/journals", "host": ["{{base_url}}"], "path": ["api", "journals"]}}},
-        {"name": "Get Authors", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/authors", "host": ["{{base_url}}"], "path": ["api", "authors"]}}},
-        {"name": "Get Publications", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/publications", "host": ["{{base_url}}"], "path": ["api", "publications"]}}}
+        {"name": "Get Reference Books", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/reference-books", "host": ["{{base_url}}"], "path": ["api", "reference-books"]}}},
+        {"name": "Get Reference Categories", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/reference-categories", "host": ["{{base_url}}"], "path": ["api", "reference-categories"]}}},
+        {"name": "Get Reference Sections", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/reference-sections", "host": ["{{base_url}}"], "path": ["api", "reference-sections"]}}},
+        {"name": "Get Reference Resources", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/reference-resources", "host": ["{{base_url}}"], "path": ["api", "reference-resources"]}}},
+        {"name": "Get Sections", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/sections", "host": ["{{base_url}}"], "path": ["api", "sections"]}}},
+        {"name": "Get Resource Types", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/resource-types", "host": ["{{base_url}}"], "path": ["api", "resource-types"]}}},
+        {"name": "Get Resources", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/resources", "host": ["{{base_url}}"], "path": ["api", "resources"]}}},
+        {"name": "Get Journals", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/journals", "host": ["{{base_url}}"], "path": ["api", "journals"]}}},
+        {"name": "Get Authors", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/authors", "host": ["{{base_url}}"], "path": ["api", "authors"]}}},
+        {"name": "Get Publications", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/publications", "host": ["{{base_url}}"], "path": ["api", "publications"]}}}
       ]
     },
     {
       "name": "🏆 Badges",
       "item": [
-        {"name": "Get All Badges", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/badges", "host": ["{{base_url}}"], "path": ["api", "badges"]}}},
-        {"name": "Get My Badges", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/badges/me", "host": ["{{base_url}}"], "path": ["api", "badges", "me"]}}},
-        {"name": "Get Granted Badges", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/badges/granted", "host": ["{{base_url}}"], "path": ["api", "badges", "granted"]}}},
-        {"name": "Assign Badge", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"user_id\": 1,\n  \"badge_key\": \"early_adopter\"\n}"}, "url": {"raw": "{{base_url}}/api/badges/assign", "host": ["{{base_url}}"], "path": ["api", "badges", "assign"]}}},
-        {"name": "Revoke Badge", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"user_id\": 1,\n  \"badge_key\": \"early_adopter\"\n}"}, "url": {"raw": "{{base_url}}/api/badges/revoke", "host": ["{{base_url}}"], "path": ["api", "badges", "revoke"]}}}
+        {"name": "Get All Badges", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/badges", "host": ["{{base_url}}"], "path": ["api", "badges"]}}},
+        {"name": "Get My Badges", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/badges/me", "host": ["{{base_url}}"], "path": ["api", "badges", "me"]}}},
+        {"name": "Get Granted Badges", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/badges/granted", "host": ["{{base_url}}"], "path": ["api", "badges", "granted"]}}},
+        {"name": "Assign Badge", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"user_id\": 1,\n  \"badge_key\": \"early_adopter\"\n}"}, "url": {"raw": "{{base_url}}/api/badges/assign", "host": ["{{base_url}}"], "path": ["api", "badges", "assign"]}}},
+        {"name": "Revoke Badge", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"user_id\": 1,\n  \"badge_key\": \"early_adopter\"\n}"}, "url": {"raw": "{{base_url}}/api/badges/revoke", "host": ["{{base_url}}"], "path": ["api", "badges", "revoke"]}}}
       ]
     },
     {
       "name": "📧 Email",
       "item": [
-        {"name": "Get Email Config", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/email", "host": ["{{base_url}}"], "path": ["api", "email"]}}},
-        {"name": "Send Email", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"to\": \"user@example.com\",\n  \"subject\": \"Test Email\",\n  \"body\": \"Test message\"\n}"}, "url": {"raw": "{{base_url}}/api/email", "host": ["{{base_url}}"], "path": ["api", "email"]}}}
+        {"name": "Get Email Config", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/email", "host": ["{{base_url}}"], "path": ["api", "email"]}}},
+        {"name": "Send Email", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"to\": \"user@example.com\",\n  \"subject\": \"Test Email\",\n  \"body\": \"Test message\"\n}"}, "url": {"raw": "{{base_url}}/api/email", "host": ["{{base_url}}"], "path": ["api", "email"]}}}
       ]
     },
     {
       "name": "📁 File Upload",
       "item": [
-        {"name": "Upload File", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "body": {"mode": "formdata", "formdata": [{"key": "file", "type": "file", "src": []}]}, "url": {"raw": "{{base_url}}/api/upload", "host": ["{{base_url}}"], "path": ["api", "upload"]}}},
-        {"name": "Get File", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/upload/1", "host": ["{{base_url}}"], "path": ["api", "upload", "1"]}}},
-        {"name": "Delete File", "request": {"method": "DELETE", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/upload/1", "host": ["{{base_url}}"], "path": ["api", "upload", "1"]}}}
+        {"name": "Upload File", "request": {"method": "POST", "header": [], "body": {"mode": "formdata", "formdata": [{"key": "file", "type": "file", "src": []}]}, "url": {"raw": "{{base_url}}/api/upload", "host": ["{{base_url}}"], "path": ["api", "upload"]}}},
+        {"name": "Get File", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/upload/1", "host": ["{{base_url}}"], "path": ["api", "upload", "1"]}}},
+        {"name": "Delete File", "request": {"method": "DELETE", "header": [], "url": {"raw": "{{base_url}}/api/upload/1", "host": ["{{base_url}}"], "path": ["api", "upload", "1"]}}}
       ]
     },
     {
       "name": "🎓 Academic Tools",
       "item": [
-        {"name": "Get Citation Formats", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/citations", "host": ["{{base_url}}"], "path": ["api", "citations"]}}},
-        {"name": "Generate Citation", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"source_type\": \"book\",\n  \"format\": \"apa\",\n  \"source_data\": {\n    \"title\": \"Test Book\",\n    \"author\": \"Test Author\"\n  }\n}"}, "url": {"raw": "{{base_url}}/api/citations", "host": ["{{base_url}}"], "path": ["api", "citations"]}}},
-        {"name": "Get Citation History", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/citations/history", "host": ["{{base_url}}"], "path": ["api", "citations", "history"]}}},
-        {"name": "Check Plagiarism", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}, {"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"text\": \"Text to check for plagiarism\"\n}"}, "url": {"raw": "{{base_url}}/api/plagiarism", "host": ["{{base_url}}"], "path": ["api", "plagiarism"]}}},
-        {"name": "Get Plagiarism History", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/plagiarism/history", "host": ["{{base_url}}"], "path": ["api", "plagiarism", "history"]}}}
+        {"name": "Get Citation Formats", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/citations", "host": ["{{base_url}}"], "path": ["api", "citations"]}}},
+        {"name": "Generate Citation", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"source_type\": \"book\",\n  \"format\": \"apa\",\n  \"source_data\": {\n    \"title\": \"Test Book\",\n    \"author\": \"Test Author\"\n  }\n}"}, "url": {"raw": "{{base_url}}/api/citations", "host": ["{{base_url}}"], "path": ["api", "citations"]}}},
+        {"name": "Get Citation History", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/citations/history", "host": ["{{base_url}}"], "path": ["api", "citations", "history"]}}},
+        {"name": "Check Plagiarism", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\n  \"text\": \"Text to check for plagiarism\"\n}"}, "url": {"raw": "{{base_url}}/api/plagiarism", "host": ["{{base_url}}"], "path": ["api", "plagiarism"]}}},
+        {"name": "Get Plagiarism History", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/plagiarism/history", "host": ["{{base_url}}"], "path": ["api", "plagiarism", "history"]}}}
       ]
     },
     {
       "name": "🛒 Orders & Payments",
       "item": [
-        {"name": "Get All Orders", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/orders", "host": ["{{base_url}}"], "path": ["api", "orders"]}}},
-        {"name": "Get Order by ID", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/orders/1", "host": ["{{base_url}}"], "path": ["api", "orders", "1"]}}},
-        {"name": "Get Payments", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/payments", "host": ["{{base_url}}"], "path": ["api", "payments"]}}},
-        {"name": "Get Receipts", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/receipts", "host": ["{{base_url}}"], "path": ["api", "receipts"]}}}
+        {"name": "Get All Orders", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/orders", "host": ["{{base_url}}"], "path": ["api", "orders"]}}},
+        {"name": "Get Order by ID", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/orders/1", "host": ["{{base_url}}"], "path": ["api", "orders", "1"]}}},
+        {"name": "Get Payments", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/payments", "host": ["{{base_url}}"], "path": ["api", "payments"]}}},
+        {"name": "Get Receipts", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/receipts", "host": ["{{base_url}}"], "path": ["api", "receipts"]}}}
       ]
     },
     {
       "name": "📊 System Management",
       "item": [
-        {"name": "Get System Logs", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/system_logs", "host": ["{{base_url}}"], "path": ["api", "system_logs"]}}},
-        {"name": "Get Action Logs", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/action_logs", "host": ["{{base_url}}"], "path": ["api", "action_logs"]}}},
-        {"name": "Get Migration Status", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/migrations", "host": ["{{base_url}}"], "path": ["api", "migrations"]}}},
-        {"name": "Run Migrations", "request": {"method": "POST", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/migrations", "host": ["{{base_url}}"], "path": ["api", "migrations"]}}}
+        {"name": "Get System Logs", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/system_logs", "host": ["{{base_url}}"], "path": ["api", "system_logs"]}}},
+        {"name": "Get Action Logs", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/action_logs", "host": ["{{base_url}}"], "path": ["api", "action_logs"]}}},
+        {"name": "Get Migration Status", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/migrations", "host": ["{{base_url}}"], "path": ["api", "migrations"]}}},
+        {"name": "Run Migrations", "request": {"method": "POST", "header": [], "url": {"raw": "{{base_url}}/api/migrations", "host": ["{{base_url}}"], "path": ["api", "migrations"]}}}
       ]
     },
     {
       "name": "🏥 Health & Utilities",
       "item": [
         {"name": "Health Check", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/health", "host": ["{{base_url}}"], "path": ["api", "health"]}}},
-        {"name": "Get Help", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/help", "host": ["{{base_url}}"], "path": ["api", "help"]}}},
-        {"name": "Get Penalties", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/penalties", "host": ["{{base_url}}"], "path": ["api", "penalties"]}}},
-        {"name": "Get Borrow Limits", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/borrow-limits", "host": ["{{base_url}}"], "path": ["api", "borrow-limits"]}}},
-        {"name": "Get Book Copies", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/book-copies", "host": ["{{base_url}}"], "path": ["api", "book-copies"]}}},
-        {"name": "Get Book Reviews", "request": {"method": "GET", "header": [{"key": "Authorization", "value": "Bearer {{auth_token}}"}], "url": {"raw": "{{base_url}}/api/book-reviews", "host": ["{{base_url}}"], "path": ["api", "book-reviews"]}}}
+        {"name": "Get Help", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/help", "host": ["{{base_url}}"], "path": ["api", "help"]}}},
+        {"name": "Get Penalties", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/penalties", "host": ["{{base_url}}"], "path": ["api", "penalties"]}}},
+        {"name": "Get Borrow Limits", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/borrow-limits", "host": ["{{base_url}}"], "path": ["api", "borrow-limits"]}}},
+        {"name": "Get Book Copies", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/book-copies", "host": ["{{base_url}}"], "path": ["api", "book-copies"]}}},
+        {"name": "Get Book Reviews", "request": {"method": "GET", "header": [], "url": {"raw": "{{base_url}}/api/book-reviews", "host": ["{{base_url}}"], "path": ["api", "book-reviews"]}}}
       ]
     }
   ],

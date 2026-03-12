@@ -13,13 +13,12 @@ title: "Superuser Endpoints"
 ## 🔐 Authentication
 
 All superuser endpoints require:
-- Valid JWT token in Authorization header or httpOnly cookie
+- Valid session (HttpOnly auth cookie)
 - User role must be `superuser`
-- Token must not be expired
+- Session must not be expired
 
 **Headers:**
 ```http
-Authorization: Bearer <your-jwt-token>
 Content-Type: application/json
 ```
 
@@ -42,7 +41,7 @@ Retrieve superuser actions log with filtering and pagination.
 **Example Request:**
 ```bash
 curl -X GET "https://your-domain.com/api/superuser/actions?limit=10&offset=0" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -b cookies.txt
 ```
 
 **Example Response:**
@@ -230,7 +229,7 @@ List all emergency access requests with filtering.
 **Example Request:**
 ```bash
 curl -X GET "https://your-domain.com/api/superuser/emergency-access/list?status=pending" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+  -b cookies.txt
 ```
 
 **Example Response:**
@@ -331,9 +330,9 @@ Start impersonating a user account.
 
 **Important Notes:**
 - Cannot impersonate another superuser (returns 403)
-- Impersonation token contains `isImpersonation: true` flag
+- Impersonation token includes claims: `impersonatedBy`, `impersonationReason`, `impersonationStartedAt`
 - All actions performed while impersonating are logged
-- Token should replace current auth token in client
+- The response sets the impersonation auth cookie via `Set-Cookie` (cookie-based auth). Browser clients should rely on the cookie; non-browser clients can persist the `Set-Cookie` value.
 
 **Status Codes:**
 - `200 OK` - Impersonation started
@@ -421,7 +420,7 @@ Check if current session is an impersonation session.
 ### User Impersonation
 - Cannot impersonate other superusers (security boundary)
 - Requires documented reason
-- Separate JWT token with impersonation flag
+- Separate JWT token with impersonation claims
 - Start and stop actions are logged
 - Frontend should display clear impersonation banner
 
@@ -446,8 +445,12 @@ Check if current session is an impersonation session.
 
 **Log Superuser Action:**
 ```bash
+curl -i -b cookies.txt -c cookies.txt "https://your-domain.com/api/auth/csrf"
+xsrf=$(grep -E "\tXSRF-TOKEN\t" cookies.txt | tail -n 1 | awk '{print $7}')
+
 curl -X POST "https://your-domain.com/api/superuser/actions" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -b cookies.txt \
+  -H "X-XSRF-TOKEN: $xsrf" \
   -H "Content-Type: application/json" \
   -d '{
     "action_type": "manual_intervention",
@@ -459,7 +462,8 @@ curl -X POST "https://your-domain.com/api/superuser/actions" \
 **Start Impersonation:**
 ```bash
 curl -X POST "https://your-domain.com/api/superuser/impersonate/start" \
-  -H "Authorization: Bearer YOUR_JWT_TOKEN" \
+  -b cookies.txt \
+  -H "X-XSRF-TOKEN: $xsrf" \
   -H "Content-Type: application/json" \
   -d '{
     "target_user_id": 5,
@@ -484,12 +488,6 @@ const result = await superuserService.startImpersonation({
   target_user_id: 5,
   reason: 'Support ticket #123'
 });
-
-// ⚠️ IMPORTANT: Always use tokenManager, never localStorage directly
-import { tokenManager } from '@/utilities/auth/token-manager';
-
-// Use the impersonation token (uses secure storage)
-await tokenManager.setToken(result.impersonation_token, 'cookie');
 ```
 
 ---

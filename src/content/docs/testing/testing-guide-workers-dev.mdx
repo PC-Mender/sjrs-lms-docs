@@ -117,12 +117,18 @@ wrangler deploy
 
 #### 4.1 Test Permission Check API
 ```bash
-# Get your JWT token from browser DevTools → Application → Cookies
-# Or login and check Network tab for Authorization header
+# Auth is cookie-based (HttpOnly). Use a cookie jar for curl.
+curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"SUPERUSER_EMAIL","password":"SUPERUSER_PASSWORD"}'
+
+curl -i -b cookies.txt -c cookies.txt "https://your-worker.your-subdomain.workers.dev/api/auth/csrf"
+xsrf=$(grep -E "\tXSRF-TOKEN\t" cookies.txt | tail -n 1 | awk '{print $7}')
 
 # Test superuser permission check
 curl -X POST https://your-worker.your-subdomain.workers.dev/api/permissions/check \
-  -H "Authorization: Bearer YOUR_SUPERUSER_TOKEN" \
+  -b cookies.txt \
+  -H "X-XSRF-TOKEN: $xsrf" \
   -H "Content-Type: application/json" \
   -d '{"resource": "books", "action": "read"}'
 
@@ -131,9 +137,18 @@ curl -X POST https://your-worker.your-subdomain.workers.dev/api/permissions/chec
 
 #### 4.2 Test Admin Permission Check
 ```bash
+# Login as admin and re-bootstrap CSRF before POST requests
+curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"ADMIN_EMAIL","password":"ADMIN_PASSWORD"}'
+
+curl -i -b cookies.txt -c cookies.txt "https://your-worker.your-subdomain.workers.dev/api/auth/csrf"
+xsrf=$(grep -E "\tXSRF-TOKEN\t" cookies.txt | tail -n 1 | awk '{print $7}')
+
 # Test admin permission check (after granting permission)
 curl -X POST https://your-worker.your-subdomain.workers.dev/api/permissions/check \
-  -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
+  -b cookies.txt \
+  -H "X-XSRF-TOKEN: $xsrf" \
   -H "Content-Type: application/json" \
   -d '{"resource": "books", "action": "read"}'
 
@@ -144,7 +159,7 @@ curl -X POST https://your-worker.your-subdomain.workers.dev/api/permissions/chec
 ```bash
 # Test system logs access
 curl -X GET https://your-worker.your-subdomain.workers.dev/api/system-logs \
-  -H "Authorization: Bearer YOUR_SUPERUSER_TOKEN"
+  -b cookies.txt
 
 # Expected: System logs JSON response
 ```

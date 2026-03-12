@@ -6,9 +6,10 @@ title: "Auth Flow"
 This document captures the finalized login flow, route-guard behavior, and supporting infrastructure. It serves as the reference for future changes and must remain consistent unless a defect is found.
 
 ## Overview
-- Token is stored using secure storage via `tokenManager` (from `src/utilities/auth/token-manager.ts`).
-- ⚠️ **Never use `localStorage` directly** - always use `tokenManager.getToken()`, `tokenManager.setToken()`, or `tokenManager.clearAuth()`.
-- Auth state hydrates on navigation. If a token exists but `isAuthenticated` is false, the guard triggers `refreshToken()` to hydrate the user.
+- Auth is cookie-based. The backend sets the JWT in an HttpOnly cookie; the browser sends it automatically.
+- JavaScript cannot read the JWT (by design). Auth state is determined by calling `GET /api/auth/me`.
+- `tokenManager` is used for session/UI state (not JWT storage).
+- On protected navigation, `AuthGuard` triggers `refreshToken()` when the app is not yet authenticated to hydrate the user.
 - Public routes auto-redirect authenticated users to their role dashboard.
 - Protected routes delegate access decisions to `AuthGuard` only (no duplicate checks in the protected route wrapper).
 
@@ -21,9 +22,10 @@ This document captures the finalized login flow, route-guard behavior, and suppo
 
 ## Hydration & Guard Logic
 - On every protected navigation:
-  1. If no token, redirect to `/login` with loop protection.
-  2. If a token exists but `isAuthenticated` is false, call `refreshToken()` to hydrate.
-  3. When `userDataLoaded` is true and `user` is present, evaluate role/status gates.
+  1. If `isAuthenticated` is true but user data is not hydrated yet, wait for `userDataLoaded`.
+  2. If `isAuthenticated` is false, call `refreshToken()` to hydrate via `GET /api/auth/validate-session` then `GET /api/auth/me`.
+  3. If refresh fails with 401/403, `logout()` runs and `AuthGuard` redirects to `/login` via a logout event.
+  4. When `userDataLoaded` is true and `user` is present, evaluate role/status gates.
 - Status gates:
   - Non‑superusers: `inactive` → `/inactive`.
   - Non‑superusers: `mfa_enabled && !mfa_setup` → `/mfa-setup`.

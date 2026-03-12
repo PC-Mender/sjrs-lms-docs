@@ -138,14 +138,14 @@ Frontend SHOULD:
 ```
 
 **Causes:**
-- Missing `Authorization` header
-- Missing `X-XSRF-TOKEN` header
-- Empty or null authentication headers
+- Missing auth cookie (not logged in)
+- Missing `X-XSRF-TOKEN` header for state-changing requests
+- Empty or null request headers/cookies
 
 **Solutions:**
-1. Include `Authorization: Bearer <token>` header
-2. Include `X-XSRF-TOKEN: <csrf_token>` header
-3. Ensure headers are not empty or null
+1. Login to establish the HttpOnly auth cookie
+2. For POST/PUT/PATCH/DELETE, include `X-XSRF-TOKEN: <csrf_token>` header matching the `XSRF-TOKEN` cookie
+3. Ensure cookies/headers are not empty or null
 
 #### **Session Expired**
 ```json
@@ -520,10 +520,13 @@ Frontend SHOULD:
 
 #### **1. Check Request Headers**
 ```bash
-# Verify authentication headers
-curl -v -H "Authorization: Bearer YOUR_TOKEN" \
-  -H "X-XSRF-TOKEN: YOUR_CSRF_TOKEN" \
-  -X GET "https://your-worker.your-subdomain.workers.dev/api/auth/me"
+# Login (cookie-based auth)
+curl -i -c cookies.txt -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/login" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"YOUR_EMAIL","password":"YOUR_PASSWORD"}'
+
+# Verify session by calling /me with the cookie jar
+curl -v -b cookies.txt -X GET "https://your-worker.your-subdomain.workers.dev/api/auth/me"
 ```
 
 #### **2. Validate Request Body**
@@ -544,7 +547,7 @@ curl -X POST "https://your-worker.your-subdomain.workers.dev/api/auth/register" 
 ```bash
 # Look for rate limiting headers
 curl -v -X GET "https://your-worker.your-subdomain.workers.dev/api/books" \
-  -H "Authorization: Bearer YOUR_TOKEN"
+  -b cookies.txt
 ```
 
 ### **Error Recovery Strategies**
