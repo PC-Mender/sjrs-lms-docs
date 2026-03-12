@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.31](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.30...v1.1.31) (2026-03-12)
+
+
+### Documentation
+
+* reduce emoji usage ([7f094d5](https://github.com/PC-Mender/sjrs-lms-docs/commit/7f094d5d0f64728b268d8d9344f4a846a34da773))
+
 ### [1.1.30](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.29...v1.1.30) (2026-03-12)
 
 
