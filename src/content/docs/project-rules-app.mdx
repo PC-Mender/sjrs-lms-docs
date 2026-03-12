@@ -361,9 +361,9 @@ These standards are enforced through tooling where possible; deviations must be 
     - Never `async/await` inside `onOk` — confirm closes instantly; deletion runs in background
   
   - **Reference Implementations**:
-    - [RoleListPage.tsx](../src/pages/roles/RoleListPage.tsx) — First official implementation
-    - [BorrowLimitList.tsx](../src/pages/borrow-limits/BorrowLimitList.tsx) — Reference for patterns
-    - [ProfessorsPage.tsx](../src/pages/professors/index.tsx) — Complete CUD migration with optimistic updates
+    - [RoleListPage.tsx](https://github.com/PC-Mender/sjrslms/blob/main/src/pages/roles/RoleListPage.tsx) — First official implementation
+    - [BorrowLimitList.tsx](https://github.com/PC-Mender/sjrslms/blob/main/src/pages/borrow-limits/BorrowLimitList.tsx) — Reference for patterns
+    - [ProfessorsPage.tsx](https://github.com/PC-Mender/sjrslms/blob/main/src/pages/professors/index.tsx) — Complete CUD migration with optimistic updates
   
   - **Common Mistakes (Anti-Patterns)**:
     -  Using `refreshData` callback (removed; use `setRefreshTime: onRefresh`)
