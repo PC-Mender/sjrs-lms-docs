@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.29](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.28...v1.1.29) (2026-03-12)
+
+
+### Documentation
+
+* align auth, CSRF, and superuser testing ([7463105](https://github.com/PC-Mender/sjrs-lms-docs/commit/7463105e28cc2f6ca24858aa436874da00e8712c))
+
 ### [1.1.28](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.27...v1.1.28) (2026-03-11)
 
 
