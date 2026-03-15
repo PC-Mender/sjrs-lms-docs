@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.3.0...v1.3.1) (2026-03-15)
+
+
+### Bug Fixes
+
+* **docs:** remove duplicate account types section in registration guide ([752a0e9](https://github.com/PC-Mender/sjrs-lms-docs/commit/752a0e980a4508b776712427b1d3a921d1a0d7c2))
+
 ## [1.3.0](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.2.0...v1.3.0) (2026-03-15)
 
 
