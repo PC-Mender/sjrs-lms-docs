@@ -364,6 +364,7 @@ These standards are enforced through tooling where possible; deviations must be 
     - [RoleListPage.tsx](https://github.com/PC-Mender/sjrslms/blob/main/src/pages/roles/RoleListPage.tsx) — First official implementation
     - [BorrowLimitList.tsx](https://github.com/PC-Mender/sjrslms/blob/main/src/pages/borrow-limits/BorrowLimitList.tsx) — Reference for patterns
     - [ProfessorsPage.tsx](https://github.com/PC-Mender/sjrslms/blob/main/src/pages/professors/index.tsx) — Complete CUD migration with optimistic updates
+    - **Latest Pattern**: All new CRUD pages must follow this pattern as the standard
   
   - **Common Mistakes (Anti-Patterns)**:
     -  Using `refreshData` callback (removed; use `setRefreshTime: onRefresh`)

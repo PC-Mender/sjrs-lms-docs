@@ -1,0 +1,436 @@
+---
+title: "Recent Changes v6.x"
+description: "Major architectural changes and features introduced in SJRS LMS v6.x"
+---
+
+# Recent Changes v6.x
+
+This document covers the significant architectural changes, new features, and improvements introduced in SJRS LMS version 6.x.
+
+## Version Overview
+
+### v6.6.2 (2026-03-14)
+- **Build**: Avoid breaking .versionLabel during version guards
+- **Stability**: Production deployment optimizations
+
+### v6.6.1 (2026-03-14)
+- **Refactoring**: Split notification event card helpers
+- **Code Quality**: Improved component organization
+
+### v6.6.0 (2026-03-14)
+- **Features**: Refined system notifications UX
+- **Performance**: Enhanced notification handling
+
+### v6.5.1 (2026-03-14)
+- **Bug Fixes**: Removed extra padding on user dashboard
+- **UI**: Improved dashboard layout consistency
+
+### v6.5.0 (2026-03-14)
+- **Features**: Aligned notifications list with management table UX
+- **Bug Fixes**: Stabilized tab routing and refresh audit log
+
+### v6.4.8 (2026-03-14)
+- **Added**: Bell dropdown with per-type counts
+- **Features**: Enhanced notification system
+
+### v6.4.7 (2026-03-14)
+- **CI/CD**: Updated actions to Node 24 and fixed release tagging
+
+### v6.4.6 (2026-03-14)
+- **Security**: Prevented system bell backfill after permission grants
+
+### v6.4.0 (2026-03-13)
+- **Features**: Added book sections endpoint
+- **Major**: Enhanced user dashboard with analytics
+- **Bug Fixes**: Ensured consistent auto-logout across dashboards
+- **Refactoring**: Split large dashboard hook into focused modules
+
+## Major Architectural Changes
+
+### 1. Instant-Close Modal Pattern (v6.0.0)
+
+#### Breaking Change
+All CRUD modals now close immediately before API response for improved UX.
+
+#### Implementation
+```typescript
+// Before: Wait for API response
+const handleSubmit = async (values) => {
+  await mutation.mutateAsync(values);
+  closeModal();
+};
+
+// After: Instant close pattern
+const handleSubmit = useInstantCloseMutation({
+  mutation: updateMutation,
+  record: editingRecord,
+  config: {
+    onClose: editModal.close,
+    setRefreshTime: onRefresh,
+    reopenModal: (record, formData) => {
+      editModal.form.setFieldsValue(formData);
+      editModal.open(record);
+    },
+  },
+});
+```
+
+#### Benefits
+- **0ms Perceived Latency**: Modal closes instantly
+- **Background Processing**: API calls execute non-blocking
+- **Error Recovery**: Auto-reopens modal on failure
+- **Consistent UX**: Uniform behavior across all CRUD operations
+
+### 2. Centralized Query Configuration (v5.0.0)
+
+#### Breaking Change
+All query hooks now use centralized `useStandardQuery` wrapper.
+
+#### Migration Summary
+- **57 files modified** (38 files use `useStandardQuery`, 91 `useStandardMutation` instances)
+- **0 raw `useQuery/useMutation`** in production code
+- **Net reduction**: 72 lines of code removed
+- **Centralized presets**: REAL_TIME, FREQUENT, STATIC, IMMUTABLE
+
+#### Implementation
+```typescript
+// Before: Scattered configuration
+const { data } = useQuery({
+  queryKey: ['users'],
+  queryFn: fetchUsers,
+  staleTime: 30000,
+  gcTime: 300000,
+});
+
+// After: Centralized configuration
+const { data } = useStandardQuery({
+  queryKey: ['users'],
+  queryFn: fetchUsers,
+  preset: 'FREQUENT',
+});
+```
+
+#### Presets
+```typescript
+const QUERY_PRESETS = {
+  REAL_TIME: { staleTime: 0, refetchOnMount: true },      // Dashboards, live data
+  FREQUENT: { staleTime: 30000, refetchOnMount: true },  // User lists, catalogs
+  STATIC: { staleTime: 300000, refetchOnMount: false },  // Reference data, settings
+  IMMUTABLE: { staleTime: Infinity, refetchOnMount: false }, // Historical data
+};
+```
+
+### 3. Enhanced User Dashboard (v6.4.0)
+
+#### New Features
+- **Reading Trends**: Visual representation of reading patterns
+- **Loan Distribution**: Category-based borrowing analytics
+- **Activity Metrics**: Login frequency and engagement tracking
+- **Performance**: < 2s load time with parallel data fetching
+
+#### Architecture
+```typescript
+// Enhanced dashboard hook
+const { metrics, loading, error } = useEnhancedUserDashboard(userId);
+
+// Data processors
+processReadingTrends();
+processLoanDistribution();
+processCategoryBorrowal();
+processRecentActivities();
+processLoginFrequency();
+```
+
+### 4. System Notifications (v6.4.0)
+
+#### New Components
+- **Notification Bell**: Centralized notification hub with per-type counts
+- **Event Cards**: Rich notification content with actions
+- **Smart Filtering**: Category-based notification organization
+- **Permission-Aware**: Role-based notification access
+
+#### Implementation
+```typescript
+export const NotificationBell: React.FC<NotificationBellProps> = ({ 
+  buttonStyle, 
+  badgeOffset 
+}) => {
+  const { unreadCount } = useNotificationsOptimized();
+  const { data: bellContext } = useNotificationBellContext();
+  const { canRead } = usePermissions();
+  
+  // Permission-aware routing and display
+};
+```
+
+## Performance Improvements
+
+### 1. Optimistic Updates (v6.1.0)
+
+#### Implementation
+All CRUD operations now implement optimistic updates:
+
+```typescript
+// Create operation
+onMutate: async (data) => {
+  await queryClient.cancelQueries({ queryKey: ['resource'] });
+  const previous = queryClient.getQueryData(['resource']);
+  
+  // Optimistic insert
+  const tempId = -Date.now();
+  const optimisticItem = { ...data, id: tempId };
+  queryClient.setQueryData(['resource'], (prev) => ({
+    ...prev,
+    data: [optimisticItem, ...prev.data],
+  }));
+  
+  return { previous, tempId };
+},
+
+onError: (error, data, context) => {
+  if (context?.previous) {
+    queryClient.setQueryData(['resource'], context.previous);
+  }
+},
+
+onSuccess: (result, data, context) => {
+  // Replace temp item with server response
+  queryClient.setQueryData(['resource'], (prev) => ({
+    ...prev,
+    data: prev.data.map(item => 
+      item.id === context?.tempId ? result.data : item
+    ),
+  }));
+},
+```
+
+### 2. File Size Optimization
+
+#### Limits Enforced
+- **Components/Handlers**: ≤ 300 lines
+- **Pages**: ≤ 500 lines
+- **Automatic splitting**: Large files broken into focused modules
+
+#### Results
+- **Maintainability**: Improved code organization
+- **Performance**: Faster load times due to better tree-shaking
+- **Developer Experience**: Easier navigation and understanding
+
+## Security Enhancements
+
+### 1. Permission System Integration
+
+#### Role-Based Notifications
+```typescript
+const { canRead } = usePermissions();
+const canViewNotifications = canRead('notifications');
+const canViewSystemNotifications = canRead('notification_events');
+
+// Context-aware notification routing
+const notificationsPath = `${dashboardBasePath}/notifications`;
+const announcementsPath = canViewSystemNotifications 
+  ? `${dashboardBasePath}/announcements` 
+  : '/announcements';
+```
+
+### 2. Audit Logging
+
+#### Comprehensive Action Tracking
+- **User Actions**: All CRUD operations logged
+- **System Events**: Authentication, permission changes
+- **Security Events**: Failed logins, suspicious activities
+- **Performance Metrics**: API response times, error rates
+
+## Code Quality Improvements
+
+### 1. TypeScript Strict Mode
+
+#### Gradual Migration
+- **Baseline**: `tsconfig.json` with `strict: true`
+- **Staged Flags**: Incremental tightening of strict-adjacent flags
+- **New Files**: Must not introduce strict-mode violations
+- **Tools**: Multiple tsconfig files for different strictness levels
+
+### 2. ESLint v10 Compatibility
+
+#### Updates
+- **Configuration**: Updated for ESLint v10 syntax
+- **CI/CD**: Fixed compatibility issues
+- **Rules**: Refined rules for better code quality
+
+### 3. Import Organization
+
+#### Standards
+- **Feature-Based**: Organize by features, not technical layers
+- **Barrel Exports**: Clean imports with `index.ts` files
+- **No Circular Dependencies**: Enforced DAG structure
+- **Domain Types**: Prefer domain-first imports
+
+## Testing Improvements
+
+### 1. Quality Gates
+
+#### Automated Checks
+```json
+{
+  "scripts": {
+    "quality-gates": "node scripts/enhanced-quality-gates.js",
+    "quality-gates:lint": "node scripts/enhanced-quality-gates.js --lint-only",
+    "type-check:strict": "tsc --noEmit --project tsconfig.strict.json",
+    "security-audit": "node scripts/security-audit.js"
+  }
+}
+```
+
+### 2. File Size Monitoring
+
+#### Automated Enforcement
+- **Pre-commit Hooks**: Check file sizes before commits
+- **CI Validation**: Fail builds on size violations
+- **Exceptions**: Documented for configuration files
+
+## Dependency Updates
+
+### 1. React 19.2.4
+
+#### Benefits
+- **Performance**: Improved rendering performance
+- **Features**: Latest React features and optimizations
+- **Compatibility**: Updated ecosystem support
+
+### 2. Build Tools
+
+#### Vite 7.3.1
+- **Speed**: Faster development builds
+- **Features**: Latest bundling optimizations
+- **Stability**: Improved build reliability
+
+### 3. Development Tools
+
+#### Node 24 Support
+- **CI/CD**: Updated GitHub Actions to Node 24
+- **Performance**: Improved build and test performance
+- **Security**: Latest Node.js security patches
+
+## Migration Guides
+
+### 1. Modal Pattern Migration
+
+#### Steps
+1. **Install**: Import `useCrudModalState` and `useInstantCloseMutation`
+2. **Replace**: Remove manual modal state management
+3. **Implement**: Add optimistic updates to hooks
+4. **Test**: Verify instant-close behavior
+
+#### Example
+```typescript
+// Old approach
+const [modalVisible, setModalVisible] = useState(false);
+const [form] = Form.useForm();
+
+const handleSubmit = async (values) => {
+  await mutation.mutateAsync(values);
+  setModalVisible(false);
+  refetch();
+};
+
+// New approach
+const { createModal, editModal, onRefresh } = useCrudModalState<Entity>({
+  setRefreshTime: setLastRefreshTime,
+  refetch,
+});
+
+const handleSubmit = useInstantCloseMutation({
+  mutation: createMutation,
+  record: { id: 0 } as Entity,
+  config: {
+    onClose: createModal.close,
+    setRefreshTime: onRefresh,
+  },
+});
+```
+
+### 2. Query Configuration Migration
+
+#### Steps
+1. **Identify**: Find all raw `useQuery`/`useMutation` usage
+2. **Replace**: Use `useStandardQuery`/`useStandardMutation`
+3. **Configure**: Select appropriate preset
+4. **Remove**: Delete hardcoded staleTime/gcTime values
+
+#### Example
+```typescript
+// Before
+const { data } = useQuery({
+  queryKey: ['users'],
+  queryFn: fetchUsers,
+  staleTime: 30000,
+  gcTime: 300000,
+  refetchOnWindowFocus: true,
+});
+
+// After
+const { data } = useStandardQuery({
+  queryKey: ['users'],
+  queryFn: fetchUsers,
+  preset: 'FREQUENT',
+});
+```
+
+## Future Roadmap
+
+### v6.7.0 (Planned)
+- **Real-Time WebSocket**: Live notification updates
+- **Smart Filtering**: AI-powered notification categorization
+- **Batch Operations**: Bulk read/archive operations
+- **Advanced Analytics**: Enhanced dashboard metrics
+
+### v6.8.0 (Planned)
+- **Mobile App**: Native mobile experience
+- **Offline Support**: Service worker implementation
+- **Performance**: Further optimization initiatives
+- **Security**: Enhanced security features
+
+## Troubleshooting
+
+### Common Issues
+
+#### 1. Modal Not Closing
+- **Cause**: Not using `useInstantCloseMutation`
+- **Solution**: Implement instant-close pattern
+- **Check**: Verify `onClose` callback is properly set
+
+#### 2. Query Not Updating
+- **Cause**: Missing optimistic updates
+- **Solution**: Add `onMutate`/`onError`/`onSuccess` handlers
+- **Check**: Verify query key consistency
+
+#### 3. Permission Errors
+- **Cause**: Missing permission checks
+- **Solution**: Add proper permission gates
+- **Check**: Verify role assignments
+
+### Debug Mode
+
+Enable debug logging:
+```typescript
+if (process.env.NODE_ENV === 'development') {
+  console.log('Debug Info:', {
+    modalState,
+    queryKeys,
+    permissions,
+  });
+}
+```
+
+## Related Documentation
+
+- [Project Rules](../project-rules-app.mdx)
+- [Architecture Overview](../architecture/)
+- [Performance Guidelines](../performance/)
+- [Security Documentation](../security/)
+
+---
+
+**Last Updated**: v6.6.2 (2026-03-14)  
+**Maintainers**: SJRS LMS Development Team
