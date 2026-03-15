@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.2.0...v1.3.0) (2026-03-15)
+
+
+### Features
+
+* **docs:** add comprehensive user registration documentation ([068d523](https://github.com/PC-Mender/sjrs-lms-docs/commit/068d523f3fbfe9679c13949601d444a9e39bd17c))
+
 ## [1.2.0](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.34...v1.2.0) (2026-03-15)
 
 
