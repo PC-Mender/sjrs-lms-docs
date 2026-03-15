@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.2.0](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.34...v1.2.0) (2026-03-15)
+
+
+### Features
+
+* **docs:** add comprehensive v6.x documentation for enhanced user dashboard and system notifications ([a100840](https://github.com/PC-Mender/sjrs-lms-docs/commit/a100840957fca251cc24b45795af86ea60fca0eb))
+
 ### [1.1.34](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.1.33...v1.1.34) (2026-03-12)
 
 
