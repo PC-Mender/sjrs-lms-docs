@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.5](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.4...v1.3.5) (2026-03-16)
+
+
+### Documentation
+
+* update project rules documentation formatting ([8a867c6](https://github.com/neil-jay/sjrs-lms-docs/commit/8a867c61a14427f3b97e29db2e88dbaa3c077dc2))
+
 ### [1.3.4](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.3...v1.3.4) (2026-03-15)
 
 
