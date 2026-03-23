@@ -40,7 +40,7 @@ jobs:
         run: npm run check:lifecycle
 
       - name: Link check (content + built HTML)
-        uses: lycheeverse/lychee-action@v1
+        uses: lycheeverse/lychee-action@v2.0.2
         with:
           args: >-
             --no-progress
