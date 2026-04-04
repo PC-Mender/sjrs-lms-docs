@@ -100,6 +100,21 @@ In Cloudflare Workers environment variables, ensure:
 
 ### 2. Version & Changelog (`version-changelog` job)
 
+> Important (GitHub Actions runtime deprecation)
+>
+> GitHub has deprecated Node.js 20 for JavaScript actions. In this workflow, `actions/checkout@v4` and `actions/setup-node@v4` are flagged and may become unreliable.
+>
+> Timeline:
+> - Node.js 24 becomes default for actions on June 2, 2026
+> - Node.js 20 is removed from runners on September 16, 2026
+>
+> Recommended updates:
+> - Upgrade to action versions that explicitly support Node.js 24 (for example, newer major versions of `actions/checkout` and `actions/setup-node` when available in your repository policy)
+> - Optionally opt in now by setting `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true` in workflow `env`
+> - Temporary fallback after default switch: `ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true`
+>
+> Reference: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
 **Purpose**: Automatically bumps version and updates changelog based on conventional commits
 
 **What it does**:
@@ -147,6 +162,18 @@ In Cloudflare Workers environment variables, ensure:
 ---
 
 ### 4. GitHub Release (`create-release` job)
+
+> Important (GitHub Actions runtime deprecation)
+>
+> The same Node.js 20 deprecation applies to this job when using `actions/checkout@v4` and `actions/setup-node@v4`.
+>
+> Ensure workflow action versions are updated for Node.js 24 compatibility before enforcement dates:
+> - Node.js 24 default: June 2, 2026
+> - Node.js 20 removal: September 16, 2026
+>
+> Temporary compatibility env vars:
+> - Opt in now: `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true`
+> - Temporary opt out (after default switch): `ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true`
 
 **Purpose**: Creates or updates GitHub release with changelog
 
