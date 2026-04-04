@@ -69,6 +69,22 @@ npm run release
 
 ## Workflow Steps
 
+## GitHub Actions Runtime Notice (Node.js 24)
+
+GitHub Actions JavaScript runtime is moving from Node.js 20 to Node.js 24.
+
+- `actions/checkout@v4` and `actions/setup-node@v4` are reported as Node.js 20-based in affected workflows.
+- Node.js 24 becomes default on June 2, 2026.
+- Node.js 20 is removed from runners on September 16, 2026.
+
+Recommended actions:
+
+- Update to action versions that support Node.js 24 in `.github/workflows/deploy.yml`.
+- To opt in early, set `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true` in workflow `env`.
+- After default switch, temporary opt-out is possible with `ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true`.
+
+Reference: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+
 ### New Workflow (Recommended)
 
 #### Step 1: Version Preparation (Local)
