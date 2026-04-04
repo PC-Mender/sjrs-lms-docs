@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.10](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.9...v1.3.10) (2026-04-04)
+
+
+### Bug Fixes
+
+* **deps:** upgrade vulnerable transitive deps ([1de772a](https://github.com/neil-jay/sjrs-lms-docs/commit/1de772addcba3384bdbccfd3d4f67675826508db))
+
 ### [1.3.9](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.8...v1.3.9) (2026-04-04)
 
 ### [1.3.8](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.7...v1.3.8) (2026-04-04)
