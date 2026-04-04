@@ -1,0 +1,45 @@
+---
+title: "Email Trigger Frequency Matrix"
+lifecycle: "Active"
+---
+
+This page documents email trigger behavior based on backend code paths.
+
+Scope notes:
+- This is code-based behavior, not runtime analytics counts.
+- Frequency values are general expectations per event path.
+- Most transactional sends are also gated by user notification preferences (`email_notifications` and type-specific flags).
+
+## Matrix
+
+| Template | Trigger (When) | General Frequency (How Many Times) | Primary Code Paths |
+|---|---|---|---|
+| `email-confirmation` | New registration, resend confirmation, email-change confirmation | Usually 1 per trigger attempt; resend paths are rate-limited | `functions/api/auth/registration.ts`, `functions/api/auth/email-resend-confirmation.ts`, `functions/api/users/handlers/update-user.ts` |
+| `password-reset` | Password reset request for an existing account | 1 per accepted reset request | `functions/api/auth/password-reset/request.ts` |
+| `login-alert` | Successful login when IP or device or location changed versus previous session | 0 or 1 per login | `functions/api/auth/login.ts` |
+| `account-recovery-alert` | Account recovery requested, lockout event, or recovery completed | Up to 1 per event occurrence | `functions/api/auth/password-reset/request.ts`, `functions/api/auth/password-reset/confirm.ts` |
+| `status-check-otp` | Public status-check OTP send endpoint | 1 per eligible send request | `functions/api/auth/check-status.ts` |
+| `mfa-email-otp` | MFA challenge email send and MFA email enrollment send | Usually 1 per request; cooldown may skip new send | `functions/api/auth/mfa-handlers/challenge-email-send.ts`, `functions/api/auth/mfa-handlers/email-setup.ts` |
+| `mfa-disable-otp` | MFA disable flow after password verification | Usually 1 per request; cooldown may skip new send | `functions/api/auth/mfa-handlers/disable.ts` |
+| `mfa-replace-authenticator-otp` | Replace authenticator app flow after password verification | Usually 1 per request; cooldown may skip new send | `functions/api/auth/mfa-services/totp-replace/send-otp.ts` |
+| `webauthn-revoke-otp` | Revoke WebAuthn credentials flow after password verification | Usually 1 per request; cooldown may skip new send | `functions/api/auth/webauthn-handlers/credentials-revoke-send-otp.ts` |
+| `borrow-notification` | Borrow/order approved path that creates borrower-facing approval email | 1 per approved order event per recipient | `functions/api/orders/services/order-notification-service.ts` |
+| `loan-renewal-notification` | Renewal decision and loan renewed notifications | Usually 1 per renewal decision or renewal event | `functions/lib/notifications/loan-renewal-notifications.ts` |
+| `return-reminder` | Scheduled due-date reminder worker (due in 3 days, 1 day, or today) | Up to 3 per active loan lifecycle (one at each checkpoint) | `functions/scheduled/send-due-date-reminders.ts` |
+| `overdue-notification` | Scheduled overdue reminder worker (7, 14, 30 days overdue) | Up to 3 per overdue loan lifecycle (one at each checkpoint) | `functions/scheduled/send-overdue-reminders.ts` |
+| `payment-success` | Payment receipt notification publish flow | 1 per successful payment event | `functions/lib/notifications/payment-notifications.ts` |
+| `admin-approval` | Account status transition to active or inactive in admin user update flow | 1 per qualifying status transition | `functions/api/users/handlers/update-user.ts` |
+| `profile-completion` | Successful profile completion/update submission paths | 1 per successful profile update request | `functions/api/auth/shared/profile-handlers-internal/process-profile-update.ts`, `functions/api/auth/shared/profile-handlers-internal/process-authenticated-profile-update.ts` |
+| `order-notification` | Order notification endpoint usage and order-created admin notification path | 1 per recipient per trigger (can fan out to multiple admins) | `functions/api/email/index.ts`, `functions/api/orders/handlers/create-order.ts` |
+| `system-notification` | Generic transactional/system events (order rejected, reservation events, penalty notices, loan status notices, reservation expiry warnings, bulk announcements) | Usually 1 per recipient per event; can be many in loops/batches | `functions/api/orders/services/order-notification-service.ts`, `functions/lib/notifications/reservation-notifications.ts`, `functions/lib/penalties/calculate-overdue-penalties.ts`, `functions/lib/notifications/loan-status-notification.ts`, `functions/scheduled/reservation-expiry.ts`, `functions/api/notifications/handlers/send-bulk-notifications.ts` |
+
+## Operational Guidance
+
+- For exact historical totals, use analytics or provider delivery data (code cannot provide historical counts).
+- For potential duplicate sends, focus reviews on retry boundaries, scheduled worker idempotency, and per-event guarding.
+- Keep this page synchronized whenever notification trigger logic changes.
+
+## Last Verified
+
+- Date: 2026-04-04
+- Verification basis: backend code paths under `functions/` in the main app repository.
