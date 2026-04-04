@@ -7,7 +7,336 @@ slug: full-changelog
 [← Back to Highlights](/changelog)
 
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+## [6.19.1] - 2026-04-04
+
+### Technical
+- 🔧 remove repetitive icons from templates
+## [6.19.0] - 2026-04-04
+
+### Added
+- ✅ wire template usage and add regression tests
+## [6.18.3] - 2026-04-04
+
+### Fixed
+- 🐛 count active/overdue loans in user stats and add progressive loading
+## [6.18.2] - 2026-04-04
+
+### Fixed
+- 🐛 prevent duplicate approval notifications and harden optimistic moderation
+## [6.18.1] - 2026-04-04
+
+### Technical
+- 🔧 align RBAC test with GET-first permission check
+## [6.18.0] - 2026-04-04
+
+### Added
+- ✅ implement usePermission hook for declarative permission checks
+## [6.17.0] - 2026-04-03
+
+### Technical
+- 🔧 split loan notification module into focused publishers
+## [6.16.0] - 2026-03-30
+
+### Added
+- ✅ add loan renewal request approval/rejection workflow
+## [6.15.1] - 2026-03-28
+
+### Fixed
+- 🐛 upgrade brace-expansion to 5.0.5 to resolve security vulnerability
+## [6.15.0] - 2026-03-28
+
+### Added
+- ✅ add folder support and improve mutation handling
+## [6.14.2] - 2026-03-26
+
+### Fixed
+- 🐛 upgrade yaml to 2.8.3 to resolve stack overflow vulnerability
+## [6.14.1] - 2026-03-26
+
+### Technical
+- 🔧 update bookmark sorting and add pin toggle with query caching
+## [6.14.0] - 2026-03-26
+
+### Added
+- ✅ cards-only view and inline header
+## [6.13.3] - 2026-03-25
+
+### Fixed
+- 🐛 add missing functions in version-prepare script for GitHub release workflow
+## [6.13.2](https://github.com/neil-jay/sjrslms/compare/v6.13.0...v6.13.2) (2026-03-25)
+
+### Fixes
+
+* normalize the authors list API response to support both flat and nested shapes
+* force production JSX output in Vite so `jsxDEV` is not emitted in production chunks
+* correct the release workflow so version commits are created before tagging
+## [6.13.0](https://github.com/neil-jay/sjrslms/compare/v6.12.1...v6.13.0) (2026-03-25)
+
+
+### Features
+
+* refactor journal authors to use author_id linking and add articles/journals counts ([e80acb7](https://github.com/neil-jay/sjrslms/commit/e80acb7e997db0988c2a24506552d40e228bbc68))
+
+
+### Code Refactoring
+
+* reduce large file sizes and improve modularity ([d98e387](https://github.com/neil-jay/sjrslms/commit/d98e387a44b255865f90d9a6f164adf40c4afa3e))
+## [6.12.1](https://github.com/neil-jay/sjrslms/compare/v6.12.0...v6.12.1) (2026-03-24)
+
+
+### Code Refactoring
+
+* extract ArticlesCatalogPage components for modularity and maintainability ([269072b](https://github.com/neil-jay/sjrslms/commit/269072bbabf5c17d69cbb32a8fc18c930be8b24f))
+## [6.12.0](https://github.com/neil-jay/sjrslms/compare/v6.11.3...v6.12.0) (2026-03-24)
+
+
+### Features
+
+* implement journal master/edition split with sections and articles ([aacfe0e](https://github.com/neil-jay/sjrslms/commit/aacfe0e57cd6c454e74f7449fa227f936d6e82d3))
+## [6.11.3](https://github.com/neil-jay/sjrslms/compare/v6.11.2...v6.11.3) (2026-03-19)
+
+
+### Code Refactoring
+
+* centralize API CORS response handling ([7898e64](https://github.com/neil-jay/sjrslms/commit/7898e648b3322c7127311cecc2f16bab884f8b72))
+## [6.11.2](https://github.com/neil-jay/sjrslms/compare/v6.11.1...v6.11.2) (2026-03-18)
+
+
+### Bug Fixes
+
+* **auth:** use AppError in requireUser to comply with standardized response envelopes ([cbed1cb](https://github.com/neil-jay/sjrslms/commit/cbed1cbcc0f1a26182a3c6cf69b80e5eba54cf9b))
+* split CSP for API vs HTML responses; restrict localhost to development only ([a4cd00b](https://github.com/neil-jay/sjrslms/commit/a4cd00b5ebaf860047695fb41ddf307bc665536c))
+## [6.11.1](https://github.com/neil-jay/sjrslms/compare/v6.11.0...v6.11.1) (2026-03-18)
+
+
+### Bug Fixes
+
+* upgrade fast-xml-parser to 5.5.6 via npm overrides ([15f7c04](https://github.com/neil-jay/sjrslms/commit/15f7c047953294f9fb842d1ca4e44601bee5b814))
+## [6.11.0](https://github.com/neil-jay/sjrslms/compare/v6.10.13...v6.11.0) (2026-03-18)
+
+
+### Features
+
+* **auth:** enforce permission-based access across API endpoints ([cd82c4b](https://github.com/neil-jay/sjrslms/commit/cd82c4be796566daafe56d88032aa9a984c2390e))
+## [6.10.13](https://github.com/neil-jay/sjrslms/compare/v6.10.12...v6.10.13) (2026-03-18)
+
+
+### Bug Fixes
+
+* **route:** harden legacy permission route matching ([0679656](https://github.com/neil-jay/sjrslms/commit/0679656a60e395b3c6f84ce589d6c275464c8395))
+## [6.10.12](https://github.com/neil-jay/sjrslms/compare/v6.10.11...v6.10.12) (2026-03-17)
+
+
+### Bug Fixes
+
+* sanitize backend error responses ([7f83c00](https://github.com/neil-jay/sjrslms/commit/7f83c0035f2f1b0e6e68641b81a995ec39da5c34))
+## [6.10.11](https://github.com/neil-jay/sjrslms/compare/v6.10.10...v6.10.11) (2026-03-17)
+
+
+### Bug Fixes
+
+* **cors:** harden credentialed origin allowlist ([319f2a6](https://github.com/neil-jay/sjrslms/commit/319f2a6133d2108215f1d319620627a9e399a84e))
+## [6.10.10](https://github.com/neil-jay/sjrslms/compare/v6.10.9...v6.10.10) (2026-03-17)
+
+
+### Bug Fixes
+
+* **auth:** omit X-Auth-Reason header in production ([60aaa00](https://github.com/neil-jay/sjrslms/commit/60aaa004d0e0eabcbb85a1a73e1361d658f13ab3))
+## [6.10.9](https://github.com/neil-jay/sjrslms/compare/v6.10.8...v6.10.9) (2026-03-17)
+
+
+### Bug Fixes
+
+* **deps:** override undici to patched version ([1ce28ad](https://github.com/neil-jay/sjrslms/commit/1ce28ad8fca2c040dc8657ad0536060441a4e829))
+## [6.10.8](https://github.com/neil-jay/sjrslms/compare/v6.10.7...v6.10.8) (2026-03-17)
+
+
+### Bug Fixes
+
+* harden reviewed html rendering and add xss guards ([dff9a13](https://github.com/neil-jay/sjrslms/commit/dff9a13b0e946ef6a1f1823dd5cbdba6785242b4))
+## [6.10.7](https://github.com/neil-jay/sjrslms/compare/v6.10.6...v6.10.7) (2026-03-17)
+
+
+### Bug Fixes
+
+* align notification invalidation with query helpers ([cf248d1](https://github.com/neil-jay/sjrslms/commit/cf248d11c02c703f2484074a02f8f75cfd51d99f))
+* harden d1 client response parsing ([3802a67](https://github.com/neil-jay/sjrslms/commit/3802a6711263795f3db1e7309ad86fbf5425677f))
+
+
+### Code Refactoring
+
+* centralize cookie management helper exports ([23dd59d](https://github.com/neil-jay/sjrslms/commit/23dd59d6f809ce4dac0b68f90cab3e01feb26267))
+* split oversized service and utility modules ([0f80ce0](https://github.com/neil-jay/sjrslms/commit/0f80ce04eeda2170bd9ff98e9b791a04f75ae790))
+## [6.10.6](https://github.com/neil-jay/sjrslms/compare/v6.10.5...v6.10.6) (2026-03-16)
+
+
+### Bug Fixes
+
+* **crud:** standardize instant-close delete action flows ([3d9de1c](https://github.com/neil-jay/sjrslms/commit/3d9de1c2027e75c3c21b93058784f623018f7e4f))
+## [6.10.5](https://github.com/neil-jay/sjrslms/compare/v6.10.4...v6.10.5) (2026-03-16)
+
+
+### Bug Fixes
+
+* eliminate raw console logging from production paths ([339bfda](https://github.com/neil-jay/sjrslms/commit/339bfdac5e8eb1c490d70c2fee7761e229326e05))
+## [6.10.4](https://github.com/neil-jay/sjrslms/compare/v6.10.3...v6.10.4) (2026-03-16)
+
+
+### Tests
+
+* **vitest:** suppress jsdom stylesheet parse noise ([45c4c41](https://github.com/neil-jay/sjrslms/commit/45c4c4106c43437752c28c6a6b33163558f47de1))
+## [6.10.3](https://github.com/neil-jay/sjrslms/compare/v6.10.2...v6.10.3) (2026-03-16)
+
+
+### Code Refactoring
+
+* **permissions:** split permissions store helpers and types ([d011643](https://github.com/neil-jay/sjrslms/commit/d011643bb8470979440697d3ff41598336c5ddd1))
+## [6.10.2](https://github.com/neil-jay/sjrslms/compare/v6.10.1...v6.10.2) (2026-03-16)
+
+
+### Code Refactoring
+
+* **architecture:** extract shared contracts from feature modules ([328f7d0](https://github.com/neil-jay/sjrslms/commit/328f7d012ee0bb8d1316beb9b1eab4c49497f00a))
+## [6.10.1](https://github.com/neil-jay/sjrslms/compare/v6.10.0...v6.10.1) (2026-03-16)
+
+
+### Bug Fixes
+
+* standardize API responses and align frontend consumers ([a5730d7](https://github.com/neil-jay/sjrslms/commit/a5730d787ad7d23616ba81d2aae1020af4be4efa))
+## [6.10.0](https://github.com/neil-jay/sjrslms/compare/v6.9.0...v6.10.0) (2026-03-16)
+
+
+### Features
+
+* **help:** add contextual help drawers to superuser pages ([66ecaa8](https://github.com/neil-jay/sjrslms/commit/66ecaa881c4eced698aaa59255272d6e96f89b90))
+## [6.9.0](https://github.com/neil-jay/sjrslms/compare/v6.8.0...v6.9.0) (2026-03-16)
+
+
+### Features
+
+* **notifications:** refine app notifications log table ([8847318](https://github.com/neil-jay/sjrslms/commit/884731882650963cb45563a04be16dc1ec07a4ed))
+## [6.8.0](https://github.com/neil-jay/sjrslms/compare/v6.7.0...v6.8.0) (2026-03-16)
+
+
+### Features
+
+* **notifications:** add mark-all-as-read action ([a047cee](https://github.com/neil-jay/sjrslms/commit/a047cee1553b3f2c1b695b9a20d18372064fd0b9))
+## [6.7.0](https://github.com/neil-jay/sjrslms/compare/v6.6.4...v6.7.0) (2026-03-16)
+
+
+### Features
+
+* **notifications:** pulse bell on new unread ([37e56cb](https://github.com/neil-jay/sjrslms/commit/37e56cb6a49ccd355602ad247126a6909bd20506))
+
+
+### Bug Fixes
+
+* **notifications:** remove bell count badge ([d2992e2](https://github.com/neil-jay/sjrslms/commit/d2992e26c973a4cb5326d6623ea2d79b95338f14))
+* **notifications:** replace bell pulse with unread dot ([1942a94](https://github.com/neil-jay/sjrslms/commit/1942a941cdce8b05018a0471f4d1f3847e4756bf))
+## [6.6.4](https://github.com/neil-jay/sjrslms/compare/v6.6.3...v6.6.4) (2026-03-16)
+
+
+### Bug Fixes
+
+* **academic-reports:** show semester options without configured dates ([834a71f](https://github.com/neil-jay/sjrslms/commit/834a71f2624bcfea98df2be64f897b9445271bb9))
+* **reports:** join authors for book popularity stats ([29c76ee](https://github.com/neil-jay/sjrslms/commit/29c76ee46337f27c02e39b5bdfde2c190fa24a5b))
+
+
+### Tests
+
+* extend timeouts for slow UI tests ([7e5e6a8](https://github.com/neil-jay/sjrslms/commit/7e5e6a8845b32d9ef7f87e9f83c41d6c36b64c43))
+## [6.6.3](https://github.com/neil-jay/sjrslms/compare/v6.6.2...v6.6.3) (2026-03-15)
+
+
+### Bug Fixes
+
+* **academic-reports:** populate user filter options ([6861717](https://github.com/neil-jay/sjrslms/commit/6861717b65f192bc3d74c6da17b9af840b6ff678))
+* **reports:** align academic penalties query with schema ([9f89ec1](https://github.com/neil-jay/sjrslms/commit/9f89ec11f69683b3beb37fbf2999d79336076728))
+## [6.6.2](https://github.com/neil-jay/sjrslms/compare/v6.6.1...v6.6.2) (2026-03-14)
+
+
+### Bug Fixes
+
+* **build:** avoid breaking .versionLabel during version guards ([a7514b7](https://github.com/neil-jay/sjrslms/commit/a7514b7d275f10dd87082bc492eeae8bd6cd549d))
+## [6.6.1](https://github.com/neil-jay/sjrslms/compare/v6.6.0...v6.6.1) (2026-03-14)
+
+
+### Code Refactoring
+
+* **notifications:** split notification event card helpers ([a14116a](https://github.com/neil-jay/sjrslms/commit/a14116a49263f3ebefb509a52bb0a6845a8a07db))
+## [6.6.0](https://github.com/neil-jay/sjrslms/compare/v6.5.1...v6.6.0) (2026-03-14)
+
+
+### Features
+
+* **notifications:** refine system notifications UX ([191e8db](https://github.com/neil-jay/sjrslms/commit/191e8db59faa231acab67746f912e67891749984))
+## [6.5.1](https://github.com/neil-jay/sjrslms/compare/v6.5.0...v6.5.1) (2026-03-14)
+
+
+### Bug Fixes
+
+* **dashboard:** remove extra padding on user dashboard ([a6a1ffb](https://github.com/neil-jay/sjrslms/commit/a6a1ffbe16510e8f03771d5ba6f4b6c7812cc2cf))
+## [6.5.0](https://github.com/neil-jay/sjrslms/compare/v6.4.8...v6.5.0) (2026-03-14)
+
+
+### Features
+
+* **notifications-ui:** align notifications list with management table UX ([3de345d](https://github.com/neil-jay/sjrslms/commit/3de345da4d56c63b58ba9ab76a5138affd3e8f94))
+
+
+### Bug Fixes
+
+* **permissions-ui:** stabilize tab routing and refresh audit log ([d15001f](https://github.com/neil-jay/sjrslms/commit/d15001f785e7c6325b2bef53f0ff46dab4abf837))
+## [6.4.8] - 2026-03-14
+
+### Added
+- ✅ add bell dropdown with per-type counts
+## [6.4.7] - 2026-03-14
+
+### Technical
+- 🔧 ci: update actions to node24 and fix release tagging
+## [6.4.6] - 2026-03-14
+
+### Added
+- ✅ prevent system bell backfill after permission grants
+## [6.4.5] - 2026-03-13
+
+### Technical
+- 🔧 ci(workflow): disable husky hooks in actions to avoid duplicate tests
+## [6.4.4] - 2026-03-13
+
+### Technical
+- 🔧 ci(workflow): skip bot-triggered runs to avoid duplicate tests
+## [6.4.3] - 2026-03-13
+
+### Technical
+- 🔧 ci(workflow): prevent duplicate runs by skipping CI on release commits and guard tag creation
+## [6.4.2] - 2026-03-13
+
+### Technical
+- 🔧 remove install warnings and drop standard-version
+### [6.4.1](https://github.com/neil-jay/sjrslms/compare/v6.4.0...v6.4.1) (2026-03-13)
+
+## [6.4.0](https://github.com/neil-jay/sjrslms/compare/v6.3.3...v6.4.0) (2026-03-13)
+
+
+### Features
+
+* **api:** add book sections endpoint ([bb190b7](https://github.com/neil-jay/sjrslms/commit/bb190b702a01dfca14788ebb709f3d9f6b307019))
+* **dashboard:** add enhanced user dashboard with analytics ([bc32d81](https://github.com/neil-jay/sjrslms/commit/bc32d8160dae4b9a7ae9e2cfc874f29fcb21f50b))
+
+
+### Bug Fixes
+
+* ensure auto-logout works consistently across all dashboard types ([b621108](https://github.com/neil-jay/sjrslms/commit/b621108fba9b57867600fa7518a012c83b737e3e))
+
+
+### Code Refactoring
+
+* **dashboard:** split large hook into focused modules ([9f5824a](https://github.com/neil-jay/sjrslms/commit/9f5824aac1136cba03e6bbaa0b2b5cb9457b6807))
+### [6.3.3](https://github.com/neil-jay/sjrslms/compare/v6.3.2...v6.3.3) (2026-03-12)
 
 ### [6.3.2](https://github.com/neil-jay/sjrslms/compare/v6.3.1...v6.3.2) (2026-03-11)
 
