@@ -94,10 +94,11 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 ### **Book Operations**
 - **GET** `/api/books` - Get all books
 - **GET** `/api/books/search` - Search books
+- **GET** `/api/books/sections` - Get distinct book sections with assigned books
 - **GET** `/api/books/:id` - Get specific book
-- **POST** `/api/books` - Create book (librarian)
-- **PUT** `/api/books/:id` - Update book (librarian)
-- **DELETE** `/api/books/:id` - Delete book (librarian)
+- **POST** `/api/books` - Create book (requires `books:create`)
+- **PUT** `/api/books/:id` - Update book (requires `books:update`)
+- **DELETE** `/api/books/:id` - Delete book (requires `books:delete`)
 
 ### **Book Copies**
 - **GET** `/api/book-copies` - Get book copies
@@ -190,9 +191,12 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 ### **Loan Operations**
 - **GET** `/api/loans` - Get all loans
 - **GET** `/api/loans/:id` - Get specific loan
-- **POST** `/api/loans` - Create loan (librarian)
-- **PUT** `/api/loans/:id` - Update loan (librarian)
-- **DELETE** `/api/loans/:id` - Delete loan (librarian)
+- **POST** `/api/loans` - Create loan (requires `loans:create`)
+- **PUT** `/api/loans/:id` - Update loan (requires `loans:update`)
+- **DELETE** `/api/loans/:id` - Delete loan (requires `loans:delete`)
+- **POST** `/api/loans/:id/renew` - Request/perform loan renewal (permission-gated)
+- **POST** `/api/loans/:id/renew/approve` - Approve a renewal request (requires `loans:update`)
+- **POST** `/api/loans/:id/renew/reject` - Reject a renewal request (requires `loans:update`)
 
 ### **Borrow Limits**
 - **GET** `/api/borrow-limits` - Get borrow limits

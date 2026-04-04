@@ -59,17 +59,29 @@ src/pages/loans/
 - Pagination support (Server-side)
 
 ### Loan Actions
-- **Approve** pending loans (Librarian/Admin/Superuser)
-- **Reject** pending loans (Librarian/Admin/Superuser)
-- **Return** approved loans (Librarian/Admin/Superuser)
-- **Renew** active/overdue loans (Librarian/Admin/Superuser)
-- **Cancel** pending loans (Students/Professors)
-- **Delete** loans (Librarian/Admin/Superuser)
+- **Approve / Reject** pending loans (permission-gated)
+- **Return** approved loans (permission-gated)
+- **Request Renewal** for your own active loan (borrower only)
+- **Approve / Reject Renewal Request** (permission-gated)
+- **Cancel** your own pending loans (borrower only)
+- **Delete** loans (permission-gated)
+
+### Renewal Requests
+
+Loan renewal uses a request + approval workflow:
+
+- **Borrower Request**: `POST /api/loans/:id/renew`
+  - Only the borrower can request renewal.
+  - Allowed only within **3 days of due date** and **before** the loan becomes overdue.
+  - Creates a renewal request (`renewal_request_status = 'pending'`); does not extend due date immediately.
+- **Administration Decision**:
+  - Approve: `POST /api/loans/:id/renew/approve` (extends due date, increments renewal count)
+  - Reject: `POST /api/loans/:id/renew/reject` (clears the pending request)
 
 ### Permission System
-- **Librarian/Admin/Superuser**: Full access to all loan operations, including renewal and deletion.
-- **Students/Professors**: Can create loans and cancel their own pending loans.
-- **Guests**: Read-only access to loan information.
+- All loan operations are enforced via permissions (no implicit role bypasses).
+- **Students/Professors**: Can request renewal and cancel only for their own loans.
+- **Librarian/Admin/Superuser**: Can approve/reject renewal requests and perform staff operations based on granted permissions.
 
 ## Usage
 
