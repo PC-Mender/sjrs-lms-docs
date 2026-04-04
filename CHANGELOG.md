@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.11](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.10...v1.3.11) (2026-04-04)
+
+
+### Bug Fixes
+
+* **deps:** resolve remaining npm audit alerts ([7261d69](https://github.com/neil-jay/sjrs-lms-docs/commit/7261d69cc89110266948f8bdd9beea9e338c204d))
+
 ### [1.3.10](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.9...v1.3.10) (2026-04-04)
 
 
