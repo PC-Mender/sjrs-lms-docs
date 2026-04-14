@@ -1,0 +1,57 @@
+---
+title: Security Policy
+description: How to report security vulnerabilities in SJRS LMS
+---
+
+# Security Policy
+
+## Reporting a Vulnerability
+
+If you believe you found a security vulnerability in SJRS LMS, please report it to the project maintainers as soon as possible.
+
+### Preferred Reporting Methods
+
+- **GitHub Security Advisories** (if enabled): [https://github.com/neil-jay/sjrslms/security/advisories](https://github.com/neil-jay/sjrslms/security/advisories)
+- **GitHub Issues**: [https://github.com/neil-jay/sjrslms/issues](https://github.com/neil-jay/sjrslms/issues)
+  - Include `security` in the title and request that the issue be handled confidentially if it should not be made public immediately.
+
+### What to Include in Your Report
+
+Please provide the following information when reporting a security vulnerability:
+
+- **Clear description** of the issue and affected components (frontend, backend, Cloudflare Workers, database layer, authentication, etc.)
+- **Steps to reproduce** the issue
+- **Expected vs actual behavior**
+- **Affected version(s)** of SJRS LMS
+- **Proof-of-concept** code, payloads, or attack scenarios
+- **Environment details** such as Node/npm versions, browser, Cloudflare deployment environment, or database schema state
+
+## What to Expect
+
+The maintainers will:
+
+- Acknowledge receipt of the report promptly
+- Confirm the issue and prioritize it for remediation
+- Work to fix the vulnerability and verify the fix
+- Communicate status updates via the chosen report channel
+
+## Supported Releases
+
+- This project currently supports the `6.x` release series
+- Security fixes will be provided for the current major version and any actively maintained release branches
+
+## Security Best Practices
+
+For users and contributors, this project follows secure development and release practices, including:
+
+- Static type checking with TypeScript
+- ESLint checks and quality gates
+- `npm run security-audit` for dependency and vulnerability analysis
+- Cloudflare Workers deployment with modern edge security controls
+- Use of secure storage and authorization patterns for D1, R2, and KV
+
+## Responsible Disclosure
+
+Please do not publicly disclose security vulnerabilities before they have been fixed and released. This helps protect users and gives the maintainers time to address the issue safely.
+
+If you need direct assistance, the project issue tracker at [https://github.com/neil-jay/sjrslms/issues](https://github.com/neil-jay/sjrslms/issues) is the best available contact point.
