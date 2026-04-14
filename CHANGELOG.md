@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.15](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.14...v1.3.15) (2026-04-14)
+
+
+### Bug Fixes
+
+* **deps:** resolve Vite security vulnerabilities (CVE-2025-XXXX) ([f713d4a](https://github.com/neil-jay/sjrs-lms-docs/commit/f713d4ad6af36006860b6f9cf1231e49ac25fe52))
+
 ### [1.3.14](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.13...v1.3.14) (2026-04-14)
 
 ### [1.3.13](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.12...v1.3.13) (2026-04-14)
