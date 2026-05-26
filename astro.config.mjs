@@ -30,67 +30,67 @@ export default defineConfig({
         {
           label: 'Getting Started',
           collapsed: true,
-          autogenerate: { directory: 'getting-started' },
+          items: [{ autogenerate: { directory: 'getting-started' } }],
         },
         {
           label: 'User Guides',
           collapsed: true,
-          autogenerate: { directory: 'user-guides' },
+          items: [{ autogenerate: { directory: 'user-guides' } }],
         },
         {
           label: 'Features',
           collapsed: true,
-          autogenerate: { directory: 'features' },
+          items: [{ autogenerate: { directory: 'features' } }],
         },
         {
           label: 'Architecture',
           collapsed: true,
-          autogenerate: { directory: 'architecture' },
+          items: [{ autogenerate: { directory: 'architecture' } }],
         },
         {
           label: 'Development',
           collapsed: true,
-          autogenerate: { directory: 'development' },
+          items: [{ autogenerate: { directory: 'development' } }],
         },
         {
           label: 'Deployment',
           collapsed: true,
-          autogenerate: { directory: 'deployment' },
+          items: [{ autogenerate: { directory: 'deployment' } }],
         },
         {
           label: 'Security',
           collapsed: true,
-          autogenerate: { directory: 'security' },
+          items: [{ autogenerate: { directory: 'security' } }],
         },
         {
           label: 'API',
           collapsed: true,
-          autogenerate: { directory: 'api' },
+          items: [{ autogenerate: { directory: 'api' } }],
         },
         {
           label: 'Database',
           collapsed: true,
-          autogenerate: { directory: 'database' },
+          items: [{ autogenerate: { directory: 'database' } }],
         },
         {
           label: 'Testing',
           collapsed: true,
-          autogenerate: { directory: 'testing' },
+          items: [{ autogenerate: { directory: 'testing' } }],
         },
         {
           label: 'Policies',
           collapsed: true,
-          autogenerate: { directory: 'policies' },
+          items: [{ autogenerate: { directory: 'policies' } }],
         },
         {
           label: 'Integrations',
           collapsed: true,
-          autogenerate: { directory: 'integrations' },
+          items: [{ autogenerate: { directory: 'integrations' } }],
         },
         {
           label: 'Performance',
           collapsed: true,
-          autogenerate: { directory: 'performance' },
+          items: [{ autogenerate: { directory: 'performance' } }],
         },
         {
           label: 'System Status',
@@ -107,7 +107,7 @@ export default defineConfig({
         {
           label: 'Archive',
           collapsed: true,
-          autogenerate: { directory: 'archive' },
+          items: [{ autogenerate: { directory: 'archive' } }],
         },
       ],
       head: [
