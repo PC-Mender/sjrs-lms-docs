@@ -14,11 +14,11 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.9",
-    "@astrojs/react": "~5.0.5",
-    "@astrojs/starlight": "~0.39.2",
-    "astro": "~6.3.7",
-    "react": "~19.2.6",
-    "react-dom": "~19.2.6",
+    "@astrojs/react": "~5.0.7",
+    "@astrojs/starlight": "~0.40.0",
+    "astro": "~6.4.8",
+    "react": "~19.2.7",
+    "react-dom": "~19.2.7",
     "typescript": "~5.9.3"
   },
   "overrides": {
@@ -30,7 +30,8 @@
     "picomatch": "^4.0.4",
     "smol-toml": "^1.6.1",
     "volar-service-yaml": "^0.0.70",
-    "yaml": "^2.8.3"
+    "yaml": "^2.8.3",
+    "esbuild": ">=0.28.1"
   },
   "devDependencies": {
     "prettier-plugin-astro": "~0.14.1",
