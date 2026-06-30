@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.17](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.16...v1.3.17) (2026-06-30)
+
+
+### Documentation
+
+* update routing, changelog, auth flow, and project rules for June 2026 ([8bc3198](https://github.com/neil-jay/sjrs-lms-docs/commit/8bc31986db030ef97e78be19a5f35a9201771a9d))
+
 ### [1.3.16](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.15...v1.3.16) (2026-05-26)
 
 ### [1.3.15](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.14...v1.3.15) (2026-04-14)
