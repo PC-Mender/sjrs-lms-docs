@@ -7,6 +7,17 @@ title: "Routing System"
 
 The AppRouter has been completely refactored to address critical issues while maintaining the existing architecture and adding enterprise-grade features.
 
+## **Current Route Model (June 2026)**
+
+- The canonical dashboard entry point is `/dashboard/*` for all roles.
+- Role-specific dashboard paths are no longer canonical and are maintained only as compatibility redirects:
+  - `/dashboard-superuser/*`
+  - `/dashboard-admin/*`
+  - `/dashboard-librarian/*`
+  - `/dashboard-dean/*`
+  - `/dashboard-user/*`
+- Role-specific UI is rendered inside the unified dashboard route using role-aware dashboard components.
+
 ## **Fixed Critical Issues**
 
 ### 1. **Syntax Error Resolution**

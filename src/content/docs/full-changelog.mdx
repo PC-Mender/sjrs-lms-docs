@@ -4,11 +4,144 @@ description: Complete history of all changes and commits since project inception
 slug: full-changelog
 ---
 
-[← Back to Highlights](/changelog)
+[Back to Highlights](/changelog)
 
+# Changelog
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [6.34.7] - 2026-06-28
+
+### Fixed
+- 🐛 prevent cross-user cache leaks on user-specific GETs
+## [6.34.6] - 2026-06-28
+
+### Technical
+- 🔧 implement R2 storage and consolidate article CRUD to inline modals
+## [6.34.5] - 2026-06-28
+
+### Technical
+- 🔧 consolidate loan management to list view with inline modals
+## [6.34.4] - 2026-06-27
+
+### Fixed
+- 🐛 replace incorrect contact details with librarian message
+## [6.34.3] - 2026-06-27
+
+### Fixed
+- 🐛 remove useless conditionals and unneeded defensive code per CodeQL findings
+## [6.34.2] - 2026-06-27
+
+### Technical
+- 🔧 ci: include ci: commits in release type detection
+## [6.34.1] - 2026-06-26
+
+### Technical
+- 🔧 remove unused code, fix validation patterns, and improve MemberList filtering
+## [6.34.0] - 2026-06-26
+
+### Technical
+- 🔧 fix MemberList test selectors after UI changes
+## [6.33.1] - 2026-06-24
+
+### Fixed
+- 🐛 parse structured filters and fix Active status filter on loans
+## [6.33.0] - 2026-06-24
+
+### Added
+- ✅ expose default_role_name, add include_inactive, and auto-sync student year
+## [6.32.1] - 2026-06-24
+
+### Fixed
+- 🐛 dynamically load student user types from API
+## [6.32.0] - 2026-06-23
+
+### Added
+- ✅ complete dynamic user types CRUD with unified table design
+## [6.31.1] - 2026-06-22
+
+### Technical
+- 🔧 wire books.publication_id from legacy SQL dump
+## [6.31.0] - 2026-06-22
+
+### Added
+- ✅ add reference book tracking, linked items modal, and advanced filters
+## [6.30.0] - 2026-06-22
+
+### Added
+- ✅ add A-Z and count filters to authors list
+## [6.29.0] - 2026-06-22
+
+### Added
+- ✅ add reference books count column to authors list and details
+## [6.28.1] - 2026-06-21
+
+### Technical
+- 🔧 remove reference resources module
+## [6.28.0] - 2026-06-20
+
+### Fixed
+- 🐛 resolve undici CVEs by pinning to v7.28.0 and update dompurify
+## [6.27.0] - 2026-06-18
+
+### Technical
+- 🔧 add utility script to reset books catalog
+## [6.26.0] - 2026-06-17
+
+### Fixed
+- 🐛 resolve npm audit security vulnerabilities
+## [6.25.0] - 2026-06-08
+
+### Added
+- ✅ refactor UPI payment types and service for cleaner API integration
+## [6.24.0] - 2026-06-08
+
+### Added
+- ✅ add author seed script and SQL for bulk author insertion
+## [6.23.1] - 2026-06-07
+
+### Technical
+- 🔧 update all pages and tests for unified dashboard routes
+## [6.23.0] - 2026-06-07
+
+### Added
+- ✅ wire locations, shelf-codes, and key-tags into navigation and routing
+## [6.22.0] - 2026-06-05
+
+### Added
+- ✅ prevent deleting book copies with active loans and harden deletion flow
+## [6.21.1] - 2026-06-05
+
+### Fixed
+- 🐛 correct release job output name for tag
+## [6.21.0] - 2026-06-05
+
+### Added
+- ✅ prevent deletion of sections with related records
+## [6.20.0] - 2026-06-05
+
+### Fixed
+- 🐛 add TURNSTILE_SITE_KEY to wrangler.toml and hook fallback
+## [6.19.6] - 2026-05-26
+
+### Technical
+- 🔧 add explicit react-is@19.2.6 to satisfy lockfile and npm ci
+## [6.19.5] - 2026-05-26
+
+### Technical
+- 🔧 increase timeout for export button test
+## [6.19.4] - 2026-04-24
+
+### Fixed
+- 🐛 upgrade protobufjs and dompurify to resolve security vulnerabilities
+## [6.19.3] - 2026-04-14
+
+### Technical
+- 🔧 Add security policy for vulnerability reporting
+## [6.19.2] - 2026-04-14
+
+### Fixed
+- 🐛 use corepack npm fallback in pre-push hook when npm is not in PATH
 ## [6.19.1] - 2026-04-04
 
 ### Technical
@@ -83,24 +216,28 @@ All notable changes to this project will be documented in this file. See [commit
 ### Code Refactoring
 
 * reduce large file sizes and improve modularity ([d98e387](https://github.com/neil-jay/sjrslms/commit/d98e387a44b255865f90d9a6f164adf40c4afa3e))
+
 ## [6.12.1](https://github.com/neil-jay/sjrslms/compare/v6.12.0...v6.12.1) (2026-03-24)
 
 
 ### Code Refactoring
 
 * extract ArticlesCatalogPage components for modularity and maintainability ([269072b](https://github.com/neil-jay/sjrslms/commit/269072bbabf5c17d69cbb32a8fc18c930be8b24f))
+
 ## [6.12.0](https://github.com/neil-jay/sjrslms/compare/v6.11.3...v6.12.0) (2026-03-24)
 
 
 ### Features
 
 * implement journal master/edition split with sections and articles ([aacfe0e](https://github.com/neil-jay/sjrslms/commit/aacfe0e57cd6c454e74f7449fa227f936d6e82d3))
+
 ## [6.11.3](https://github.com/neil-jay/sjrslms/compare/v6.11.2...v6.11.3) (2026-03-19)
 
 
 ### Code Refactoring
 
 * centralize API CORS response handling ([7898e64](https://github.com/neil-jay/sjrslms/commit/7898e648b3322c7127311cecc2f16bab884f8b72))
+
 ## [6.11.2](https://github.com/neil-jay/sjrslms/compare/v6.11.1...v6.11.2) (2026-03-18)
 
 
@@ -108,54 +245,63 @@ All notable changes to this project will be documented in this file. See [commit
 
 * **auth:** use AppError in requireUser to comply with standardized response envelopes ([cbed1cb](https://github.com/neil-jay/sjrslms/commit/cbed1cbcc0f1a26182a3c6cf69b80e5eba54cf9b))
 * split CSP for API vs HTML responses; restrict localhost to development only ([a4cd00b](https://github.com/neil-jay/sjrslms/commit/a4cd00b5ebaf860047695fb41ddf307bc665536c))
+
 ## [6.11.1](https://github.com/neil-jay/sjrslms/compare/v6.11.0...v6.11.1) (2026-03-18)
 
 
 ### Bug Fixes
 
 * upgrade fast-xml-parser to 5.5.6 via npm overrides ([15f7c04](https://github.com/neil-jay/sjrslms/commit/15f7c047953294f9fb842d1ca4e44601bee5b814))
+
 ## [6.11.0](https://github.com/neil-jay/sjrslms/compare/v6.10.13...v6.11.0) (2026-03-18)
 
 
 ### Features
 
 * **auth:** enforce permission-based access across API endpoints ([cd82c4b](https://github.com/neil-jay/sjrslms/commit/cd82c4be796566daafe56d88032aa9a984c2390e))
+
 ## [6.10.13](https://github.com/neil-jay/sjrslms/compare/v6.10.12...v6.10.13) (2026-03-18)
 
 
 ### Bug Fixes
 
 * **route:** harden legacy permission route matching ([0679656](https://github.com/neil-jay/sjrslms/commit/0679656a60e395b3c6f84ce589d6c275464c8395))
+
 ## [6.10.12](https://github.com/neil-jay/sjrslms/compare/v6.10.11...v6.10.12) (2026-03-17)
 
 
 ### Bug Fixes
 
 * sanitize backend error responses ([7f83c00](https://github.com/neil-jay/sjrslms/commit/7f83c0035f2f1b0e6e68641b81a995ec39da5c34))
+
 ## [6.10.11](https://github.com/neil-jay/sjrslms/compare/v6.10.10...v6.10.11) (2026-03-17)
 
 
 ### Bug Fixes
 
 * **cors:** harden credentialed origin allowlist ([319f2a6](https://github.com/neil-jay/sjrslms/commit/319f2a6133d2108215f1d319620627a9e399a84e))
+
 ## [6.10.10](https://github.com/neil-jay/sjrslms/compare/v6.10.9...v6.10.10) (2026-03-17)
 
 
 ### Bug Fixes
 
 * **auth:** omit X-Auth-Reason header in production ([60aaa00](https://github.com/neil-jay/sjrslms/commit/60aaa004d0e0eabcbb85a1a73e1361d658f13ab3))
+
 ## [6.10.9](https://github.com/neil-jay/sjrslms/compare/v6.10.8...v6.10.9) (2026-03-17)
 
 
 ### Bug Fixes
 
 * **deps:** override undici to patched version ([1ce28ad](https://github.com/neil-jay/sjrslms/commit/1ce28ad8fca2c040dc8657ad0536060441a4e829))
+
 ## [6.10.8](https://github.com/neil-jay/sjrslms/compare/v6.10.7...v6.10.8) (2026-03-17)
 
 
 ### Bug Fixes
 
 * harden reviewed html rendering and add xss guards ([dff9a13](https://github.com/neil-jay/sjrslms/commit/dff9a13b0e946ef6a1f1823dd5cbdba6785242b4))
+
 ## [6.10.7](https://github.com/neil-jay/sjrslms/compare/v6.10.6...v6.10.7) (2026-03-17)
 
 
@@ -169,60 +315,70 @@ All notable changes to this project will be documented in this file. See [commit
 
 * centralize cookie management helper exports ([23dd59d](https://github.com/neil-jay/sjrslms/commit/23dd59d6f809ce4dac0b68f90cab3e01feb26267))
 * split oversized service and utility modules ([0f80ce0](https://github.com/neil-jay/sjrslms/commit/0f80ce04eeda2170bd9ff98e9b791a04f75ae790))
+
 ## [6.10.6](https://github.com/neil-jay/sjrslms/compare/v6.10.5...v6.10.6) (2026-03-16)
 
 
 ### Bug Fixes
 
 * **crud:** standardize instant-close delete action flows ([3d9de1c](https://github.com/neil-jay/sjrslms/commit/3d9de1c2027e75c3c21b93058784f623018f7e4f))
+
 ## [6.10.5](https://github.com/neil-jay/sjrslms/compare/v6.10.4...v6.10.5) (2026-03-16)
 
 
 ### Bug Fixes
 
 * eliminate raw console logging from production paths ([339bfda](https://github.com/neil-jay/sjrslms/commit/339bfdac5e8eb1c490d70c2fee7761e229326e05))
+
 ## [6.10.4](https://github.com/neil-jay/sjrslms/compare/v6.10.3...v6.10.4) (2026-03-16)
 
 
 ### Tests
 
 * **vitest:** suppress jsdom stylesheet parse noise ([45c4c41](https://github.com/neil-jay/sjrslms/commit/45c4c4106c43437752c28c6a6b33163558f47de1))
+
 ## [6.10.3](https://github.com/neil-jay/sjrslms/compare/v6.10.2...v6.10.3) (2026-03-16)
 
 
 ### Code Refactoring
 
 * **permissions:** split permissions store helpers and types ([d011643](https://github.com/neil-jay/sjrslms/commit/d011643bb8470979440697d3ff41598336c5ddd1))
+
 ## [6.10.2](https://github.com/neil-jay/sjrslms/compare/v6.10.1...v6.10.2) (2026-03-16)
 
 
 ### Code Refactoring
 
 * **architecture:** extract shared contracts from feature modules ([328f7d0](https://github.com/neil-jay/sjrslms/commit/328f7d012ee0bb8d1316beb9b1eab4c49497f00a))
+
 ## [6.10.1](https://github.com/neil-jay/sjrslms/compare/v6.10.0...v6.10.1) (2026-03-16)
 
 
 ### Bug Fixes
 
 * standardize API responses and align frontend consumers ([a5730d7](https://github.com/neil-jay/sjrslms/commit/a5730d787ad7d23616ba81d2aae1020af4be4efa))
+
 ## [6.10.0](https://github.com/neil-jay/sjrslms/compare/v6.9.0...v6.10.0) (2026-03-16)
 
 
 ### Features
 
 * **help:** add contextual help drawers to superuser pages ([66ecaa8](https://github.com/neil-jay/sjrslms/commit/66ecaa881c4eced698aaa59255272d6e96f89b90))
+
 ## [6.9.0](https://github.com/neil-jay/sjrslms/compare/v6.8.0...v6.9.0) (2026-03-16)
 
 
 ### Features
 
 * **notifications:** refine app notifications log table ([8847318](https://github.com/neil-jay/sjrslms/commit/884731882650963cb45563a04be16dc1ec07a4ed))
+
 ## [6.8.0](https://github.com/neil-jay/sjrslms/compare/v6.7.0...v6.8.0) (2026-03-16)
 
 
 ### Features
 
 * **notifications:** add mark-all-as-read action ([a047cee](https://github.com/neil-jay/sjrslms/commit/a047cee1553b3f2c1b695b9a20d18372064fd0b9))
+
 ## [6.7.0](https://github.com/neil-jay/sjrslms/compare/v6.6.4...v6.7.0) (2026-03-16)
 
 
@@ -235,6 +391,7 @@ All notable changes to this project will be documented in this file. See [commit
 
 * **notifications:** remove bell count badge ([d2992e2](https://github.com/neil-jay/sjrslms/commit/d2992e26c973a4cb5326d6623ea2d79b95338f14))
 * **notifications:** replace bell pulse with unread dot ([1942a94](https://github.com/neil-jay/sjrslms/commit/1942a941cdce8b05018a0471f4d1f3847e4756bf))
+
 ## [6.6.4](https://github.com/neil-jay/sjrslms/compare/v6.6.3...v6.6.4) (2026-03-16)
 
 
@@ -247,6 +404,7 @@ All notable changes to this project will be documented in this file. See [commit
 ### Tests
 
 * extend timeouts for slow UI tests ([7e5e6a8](https://github.com/neil-jay/sjrslms/commit/7e5e6a8845b32d9ef7f87e9f83c41d6c36b64c43))
+
 ## [6.6.3](https://github.com/neil-jay/sjrslms/compare/v6.6.2...v6.6.3) (2026-03-15)
 
 
@@ -254,30 +412,35 @@ All notable changes to this project will be documented in this file. See [commit
 
 * **academic-reports:** populate user filter options ([6861717](https://github.com/neil-jay/sjrslms/commit/6861717b65f192bc3d74c6da17b9af840b6ff678))
 * **reports:** align academic penalties query with schema ([9f89ec1](https://github.com/neil-jay/sjrslms/commit/9f89ec11f69683b3beb37fbf2999d79336076728))
+
 ## [6.6.2](https://github.com/neil-jay/sjrslms/compare/v6.6.1...v6.6.2) (2026-03-14)
 
 
 ### Bug Fixes
 
 * **build:** avoid breaking .versionLabel during version guards ([a7514b7](https://github.com/neil-jay/sjrslms/commit/a7514b7d275f10dd87082bc492eeae8bd6cd549d))
+
 ## [6.6.1](https://github.com/neil-jay/sjrslms/compare/v6.6.0...v6.6.1) (2026-03-14)
 
 
 ### Code Refactoring
 
 * **notifications:** split notification event card helpers ([a14116a](https://github.com/neil-jay/sjrslms/commit/a14116a49263f3ebefb509a52bb0a6845a8a07db))
+
 ## [6.6.0](https://github.com/neil-jay/sjrslms/compare/v6.5.1...v6.6.0) (2026-03-14)
 
 
 ### Features
 
 * **notifications:** refine system notifications UX ([191e8db](https://github.com/neil-jay/sjrslms/commit/191e8db59faa231acab67746f912e67891749984))
+
 ## [6.5.1](https://github.com/neil-jay/sjrslms/compare/v6.5.0...v6.5.1) (2026-03-14)
 
 
 ### Bug Fixes
 
 * **dashboard:** remove extra padding on user dashboard ([a6a1ffb](https://github.com/neil-jay/sjrslms/commit/a6a1ffbe16510e8f03771d5ba6f4b6c7812cc2cf))
+
 ## [6.5.0](https://github.com/neil-jay/sjrslms/compare/v6.4.8...v6.5.0) (2026-03-14)
 
 
@@ -289,6 +452,7 @@ All notable changes to this project will be documented in this file. See [commit
 ### Bug Fixes
 
 * **permissions-ui:** stabilize tab routing and refresh audit log ([d15001f](https://github.com/neil-jay/sjrslms/commit/d15001f785e7c6325b2bef53f0ff46dab4abf837))
+
 ## [6.4.8] - 2026-03-14
 
 ### Added
@@ -336,6 +500,7 @@ All notable changes to this project will be documented in this file. See [commit
 ### Code Refactoring
 
 * **dashboard:** split large hook into focused modules ([9f5824a](https://github.com/neil-jay/sjrslms/commit/9f5824aac1136cba03e6bbaa0b2b5cb9457b6807))
+
 ### [6.3.3](https://github.com/neil-jay/sjrslms/compare/v6.3.2...v6.3.3) (2026-03-12)
 
 ### [6.3.2](https://github.com/neil-jay/sjrslms/compare/v6.3.1...v6.3.2) (2026-03-11)
@@ -346,8 +511,6 @@ All notable changes to this project will be documented in this file. See [commit
 * ensure footer links scroll to top ([bdbb610](https://github.com/neil-jay/sjrslms/commit/bdbb610c4a76a5493d1a5c6be087a8ea8ae0e049))
 
 ### [6.3.1](https://github.com/neil-jay/sjrslms/compare/v6.3.0...v6.3.1) (2026-03-11)
-
-* Internal version alignment release; no user-facing changes documented
 
 ## [6.3.0](https://github.com/neil-jay/sjrslms/compare/v6.2.0...v6.3.0) (2026-03-11)
 
@@ -389,12 +552,30 @@ All notable changes to this project will be documented in this file. See [commit
 * extract table actions into reusable hooks for guests and professors ([9710e2f](https://github.com/neil-jay/sjrslms/commit/9710e2fe4903da13f1c50bc9dd4fe75153e9099e))
 
 ### [6.0.2](https://github.com/neil-jay/sjrslms/compare/v6.0.1...v6.0.2) (2026-03-10)
-...
+
+
+### Bug Fixes
+
+* remove unused parameter in optimistic-updates utility ([3c7d531](https://github.com/neil-jay/sjrslms/commit/3c7d531e5e630e563d2039341097351854b2185b))
+* resolve ESLint v10 compatibility issues for CI/CD ([6d1e2d2](https://github.com/neil-jay/sjrslms/commit/6d1e2d28d689e14e9bdfb9607bf6a7624242f550))
+
+
+### Code Refactoring
+
+* extract permission mutation logic to fix file size violation ([26d2142](https://github.com/neil-jay/sjrslms/commit/26d214292dd5897cb9e4d1e2a20d49ad31354ab6))
+
+### [6.0.1](https://github.com/neil-jay/sjrslms/compare/v6.0.0...v6.0.1) (2026-03-10)
+
+
+### Documentation
+
+* restructure project rules with clear classification system ([6ebbd5e](https://github.com/neil-jay/sjrslms/commit/6ebbd5e637dce80b3787903db6e9107a5410550d))
+* Update README with adequate & latest info ([dcc5c37](https://github.com/neil-jay/sjrslms/commit/dcc5c37a2584cf4cfeeb497dc81e5ff456193ce9))
 
 ## [6.0.0](https://github.com/neil-jay/sjrslms/compare/v5.0.1...v6.0.0) (2026-03-10)
 
 
-### BREAKING CHANGES
+### ⚠ BREAKING CHANGES
 
 * All CRUD modals now close immediately before API response
 
@@ -417,7 +598,7 @@ All notable changes to this project will be documented in this file. See [commit
 ## [5.0.0](https://github.com/neil-jay/sjrslms/compare/v4.2.1...v5.0.0) (2026-03-09)
 
 
-### BREAKING CHANGES
+### ⚠ BREAKING CHANGES
 
 * All query hooks now use centralized useStandardQuery wrapper
 
@@ -533,7 +714,7 @@ Closes query configuration technical debt initiative.
 ## [4.0.0](https://github.com/neil-jay/sjrslms/compare/v3.52.1...v4.0.0) (2026-03-03)
 
 
-### BREAKING CHANGES
+### ⚠ BREAKING CHANGES
 
 * **api:** All API handlers now expect sanitizedData parameter from security middleware
 
@@ -3130,1001 +3311,1001 @@ Closes query configuration technical debt initiative.
 ## [3.40.23] - 2025-11-14
 
 ### Fixed
-- Issues with ESLint
+- 🐛 Issues with ESLint
 ## [3.40.22] - 2025-11-14
 
 ### Fixed
-- ESLint errors
+- 🐛 ESLint errors
 ## [3.40.21] - 2025-11-14
 
 ### Technical
-- bump version to 3.40.20 [skip ci]
+- 🔧 bump version to 3.40.20 [skip ci]
 ## [3.40.20] - 2025-11-14
 
 ### Fixed
-- issues with workflow and ESLint
+- 🐛 issues with workflow and ESLint
 ## [3.40.19] - 2025-11-14
 
 ### Fixed
-- ESLint issues
+- 🐛 ESLint issues
 ## [3.40.18] - 2025-11-14
 
 ### Fixed
-- ESLint issues
+- 🐛 ESLint issues
 ## [3.40.17] - 2025-11-14
 
 ### Fixed
-- Issues with ESLint and automatic workflow
+- 🐛 Issues with ESLint and automatic workflow
 ## [3.40.16] - 2025-11-14
 
 ### Fixed
-- Issues of ESLint
+- 🐛 Issues of ESLint
 ## [3.40.15] - 2025-11-14
 
 ### Fixed
-- ESLint issues
+- 🐛 ESLint issues
 ## [3.40.14] - 2025-11-14
 
 ### Fixed
-- ESLint issues
+- 🐛 ESLint issues
 ## [3.40.13] - 2025-11-14
 
 ### Technical
-- bump version to 3.40.12 [skip ci]
+- 🔧 bump version to 3.40.12 [skip ci]
 ## [3.40.12] - 2025-11-14
 
 ### Fixed
-- issues with Wrangler config
+- 🐛 issues with Wrangler config
 ## [3.40.11] - 2025-11-14
 
 ### Fixed
-- simplify github actions
+- 🐛 simplify github actions
 ## [3.40.10] - 2025-11-14
 
 ### Fixed
-- Issues with Wrangler version
+- 🐛 Issues with Wrangler version
 ## [3.40.9] - 2025-11-14
 
 ### Fixed
-- Issues with Wrangler config to push to Workers
+- 🐛 Issues with Wrangler config to push to Workers
 ## [3.40.8] - 2025-11-14
 
 ### Fixed
-- issues with Build App for Github Actions
+- 🐛 issues with Build App for Github Actions
 ## [3.40.7] - 2025-11-14
 
 ### Fixed
-- Issues with Building App via Github Actions
+- 🐛 Issues with Building App via Github Actions
 ## [3.40.6] - 2025-11-14
 
 ### Fixed
-- Issues with node version
+- 🐛 Issues with node version
 ## [3.40.5] - 2025-11-14
 
 ### Fixed
-- issues with deployment configurations
+- 🐛 issues with deployment configurations
 ## [3.40.4] - 2025-11-14
 
 ### Fixed
-- Issues with build configs
+- 🐛 Issues with build configs
 ## [3.40.3] - 2025-11-14
 
 ### Fixed
-- applied depoyment level fixes
+- 🐛 applied depoyment level fixes
 ## [3.40.2] - 2025-11-14
 
 ### Technical
-- bump version to 3.40.1 [skip ci]
+- 🔧 bump version to 3.40.1 [skip ci]
 ## [3.40.1] - 2025-11-14
 
 ### Technical
-- Update script and package
+- 🔧 Update script and package
 ## [3.40.0] - 2025-11-14
 
 ### Added
-- Updated documentation and API and user interface
+- ✅ Updated documentation and API and user interface
 ## [3.39.0] - 2025-11-14
 
 ### Added
-- Updated documentation and API and config and user interface
+- ✅ Updated documentation and API and config and user interface
 ## [3.38.1] - 2025-11-13
 
 ### Technical
-- Updated config and documentation
+- 🔧 Updated config and documentation
 ## [3.38.0] - 2025-11-13
 
 ### Added
-- Updated user interface and documentation
+- ✅ Updated user interface and documentation
 ## [3.37.0] - 2025-11-13
 
 ### Added
-- Updated user interface and documentation
+- ✅ Updated user interface and documentation
 ## [3.36.1] - 2025-11-13
 
 ### Technical
-- Platform update
+- 🔧 Platform update
 ## [3.36.0] - 2025-11-13
 
 ### Added
-- Updated API and documentation and user interface
+- ✅ Updated API and documentation and user interface
 ## [3.35.1] - 2025-11-13
 
 ### Technical
-- Platform update
+- 🔧 Platform update
 ## [3.35.0] - 2025-11-13
 
 ### Added
-- Updated documentation and API and config and user interface
+- ✅ Updated documentation and API and config and user interface
 ## [3.34.0] - 2025-11-13
 
 ### Added
-- Updated config and user interface and documentation and API
+- ✅ Updated config and user interface and documentation and API
 ## [3.33.0] - 2025-11-13
 
 ### Added
-- Updated user interface
+- ✅ Updated user interface
 ## [3.32.0] - 2025-11-13
 
 ### Added
-- Updated documentation and API and config and user interface
+- ✅ Updated documentation and API and config and user interface
 ## [3.31.0] - 2025-11-13
 
 ### Added
-- Updated documentation and API and config and user interface
+- ✅ Updated documentation and API and config and user interface
 ## [3.30.0] - 2025-11-13
 
 ### Added
-- Updated API and config and user interface and documentation
+- ✅ Updated API and config and user interface and documentation
 ## [3.29.0] - 2025-11-13
 
 ### Added
-- Updated API and user interface and config and documentation
+- ✅ Updated API and user interface and config and documentation
 ## [3.28.0] - 2025-11-13
 
 ### Added
-- Updated user interface
+- ✅ Updated user interface
 ## [3.27.4] - 2025-11-13
 
 ### Technical
-- Updated documentation and config and user interface
+- 🔧 Updated documentation and config and user interface
 ## [3.27.3] - 2025-11-13
 
 ### Technical
-- Updated documentation and config and user interface
+- 🔧 Updated documentation and config and user interface
 ## [3.27.2] - 2025-11-13
 
 ### Technical
-- Updated config
+- 🔧 Updated config
 ## [3.27.1] - 2025-11-13
 
 ### Technical
-- Updated config
+- 🔧 Updated config
 ## [3.27.0] - 2025-11-13
 
 ### Added
-- Updated config and user interface
+- ✅ Updated config and user interface
 ## [3.26.10] - 2025-11-13
 
 ### Technical
-- Updated config
+- 🔧 Updated config
 ## [3.26.9] - 2025-11-13
 
 ### Technical
-- Updated config
+- 🔧 Updated config
 ## [3.26.8] - 2025-11-13
 
 ### Technical
-- Updated config
+- 🔧 Updated config
 ## [3.26.7] - 2025-11-13
 
 ### Technical
-- Updated documentation and config
+- 🔧 Updated documentation and config
 ## [3.26.6] - 2025-11-12
 
 ### Technical
-- Updated documentation and config
+- 🔧 Updated documentation and config
 ## [3.26.5] - 2025-11-12
 
 ### Technical
-- Updated config
+- 🔧 Updated config
 ## [3.26.4] - 2025-11-12
 
 ### Technical
-- Updated config
+- 🔧 Updated config
 ## [3.26.3] - 2025-11-12
 
 ### Technical
-- Updated config
+- 🔧 Updated config
 ## [3.26.2] - 2025-11-12
 
 ### Technical
-- Updated config
+- 🔧 Updated config
 ## [3.26.1] - 2025-11-12
 
 ### Technical
-- Updated config
+- 🔧 Updated config
 ## [3.26.0] - 2025-11-12
 
 ### Added
-- Updated documentation and API and user interface and config
+- ✅ Updated documentation and API and user interface and config
 ## [3.25.0] - 2025-11-12
 
 ### Added
-- Updated documentation and config and user interface
+- ✅ Updated documentation and config and user interface
 ## [3.24.0] - 2025-11-12
 
 ### Added
-- Updated user interface and documentation
+- ✅ Updated user interface and documentation
 ## [3.23.0] - 2025-11-12
 
 ### Added
-- Updated documentation and API and config and user interface
+- ✅ Updated documentation and API and config and user interface
 ## [3.22.0] - 2025-11-12
 
 ### Added
-- Updated API and user interface and documentation
+- ✅ Updated API and user interface and documentation
 ## [3.21.2] - 2025-11-12
 
 ### Technical
-- Updated documentation and config and user interface
+- 🔧 Updated documentation and config and user interface
 ## [3.21.1] - 2025-11-12
 
 ### Technical
-- Platform update
+- 🔧 Platform update
 ## [3.21.0] - 2025-11-12
 
 ### Added
-- Updated API
+- ✅ Updated API
 ## [3.20.0] - 2025-11-12
 
 ### Added
-- Updated documentation and config and user interface
+- ✅ Updated documentation and config and user interface
 ## [3.19.3] - 2025-11-12
 
 ### Technical
-- Platform update
+- 🔧 Platform update
 ## [3.19.2] - 2025-11-12
 
 ### Technical
-- Platform update
+- 🔧 Platform update
 ## [3.19.1] - 2025-11-12
 
 ### Technical
-- Platform update
+- 🔧 Platform update
 ## [3.19.0] - 2025-11-12
 
 ### Added
-- Updated user interface
+- ✅ Updated user interface
 ## [3.18.4] - 2025-11-12
 
 ### Technical
-- Platform update
+- 🔧 Platform update
 ## [3.18.3] - 2025-11-12
 
 ### Technical
-- Platform update
+- 🔧 Platform update
 ## [3.18.2] - 2025-11-12
 
 ### Technical
-- Platform update
+- 🔧 Platform update
 ## [3.18.1] - 2025-11-12
 
 ### Technical
-- Platform update
+- 🔧 Platform update
 ## [3.18.0] - 2025-11-12
 
 ### Added
-- Updated user interface
+- ✅ Updated user interface
 ## [3.17.1] - 2025-11-12
 
 ### Technical
-- Platform update
+- 🔧 Platform update
 ## [3.17.0] - 2025-11-12
 
 ### Added
-- Updated API
+- ✅ Updated API
 ## [3.16.0] - 2025-11-12
 
 ### Added
-- Updated API and user interface
+- ✅ Updated API and user interface
 ## [3.15.0] - 2025-11-12
 
 ### Added
-- Updated API and config and user interface and documentation
+- ✅ Updated API and config and user interface and documentation
 ## [3.14.270] - 2025-11-12
 
 ### Technical
-- Platform update
+- 🔧 Platform update
 ## [3.14.269] - 2025-11-12
 
 ### Technical
-- Platform update
+- 🔧 Platform update
 ## [3.14.268] - 2025-11-12
 
 ### Technical
-- Platform update
+- 🔧 Platform update
 ## [3.14.267] - 2025-11-12
 
 ### Technical
-- 1 file changed; release v3.14.267 [skip ci]
+- 🔧 1 file changed; release v3.14.267 [skip ci]
 
 - M cripts/auto-version.js
 ## [3.14.266] - 2025-11-12
 
 ### Technical
-- bump version to 3.14.265 [skip ci]
+- 🔧 bump version to 3.14.265 [skip ci]
 ## [3.14.265] - 2025-11-12
 
 ### Technical
-- bump version to 3.14.264 [skip ci]
+- 🔧 bump version to 3.14.264 [skip ci]
 ## [3.14.264] - 2025-11-12
 
 ### Technical
-- bump version to 3.14.263 [skip ci]
+- 🔧 bump version to 3.14.263 [skip ci]
 ## [3.14.263] - 2025-11-12
 
 ### Technical
-- bump version to 3.14.262 [skip ci]
+- 🔧 bump version to 3.14.262 [skip ci]
 ## [3.14.262] - 2025-11-12
 
 ### Technical
-- bump version to 3.14.261 [skip ci]
+- 🔧 bump version to 3.14.261 [skip ci]
 ## [3.14.261] - 2025-11-12
 
 ### Technical
-- bump version to 3.14.259 [skip ci]
+- 🔧 bump version to 3.14.259 [skip ci]
 ## [3.14.260] - 2025-11-12
 
 ### Technical
-- bump version to 3.14.259 [skip ci]
+- 🔧 bump version to 3.14.259 [skip ci]
 ## [3.14.259] - 2025-11-12
 
 ### Technical
-- bump version to 3.14.258 [skip ci]
+- 🔧 bump version to 3.14.258 [skip ci]
 ## [3.14.258] - 2025-11-12
 
 ### Technical
-- bump version to 3.14.257 [skip ci]
+- 🔧 bump version to 3.14.257 [skip ci]
 ## [3.14.257] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.255 [skip ci]
+- 🔧 bump version to 3.14.255 [skip ci]
 ## [3.14.256] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.255 [skip ci]
+- 🔧 bump version to 3.14.255 [skip ci]
 ## [3.14.255] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.254 [skip ci]
+- 🔧 bump version to 3.14.254 [skip ci]
 ## [3.14.254] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.253 [skip ci]
+- 🔧 bump version to 3.14.253 [skip ci]
 ## [3.14.253] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.252 [skip ci]
+- 🔧 bump version to 3.14.252 [skip ci]
 ## [3.14.252] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.251 [skip ci]
+- 🔧 bump version to 3.14.251 [skip ci]
 ## [3.14.251] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.250 [skip ci]
+- 🔧 bump version to 3.14.250 [skip ci]
 ## [3.14.250] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.249 [skip ci]
+- 🔧 bump version to 3.14.249 [skip ci]
 ## [3.14.249] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.248 [skip ci]
+- 🔧 bump version to 3.14.248 [skip ci]
 ## [3.14.248] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.247 [skip ci]
+- 🔧 bump version to 3.14.247 [skip ci]
 ## [3.14.247] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.246 [skip ci]
+- 🔧 bump version to 3.14.246 [skip ci]
 ## [3.14.246] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.245 [skip ci]
+- 🔧 bump version to 3.14.245 [skip ci]
 ## [3.14.245] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.244 [skip ci]
+- 🔧 bump version to 3.14.244 [skip ci]
 ## [3.14.244] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.243 [skip ci]
+- 🔧 bump version to 3.14.243 [skip ci]
 ## [3.14.243] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.242 [skip ci]
+- 🔧 bump version to 3.14.242 [skip ci]
 ## [3.14.242] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.241 [skip ci]
+- 🔧 bump version to 3.14.241 [skip ci]
 ## [3.14.241] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.240 [skip ci]
+- 🔧 bump version to 3.14.240 [skip ci]
 ## [3.14.240] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.239 [skip ci]
+- 🔧 bump version to 3.14.239 [skip ci]
 ## [3.14.239] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.238 [skip ci]
+- 🔧 bump version to 3.14.238 [skip ci]
 ## [3.14.238] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.237 [skip ci]
+- 🔧 bump version to 3.14.237 [skip ci]
 ## [3.14.237] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.236 [skip ci]
+- 🔧 bump version to 3.14.236 [skip ci]
 ## [3.14.236] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.233 [skip ci]
+- 🔧 bump version to 3.14.233 [skip ci]
 ## [3.14.235] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.233 [skip ci]
+- 🔧 bump version to 3.14.233 [skip ci]
 ## [3.14.234] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.233 [skip ci]
+- 🔧 bump version to 3.14.233 [skip ci]
 ## [3.14.233] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.232 [skip ci]
+- 🔧 bump version to 3.14.232 [skip ci]
 ## [3.14.232] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.231 [skip ci]
+- 🔧 bump version to 3.14.231 [skip ci]
 ## [3.14.231] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.230 [skip ci]
+- 🔧 bump version to 3.14.230 [skip ci]
 ## [3.14.230] - 2025-11-11
 
 ### Technical
-- bump version to 3.14.229 [skip ci]
+- 🔧 bump version to 3.14.229 [skip ci]
 ## [3.14.229] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.228 [skip ci]
+- 🔧 bump version to 3.14.228 [skip ci]
 ## [3.14.228] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.227 [skip ci]
+- 🔧 bump version to 3.14.227 [skip ci]
 ## [3.14.227] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.226 [skip ci]
+- 🔧 bump version to 3.14.226 [skip ci]
 ## [3.14.226] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.225 [skip ci]
+- 🔧 bump version to 3.14.225 [skip ci]
 ## [3.14.225] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.224 [skip ci]
+- 🔧 bump version to 3.14.224 [skip ci]
 ## [3.14.224] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.222 [skip ci]
+- 🔧 bump version to 3.14.222 [skip ci]
 ## [3.14.223] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.222 [skip ci]
+- 🔧 bump version to 3.14.222 [skip ci]
 ## [3.14.222] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.221 [skip ci]
+- 🔧 bump version to 3.14.221 [skip ci]
 ## [3.14.221] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.220 [skip ci]
+- 🔧 bump version to 3.14.220 [skip ci]
 ## [3.14.220] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.219 [skip ci]
+- 🔧 bump version to 3.14.219 [skip ci]
 ## [3.14.219] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.218 [skip ci]
+- 🔧 bump version to 3.14.218 [skip ci]
 ## [3.14.218] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.217 [skip ci]
+- 🔧 bump version to 3.14.217 [skip ci]
 ## [3.14.217] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.216 [skip ci]
+- 🔧 bump version to 3.14.216 [skip ci]
 ## [3.14.216] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.215 [skip ci]
+- 🔧 bump version to 3.14.215 [skip ci]
 ## [3.14.215] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.214 [skip ci]
+- 🔧 bump version to 3.14.214 [skip ci]
 ## [3.14.214] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.213 [skip ci]
+- 🔧 bump version to 3.14.213 [skip ci]
 ## [3.14.213] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.212 [skip ci]
+- 🔧 bump version to 3.14.212 [skip ci]
 ## [3.14.212] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.211 [skip ci]
+- 🔧 bump version to 3.14.211 [skip ci]
 ## [3.14.211] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.210 [skip ci]
+- 🔧 bump version to 3.14.210 [skip ci]
 ## [3.14.210] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.209 [skip ci]
+- 🔧 bump version to 3.14.209 [skip ci]
 ## [3.14.209] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.208 [skip ci]
+- 🔧 bump version to 3.14.208 [skip ci]
 ## [3.14.208] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.207 [skip ci]
+- 🔧 bump version to 3.14.207 [skip ci]
 ## [3.14.207] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.206 [skip ci]
+- 🔧 bump version to 3.14.206 [skip ci]
 ## [3.14.206] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.204 [skip ci]
+- 🔧 bump version to 3.14.204 [skip ci]
 ## [3.14.205] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.204 [skip ci]
+- 🔧 bump version to 3.14.204 [skip ci]
 ## [3.14.204] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.203 [skip ci]
+- 🔧 bump version to 3.14.203 [skip ci]
 ## [3.14.203] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.202 [skip ci]
+- 🔧 bump version to 3.14.202 [skip ci]
 ## [3.14.202] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.200 [skip ci]
+- 🔧 bump version to 3.14.200 [skip ci]
 ## [3.14.201] - 2025-11-10
 
 ### Technical
-- bump version to 3.14.200 [skip ci]
+- 🔧 bump version to 3.14.200 [skip ci]
 ## [3.14.200] - 2025-11-09
 
 ### Technical
-- bump version to 3.14.199 [skip ci]
+- 🔧 bump version to 3.14.199 [skip ci]
 ## [3.14.199] - 2025-11-09
 
 ### Technical
-- bump version to 3.14.198 [skip ci]
+- 🔧 bump version to 3.14.198 [skip ci]
 ## [3.14.198] - 2025-11-09
 
 ### Technical
-- bump version to 3.14.197 [skip ci]
+- 🔧 bump version to 3.14.197 [skip ci]
 ## [3.14.197] - 2025-11-09
 
 ### Technical
-- bump version to 3.14.196 [skip ci]
+- 🔧 bump version to 3.14.196 [skip ci]
 ## [3.14.196] - 2025-11-09
 
 ### Technical
-- bump version to 3.14.194 [skip ci]
+- 🔧 bump version to 3.14.194 [skip ci]
 ## [3.14.195] - 2025-11-09
 
 ### Technical
-- bump version to 3.14.194 [skip ci]
+- 🔧 bump version to 3.14.194 [skip ci]
 ## [3.14.194] - 2025-11-09
 
 ### Technical
-- bump version to 3.14.193 [skip ci]
+- 🔧 bump version to 3.14.193 [skip ci]
 ## [3.14.193] - 2025-11-09
 
 ### Technical
-- bump version to 3.14.192 [skip ci]
+- 🔧 bump version to 3.14.192 [skip ci]
 ## [3.14.192] - 2025-11-09
 
 ### Technical
-- bump version to 3.14.191 [skip ci]
+- 🔧 bump version to 3.14.191 [skip ci]
 ## [3.14.191] - 2025-11-09
 
 ### Technical
-- bump version to 3.14.190 [skip ci]
+- 🔧 bump version to 3.14.190 [skip ci]
 ## [3.14.190] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.189 [skip ci]
+- 🔧 bump version to 3.14.189 [skip ci]
 ## [3.14.189] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.188 [skip ci]
+- 🔧 bump version to 3.14.188 [skip ci]
 ## [3.14.188] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.187 [skip ci]
+- 🔧 bump version to 3.14.187 [skip ci]
 ## [3.14.187] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.186 [skip ci]
+- 🔧 bump version to 3.14.186 [skip ci]
 ## [3.14.186] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.185 [skip ci]
+- 🔧 bump version to 3.14.185 [skip ci]
 ## [3.14.185] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.184 [skip ci]
+- 🔧 bump version to 3.14.184 [skip ci]
 ## [3.14.184] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.183 [skip ci]
+- 🔧 bump version to 3.14.183 [skip ci]
 ## [3.14.183] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.182 [skip ci]
+- 🔧 bump version to 3.14.182 [skip ci]
 ## [3.14.182] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.181 [skip ci]
+- 🔧 bump version to 3.14.181 [skip ci]
 ## [3.14.181] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.180 [skip ci]
+- 🔧 bump version to 3.14.180 [skip ci]
 ## [3.14.180] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.179 [skip ci]
+- 🔧 bump version to 3.14.179 [skip ci]
 ## [3.14.179] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.178 [skip ci]
+- 🔧 bump version to 3.14.178 [skip ci]
 ## [3.14.178] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.177 [skip ci]
+- 🔧 bump version to 3.14.177 [skip ci]
 ## [3.14.177] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.176 [skip ci]
+- 🔧 bump version to 3.14.176 [skip ci]
 ## [3.14.176] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.175 [skip ci]
+- 🔧 bump version to 3.14.175 [skip ci]
 ## [3.14.175] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.173 [skip ci]
+- 🔧 bump version to 3.14.173 [skip ci]
 ## [3.14.174] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.173 [skip ci]
+- 🔧 bump version to 3.14.173 [skip ci]
 ## [3.14.173] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.172 [skip ci]
+- 🔧 bump version to 3.14.172 [skip ci]
 ## [3.14.172] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.171 [skip ci]
+- 🔧 bump version to 3.14.171 [skip ci]
 ## [3.14.171] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.170 [skip ci]
+- 🔧 bump version to 3.14.170 [skip ci]
 ## [3.14.170] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.169 [skip ci]
+- 🔧 bump version to 3.14.169 [skip ci]
 ## [3.14.169] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.168 [skip ci]
+- 🔧 bump version to 3.14.168 [skip ci]
 ## [3.14.168] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.167 [skip ci]
+- 🔧 bump version to 3.14.167 [skip ci]
 ## [3.14.167] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.166 [skip ci]
+- 🔧 bump version to 3.14.166 [skip ci]
 ## [3.14.166] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.165 [skip ci]
+- 🔧 bump version to 3.14.165 [skip ci]
 ## [3.14.165] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.164 [skip ci]
+- 🔧 bump version to 3.14.164 [skip ci]
 ## [3.14.164] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.163 [skip ci]
+- 🔧 bump version to 3.14.163 [skip ci]
 ## [3.14.163] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.162 [skip ci]
+- 🔧 bump version to 3.14.162 [skip ci]
 ## [3.14.162] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.161 [skip ci]
+- 🔧 bump version to 3.14.161 [skip ci]
 ## [3.14.161] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.160 [skip ci]
+- 🔧 bump version to 3.14.160 [skip ci]
 ## [3.14.160] - 2025-11-08
 
 ### Technical
-- bump version to 3.14.159 [skip ci]
+- 🔧 bump version to 3.14.159 [skip ci]
 ## [3.14.159] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.158 [skip ci]
+- 🔧 bump version to 3.14.158 [skip ci]
 ## [3.14.158] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.157 [skip ci]
+- 🔧 bump version to 3.14.157 [skip ci]
 ## [3.14.157] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.155 [skip ci]
+- 🔧 bump version to 3.14.155 [skip ci]
 ## [3.14.156] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.155 [skip ci]
+- 🔧 bump version to 3.14.155 [skip ci]
 ## [3.14.155] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.154 [skip ci]
+- 🔧 bump version to 3.14.154 [skip ci]
 ## [3.14.154] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.153 [skip ci]
+- 🔧 bump version to 3.14.153 [skip ci]
 ## [3.14.153] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.152 [skip ci]
+- 🔧 bump version to 3.14.152 [skip ci]
 ## [3.14.152] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.151 [skip ci]
+- 🔧 bump version to 3.14.151 [skip ci]
 ## [3.14.151] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.149 [skip ci]
+- 🔧 bump version to 3.14.149 [skip ci]
 ## [3.14.150] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.149 [skip ci]
+- 🔧 bump version to 3.14.149 [skip ci]
 ## [3.14.149] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.148 [skip ci]
+- 🔧 bump version to 3.14.148 [skip ci]
 ## [3.14.148] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.147 [skip ci]
+- 🔧 bump version to 3.14.147 [skip ci]
 ## [3.14.147] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.146 [skip ci]
+- 🔧 bump version to 3.14.146 [skip ci]
 ## [3.14.146] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.145 [skip ci]
+- 🔧 bump version to 3.14.145 [skip ci]
 ## [3.14.145] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.144 [skip ci]
+- 🔧 bump version to 3.14.144 [skip ci]
 ## [3.14.144] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.143 [skip ci]
+- 🔧 bump version to 3.14.143 [skip ci]
 ## [3.14.143] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.141 [skip ci]
+- 🔧 bump version to 3.14.141 [skip ci]
 ## [3.14.142] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.141 [skip ci]
+- 🔧 bump version to 3.14.141 [skip ci]
 ## [3.14.141] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.137 [skip ci]
+- 🔧 bump version to 3.14.137 [skip ci]
 ## [3.14.140] - 2025-11-07
 
 ### Technical
-- bump version to 3.14.137 [skip ci]
+- 🔧 bump version to 3.14.137 [skip ci]
 ## [3.14.139] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.137 [skip ci]
+- 🔧 bump version to 3.14.137 [skip ci]
 ## [3.14.138] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.137 [skip ci]
+- 🔧 bump version to 3.14.137 [skip ci]
 ## [3.14.137] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.136 [skip ci]
+- 🔧 bump version to 3.14.136 [skip ci]
 ## [3.14.136] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.135 [skip ci]
+- 🔧 bump version to 3.14.135 [skip ci]
 ## [3.14.135] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.134 [skip ci]
+- 🔧 bump version to 3.14.134 [skip ci]
 ## [3.14.134] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.133 [skip ci]
+- 🔧 bump version to 3.14.133 [skip ci]
 ## [3.14.133] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.132 [skip ci]
+- 🔧 bump version to 3.14.132 [skip ci]
 ## [3.14.132] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.131 [skip ci]
+- 🔧 bump version to 3.14.131 [skip ci]
 ## [3.14.131] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.130 [skip ci]
+- 🔧 bump version to 3.14.130 [skip ci]
 ## [3.14.130] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.129 [skip ci]
+- 🔧 bump version to 3.14.129 [skip ci]
 ## [3.14.129] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.128 [skip ci]
+- 🔧 bump version to 3.14.128 [skip ci]
 ## [3.14.128] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.127 [skip ci]
+- 🔧 bump version to 3.14.127 [skip ci]
 ## [3.14.127] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.126 [skip ci]
+- 🔧 bump version to 3.14.126 [skip ci]
 ## [3.14.126] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.125 [skip ci]
+- 🔧 bump version to 3.14.125 [skip ci]
 ## [3.14.125] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.124 [skip ci]
+- 🔧 bump version to 3.14.124 [skip ci]
 ## [3.14.124] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.123 [skip ci]
+- 🔧 bump version to 3.14.123 [skip ci]
 ## [3.14.123] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.122 [skip ci]
+- 🔧 bump version to 3.14.122 [skip ci]
 ## [3.14.122] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.121 [skip ci]
+- 🔧 bump version to 3.14.121 [skip ci]
 ## [3.14.121] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.120 [skip ci]
+- 🔧 bump version to 3.14.120 [skip ci]
 ## [3.14.120] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.119 [skip ci]
+- 🔧 bump version to 3.14.119 [skip ci]
 ## [3.14.119] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.118 [skip ci]
+- 🔧 bump version to 3.14.118 [skip ci]
 ## [3.14.118] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.117 [skip ci]
+- 🔧 bump version to 3.14.117 [skip ci]
 ## [3.14.117] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.116 [skip ci]
+- 🔧 bump version to 3.14.116 [skip ci]
 ## [3.14.116] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.115 [skip ci]
+- 🔧 bump version to 3.14.115 [skip ci]
 ## [3.14.115] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.114 [skip ci]
+- 🔧 bump version to 3.14.114 [skip ci]
 ## [3.14.114] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.113 [skip ci]
+- 🔧 bump version to 3.14.113 [skip ci]
 ## [3.14.113] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.112 [skip ci]
+- 🔧 bump version to 3.14.112 [skip ci]
 ## [3.14.112] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.111 [skip ci]
+- 🔧 bump version to 3.14.111 [skip ci]
 ## [3.14.111] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.110 [skip ci]
+- 🔧 bump version to 3.14.110 [skip ci]
 ## [3.14.110] - 2025-11-06
 
 ### Technical
-- bump version to 3.14.109 [skip ci]
+- 🔧 bump version to 3.14.109 [skip ci]
 ## [3.14.109] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.108 [skip ci]
+- 🔧 bump version to 3.14.108 [skip ci]
 ## [3.14.108] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.107 [skip ci]
+- 🔧 bump version to 3.14.107 [skip ci]
 ## [3.14.107] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.106 [skip ci]
+- 🔧 bump version to 3.14.106 [skip ci]
 ## [3.14.106] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.104 [skip ci]
+- 🔧 bump version to 3.14.104 [skip ci]
 ## [3.14.105] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.104 [skip ci]
+- 🔧 bump version to 3.14.104 [skip ci]
 ## [3.14.104] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.103 [skip ci]
+- 🔧 bump version to 3.14.103 [skip ci]
 ## [3.14.103] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.102 [skip ci]
+- 🔧 bump version to 3.14.102 [skip ci]
 ## [3.14.102] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.101 [skip ci]
+- 🔧 bump version to 3.14.101 [skip ci]
 ## [3.14.101] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.100 [skip ci]
+- 🔧 bump version to 3.14.100 [skip ci]
 ## [3.14.100] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.99 [skip ci]
+- 🔧 bump version to 3.14.99 [skip ci]
 ## [3.14.99] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.98 [skip ci]
+- 🔧 bump version to 3.14.98 [skip ci]
 ## [3.14.98] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.97 [skip ci]
+- 🔧 bump version to 3.14.97 [skip ci]
 ## [3.14.97] - 2025-11-05
 
 ### Added
@@ -4143,1650 +4324,643 @@ Closes query configuration technical debt initiative.
 ## [3.14.96] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.95 [skip ci]
+- 🔧 bump version to 3.14.95 [skip ci]
 ## [3.14.95] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.94 [skip ci]
+- 🔧 bump version to 3.14.94 [skip ci]
 ## [3.14.94] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.93 [skip ci]
+- 🔧 bump version to 3.14.93 [skip ci]
 ## [3.14.93] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.92 [skip ci]
+- 🔧 bump version to 3.14.92 [skip ci]
 ## [3.14.92] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.91 [skip ci]
+- 🔧 bump version to 3.14.91 [skip ci]
 ## [3.14.91] - 2025-11-05
 
 ### Technical
-- bump version to 3.14.90 [skip ci]
+- 🔧 bump version to 3.14.90 [skip ci]
 ## [3.14.90] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.88 [skip ci]
+- 🔧 bump version to 3.14.88 [skip ci]
 ## [3.14.89] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.88 [skip ci]
+- 🔧 bump version to 3.14.88 [skip ci]
 ## [3.14.88] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.87 [skip ci]
+- 🔧 bump version to 3.14.87 [skip ci]
 ## [3.14.87] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.86 [skip ci]
+- 🔧 bump version to 3.14.86 [skip ci]
 ## [3.14.86] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.85 [skip ci]
+- 🔧 bump version to 3.14.85 [skip ci]
 ## [3.14.85] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.84 [skip ci]
+- 🔧 bump version to 3.14.84 [skip ci]
 ## [3.14.84] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.83 [skip ci]
+- 🔧 bump version to 3.14.83 [skip ci]
 ## [3.14.83] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.82 [skip ci]
+- 🔧 bump version to 3.14.82 [skip ci]
 ## [3.14.82] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.81 [skip ci]
+- 🔧 bump version to 3.14.81 [skip ci]
 ## [3.14.81] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.80 [skip ci]
+- 🔧 bump version to 3.14.80 [skip ci]
 ## [3.14.80] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.79 [skip ci]
+- 🔧 bump version to 3.14.79 [skip ci]
 ## [3.14.79] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.77 [skip ci]
+- 🔧 bump version to 3.14.77 [skip ci]
 ## [3.14.78] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.77 [skip ci]
+- 🔧 bump version to 3.14.77 [skip ci]
 ## [3.14.77] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.76 [skip ci]
+- 🔧 bump version to 3.14.76 [skip ci]
 ## [3.14.76] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.75 [skip ci]
+- 🔧 bump version to 3.14.75 [skip ci]
 ## [3.14.75] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.74 [skip ci]
+- 🔧 bump version to 3.14.74 [skip ci]
 ## [3.14.74] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.73 [skip ci]
+- 🔧 bump version to 3.14.73 [skip ci]
 ## [3.14.73] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.72 [skip ci]
+- 🔧 bump version to 3.14.72 [skip ci]
 ## [3.14.72] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.71 [skip ci]
+- 🔧 bump version to 3.14.71 [skip ci]
 ## [3.14.71] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.70 [skip ci]
+- 🔧 bump version to 3.14.70 [skip ci]
 ## [3.14.70] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.69 [skip ci]
+- 🔧 bump version to 3.14.69 [skip ci]
 ## [3.14.69] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.68 [skip ci]
+- 🔧 bump version to 3.14.68 [skip ci]
 ## [3.14.68] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.67 [skip ci]
+- 🔧 bump version to 3.14.67 [skip ci]
 ## [3.14.67] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.64 [skip ci]
+- 🔧 bump version to 3.14.64 [skip ci]
 ## [3.14.66] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.64 [skip ci]
+- 🔧 bump version to 3.14.64 [skip ci]
 ## [3.14.65] - 2025-11-04
 
 ### Technical
-- bump version to 3.14.64 [skip ci]
+- 🔧 bump version to 3.14.64 [skip ci]
 ## [3.14.64] - 2025-10-16
 
-### Technical
-- fix(validation): narrow command-injection patterns; feat(devops): align Sentry SDK usage and remove dev Sentry test; fix(auth): login email validation and deploy
+### 🔧 Technical
+- 🔧 fix(validation): narrow command-injection patterns; feat(devops): align Sentry SDK usage and remove dev Sentry test; fix(auth): login email validation and deploy
 ## [3.14.63] - 2025-09-15
 
 ### Fixed
-- set to use production workers api even for local dev
+- 🐛 set to use production workers api even for local dev
 ## [3.14.62] - 2025-09-14
 
 ### Fixed
-- workers api update
+- 🐛 workers api update
 ## [3.14.61] - 2025-09-14
 
 ### Technical
-- bump version to 3.14.59 [skip ci]
+- 🔧 bump version to 3.14.59 [skip ci]
 ## [3.14.60] - 2025-09-14
 
 ### Technical
-- bump version to 3.14.59 [skip ci]
+- 🔧 bump version to 3.14.59 [skip ci]
 ## [3.14.59] - 2025-09-14
 
 ### Technical
-- bump version to 3.14.58 [skip ci]
+- 🔧 bump version to 3.14.58 [skip ci]
 ## [3.14.58] - 2025-09-14
 
 ### Fixed
-- resolved issues with superuser dashboard components
+- 🐛 resolved issues with superuser dashboard components
 ## [3.14.57] - 2025-09-14
 
 ### Technical
-- bump version to 3.14.56 [skip ci]
+- 🔧 bump version to 3.14.56 [skip ci]
 ## [3.14.56] - 2025-09-14
 
 ### Technical
-- bump version to 3.14.55 [skip ci]
+- 🔧 bump version to 3.14.55 [skip ci]
 ## [3.14.55] - 2025-09-13
 
 ### Fixed
-- resolved issues with feature-flag and login issue
+- 🐛 resolved issues with feature-flag and login issue
 ## [3.14.54] - 2025-09-11
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.53] - 2025-09-02
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.52] - 2025-09-02
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.51] - 2025-09-02
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.50] - 2025-09-02
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.49] - 2025-09-02
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.48] - 2025-09-02
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.47] - 2025-09-02
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.46] - 2025-09-02
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.45] - 2025-09-02
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.44] - 2025-09-02
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.43] - 2025-09-01
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.42] - 2025-08-31
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.41] - 2025-08-31
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.40] - 2025-08-31
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.39] - 2025-08-31
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.38] - 2025-08-31
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.37] - 2025-08-31
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.36] - 2025-08-31
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.35] - 2025-08-31
 
 ### Technical
-- bump version to 3.14.34 [skip ci]
+- 🔧 bump version to 3.14.34 [skip ci]
 ## [3.14.34] - 2025-08-28
 
 ### Fixed
-- issues with Workers compatibility
+- 🐛 issues with Workers compatibility
 ## [3.14.33] - 2025-08-22
 
 ### Technical
-- bump version to 3.14.32 [skip ci]
+- 🔧 bump version to 3.14.32 [skip ci]
 ## [3.14.32] - 2025-08-22
 
 ### Technical
-- bump version to 3.14.31 [skip ci]
+- 🔧 bump version to 3.14.31 [skip ci]
 ## [3.14.31] - 2025-08-21
 
 ### Technical
-- bump version to 3.14.30 [skip ci]
+- 🔧 bump version to 3.14.30 [skip ci]
 ## [3.14.30] - 2025-08-21
 
-### Technical
-- Update all readme files according to their features
+### 🔧 Technical
+- 🔧 Update all readme files according to their features
 ## [3.14.29] - 2025-08-21
 
 ### Technical
-- bump version to 3.14.28 [skip ci]
+- 🔧 bump version to 3.14.28 [skip ci]
 ## [3.14.28] - 2025-08-21
 
 ### Technical
-- bump version to 3.14.27 [skip ci]
+- 🔧 bump version to 3.14.27 [skip ci]
 ## [3.14.27] - 2025-08-21
 
 ### Technical
-- bump version to 3.14.25 [skip ci]
+- 🔧 bump version to 3.14.25 [skip ci]
 ## [3.14.26] - 2025-08-21
 
 ### Technical
-- bump version to 3.14.25 [skip ci]
+- 🔧 bump version to 3.14.25 [skip ci]
 ## [3.14.25] - 2025-08-21
 
 ### Technical
-- bump version to 3.14.24 [skip ci]
+- 🔧 bump version to 3.14.24 [skip ci]
 ## [3.14.24] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.23 [skip ci]
+- 🔧 bump version to 3.14.23 [skip ci]
 ## [3.14.23] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.22 [skip ci]
+- 🔧 bump version to 3.14.22 [skip ci]
 ## [3.14.22] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.21 [skip ci]
+- 🔧 bump version to 3.14.21 [skip ci]
 ## [3.14.21] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.20 [skip ci]
+- 🔧 bump version to 3.14.20 [skip ci]
 ## [3.14.20] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.19 [skip ci]
+- 🔧 bump version to 3.14.19 [skip ci]
 ## [3.14.19] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.18 [skip ci]
+- 🔧 bump version to 3.14.18 [skip ci]
 ## [3.14.18] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.17 [skip ci]
+- 🔧 bump version to 3.14.17 [skip ci]
 ## [3.14.17] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.16 [skip ci]
+- 🔧 bump version to 3.14.16 [skip ci]
 ## [3.14.16] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.15 [skip ci]
+- 🔧 bump version to 3.14.15 [skip ci]
 ## [3.14.15] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.14 [skip ci]
+- 🔧 bump version to 3.14.14 [skip ci]
 ## [3.14.14] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.13 [skip ci]
+- 🔧 bump version to 3.14.13 [skip ci]
 ## [3.14.13] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.12 [skip ci]
+- 🔧 bump version to 3.14.12 [skip ci]
 ## [3.14.12] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.11 [skip ci]
+- 🔧 bump version to 3.14.11 [skip ci]
 ## [3.14.11] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.10 [skip ci]
+- 🔧 bump version to 3.14.10 [skip ci]
 ## [3.14.10] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.9 [skip ci]
+- 🔧 bump version to 3.14.9 [skip ci]
 ## [3.14.9] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.8 [skip ci]
+- 🔧 bump version to 3.14.8 [skip ci]
 ## [3.14.8] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.7 [skip ci]
+- 🔧 bump version to 3.14.7 [skip ci]
 ## [3.14.7] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.6 [skip ci]
+- 🔧 bump version to 3.14.6 [skip ci]
 ## [3.14.6] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.5 [skip ci]
+- 🔧 bump version to 3.14.5 [skip ci]
 ## [3.14.5] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.4 [skip ci]
+- 🔧 bump version to 3.14.4 [skip ci]
 ## [3.14.4] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.2 [skip ci]
+- 🔧 bump version to 3.14.2 [skip ci]
 ## [3.14.3] - 2025-08-20
 
 ### Technical
-- bump version to 3.14.2 [skip ci]
+- 🔧 bump version to 3.14.2 [skip ci]
 ## [3.14.2] - 2025-08-19
 
 ### Fixed
-- continue to fix login related errors
+- 🐛 continue to fix login related errors
 ## [3.14.1] - 2025-08-19
 
 ### Fixed
-- 409 error
+- 🐛 409 error
 ## [3.14.0] - 2025-08-19
 
 ### Added
-- test version display system
+- ✅ test version display system
 ## [3.13.20] - 2025-08-19
 
 ### Technical
-- fixed version
+- 🔧 fixed version
 ## [3.13.32] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.30 [skip ci]
+- 🔧 bump version to 3.13.30 [skip ci]
 ## [3.13.31] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.29 [skip ci]
+- 🔧 bump version to 3.13.29 [skip ci]
 ## [3.13.30] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.28 [skip ci]
+- 🔧 bump version to 3.13.28 [skip ci]
 ## [3.13.29] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.27 [skip ci]
+- 🔧 bump version to 3.13.27 [skip ci]
 ## [3.13.28] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.26 [skip ci]
+- 🔧 bump version to 3.13.26 [skip ci]
 ## [3.13.27] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.25 [skip ci]
+- 🔧 bump version to 3.13.25 [skip ci]
 ## [3.13.26] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.24 [skip ci]
+- 🔧 bump version to 3.13.24 [skip ci]
 ## [3.13.25] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.23 [skip ci]
+- 🔧 bump version to 3.13.23 [skip ci]
 ## [3.13.24] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.22 [skip ci]
+- 🔧 bump version to 3.13.22 [skip ci]
 ## [3.13.23] - 2025-08-19
 
 ### Technical
-- automated version bump to 3.13.20
+- 🔧 automated version bump to 3.13.20
 ## [3.13.22] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.21 [skip ci]
+- 🔧 bump version to 3.13.21 [skip ci]
 ## [3.13.21] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.20 [skip ci]
+- 🔧 bump version to 3.13.20 [skip ci]
 ## [3.13.20] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.39 [skip ci]
+- 🔧 bump version to 3.13.39 [skip ci]
 ## [3.13.39] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.38 [skip ci]
+- 🔧 bump version to 3.13.38 [skip ci]
 ## [3.13.38] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.37 [skip ci]
+- 🔧 bump version to 3.13.37 [skip ci]
 ## [3.13.37] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.36 [skip ci]
+- 🔧 bump version to 3.13.36 [skip ci]
 ## [3.13.36] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.35 [skip ci]
+- 🔧 bump version to 3.13.35 [skip ci]
 ## [3.13.35] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.34 [skip ci]
+- 🔧 bump version to 3.13.34 [skip ci]
 ## [3.13.34] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.33 [skip ci]
+- 🔧 bump version to 3.13.33 [skip ci]
 ## [3.13.33] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.32 [skip ci]
+- 🔧 bump version to 3.13.32 [skip ci]
 ## [3.13.32] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.31 [skip ci]
+- 🔧 bump version to 3.13.31 [skip ci]
 ## [3.13.31] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.30 [skip ci]
+- 🔧 bump version to 3.13.30 [skip ci]
 ## [3.13.30] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.29 [skip ci]
+- 🔧 bump version to 3.13.29 [skip ci]
 ## [3.13.29] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.28 [skip ci]
+- 🔧 bump version to 3.13.28 [skip ci]
 ## [3.13.28] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.27 [skip ci]
+- 🔧 bump version to 3.13.27 [skip ci]
 ## [3.13.27] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.26 [skip ci]
+- 🔧 bump version to 3.13.26 [skip ci]
 ## [3.13.26] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.25 [skip ci]
+- 🔧 bump version to 3.13.25 [skip ci]
 ## [3.13.25] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.24 [skip ci]
+- 🔧 bump version to 3.13.24 [skip ci]
 ## [3.13.24] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.23 [skip ci]
+- 🔧 bump version to 3.13.23 [skip ci]
 ## [3.13.23] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.22 [skip ci]
+- 🔧 bump version to 3.13.22 [skip ci]
 ## [3.13.22] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.21 [skip ci]
+- 🔧 bump version to 3.13.21 [skip ci]
 ## [3.13.21] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.20 [skip ci]
+- 🔧 bump version to 3.13.20 [skip ci]
 ## [3.13.20] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.32 [skip ci]
+- 🔧 bump version to 3.13.32 [skip ci]
 ## [3.13.32] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.31 [skip ci]
+- 🔧 bump version to 3.13.31 [skip ci]
 ## [3.13.31] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.30 [skip ci]
+- 🔧 bump version to 3.13.30 [skip ci]
 ## [3.13.30] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.29 [skip ci]
+- 🔧 bump version to 3.13.29 [skip ci]
 ## [3.13.29] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.28 [skip ci]
+- 🔧 bump version to 3.13.28 [skip ci]
 ## [3.13.28] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.27 [skip ci]
+- 🔧 bump version to 3.13.27 [skip ci]
 ## [3.13.27] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.26 [skip ci]
+- 🔧 bump version to 3.13.26 [skip ci]
 ## [3.13.26] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.25 [skip ci]
+- 🔧 bump version to 3.13.25 [skip ci]
 ## [3.13.25] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.24 [skip ci]
+- 🔧 bump version to 3.13.24 [skip ci]
 ## [3.13.24] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.23 [skip ci]
+- 🔧 bump version to 3.13.23 [skip ci]
 ## [3.13.23] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.22 [skip ci]
+- 🔧 bump version to 3.13.22 [skip ci]
 ## [3.13.22] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.21 [skip ci]
+- 🔧 bump version to 3.13.21 [skip ci]
 ## [3.13.21] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.20 [skip ci]
+- 🔧 bump version to 3.13.20 [skip ci]
 ## [3.13.20] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.22 [skip ci]
+- 🔧 bump version to 3.13.22 [skip ci]
 ## [3.13.22] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.21 [skip ci]
+- 🔧 bump version to 3.13.21 [skip ci]
 ## [3.13.21] - 2025-08-19
 
 ### Technical
-- bump version to 3.13.20 [skip ci]
+- 🔧 bump version to 3.13.20 [skip ci]
 ## [3.13.20] - 2025-08-19
 
-### Technical
-- chore(release): 3.13.19 [skip ci]
+### 🔧 Technical
+- 🔧 chore(release): 3.13.19 [skip ci]
 ## [3.13.19] - 2025-08-19
 
 ### Changed
-- Migrated from Cloudflare Pages to Workers Static Assets
-- Unified deployment: single `npm run deploy` command
-- Removed GitHub Actions deployment automation
-- Simplified development workflow to local-only deployment
+- ✅ Migrated from Cloudflare Pages to Workers Static Assets
+- ✅ Unified deployment: single `npm run deploy` command
+- ✅ Removed GitHub Actions deployment automation
+- ✅ Simplified development workflow to local-only deployment
 
 ### Removed
-- Semantic-release automation
-- GitHub Actions workflows
-- Automatic changelog generation
+- ❌ Semantic-release automation
+- ❌ GitHub Actions workflows
+- ❌ Automatic changelog generation
 
 ### Technical
-- Updated wrangler.toml with static assets configuration
-- Added ASSETS binding for unified Worker deployment
-- Cleaned up package.json dependencies
+- 🔧 Updated wrangler.toml with static assets configuration
+- 🔧 Added ASSETS binding for unified Worker deployment
+- 🔧 Cleaned up package.json dependencies
 
+---
 
-### [v3.13.18] (2025-08-19)
+## Template for Future Releases
 
-* chore(release): 3.13.18 [skip ci] ([d862cd4d](https://github.com/neil-jay/sjrslms/commit/d862cd4d3b3a61344013c231a24645c6d28eafb9))
-* fix: working on automatic clear session issue ([bdf94c01](https://github.com/neil-jay/sjrslms/commit/bdf94c0198f125b1fac0854fcdd2996e87209846))
+```markdown
+## [VERSION] - YYYY-MM-DD
 
+### Added
+- ✅ New features
 
-### [v3.13.17] (2025-08-19)
+### Changed
+- 🔄 Modified functionality
 
-* chore(release): 3.13.17 [skip ci] ([d4dc082a](https://github.com/neil-jay/sjrslms/commit/d4dc082a17bc5b69fe3bd5630568441dcc4407cd))
-* fix: session expiry automatically ([94c4a303](https://github.com/neil-jay/sjrslms/commit/94c4a30395103743725177736c03ed3b7818a861))
+### Fixed
+- 🐛 Bug fixes
 
+### Removed
+- ❌ Removed features
 
-### [v3.13.16] (2025-08-19)
+### Technical
+- 🔧 Infrastructure changes
+- 📦 Dependency updates
+- 🛡️ Security improvements
+```
 
-* chore(release): 3.13.16 [skip ci] ([86c8d890](https://github.com/neil-jay/sjrslms/commit/86c8d89050bd9463d49602fe6271cdbd55bb5260))
-* fix: requestforcelogout logic ([1f1ad7f0](https://github.com/neil-jay/sjrslms/commit/1f1ad7f01022ef39dfed78c5c16e1356185350e6))
+---
 
+## How to Update This File
 
-### [v3.13.15] (2025-08-19)
-
-* chore(release): 3.13.15 [skip ci] ([68b7d2eb](https://github.com/neil-jay/sjrslms/commit/68b7d2eb728c4d567c9b2eab9ea110a7132d8a5a))
-* fix: issues with permission ([4288b632](https://github.com/neil-jay/sjrslms/commit/4288b6320e5c9d011a9b012587febfe5344298b4))
-
-
-### [v3.13.14] (2025-08-19)
-
-* chore(release): 3.13.14 [skip ci] ([81ea7455](https://github.com/neil-jay/sjrslms/commit/81ea745567ef79af4f2ba27395d7c02611b1b47d))
-* fix: issues with session creation ([cd7e7784](https://github.com/neil-jay/sjrslms/commit/cd7e7784c67e764fd1a31fd600bf0c343518ab34))
-
-
-### [v3.13.13] (2025-08-19)
-
-* chore(release): 3.13.13 [skip ci] ([a9dd95b0](https://github.com/neil-jay/sjrslms/commit/a9dd95b073b9db2a86bb295edd607802bd3d54ff))
-* fix: issues with active login ([a28dceb2](https://github.com/neil-jay/sjrslms/commit/a28dceb29a37cf61fe3d8e36b5fc850f935e46c9))
-
-
-### [v3.13.12] (2025-08-19)
-
-* chore(release): 3.13.12 [skip ci] ([a1042c80](https://github.com/neil-jay/sjrslms/commit/a1042c80a535b3e63387db2271ee967529591893))
-* fix: remove last_login column query ([efa4ea7c](https://github.com/neil-jay/sjrslms/commit/efa4ea7c0b17a02fe55d0cbd099699d9a9d996f8))
-
-
-### [v3.13.11] (2025-08-18)
-
-* chore(release): 3.13.11 [skip ci] ([fcfacf90](https://github.com/neil-jay/sjrslms/commit/fcfacf90e8b15f9e6575e5706a247fe3341697e0))
-* fix: issues with login ([992dda73](https://github.com/neil-jay/sjrslms/commit/992dda730862177ac834e1b647505344e954fa70))
-
-
-### [v3.13.10] (2025-08-18)
-
-* chore(release): 3.13.10 [skip ci] ([49e93a7f](https://github.com/neil-jay/sjrslms/commit/49e93a7f1484e52a26220bd64205a45baff9ee21))
-* fix: issues with email delivery ([3e1f1acf](https://github.com/neil-jay/sjrslms/commit/3e1f1acf1b663ff51d8c7e56d5cfb869e57468e3))
-
-
-### [v3.13.9] (2025-08-18)
-
-* chore(release): 3.13.9 [skip ci] ([a08ac21d](https://github.com/neil-jay/sjrslms/commit/a08ac21dbd81f72e1149c986b072f40ab3e19086))
-* fix: typescript errors ([1bf09393](https://github.com/neil-jay/sjrslms/commit/1bf0939323b0f7caf50226ae17337cb13fe42556))
-
-
-### [v3.13.8] (2025-08-18)
-
-* chore(release): 3.13.8 [skip ci] ([13e4dff8](https://github.com/neil-jay/sjrslms/commit/13e4dff88de5138b2bd2be62f57efbd9d66b22c5))
-* fix: issues with login ([f404b00c](https://github.com/neil-jay/sjrslms/commit/f404b00c794453d81161853baf20ccd736421a28))
-* fix: issues with email confirmation ([168ad5fb](https://github.com/neil-jay/sjrslms/commit/168ad5fbd434b09966ab03764a8a4db5df398eae))
-
-
-### [v3.13.7] (2025-08-18)
-
-* chore(release): 3.13.7 [skip ci] ([75410b1c](https://github.com/neil-jay/sjrslms/commit/75410b1c8e99e6db185f1d19cd83214cf782c001))
-* fix: issues with JWT token ([83bffb1f](https://github.com/neil-jay/sjrslms/commit/83bffb1f3a375ffbbe75cfc4ff98884b12ed5549))
-
-
-### [v3.13.6] (2025-08-18)
-
-* chore(release): 3.13.6 [skip ci] ([97e3f373](https://github.com/neil-jay/sjrslms/commit/97e3f373afe954d210807e6b605fdd2b10c10132))
-* fix: typescript errors ([1be42e38](https://github.com/neil-jay/sjrslms/commit/1be42e38305c0a7c2c831bf685e109d99e0c1727))
-* add cart feature ([f7026e55](https://github.com/neil-jay/sjrslms/commit/f7026e558493be6aa4c26ca1428742758a1db620))
-
-
-### [v3.13.5] (2025-08-18)
-
-* chore(release): 3.13.5 [skip ci] ([7b78e205](https://github.com/neil-jay/sjrslms/commit/7b78e2056541c5d3dbeae337a3c2f17f610d5446))
-* fix: typescript errors ([b99712c2](https://github.com/neil-jay/sjrslms/commit/b99712c2a8b8c5ba4884d9640960933f77b28a6d))
-* refactor: code refactored of frontend and updated to modular approach ([2a4cd312](https://github.com/neil-jay/sjrslms/commit/2a4cd31241c3c2935bd5abe9e922fe9559487581))
-
-
-### [v3.13.4] (2025-08-15)
-
-* chore(release): 3.13.4 [skip ci] ([ad4fe970](https://github.com/neil-jay/sjrslms/commit/ad4fe9707d607db5ee6697a3613649275b9f834e))
-* fix: typescript issues ([e322dc07](https://github.com/neil-jay/sjrslms/commit/e322dc07e1d545de88207fc4deea260c1d2926a8))
-
-
-### [v3.13.3] (2025-08-15)
-
-* chore(release): 3.13.3 [skip ci] ([321d6adf](https://github.com/neil-jay/sjrslms/commit/321d6adf9d18e6d6c03bfdf249506f7fdc4aae02))
-* perf: Update performance by fixing typesafety issues, duplicates, unifying api calling, etc ([8c7b0a69](https://github.com/neil-jay/sjrslms/commit/8c7b0a6994dab12fa046b4bf4e7c83c6599ea4a0))
-* docs: update changelog ([5a369c47](https://github.com/neil-jay/sjrslms/commit/5a369c4793bbfa55534322196584b97deec1503e))
-* refactor: Code refactored: Modular system applied ([d4a809d8](https://github.com/neil-jay/sjrslms/commit/d4a809d89b1be993805d5d406076057ede331237))
-
-
-### [v3.13.2] (2025-08-14)
-
-* chore(release): 3.13.2 [skip ci] ([5f82be03](https://github.com/neil-jay/sjrslms/commit/5f82be03e88c554e3702b3b414abe415722ad2d9))
-* fix: minor issues ([1b90b95f](https://github.com/neil-jay/sjrslms/commit/1b90b95f876a6146d75bdbe35ec4762236c4d9d1))
-* refactor: Refactored and turned to Modular System ([bb622ba1](https://github.com/neil-jay/sjrslms/commit/bb622ba1379e3f83c006072900465086d8799ca6))
-
-
-### [v3.13.1] (2025-08-06)
-
-* chore(release): 3.13.1 [skip ci] ([67850096](https://github.com/neil-jay/sjrslms/commit/67850096228f6216542b5dbde81d47503f2b88eb))
-* fix: MFA missing insert values ([d99d7083](https://github.com/neil-jay/sjrslms/commit/d99d7083b410597fedfd44d8662d47857d4eec45))
-
-
-### [v3.13.0] (2025-08-06)
-
-* chore(release): 3.13.0 [skip ci] ([94702903](https://github.com/neil-jay/sjrslms/commit/94702903a9cecca76064d75261cd22f63e57e1a7))
-* feat: Add MFA Feature ([7bc6f372](https://github.com/neil-jay/sjrslms/commit/7bc6f3728ceb9f72c7e295b7275ff3226a2866b1))
-
-
-### [v3.12.17] (2025-08-06)
-
-* chore(release): 3.12.17 [skip ci] ([cc9ba61f](https://github.com/neil-jay/sjrslms/commit/cc9ba61f1fb37f144b9a6603eeb774121e401ed8))
-* fix: continue fixing the issue ([d2a31e54](https://github.com/neil-jay/sjrslms/commit/d2a31e54c7db68fd674953a056bacae419869a79))
-
-
-### [v3.12.16] (2025-08-06)
-
-* chore(release): 3.12.16 [skip ci] ([da874f98](https://github.com/neil-jay/sjrslms/commit/da874f98fbf9fb2b1190d7baf704da4b7e1a3225))
-* fix: server side validation ([21b8bb4c](https://github.com/neil-jay/sjrslms/commit/21b8bb4ce8b0f008575f283c52b73aa68bf5f5eb))
-
-
-### [v3.12.15] (2025-08-06)
-
-* chore(release): 3.12.15 [skip ci] ([b9ad6942](https://github.com/neil-jay/sjrslms/commit/b9ad69427f658d0769b7ba5e1f111d96d4097e64))
-* fix: apply session terminate fetching serverside data ([0a16c597](https://github.com/neil-jay/sjrslms/commit/0a16c59797d3d38a3137f811f796a9b52dc7cd02))
-* docs: update docs on force logout implementation ([1eb312a4](https://github.com/neil-jay/sjrslms/commit/1eb312a4b57b73d3ad64c2e8b9a289909dc3c2f6))
-
-
-### [v3.12.14] (2025-08-06)
-
-* chore(release): 3.12.14 [skip ci] ([bc7a0ad0](https://github.com/neil-jay/sjrslms/commit/bc7a0ad03103c59cf405653c556b38665c18d21c))
-* fix: typescript error ([b7e9fa29](https://github.com/neil-jay/sjrslms/commit/b7e9fa29920e941e52da6399f1c7a5117ec275b0))
-
-
-### [v3.12.13] (2025-08-06)
-
-* chore(release): 3.12.13 [skip ci] ([c59ac99c](https://github.com/neil-jay/sjrslms/commit/c59ac99c672fc762a33a624f41fa46e532582756))
-* perf: add force logout option ([9fb4c551](https://github.com/neil-jay/sjrslms/commit/9fb4c551889f1aee08066e15f7ca69114828aadf))
-
-
-### [v3.12.12] (2025-08-06)
-
-* chore(release): 3.12.12 [skip ci] ([b70249ac](https://github.com/neil-jay/sjrslms/commit/b70249accfb29b19a08f6cf635f79257e8725692))
-* fix: added a final session limit check ([7f90ad35](https://github.com/neil-jay/sjrslms/commit/7f90ad3544705a70ef147905f43cb28594c6c4dc))
-
-
-### [v3.12.11] (2025-08-06)
-
-* chore(release): 3.12.11 [skip ci] ([d2982090](https://github.com/neil-jay/sjrslms/commit/d29820901bfca8851a293cd2cf79573e77231d9d))
-* fix: add additional cleanup ([77998f95](https://github.com/neil-jay/sjrslms/commit/77998f95b0857c5a723e2f2fa4f7ada8d43daf26))
-
-
-### [v3.12.10] (2025-08-05)
-
-* chore(release): 3.12.10 [skip ci] ([fecce300](https://github.com/neil-jay/sjrslms/commit/fecce300196a192938a15d2f85d05306d61a65a0))
-* fix: working on a single session manager ([d7867324](https://github.com/neil-jay/sjrslms/commit/d7867324b04b326277a34807cca20e234edfcb66))
-
-
-### [v3.12.9] (2025-08-05)
-
-* chore(release): 3.12.9 [skip ci] ([150eaea0](https://github.com/neil-jay/sjrslms/commit/150eaea026f75b5184d06a23f8a529cc53117179))
-* fix: issue with CSP ([14d607a9](https://github.com/neil-jay/sjrslms/commit/14d607a96a1fce8bb998600f372139bffe9fa9e3))
-
-
-### [v3.12.8] (2025-08-05)
-
-* chore(release): 3.12.8 [skip ci] ([7538e647](https://github.com/neil-jay/sjrslms/commit/7538e6475cfea8df52c4dfbf8363a5c473aad155))
-* fix: update to timestamp ([d48bb7b9](https://github.com/neil-jay/sjrslms/commit/d48bb7b9cfc0598cb2739d6c1d17a3cbf7564b24))
-
-
-### [v3.12.7] (2025-08-05)
-
-* chore(release): 3.12.7 [skip ci] ([41b612fc](https://github.com/neil-jay/sjrslms/commit/41b612fc315ffa3da0a22f90fcec53543c33ad5d))
-* fix: update to fix ([4411f840](https://github.com/neil-jay/sjrslms/commit/4411f84004c2aa7ad29ade1cc0fc86a0f661965f))
-
-
-### [v3.12.6] (2025-08-05)
-
-* chore(release): 3.12.6 [skip ci] ([a4117622](https://github.com/neil-jay/sjrslms/commit/a4117622fd961dd17eb6acc893dc73514876f229))
-* fix: issue with session manager ([6366cf31](https://github.com/neil-jay/sjrslms/commit/6366cf31c639b08257e6c5be2dce39739aa590d6))
-
-
-### [v3.12.5] (2025-08-05)
-
-* chore(release): 3.12.5 [skip ci] ([7a6429f4](https://github.com/neil-jay/sjrslms/commit/7a6429f41c3fd620f58f3c56cff8bf2c6dcae934))
-* fix: issue with session management ([61bda8ea](https://github.com/neil-jay/sjrslms/commit/61bda8eaf74ce01b842bc24377de6b66c60c8a32))
-
-
-### [v3.12.4] (2025-08-05)
-
-* chore(release): 3.12.4 [skip ci] ([4002370e](https://github.com/neil-jay/sjrslms/commit/4002370e266bffb21f3578ce64ea4f7a2475fec1))
-* fix: apply single session policy ([28ce2f32](https://github.com/neil-jay/sjrslms/commit/28ce2f322df8675cfd0196add5527e429d4bc4b3))
-
-
-### [v3.12.3] (2025-08-05)
-
-* chore(release): 3.12.3 [skip ci] ([c0735eba](https://github.com/neil-jay/sjrslms/commit/c0735eba7003dde81eb669cdcf2fdd6471eb4b62))
-* fix: issue with aggressive session logins ([2c04cd4f](https://github.com/neil-jay/sjrslms/commit/2c04cd4f3f56a8b683e4abf71546040bca268a64))
-* test: add session debug ([d9b873d0](https://github.com/neil-jay/sjrslms/commit/d9b873d00b21466091c3b36d9647a0580e412381))
-
-
-### [v3.12.2] (2025-08-05)
-
-* chore(release): 3.12.2 [skip ci] ([9dec5c91](https://github.com/neil-jay/sjrslms/commit/9dec5c91ea64fe2e95e82eb474ece41052347534))
-* perf: add timezone for proper datetime ([6cdc8d0d](https://github.com/neil-jay/sjrslms/commit/6cdc8d0d8d00472eb0e63544f916a07b9a5b34de))
-* fix: issue with session cleanup ([66a52acc](https://github.com/neil-jay/sjrslms/commit/66a52accb84b65e9e1bd0b7d4027b8b1b83d9336))
-
-
-### [v3.12.1] (2025-08-05)
-
-* chore(release): 3.12.1 [skip ci] ([0947c29a](https://github.com/neil-jay/sjrslms/commit/0947c29a28d1aaf83c07eab8eda3eb53aa24cb85))
-* fix: issue with session cleanup logic ([f2adadaa](https://github.com/neil-jay/sjrslms/commit/f2adadaa66ff4232b75fcd711114f467d2f9bc54))
-
-
-### [v3.12.0] (2025-08-05)
-
-* chore(release): 3.12.0 [skip ci] ([07ed1d43](https://github.com/neil-jay/sjrslms/commit/07ed1d432d637358daf35d81722663ff36bd080c))
-* feat: Add Multiple device login detector ([b692578c](https://github.com/neil-jay/sjrslms/commit/b692578c1f36c8ce7477d01d36315f58a7ea0111))
-
-
-### [v3.11.3] (2025-08-05)
-
-* chore(release): 3.11.3 [skip ci] ([28c28dc4](https://github.com/neil-jay/sjrslms/commit/28c28dc474bf786af91443cdbf9c06b8ac46ea67))
-* perf: updated migration page with real instance ([247fdfa7](https://github.com/neil-jay/sjrslms/commit/247fdfa7cc33b2db1a230787d13cac64228bc763))
-
-
-### [v3.11.2] (2025-08-05)
-
-* chore(release): 3.11.2 [skip ci] ([20679b38](https://github.com/neil-jay/sjrslms/commit/20679b3884f86a5865add3d08ab6b1c83e868db0))
-* perf: Add updated_at columns for some tables ([1880ea4e](https://github.com/neil-jay/sjrslms/commit/1880ea4e6f6e5de84476d69861e201d9961ad0c4))
-* chore: update docs for sql file & delete redundant sql files ([60b2d964](https://github.com/neil-jay/sjrslms/commit/60b2d964ab0b198c8863720a0a04c54c06cb1cf8))
-* docs: Update docs & remove redundant files ([037de367](https://github.com/neil-jay/sjrslms/commit/037de367bd5d6ea1a33be1b2b6e9764af17dcf0d))
-
-
-### [v3.11.1] (2025-08-04)
-
-* chore(release): 3.11.1 [skip ci] ([2c210213](https://github.com/neil-jay/sjrslms/commit/2c2102135b4e8e51e892a53e5876fccb0f875a98))
-* fix: issue with cross-tab login and logout detection ([806588b0](https://github.com/neil-jay/sjrslms/commit/806588b0b896356a8693d4643e1dbc18e2f9fa38))
-
-
-### [v3.11.0] (2025-08-04)
-
-* chore(release): 3.11.0 [skip ci] ([75647512](https://github.com/neil-jay/sjrslms/commit/756475129729918e33205fb555a1a56ff8753bf6))
-* perf: updated imports ([4a0eca5f](https://github.com/neil-jay/sjrslms/commit/4a0eca5f33c9303cf9fadea31bdb0f55d71a18b0))
-* docs: update docs for dynamic role management & session manager ([aeb53583](https://github.com/neil-jay/sjrslms/commit/aeb53583fb9c59ce105e9c2547687b70d623431c))
-* chore: update schema ([9b754fa1](https://github.com/neil-jay/sjrslms/commit/9b754fa1646bd541170d9c31e796dc42f063e4a0))
-* perf: Updates to use new session manager ([cda22286](https://github.com/neil-jay/sjrslms/commit/cda22286a27fee21ff1329aeb3955e99983d00d4))
-* fix: issues with proper redirect - set static role route ([dc11e767](https://github.com/neil-jay/sjrslms/commit/dc11e76769794983d3d50b08c592ef3598971539))
-* feat: Enhanced session manager with security alert ([749643d0](https://github.com/neil-jay/sjrslms/commit/749643d02610e2957a96bff0e7b4802eedd5dc2e))
-* perf: changes applied in order adapt dynamic role management ([80b062fb](https://github.com/neil-jay/sjrslms/commit/80b062fbf7c85fd0cc1098b896cf41ccbf689d61))
-* perf: docs & migrations related dynamic role management ([d159e1ba](https://github.com/neil-jay/sjrslms/commit/d159e1babc5454502d3f8c9264b03ef76214dac5))
-* feat: Add Dynamic Role Management for features & permissions ([96467d59](https://github.com/neil-jay/sjrslms/commit/96467d59cc1bc3aadf7282227898ef9603637cd3))
-
-
-### [v3.10.3] (2025-08-04)
-
-* chore(release): 3.10.3 [skip ci] ([4f58ecea](https://github.com/neil-jay/sjrslms/commit/4f58ecea9d1eba71c14be3759f5a7bf91b7219df))
-* perf: Add success message for reset password & add action button ([475aa363](https://github.com/neil-jay/sjrslms/commit/475aa363cb647c2c0ffa667cbb0dcc383f0a3967))
-
-
-### [v3.10.2] (2025-08-04)
-
-* chore(release): 3.10.2 [skip ci] ([e60ae4af](https://github.com/neil-jay/sjrslms/commit/e60ae4afd1c01159f61a47bb748b4d7d3f836f0e))
-* fix: update error handling ([7d38299b](https://github.com/neil-jay/sjrslms/commit/7d38299bbe7799f293fde039520fe839441dd4a4))
-
-
-### [v3.10.1] (2025-08-04)
-
-* chore(release): 3.10.1 [skip ci] ([7d74af0f](https://github.com/neil-jay/sjrslms/commit/7d74af0fd7cd16b40f94d5cf9db7dbdb3a5ae618))
-* fix: remove redirectTo from json body ([66bc31f3](https://github.com/neil-jay/sjrslms/commit/66bc31f3a8c6ab1b74d6294620501f038e648a48))
-
-
-### [v3.10.0] (2025-08-03)
-
-* chore(release): 3.10.0 [skip ci] ([9d2787db](https://github.com/neil-jay/sjrslms/commit/9d2787dbcfc6f5571ce907107c5e9fb48b39a86b))
-* fix: issues with css & layout ([c6c14446](https://github.com/neil-jay/sjrslms/commit/c6c14446c1483dfb74878741dc55326525ee9d40))
-* perf: add email route ([151fb702](https://github.com/neil-jay/sjrslms/commit/151fb702c0d7d1d7951c5db17385b081eb47cd73))
-* feat: add email preview feature ([6d637d7a](https://github.com/neil-jay/sjrslms/commit/6d637d7a8c74b61670981663483a660158b4ae88))
-
-
-### [v3.9.5] (2025-08-03)
-
-* chore(release): 3.9.5 [skip ci] ([17e5a2ed](https://github.com/neil-jay/sjrslms/commit/17e5a2ed5582112e99a6f160d0c02771e098f56f))
-* fix: UI visibility & button issue ([11287bb4](https://github.com/neil-jay/sjrslms/commit/11287bb4adae2a3933e234be5a5d8c7fbc78031f))
-
-
-### [v3.9.4] (2025-08-03)
-
-* chore(release): 3.9.4 [skip ci] ([27d589e4](https://github.com/neil-jay/sjrslms/commit/27d589e40b881b32db4444dc8465de28ae606902))
-* fix: update frontend login for reset email pass ([c0b9b101](https://github.com/neil-jay/sjrslms/commit/c0b9b1013d18afb8cc7745fa5f3434b429fa9cbf))
-* fix: URL correction in email generation ([dd731ff3](https://github.com/neil-jay/sjrslms/commit/dd731ff3802fcacfbe8d8961284f04ac7aedf94c))
-* perf: Add new API points ([85a00a56](https://github.com/neil-jay/sjrslms/commit/85a00a567e621ccc35d90d1b301f9de3e38f312b))
-
-
-### [v3.9.3] (2025-08-03)
-
-* chore(release): 3.9.3 [skip ci] ([a24770e9](https://github.com/neil-jay/sjrslms/commit/a24770e955067428a860b21e6a9771a71182a91e))
-* fix: issue with three stage workflow: automatic email confirmaiton flow, manual flow, proper status filtering, consistent data mapping, security permissions, action logging ([ee4e23d1](https://github.com/neil-jay/sjrslms/commit/ee4e23d13acbed05e806243030ae51769aa0fbdd))
-* fix: missing student year & reg no in side drawer ([d2b1e2eb](https://github.com/neil-jay/sjrslms/commit/d2b1e2eb5ae5248f1825ea489d61ab5242063605))
-* fix: student reg no validation ([2a3015aa](https://github.com/neil-jay/sjrslms/commit/2a3015aa904993fbba085e14ac9a3c39ec172ca5))
-* docs: Add documention to action logs feature ([ff880d13](https://github.com/neil-jay/sjrslms/commit/ff880d1385451ef00587bebed770cdc1e6e83f38))
-
-
-### [v3.9.2] (2025-08-02)
-
-* chore(release): 3.9.2 [skip ci] ([4108ca28](https://github.com/neil-jay/sjrslms/commit/4108ca28f5c6dda8b5ceb905f5d2342700cb0977))
-* perf: Implement comprehensive action logging system ([f872b452](https://github.com/neil-jay/sjrslms/commit/f872b452e6d187feec8cb47472dc3980d26d46b5))
-
-
-### [v3.9.1] (2025-08-02)
-
-* chore(release): 3.9.1 [skip ci] ([21371c18](https://github.com/neil-jay/sjrslms/commit/21371c1800e784348c0e1f1e77b8007f08283339))
-* fix: isues with plugin ([52350225](https://github.com/neil-jay/sjrslms/commit/52350225bee7372551d9dddea5327249d446c61d))
-
-
-### [v3.9.0] (2025-08-02)
-
-* chore(release): 3.9.0 [skip ci] ([4c4961dc](https://github.com/neil-jay/sjrslms/commit/4c4961dcc2f044848809a074a5d0058ddd54ddd6))
-* perf: Add view activity modal ([d5073434](https://github.com/neil-jay/sjrslms/commit/d5073434c33ec516ccf86b023e19660fae1b90be))
-* fix: issues with view of action log ([32e8abe3](https://github.com/neil-jay/sjrslms/commit/32e8abe3ef39072de0c7a86925590f9f3464e69c))
-* feat: Add migration feature & update in app ([b0e315b2](https://github.com/neil-jay/sjrslms/commit/b0e315b22f9543e8a4ebbd3366216d9314c6bf37))
-* feat: Add action logs to see user actions ([05d6b633](https://github.com/neil-jay/sjrslms/commit/05d6b6338cc84ae4b6322a234d2979efc1bc4d21))
-
-
-### [v3.8.9] (2025-08-02)
-
-* chore(release): 3.8.9 [skip ci] ([7a3ac615](https://github.com/neil-jay/sjrslms/commit/7a3ac615333f1867f6821e62ee2b80b6d1ffe590))
-* perf: improvements to table view ([ed21137e](https://github.com/neil-jay/sjrslms/commit/ed21137e73e9b4849882de81f788855e385e814a))
-
-
-### [v3.8.8] (2025-08-02)
-
-* chore(release): 3.8.8 [skip ci] ([c6626330](https://github.com/neil-jay/sjrslms/commit/c6626330125df92620bd15c886a0689cd2e06230))
-* fix: issues with react hook ([2e7f6b37](https://github.com/neil-jay/sjrslms/commit/2e7f6b372729cabb6438be4130dce290cdf8c625))
-
-
-### [v3.8.7] (2025-08-02)
-
-* chore(release): 3.8.7 [skip ci] ([d8814ab2](https://github.com/neil-jay/sjrslms/commit/d8814ab245202e7620c4343564561a2a097370ad))
-* fix: Mitigate issues of three stage workflow ([d71bebde](https://github.com/neil-jay/sjrslms/commit/d71bebdea92001b5e3f28f995a7df5ea2fac4d8b))
-* build: remove & reorder package ([77e93179](https://github.com/neil-jay/sjrslms/commit/77e931793ae3aa03910f988027d6f5b0737ae4dc))
-* fix: Issues with three stages of registration process ([217fe476](https://github.com/neil-jay/sjrslms/commit/217fe476348a6e7e234a9e61437d49f85621eafc))
-
-
-### [v3.8.6] (2025-08-01)
-
-* chore(release): 3.8.6 [skip ci] ([6b605a4f](https://github.com/neil-jay/sjrslms/commit/6b605a4f2d494ccabbce0d8df64bbc00635fcd38))
-* perf: added detailed logging ([bab02bbe](https://github.com/neil-jay/sjrslms/commit/bab02bbe6bacb0c3bb86d56af2c5a0c651bc9223))
-
-
-### [v3.8.5] (2025-08-01)
-
-* chore(release): 3.8.5 [skip ci] ([373d6ace](https://github.com/neil-jay/sjrslms/commit/373d6acecd56329d58dc2edd853730bbbb16b8b4))
-* fix: issue with destructuring which is changed to result.changes ([c126084b](https://github.com/neil-jay/sjrslms/commit/c126084b1f2354064f5d48d2eeaf09a675bcb83b))
-
-
-### [v3.8.4] (2025-08-01)
-
-* chore(release): 3.8.4 [skip ci] ([b0ede262](https://github.com/neil-jay/sjrslms/commit/b0ede262f37b3ddf5d9fe1551a78c60535aa1931))
-* fix: Conflicting popup ([2dd25dce](https://github.com/neil-jay/sjrslms/commit/2dd25dce7339469879de8fd21cf1382070c38bae))
-
-
-### [v3.8.3] (2025-08-01)
-
-* chore(release): 3.8.3 [skip ci] ([62bc9fcd](https://github.com/neil-jay/sjrslms/commit/62bc9fcd560c59ec15d09a326a8e57db3d4445b8))
-* fix: issues with missing status ([17cc2dfc](https://github.com/neil-jay/sjrslms/commit/17cc2dfc0279ce830f7d03bdacaaad6194bea92d))
-
-
-### [v3.8.2] (2025-08-01)
-
-* chore(release): 3.8.2 [skip ci] ([66d88a0f](https://github.com/neil-jay/sjrslms/commit/66d88a0fea6cf39d0a9db7a019557a77681a27db))
-* fix: issues with valid status ([9b939fb0](https://github.com/neil-jay/sjrslms/commit/9b939fb04a9796771fe00a500f435f80e097b28d))
-
-
-### [v3.8.1] (2025-08-01)
-
-* chore(release): 3.8.1 [skip ci] ([d4b4bc24](https://github.com/neil-jay/sjrslms/commit/d4b4bc2404b65e2c80d0410ff504e67ad50a9525))
-* fix: issues with role ID bug and stream field ([d2cf02fe](https://github.com/neil-jay/sjrslms/commit/d2cf02fe43d439571f7b8b4ddcf2ca9e089eb4a4))
-
-
-### [v3.8.0] (2025-08-01)
-
-* chore(release): 3.8.0 [skip ci] ([59830770](https://github.com/neil-jay/sjrslms/commit/59830770833b6d2365a1185b21d82545e983330e))
-* perf: Update sql file & added migration ([91465f5d](https://github.com/neil-jay/sjrslms/commit/91465f5dedecbf08db37accc47b41a6eca314176))
-* fix: css issue with themechanger ([c2262a7a](https://github.com/neil-jay/sjrslms/commit/c2262a7a07c6ee520801ad8af525a380a71a7d2e))
-* perf: add UI buttons for resend and forgot pass ([2fba86a1](https://github.com/neil-jay/sjrslms/commit/2fba86a198ad9b8dd434fd41b08ef35dd117fc13))
-* perf: add resend email endpoint ([44af9f0a](https://github.com/neil-jay/sjrslms/commit/44af9f0a75c521dd470cb4cb3fbcbeb9a9a1fa4d))
-* perf: Improve security via ratelimiting & kv ([b5e1d550](https://github.com/neil-jay/sjrslms/commit/b5e1d55085a37d093ddb3e0e49d3f6ab4e4f297a))
-* feat: add resend email confirmation ([6bb1e0b9](https://github.com/neil-jay/sjrslms/commit/6bb1e0b95ca4d89726aae4d920725e60d6a21db0))
-* feat: Implement rate limiting using KV Storage ([fbfd8998](https://github.com/neil-jay/sjrslms/commit/fbfd89984813f9f9f87ddee715f178dd35c685ea))
-
-
-### [v3.7.1] (2025-08-01)
-
-* chore(release): 3.7.1 [skip ci] ([215e5042](https://github.com/neil-jay/sjrslms/commit/215e50428a7383d6745cc37a27e567166b4739b6))
-* fix: Add missing isSuperuser variable in MemberEditModal to fix deployment ([6b46c606](https://github.com/neil-jay/sjrslms/commit/6b46c606085d480de16155d9a117a592f4c4f64c))
-
-
-### [v3.7.0] (2025-08-01)
-
-* chore(release): 3.7.0 [skip ci] ([c4384e73](https://github.com/neil-jay/sjrslms/commit/c4384e7366666b8105ba27ef05ad881bbe0e3e53))
-* docs: Update docs ([04032319](https://github.com/neil-jay/sjrslms/commit/040323194390fff51f4ac7932cfd54161944991f))
-* perf: Update base schema updating user types & roles info ([973ffe96](https://github.com/neil-jay/sjrslms/commit/973ffe963e907b5ae2222a92ff0e986569edb6d7))
-* perf: roles & user types migrations & docs ([73661c1f](https://github.com/neil-jay/sjrslms/commit/73661c1ffca51104f50ee5183035642945067cd4))
-* perf: update roles & user types accordingly ([d5cb37b5](https://github.com/neil-jay/sjrslms/commit/d5cb37b59a2e1478237c746123e539a9bc51ae85))
-* perf: Update user types ([248ec743](https://github.com/neil-jay/sjrslms/commit/248ec743a4606945cd79bada056313671447a9cf))
-* feat: add precise role management ([5ff9c2cd](https://github.com/neil-jay/sjrslms/commit/5ff9c2cdac8a36ee16d476a2014ab48ee824ce19))
-
-
-### [v3.6.1] (2025-08-01)
-
-* chore(release): 3.6.1 [skip ci] ([68f25cab](https://github.com/neil-jay/sjrslms/commit/68f25cab7a56d33a14e37b495fe33829c1212fc8))
-* fix: role-based redirects in auth ([a31e01ac](https://github.com/neil-jay/sjrslms/commit/a31e01ac96657853410f0f85b9f8238b936ea32e))
-* fix: localStorage key from 'currentUser' to 'userData ([79e1721f](https://github.com/neil-jay/sjrslms/commit/79e1721fbc717d6594b2b164e783202afe027170))
-* fix: localStorage key from 'currentUser' to 'userData' ([3ac68b68](https://github.com/neil-jay/sjrslms/commit/3ac68b687d78b63d3db8f0452e4b3dd779951357))
-
-
-### [v3.6.0] (2025-08-01)
-
-* chore(release): 3.6.0 [skip ci] ([e8a90843](https://github.com/neil-jay/sjrslms/commit/e8a9084362d15102451ee0ce06f9c1352ba39f7c))
-* perf: Update registration & login flow with new & modern email templates & service ([4501a381](https://github.com/neil-jay/sjrslms/commit/4501a3819b9406c56bbf0684761e4974b2a4fa20))
-* feat: Add modern email template service ([7f4e84f6](https://github.com/neil-jay/sjrslms/commit/7f4e84f669c5c95aeef22b0e5c3cd05f3e1714e5))
-
-
-### [v3.5.0] (2025-08-01)
-
-* chore(release): 3.5.0 [skip ci] ([04f05ac7](https://github.com/neil-jay/sjrslms/commit/04f05ac7e11e8565509f9fb20459705ec7aa32f3))
-* docs: Update docs & reorganize them ([c4a220d4](https://github.com/neil-jay/sjrslms/commit/c4a220d4e5fc5b4a6a1b36a897edba0d3649ea50))
-* feat: added hybrid email architecture using direct api and queues ([30a1c14b](https://github.com/neil-jay/sjrslms/commit/30a1c14b5af802e73eb88ebc481109b310577b2c))
-
-
-### [v3.4.0] (2025-07-31)
-
-* chore(release): 3.4.0 [skip ci] ([85de0aeb](https://github.com/neil-jay/sjrslms/commit/85de0aeb647b19bd1ae1fe18798d83a8f033e181))
-* chore: Update config ([2139a7dd](https://github.com/neil-jay/sjrslms/commit/2139a7dd14e043b59b6efd9ed57a481075fd324b))
-* feat: add profile completion workflow ([2ac3d17c](https://github.com/neil-jay/sjrslms/commit/2ac3d17c2ce21fa652ebad563dc410b56406987c))
-* perf: allow profile completion workflow ([8499e835](https://github.com/neil-jay/sjrslms/commit/8499e8358ebbfe3020ef968bfb3be3920b5d2e60))
-* feat: add email confirmation system with Mailjet integration ([7e04ee1d](https://github.com/neil-jay/sjrslms/commit/7e04ee1d5e0c9df78f90775cbe291b0e354c3189))
-* feat: Implement complete user registration workflow ([594bd7c7](https://github.com/neil-jay/sjrslms/commit/594bd7c78bf0e8b363d9e35cfa21bd20ea21ed5c))
-
-
-### [v3.3.0] (2025-07-31)
-
-* chore(release): 3.3.0 [skip ci] ([4bb3d151](https://github.com/neil-jay/sjrslms/commit/4bb3d151eabdb836d3c5a313c87787024a4ae6de))
-* fix(ui): remove duplicate success message in registration ([b0c9937f](https://github.com/neil-jay/sjrslms/commit/b0c9937f6332bf25e14180cf9bd5be28a981f57a))
-* feat(database): add emaili confirmation tokens table ([4471eb37](https://github.com/neil-jay/sjrslms/commit/4471eb37410d9269111df9f18d857426c88e7266))
-* feat(auth): defer authentication until email confirmation ([3e5ce875](https://github.com/neil-jay/sjrslms/commit/3e5ce87511e9def72369644b4bbf03287dc38974))
-* feat(auth): implement email confirmation page ([a4dcdd1c](https://github.com/neil-jay/sjrslms/commit/a4dcdd1cf228c61d488654d6498bd5ae8ff9b595))
-* feat(types): add email confirmation token types ([3b94a561](https://github.com/neil-jay/sjrslms/commit/3b94a561b9bb14c45f2490e904018941507ae628))
-* feat(services): add email confirmation services methods ([724295fd](https://github.com/neil-jay/sjrslms/commit/724295fdd338cd89a9aa719cc9720a710732f65a))
-* feat(constants): add email confirmation status constants ([8b2483c9](https://github.com/neil-jay/sjrslms/commit/8b2483c91efff6510f3672fb47d41cc0ee8f4803))
-* feat(auth): implement secure PBKDF2 password hashing and dual verification ([1542ec58](https://github.com/neil-jay/sjrslms/commit/1542ec580b80b97356d347bb011874b95326776d))
-* chore: remove redundant file ([dc3f2ff8](https://github.com/neil-jay/sjrslms/commit/dc3f2ff8a3f897c5279f1a3befe026231522b8da))
-
-
-### [v3.2.1] (2025-07-31)
-
-* chore(release): 3.2.1 [skip ci] ([ca4412c6](https://github.com/neil-jay/sjrslms/commit/ca4412c64722e62ef95f42c9091a2f7fd5343000))
-* docs: add docs to make use of API ([4454e894](https://github.com/neil-jay/sjrslms/commit/4454e894488b1a2ceb211160758f3662bbd68504))
-* fix: typescript error ([3a0081a0](https://github.com/neil-jay/sjrslms/commit/3a0081a08b34a387b9d058f71927ce232ba02130))
-
-
-### [v3.2.0] (2025-07-31)
-
-* chore(release): 3.2.0 [skip ci] ([d0291863](https://github.com/neil-jay/sjrslms/commit/d02918632f1a4d351acdf34960a928753c838f74))
-* fix: update role consistency and permission handling across components ([c4466509](https://github.com/neil-jay/sjrslms/commit/c44665096acc9d29cee6ed0c5bbff93534519cd7))
-* feat: create dedicated dashboard component for dean role ([a37ba06a](https://github.com/neil-jay/sjrslms/commit/a37ba06ab0b0e29a2ef406c308a4c44ac55ef6d9))
-* feat: add dean role routing and navigation support ([82032833](https://github.com/neil-jay/sjrslms/commit/820328337287ad93da4eef75be4d9a2c752657e8))
-* feat: add guest and dean role permissions to frontend hooks ([c51699b6](https://github.com/neil-jay/sjrslms/commit/c51699b6738f77d4cc0b74856a49ba47881d444b))
-* feat: add dean and guest role support to backend permissions ([a6c87e9c](https://github.com/neil-jay/sjrslms/commit/a6c87e9c8827705e85f259ef3ccce420653c8bba))
-
-
-### [v3.1.8] (2025-07-31)
-
-* chore(release): 3.1.8 [skip ci] ([ee26fd72](https://github.com/neil-jay/sjrslms/commit/ee26fd7281b03f20bf6a2f6689c173b35a284b01))
-* perf: Upgrade PBKDF2 ([886b707a](https://github.com/neil-jay/sjrslms/commit/886b707a7f9bb63dd60065a575a5a3ff48473778))
-
-
-### [v3.1.7] (2025-07-31)
-
-* chore(release): 3.1.7 [skip ci] ([1dfaa0db](https://github.com/neil-jay/sjrslms/commit/1dfaa0db9d64ed763d7e25e6e33657c227bf4419))
-* fix: Issue with fetching permission audit log ([83313218](https://github.com/neil-jay/sjrslms/commit/83313218469c50a70e2ccaa0254da731bb7b89a3))
-
-
-### [v3.1.6] (2025-07-31)
-
-* chore(release): 3.1.6 [skip ci] ([4c8b12b2](https://github.com/neil-jay/sjrslms/commit/4c8b12b288d00a70afe37691ddffa99ebd98aca3))
-* fix: Remove duplicate message ([2b1ef99a](https://github.com/neil-jay/sjrslms/commit/2b1ef99aeeff5a686862ac7c07ea04ca5a9d14f5))
-* fix: Added app context instead of static ([a90df5d3](https://github.com/neil-jay/sjrslms/commit/a90df5d37487bd9d1a0b7d47b2b09fcae788496c))
-* perf: Update popup timing & remove redundant popup ([25e15b75](https://github.com/neil-jay/sjrslms/commit/25e15b75c456401e825cc8f236a05e227be1dd37))
-* chore: Remove redundant files & Update docs ([99cbf3f7](https://github.com/neil-jay/sjrslms/commit/99cbf3f793412b4484348aa8e0e586d52770b262))
-* chore: Remove redundant files ([2509430c](https://github.com/neil-jay/sjrslms/commit/2509430cf735f79b9844c9fdf659f5c059aa6131))
-
-
-### [v3.1.5] (2025-07-31)
-
-* chore(release): 3.1.5 [skip ci] ([bef6a0bc](https://github.com/neil-jay/sjrslms/commit/bef6a0bcba0ec78a785938b5121849cdebd1cf91))
-* fix: login popup issue and clean up test files ([1f419fb8](https://github.com/neil-jay/sjrslms/commit/1f419fb8e06f7480bfb142913b0eedcea68ac0d2))
-
-
-### [v3.1.4] (2025-07-31)
-
-* chore(release): 3.1.4 [skip ci] ([7ce638ae](https://github.com/neil-jay/sjrslms/commit/7ce638ae0dfdc71490c719da137e001049a01b79))
-* fix: Typescript errors ([ba8a98df](https://github.com/neil-jay/sjrslms/commit/ba8a98df07ed544250bbd493ef7b27002c988d02))
-
-
-### [v3.1.3] (2025-07-31)
-
-* chore(release): 3.1.3 [skip ci] ([defe03c4](https://github.com/neil-jay/sjrslms/commit/defe03c43cfa6c0b1b188f6ca8b4f922d71ce148))
-* Update authentication system with PBKDF2 password hashing and fix login issues ([63275fe9](https://github.com/neil-jay/sjrslms/commit/63275fe9547fa9e06c7c966e998eacfe756831fe))
-
-
-### [v3.1.2] (2025-07-30)
-
-* chore(release): 3.1.2 [skip ci] ([756e1034](https://github.com/neil-jay/sjrslms/commit/756e10345c4528cf03417847f5a716bb012f53fe))
-* perf: Add spinner ([b2a8bb2b](https://github.com/neil-jay/sjrslms/commit/b2a8bb2bb79713d806d616c2b0659f46a847aaca))
-* chore: remove git tag script ([7b908c3d](https://github.com/neil-jay/sjrslms/commit/7b908c3d3aa10786cc23701e8cdb39f046032b96))
-* build: add git tag versioning ([886b3d9f](https://github.com/neil-jay/sjrslms/commit/886b3d9fe20ff58faec54013a4fdbaab2b9dff7e))
-
-
-### [v3.1.1] (2025-07-30)
-
-* chore(release): 3.1.1 [skip ci] ([f0c7238d](https://github.com/neil-jay/sjrslms/commit/f0c7238d20c4832d24b7596b8158fb7174df25cd))
-* fix: Update node version ([d8246ecb](https://github.com/neil-jay/sjrslms/commit/d8246ecb018a2bb50702db33b15966295d6a8926))
-* fix: Issues with showing git version in footer ([52ea04fe](https://github.com/neil-jay/sjrslms/commit/52ea04fe4cf1de319b9e5a52d8d630a535e2532f))
-
-
-### [v3.1.0] (2025-07-30)
-
-* chore(release): 3.1.0 [skip ci] ([eb68ac4f](https://github.com/neil-jay/sjrslms/commit/eb68ac4f0a762e47275bd054d0cf348a2c86a56d))
-* feat: Add bcrypt, update API base, CSP update, pass verification update ([21a055ff](https://github.com/neil-jay/sjrslms/commit/21a055ffab532397ae8678ed104ff58e40fb8b39))
-* docs: Update readme ([67891437](https://github.com/neil-jay/sjrslms/commit/678914375017af25981f3862aa002c67423c05b7))
-
-
-### [v3.0.6] (2025-07-30)
-
-* chore(release): 3.0.6 [skip ci] ([1d271443](https://github.com/neil-jay/sjrslms/commit/1d27144368c9ca714d52a0a22dbd2882934711bb))
-* fix: resolve CF Functions syntax errors ([db9bc319](https://github.com/neil-jay/sjrslms/commit/db9bc31950949991e6673c5bba08a6ee5655ce5c))
-
-
-### [v3.0.5] (2025-07-30)
-
-* chore(release): 3.0.5 [skip ci] ([46538f60](https://github.com/neil-jay/sjrslms/commit/46538f606232edc8930e99c35978cd8978eb09aa))
-* fix: resolve Cloudflare Pages build issues - Move vite from devDependencies to dependencies - Update build script to use npx vite build - Add .npmrc to ensure all dependencies are installed - Fix vite not found error in Cloudflare Pages environment ([a37bbc1b](https://github.com/neil-jay/sjrslms/commit/a37bbc1bb73c7f523393477e81f12ee2f78b32f8))
-
-
-### [v3.0.4] (2025-07-30)
-
-* chore(release): 3.0.4 [skip ci] ([1a4c8517](https://github.com/neil-jay/sjrslms/commit/1a4c85175c1507ea1d514abbea953a258097de10))
-* fix: resolve remaining NodeJS namespace references for browser compatibility - Replace NodeJS.Timeout with `ReturnType<typeof setTimeout>` - Replace NodeJS.Timeout with `ReturnType<typeof setInterval>` for intervals - Ensure all timer types are browser-compatible ([315ebb30](https://github.com/neil-jay/sjrslms/commit/315ebb30c4358dc199c14d0af2494f4dc15891fa))
-
-
-### [v3.0.3] (2025-07-30)
-
-* chore(release): 3.0.3 [skip ci] ([cce42ea6](https://github.com/neil-jay/sjrslms/commit/cce42ea630dae2a2c258496741f92a3d920d068b))
-* fix: resolve TypeScript build errors for Cloudflare Pages deployment - Remove Node.js types from tsconfig.json - Fix book service to use d1Client instead of supabase - Update Vite environment types - Remove deleted testing files ([19aa3d47](https://github.com/neil-jay/sjrslms/commit/19aa3d47de35f217e167ceeb4459b3cb5ded318f))
-
-
-### [v3.0.2] (2025-07-30)
-
-* chore(release): 3.0.2 [skip ci] ([307e8bf6](https://github.com/neil-jay/sjrslms/commit/307e8bf63b80a0b71512c8474dd9c4e8e19e6cc8))
-* fix: resolve TypeScript build errors for Cloudflare Pages deployment ([5485d719](https://github.com/neil-jay/sjrslms/commit/5485d71946fa0e780fd03f02f0d5d60924b2338e))
-
-
-### [v3.0.1] (2025-07-30)
-
-* chore(release): 3.0.1 [skip ci] ([08428f49](https://github.com/neil-jay/sjrslms/commit/08428f4924120e91320bcf53f8e9fb27642305a8))
-* fix: restore GitHub plugin for semantic-release automation ([18a9e9b6](https://github.com/neil-jay/sjrslms/commit/18a9e9b64fc02cd9a2d98916573c4c829c393980))
-
-
-### [v3.0.0] (2025-07-30)
-
-* chore(release): 3.0.0 [skip ci] ([18643f1f](https://github.com/neil-jay/sjrslms/commit/18643f1f3dc516873a1bf677c2e8d06f93bc588c))
-* fix: Issue with Github plugin ([3a92506c](https://github.com/neil-jay/sjrslms/commit/3a92506c3f0dea98c7a6e11cac8b4c96e6c5c161))
-* feat: complete migration to Cloudflare platform ([cc7b7f87](https://github.com/neil-jay/sjrslms/commit/cc7b7f8731eb73790b3bd5faa568cd0d087a1f70))
-* build: remove a package ([14c2b6aa](https://github.com/neil-jay/sjrslms/commit/14c2b6aa7754ee151ffd7e14637ae4f3e3c143b0))
-* build: remove package: refine.dev ([682e8f74](https://github.com/neil-jay/sjrslms/commit/682e8f743b247dff5e153d580f0a1649eb274f03))
-* docs: Update docs upon removal of refine.dev package ([1935c55e](https://github.com/neil-jay/sjrslms/commit/1935c55e8a75e1730add1a565bc52d0309d9ca10))
-* chore: delete non-necessary file ([d53665c3](https://github.com/neil-jay/sjrslms/commit/d53665c32c54758af955ed4aa91d2d9e928d632c))
-* docs: Add docs for version 2.0.0 beta ([f9f88ed6](https://github.com/neil-jay/sjrslms/commit/f9f88ed6a8cf31d8c83a69707641d802a5924175))
-* style: Updating overlapping login component ([d659dba0](https://github.com/neil-jay/sjrslms/commit/d659dba090aaf21c99ee3ec61a3a9e82776ee990))
-
-
-### [v2.1.0] (2025-07-16)
-
-* chore(release): 2.1.0 [skip ci] ([e2078824](https://github.com/neil-jay/sjrslms/commit/e2078824bce31294cc6775e21f2809e6212cd974))
-* feat: Add Reference books section ([9e36ddb5](https://github.com/neil-jay/sjrslms/commit/9e36ddb54f2523df51a8d2c29ab79b8db1bef83e))
-
-
-### [v2.0.3] (2025-07-15)
-
-* chore(release): 2.0.3 [skip ci] ([470cb75b](https://github.com/neil-jay/sjrslms/commit/470cb75be6f5154b96485be6589362df3b81461f))
-* fix: session manage issue ([ff4a8d96](https://github.com/neil-jay/sjrslms/commit/ff4a8d965f94acc1846eb49ffaf84d304f77c0ac))
-* chore: temporarily disable cookie for development ([348e5a0c](https://github.com/neil-jay/sjrslms/commit/348e5a0c726dd8a64b703411e38023f1ed855f2c))
-
-
-### [v2.0.2] (2025-07-14)
-
-* chore(release): 2.0.2 [skip ci] ([e1e77457](https://github.com/neil-jay/sjrslms/commit/e1e77457534694882accd312d350344f913afd04))
-* fix: App versioning in footer ([54802935](https://github.com/neil-jay/sjrslms/commit/54802935d059f0f7a8e5d03dcf1df6051a539ea6))
-
-
-### [v2.0.1] (2025-07-13)
-
-* chore(release): 2.0.1 [skip ci] ([968b0c2b](https://github.com/neil-jay/sjrslms/commit/968b0c2bb76ec6b5f21acb95ab86011a3f51b4f1))
-* fix: configure npm plugin to not publish to registry ([61918322](https://github.com/neil-jay/sjrslms/commit/6191832293c329f6dfb5adf2d6dad0b1bac17f97))
-* fix: add npm plugin to semantic-release config ([04a801d7](https://github.com/neil-jay/sjrslms/commit/04a801d7276ce2ff8d877d1b20c12528c296ac16))
-
-
-### [v2.0.0] (2025-07-13)
-
-* chore(release): 2.0.0 [skip ci] ([027d8306](https://github.com/neil-jay/sjrslms/commit/027d8306447e93533ab4f593d672fe1a84bada5e))
-* feat!: implement new security system ([b0c6295c](https://github.com/neil-jay/sjrslms/commit/b0c6295c254c33df71c28fa41baa17d8302a9b6e))
-
-
-### [v1.12.4] (2025-07-13)
-
-* chore(release): 1.12.4 [skip ci] ([42d274a2](https://github.com/neil-jay/sjrslms/commit/42d274a270f0b32263f78db1cf83c51dcff6d6df))
-* perf: Version visibility in footer ([14323517](https://github.com/neil-jay/sjrslms/commit/143235176360501e17e2d4d9c8c6e03ece80bd5d))
-* feat!: Implement new security system ([d41e395d](https://github.com/neil-jay/sjrslms/commit/d41e395d4e8a1d409046d09539d61ed192972861))
-
-
-### [v1.12.3] (2025-07-13)
-
-* chore(release): 1.12.3 [skip ci] ([4b1ae777](https://github.com/neil-jay/sjrslms/commit/4b1ae7778ceae38dc629b0af3368729713e121be))
-* fix: Some fixes ([e9d8788c](https://github.com/neil-jay/sjrslms/commit/e9d8788c9d016268702e58ca7f07d722224eb51b))
-
-
-### [v1.12.2] (2025-07-13)
-
-* chore(release): 1.12.2 [skip ci] ([51743607](https://github.com/neil-jay/sjrslms/commit/517436079d7290882acce7ed7e2c825fcaee43f1))
-* perf: Enhanced permission manager ([0e7f00e6](https://github.com/neil-jay/sjrslms/commit/0e7f00e6d56e9285530c2edfee8cd6780dfef269))
-
-
-### [v1.12.1] (2025-07-13)
-
-* chore(release): 1.12.1 [skip ci] ([7e32e20d](https://github.com/neil-jay/sjrslms/commit/7e32e20df4f4168fe17a275c548d79414d924a0a))
-* perf: Update permissions manager ([68e4c6ff](https://github.com/neil-jay/sjrslms/commit/68e4c6ff7a25c4ee6cee1645ddfda55f9314b0d8))
-* chore: Update routes ([ed2e5d5c](https://github.com/neil-jay/sjrslms/commit/ed2e5d5cc9d8c4a6fcc5de679d1f6ca8c308f13b))
-* fix: issues with layout ([04bd133e](https://github.com/neil-jay/sjrslms/commit/04bd133ed85268f97fe7e28a21db0a5c644d0f98))
-* fix: issues with user roles ([b36a65f8](https://github.com/neil-jay/sjrslms/commit/b36a65f81cd0b8c60c3b7bffa2f497bf21007ed8))
-* perf: update footer ([bc78b089](https://github.com/neil-jay/sjrslms/commit/bc78b08904b4b7c834047859a5272fb139608e0a))
-* fix: isssues of child menus ([007dfb45](https://github.com/neil-jay/sjrslms/commit/007dfb4524bc6026989fb45c7a77b4fa0b8a2e87))
-
-
-### [v1.12.0] (2025-07-13)
-
-* chore(release): 1.12.0 [skip ci] ([2365dc2d](https://github.com/neil-jay/sjrslms/commit/2365dc2db2b60c8bd9e36b6c3c1ae214dd0c79c9))
-* feat: Configure Permission Management ([5ef2af5c](https://github.com/neil-jay/sjrslms/commit/5ef2af5ce3216e13014e73c61c956480a8923f9a))
-* perf: Updated with configs ([c10589f7](https://github.com/neil-jay/sjrslms/commit/c10589f70773784e7f1493a87644b48e5163c7f7))
-
-
-### [v1.11.0] (2025-07-13)
-
-* chore(release): 1.11.0 [skip ci] ([eac60eda](https://github.com/neil-jay/sjrslms/commit/eac60edacedf2fc950fdd9a9d2414759c1459d6a))
-* perf: Updates to services ([32c6b270](https://github.com/neil-jay/sjrslms/commit/32c6b2708531ed9523efad577d159c005918a713))
-* feat: Add Guests section ([474e2b09](https://github.com/neil-jay/sjrslms/commit/474e2b09530c12bfe57a7d953a08d32685a2e123))
-
-
-### [v1.10.3] (2025-07-12)
-
-* chore(release): 1.10.3 [skip ci] ([d09c9269](https://github.com/neil-jay/sjrslms/commit/d09c926968c7433b76b3b165d7977216f383af05))
-* perf: configure dashboard for User role ([50d16bae](https://github.com/neil-jay/sjrslms/commit/50d16bae262ce202cd45b787ffc92769c7a956e4))
-
-
-### [v1.10.2] (2025-07-12)
-
-* chore(release): 1.10.2 [skip ci] ([f930873a](https://github.com/neil-jay/sjrslms/commit/f930873a5192aef28d360757c918c4b32fe41984))
-* fix: issue with user direction ([877f1274](https://github.com/neil-jay/sjrslms/commit/877f1274bcd2a1dcbfd3cdc7ee76b85a079de1cb))
-* fix: Antdesign static function ([a1012fd6](https://github.com/neil-jay/sjrslms/commit/a1012fd67a97ad17389f6e93fefc51e1ee6b1334))
-
-
-### [v1.10.1] (2025-07-12)
-
-* chore(release): 1.10.1 [skip ci] ([874ae147](https://github.com/neil-jay/sjrslms/commit/874ae147b1055ecc89d7e7182980eed40f2ac57a))
-* perf: Add filter in members & remove submenu ([02df1d5c](https://github.com/neil-jay/sjrslms/commit/02df1d5ce06e7000b602511aaf9b6d0a67c6b879))
-
-
-### [v1.10.0] (2025-07-12)
-
-* chore(release): 1.10.0 [skip ci] ([00d70763](https://github.com/neil-jay/sjrslms/commit/00d70763355b40ce44548720720e924262817cee))
-* fix: ESlint issues ([f2f517de](https://github.com/neil-jay/sjrslms/commit/f2f517de4aa6ae05b054fbb578e780a52e0cfe89))
-* feat: Add Professors page ([166ef03b](https://github.com/neil-jay/sjrslms/commit/166ef03b991cc2e54f229bc67eb42e1e88fe820c))
-* docs: Add docs on roles & system log ([507d11b4](https://github.com/neil-jay/sjrslms/commit/507d11b4f841495aedabcb6f10535924b55a51fa))
-* build: add description in role ([c8b605d4](https://github.com/neil-jay/sjrslms/commit/c8b605d4549cb3e18bf6186c1905cd52f01e4f9f))
-
-
-### [v1.9.6] (2025-07-12)
-
-* chore(release): 1.9.6 [skip ci] ([d03d57d1](https://github.com/neil-jay/sjrslms/commit/d03d57d10021117b4282fd4d45e11d2c7dc151df))
-* chore: Remove unnecessary files ([6a0e6b37](https://github.com/neil-jay/sjrslms/commit/6a0e6b37430f836e4555de39c6d515d11fb7de69))
-* perf: Add modal ([4c704519](https://github.com/neil-jay/sjrslms/commit/4c704519da554b74459006f9ef39c468d18ba714))
-
-
-### [v1.9.5] (2025-07-12)
-
-* chore(release): 1.9.5 [skip ci] ([0a683c19](https://github.com/neil-jay/sjrslms/commit/0a683c19c0344cafa4a6d688cd3575210df09399))
-* build: updated with description field in role ([5e2459ae](https://github.com/neil-jay/sjrslms/commit/5e2459ae188a890d6047ded0d2f23990ff472314))
-* chore: remove non-necessary page ([531cf87b](https://github.com/neil-jay/sjrslms/commit/531cf87b51ea91d68f51b3a77a4850590879a51e))
-* perf: Remove members create page ([c105d533](https://github.com/neil-jay/sjrslms/commit/c105d533460fc594e0dda1c2381e548f5c6c993e))
-
-
-### [v1.9.4] (2025-07-12)
-
-* chore(release): 1.9.4 [skip ci] ([74e1d2c5](https://github.com/neil-jay/sjrslms/commit/74e1d2c5cf7027bb14c59b407e7a02188ead6bd3))
-* chore: Remove unnecessary pages ([85117bcc](https://github.com/neil-jay/sjrslms/commit/85117bcc6c84334c8aa8e292426ab6b3eec3b76f))
-* perf: Add modals + sidedrawer ([87f38d22](https://github.com/neil-jay/sjrslms/commit/87f38d22c701d34bb0e5a3cdbf4d335dc26c7cd8))
-
-
-### [v1.9.3] (2025-07-12)
-
-* chore(release): 1.9.3 [skip ci] ([805573d7](https://github.com/neil-jay/sjrslms/commit/805573d782fa2072499d3a306b297253b45bd019))
-* perf: Update Menu structure ([9f7457c5](https://github.com/neil-jay/sjrslms/commit/9f7457c53e16618df7ba2ff1c078b59fa6d5efbb))
-
-
-### [v1.9.2] (2025-07-12)
-
-* chore(release): 1.9.2 [skip ci] ([f6f568f0](https://github.com/neil-jay/sjrslms/commit/f6f568f032baeaa3f959aa0eee09502487a24850))
-* fix: Roles related issues ([e13ed016](https://github.com/neil-jay/sjrslms/commit/e13ed016bf17900e7af8570cd45a1ed71c844f55))
-
-
-### [v1.9.1] (2025-07-12)
-
-* chore(release): 1.9.1 [skip ci] ([8920d53f](https://github.com/neil-jay/sjrslms/commit/8920d53f13574d028e34850f8dac1ab192c334de))
-* fix: missing page redirect ([6b33c256](https://github.com/neil-jay/sjrslms/commit/6b33c256cf801c30f66ef7b6d678bdb5d6c3247e))
-
-
-### [v1.9.0] (2025-07-12)
-
-* chore(release): 1.9.0 [skip ci] ([eb41ecf0](https://github.com/neil-jay/sjrslms/commit/eb41ecf0d658eb43055187c75a3654896af0d382))
-* build: Add lodash plugin ([388ecd63](https://github.com/neil-jay/sjrslms/commit/388ecd635996b7722e78dd2caed0282fbc96c46d))
-* feat: Accommodate System Logs ([605c5e2a](https://github.com/neil-jay/sjrslms/commit/605c5e2afa8079271b998dcfaf344ae61060cd62))
-* refactor: Menu reorganization ([37ba32f3](https://github.com/neil-jay/sjrslms/commit/37ba32f3d73edd18f7dec337b850753c6246b065))
-
-
-### [v1.8.5] (2025-07-11)
-
-* chore(release): 1.8.5 [skip ci] ([8f6f29db](https://github.com/neil-jay/sjrslms/commit/8f6f29db43f8b3400fe9c9c88f2b6eff3fca121d))
-* fix: Email verification token ([ebfff235](https://github.com/neil-jay/sjrslms/commit/ebfff2359bcd46f5824c18b78aaa6d80b62d0bd4))
-
-
-### [v1.8.4] (2025-07-11)
-
-* chore(release): 1.8.4 [skip ci] ([c3656213](https://github.com/neil-jay/sjrslms/commit/c36562131f4ce8e6b0d06bb584821a203060d4ab))
-* fix: prop warning by adding unique key ([4b2a2a80](https://github.com/neil-jay/sjrslms/commit/4b2a2a8086ab3b41e3ce293e51d4f0ede5f3cf77))
-
-
-### [v1.8.3] (2025-07-11)
-
-* chore(release): 1.8.3 [skip ci] ([211dbd07](https://github.com/neil-jay/sjrslms/commit/211dbd07ca5c96f5b4f4a00102e4d1e0d44fd268))
-* perf: Code splitting with react lazy ([8b0a3628](https://github.com/neil-jay/sjrslms/commit/8b0a3628d6de0a79c7e0c6dd5ff82a5ac60653e2))
-
-
-### [v1.8.2] (2025-07-11)
-
-* chore(release): 1.8.2 [skip ci] ([5242ae6c](https://github.com/neil-jay/sjrslms/commit/5242ae6c163579c903c2a389480e9eb97fb9631c))
-* perf: Added react-lazy loads & kept only utilities folder ([d2ac2f82](https://github.com/neil-jay/sjrslms/commit/d2ac2f820d89e360f679e8bfd72d91820525ed39))
-* chore: Remove redundant file ([eeb4e6be](https://github.com/neil-jay/sjrslms/commit/eeb4e6be91940c33ed332cb79c86c62d4033fb13))
-* docs: Add documentation for components ([86c558b5](https://github.com/neil-jay/sjrslms/commit/86c558b557ff1880f79a1aa15c9a469060e6c235))
-
-
-### [v1.8.1] (2025-07-11)
-
-* chore(release): 1.8.1 [skip ci] ([ca78f98e](https://github.com/neil-jay/sjrslms/commit/ca78f98ee85364a25069dd74aec0d46afffc1c5a))
-* perf: Perf updates to fields validation ([617b5e2c](https://github.com/neil-jay/sjrslms/commit/617b5e2c053f7eb44084f052b313439decfc6d6a))
-* perf: Update fields form ([822b6273](https://github.com/neil-jay/sjrslms/commit/822b62731268b8eb4dc6a9c4ecdafa3168e65996))
-
-
-### [v1.8.0] (2025-07-11)
-
-* chore(release): 1.8.0 [skip ci] ([d390ef35](https://github.com/neil-jay/sjrslms/commit/d390ef3560ea30c804da65275c8d79fb0cdb652e))
-* perf: Added permission integration ([b7c2fcd3](https://github.com/neil-jay/sjrslms/commit/b7c2fcd3cbdddfa9e84ccef6cf705890f0416f13))
-* perf: Added permission integration ([63418020](https://github.com/neil-jay/sjrslms/commit/63418020a6458893096f77b9859702dcf59de18a))
-* refactor: Removed duplications ([5656534f](https://github.com/neil-jay/sjrslms/commit/5656534fe1a8ac62d927c7ec23380352933bde67))
-* feat: Add validation rules & error message ([20a7fe60](https://github.com/neil-jay/sjrslms/commit/20a7fe60c28d983df33ee98f9cbcb8bc65c9257b))
-* perf: Update user type definitions & validation ([db0a5cc6](https://github.com/neil-jay/sjrslms/commit/db0a5cc66ffb02dcdc57ccf2292d9e33004fb319))
-* perf: DB col. name remapping ([65a270c6](https://github.com/neil-jay/sjrslms/commit/65a270c6b987a9f6d136874ea1549a3772d180a9))
-* feat: Add centralized config for borrow limit ([6e30a5d2](https://github.com/neil-jay/sjrslms/commit/6e30a5d26f3914b44fde1a4557cf0314ace73515))
-* perf: Configured centralized borrow limit ([fa947efd](https://github.com/neil-jay/sjrslms/commit/fa947efd5d919479f8156851feec72264239a9d6))
-
-
-### [v1.7.7] (2025-07-11)
-
-* chore(release): 1.7.7 [skip ci] ([8cd14ee4](https://github.com/neil-jay/sjrslms/commit/8cd14ee4532eb0b542db3233206c17584e264d72))
-* perf: Add Rejection page in the workflow ([f776f9c4](https://github.com/neil-jay/sjrslms/commit/f776f9c4c1fb495c988137d53ae008740302ec34))
-
-
-### [v1.7.6] (2025-07-11)
-
-* chore(release): 1.7.6 [skip ci] ([eed03dad](https://github.com/neil-jay/sjrslms/commit/eed03dadd525d0b060339de1da41b76932374c3d))
-* perf: Improved Login workflow ([13ef4dce](https://github.com/neil-jay/sjrslms/commit/13ef4dce4bdff482974a4be6477a3ded7fb473ea))
-
-
-### [v1.7.5] (2025-07-11)
-
-* chore(release): 1.7.5 [skip ci] ([9f7554cc](https://github.com/neil-jay/sjrslms/commit/9f7554cc8d4f474948e338924f14a19b096bb0ce))
-* perf: Add system sleep/wake detection ([457d6547](https://github.com/neil-jay/sjrslms/commit/457d654720252e07c47059f03e9f3b9a2118d904))
-
-
-### [v1.7.4] (2025-07-11)
-
-* chore(release): 1.7.4 [skip ci] ([457dc9ee](https://github.com/neil-jay/sjrslms/commit/457dc9ee4d8c67080fd7c81628fbbfc0a4a1c2d8))
-* fix: User update page ([2c012609](https://github.com/neil-jay/sjrslms/commit/2c0126093d728ab871f275a4d4bc18aebdf2d69b))
-
-
-### [v1.7.3] (2025-07-11)
-
-* chore(release): 1.7.3 [skip ci] ([89a556ce](https://github.com/neil-jay/sjrslms/commit/89a556ce04c8ce2eff2343b55b4b237b624692b6))
-* fix: fetching proper UUID ([d4904637](https://github.com/neil-jay/sjrslms/commit/d490463700c89383dd44839151b2e92f8dc0a952))
-
-
-### [v1.7.2] (2025-07-10)
-
-* chore(release): 1.7.2 [skip ci] ([d2f0e372](https://github.com/neil-jay/sjrslms/commit/d2f0e372a35df5cc14ea99ca5a548a8cb226b19a))
-* perf: Added Journal page ([c59275aa](https://github.com/neil-jay/sjrslms/commit/c59275aafef76998982b96cf1a80c5d3d639c4f6))
-* perf: Improved RBAC ([ad66086a](https://github.com/neil-jay/sjrslms/commit/ad66086ad34c8d53eaaf6c8832642823b4246c74))
-
-
-### [v1.7.1] (2025-07-10)
-
-* chore(release): 1.7.1 [skip ci] ([8030df3d](https://github.com/neil-jay/sjrslms/commit/8030df3d7ef673cd0188f461f8d959f5b399527d))
-* perf: Improved RBAC + Login & Register workflow ([85421c57](https://github.com/neil-jay/sjrslms/commit/85421c57a59ecc22166af25bd37c38e728e6a291))
-
-
-### [v1.7.0] (2025-07-09)
-
-* chore(release): 1.7.0 [skip ci] ([bbe7e508](https://github.com/neil-jay/sjrslms/commit/bbe7e508f69c0c244e593993a19039f525a889fb))
-* feat: Add different dashboards ([b344e1e9](https://github.com/neil-jay/sjrslms/commit/b344e1e9496adf69fbeffed855436bf0363866a1))
-* docs: Update docs after refactor ([4a65c1cc](https://github.com/neil-jay/sjrslms/commit/4a65c1ccb890f8662dc392d30e0d5961df60b143))
-* refactor: Code refactored ([13f3bb07](https://github.com/neil-jay/sjrslms/commit/13f3bb070f3ba31213541a9fd0f954f358e096ed))
-* test: test & sql files ([0f5445af](https://github.com/neil-jay/sjrslms/commit/0f5445afdf62e6cfaa3cbdf29c4ed030744b5831))
-* docs: Add profile workflow ([594c154f](https://github.com/neil-jay/sjrslms/commit/594c154f6885780ce388cbc8545daa99ec1df1de))
-* docs: Add registration-login workflow ([6e06bf12](https://github.com/neil-jay/sjrslms/commit/6e06bf1232564c6910e25b833365213340668843))
-* chore: Table updates ([9cb20ae1](https://github.com/neil-jay/sjrslms/commit/9cb20ae1aa78ec9ae555a497687648d323dc6c13))
-
-
-### [v1.6.1] (2025-07-03)
-
-* chore(release): 1.6.1 [skip ci] ([86104e29](https://github.com/neil-jay/sjrslms/commit/86104e29846f8343bd5492cc6cf92623362b8520))
-* fix: missing fields, imports & workflow ([a8e6c353](https://github.com/neil-jay/sjrslms/commit/a8e6c35320ce5d195bf269069b709ef205b9f747))
-* chore: Cleanup non-necessary files ([48e51fda](https://github.com/neil-jay/sjrslms/commit/48e51fdaaf2afa6f60febbe77c047f3cd36f00aa))
-* docs: Update workflow ([2b718d14](https://github.com/neil-jay/sjrslms/commit/2b718d148a82d33a988a135a5ef3bb8bc08d4b7d))
-
-
-### [v1.6.0] (2025-07-02)
-
-* chore(release): 1.6.0 [skip ci] ([b7aba858](https://github.com/neil-jay/sjrslms/commit/b7aba858c28216704e64e451b0853808e7352405))
-* perf: Add email conf. for user ([53e2a3fa](https://github.com/neil-jay/sjrslms/commit/53e2a3fa72229e648db63d633d60a73618da39b3))
-* feat: Add Super Admin panel ([f4ba273d](https://github.com/neil-jay/sjrslms/commit/f4ba273d301be8bfff2c5bb456271933964cdfcc))
-
-
-### [v1.5.3] (2025-07-02)
-
-* chore(release): 1.5.3 [skip ci] ([fc55e85b](https://github.com/neil-jay/sjrslms/commit/fc55e85b6d48101a0e501535641be60c6f269523))
-* perf: Update register logic ([ddc6bb00](https://github.com/neil-jay/sjrslms/commit/ddc6bb00ddc4b1ee816ebcbb979590c6acb74e8f))
-* perf: Update login logic ([cbe45933](https://github.com/neil-jay/sjrslms/commit/cbe45933a60990e2e476abcd5992eb0834443b7d))
-
-
-### [v1.5.2] (2025-07-02)
-
-* chore(release): 1.5.2 [skip ci] ([bd552c1a](https://github.com/neil-jay/sjrslms/commit/bd552c1aa8c12d3a863a8db8787d03204325baa5))
-* fix: issues with imports ([a248e802](https://github.com/neil-jay/sjrslms/commit/a248e80217cf1557ddb309d3fa2a5e6679a6d4e0))
-* docs: Update README ([24ac3d5b](https://github.com/neil-jay/sjrslms/commit/24ac3d5be6ee0e147e177325015fb12f6121f279))
-* chore: Remove debug code ([d4e6a7eb](https://github.com/neil-jay/sjrslms/commit/d4e6a7eb3ebaf54b611887d18df5de9b609115ea))
-* chore: Cleanup files ([da5beebc](https://github.com/neil-jay/sjrslms/commit/da5beebc8bf503ac6b05dd69921b486f7a2f356c))
-* chore: Cleanup files ([0a153ba4](https://github.com/neil-jay/sjrslms/commit/0a153ba4a17ee9ee38d5b470ac6638d0a58db917))
-* chore: Cleanup files ([8e3c7957](https://github.com/neil-jay/sjrslms/commit/8e3c79575bd079ec6b8e3d69eb931d81ad0c49dc))
-* chore: Clean up files ([41729aa3](https://github.com/neil-jay/sjrslms/commit/41729aa325ff2c24c0c2c4bf43ed61f6c3f54cdb))
-
-
-### [v1.5.1] (2025-06-30)
-
-* chore(release): 1.5.1 [skip ci] ([4548cfd0](https://github.com/neil-jay/sjrslms/commit/4548cfd06b679bf50fd930e3c7dd0d1aa74e901c))
-* perf: Add registration auth check for login ([48c7ff00](https://github.com/neil-jay/sjrslms/commit/48c7ff007ae36c07a2da069b6a82a018aa3cc627))
-
-
-### [v1.5.0] (2025-06-30)
-
-* chore(release): 1.5.0 [skip ci] ([cbb2e120](https://github.com/neil-jay/sjrslms/commit/cbb2e1200ab461c191ddc47068d8c52a58f30a69))
-* perf: Updated with pass toolkit ([94612ad9](https://github.com/neil-jay/sjrslms/commit/94612ad94869e77d04578b8270c65211a4d88d02))
-* feat: Add Password policy toolkit ([b1f7c06a](https://github.com/neil-jay/sjrslms/commit/b1f7c06aeaf722cd6848a7d93fe80b627c2a9281))
-
-
-### [v1.4.1] (2025-06-30)
-
-* chore(release): 1.4.1 [skip ci] ([5d7c45a7](https://github.com/neil-jay/sjrslms/commit/5d7c45a71c8911337bded6de828869682a008bfd))
-* fix: wrapped routes with AuthGuard ([29541c1d](https://github.com/neil-jay/sjrslms/commit/29541c1db9419b93f8f07fed1918535cfb9900e7))
-
-
-### [v1.4.0] (2025-06-30)
-
-* chore(release): 1.4.0 [skip ci] ([01327b59](https://github.com/neil-jay/sjrslms/commit/01327b5981cff77d9ce85b04a7ff0663f63f0152))
-* perf: enable session management ([5d269177](https://github.com/neil-jay/sjrslms/commit/5d2691775024e84c582231bcb6b2bda8e6f7ea63))
-* style: Updated UI ([e9b45a54](https://github.com/neil-jay/sjrslms/commit/e9b45a543653808fb5e33410d86f6b374a9549da))
-* perf: Add session management ([7664461f](https://github.com/neil-jay/sjrslms/commit/7664461f4dd9738db7a8e55c9f11dab3cdb8ef97))
-* refactor: re-organized into folder ([78b1c113](https://github.com/neil-jay/sjrslms/commit/78b1c113e58b9b8872e4d151738c9f678084cabc))
-* test: session management test file ([61853f12](https://github.com/neil-jay/sjrslms/commit/61853f124d58e34c96deb93dd8d6e05a7c3345e6))
-* feat: Add Session management ([d75c05af](https://github.com/neil-jay/sjrslms/commit/d75c05afb41dfe7a0482b33bfd34b4b509ab0667))
-
-
-### [v1.3.4] (2025-06-30)
-
-* chore(release): 1.3.4 [skip ci] ([3e59030f](https://github.com/neil-jay/sjrslms/commit/3e59030f06f332b066d0d9b0f70094e918da28b4))
-* perf: Enhanced login security ([8264734b](https://github.com/neil-jay/sjrslms/commit/8264734b930a2bb1cc2d6225d91005d7a70af3ec))
-* style: Update resetpass UI ([a0671345](https://github.com/neil-jay/sjrslms/commit/a06713453beac7d4fdc630490cb1c34674dce06a))
-* style: Update UI of forgot pass ([7aba2a0f](https://github.com/neil-jay/sjrslms/commit/7aba2a0ffdf39d4d2e19adc6df0ab6fd6d111c51))
-* style: Update login UI ([e7127b6e](https://github.com/neil-jay/sjrslms/commit/e7127b6ead41a8c30923cd4266515edb86f34af2))
-* chore: deletes & updates ([8e44b8cb](https://github.com/neil-jay/sjrslms/commit/8e44b8cbbb203fba0d4a114ba3bcff1ea07051cb))
-* refactor: Organize SQL scripts ([81e986a8](https://github.com/neil-jay/sjrslms/commit/81e986a8a54d09ca6692f2da91587d9c5b233073))
-* docs: Organize doc files ([e6786c1c](https://github.com/neil-jay/sjrslms/commit/e6786c1c94e2d4dfde1dfd6feda19eba2c5ac2ae))
-* chore: minor updates ([4b6366d2](https://github.com/neil-jay/sjrslms/commit/4b6366d27497a27511aa6a6f717f164a9277a651))
-
-
-### [v1.3.3] (2025-06-30)
-
-* chore(release): 1.3.3 [skip ci] ([1ebbbe4b](https://github.com/neil-jay/sjrslms/commit/1ebbbe4b7a5cfedf7125e99b8381c7fcd1552280))
-* perf: user supabase client ([60620766](https://github.com/neil-jay/sjrslms/commit/606207663fdd303d5e587da52953a8255d35d9aa))
-* perf: Add reset password features ([88c98c31](https://github.com/neil-jay/sjrslms/commit/88c98c315a825df30f5736d85279aaca23d408d9))
-
-
-### [v1.3.2] (2025-06-30)
-
-* chore(release): 1.3.2 [skip ci] ([059781df](https://github.com/neil-jay/sjrslms/commit/059781df31d2e1a5919b4780f4454a7169e55c17))
-* perf: Use Supabase Authentication ([e1cd0398](https://github.com/neil-jay/sjrslms/commit/e1cd0398e5f5709a873987d7b948338f1bf35bc6))
-* Use custom API - hybrid approach ([c317bb18](https://github.com/neil-jay/sjrslms/commit/c317bb188ecb60e4d7d249c3c585b28cce6ebdc3))
-* perf: Use SupabaseAuth ([378118fb](https://github.com/neil-jay/sjrslms/commit/378118fbb2cb2e537c59101e693923edac0be816))
-* build: Remove certain packages ([4782d589](https://github.com/neil-jay/sjrslms/commit/4782d589e85f567046714d1c82ed27776f813f8d))
-* docs: Update doc ([f3913d59](https://github.com/neil-jay/sjrslms/commit/f3913d5970967afd041d664d3db86633ddc4862e))
-
-
-### [v1.3.1] (2025-06-29)
-
-* chore(release): 1.3.1 [skip ci] ([76290a6b](https://github.com/neil-jay/sjrslms/commit/76290a6bd826e91ebd96db954b080fe2e29dca40))
-* fix: user not showin in navbar in dash ([d11fbcd3](https://github.com/neil-jay/sjrslms/commit/d11fbcd3caa95b939aad8cd8290c8b2305c236dd))
-
-
-### [v1.3.0] (2025-06-29)
-
-* chore(release): 1.3.0 [skip ci] ([8a93cc8a](https://github.com/neil-jay/sjrslms/commit/8a93cc8a0220e3913e2ef0293b7481449aacbf3e))
-* feat: Add Order page ([a3b1c8ce](https://github.com/neil-jay/sjrslms/commit/a3b1c8cefad5dd7e2e2038109fc692cb32bdf495))
-* perf: Improvise page behaviours ([5e52cbd3](https://github.com/neil-jay/sjrslms/commit/5e52cbd3bcb8ddf0e8de93a7d29804b79655da9f))
-* docs: Add User Guides ([8718ed13](https://github.com/neil-jay/sjrslms/commit/8718ed138a12cd6569a52d3d169b594a95970a3e))
-* feat: Add pages ([62854add](https://github.com/neil-jay/sjrslms/commit/62854addb75f3b894e86a207abd531d77b7198c0))
-* fix: apply certain fix ([16f260e5](https://github.com/neil-jay/sjrslms/commit/16f260e556768735361d550b2cd75e1ddff2d2b1))
-
-
-### [v1.2.0] (2025-06-29)
-
-* chore(release): 1.2.0 [skip ci] ([6526add9](https://github.com/neil-jay/sjrslms/commit/6526add9c22a17a1cf9fc5402427b12bfcbacb6b))
-* chore: Update BOOK-ID section ([cf3aba3e](https://github.com/neil-jay/sjrslms/commit/cf3aba3e516ee894f871d0296d3d869d7230286d))
-* feat: Add login auth & update features ([029d8834](https://github.com/neil-jay/sjrslms/commit/029d8834be4ac19698fc04e6748530b5a04834ed))
-* add homepage & test authentication ([432aa3c4](https://github.com/neil-jay/sjrslms/commit/432aa3c4044ecdfdc9ca112a8954cd3500a2556a))
-* docs: Add Book Ordering workflow ([534ef711](https://github.com/neil-jay/sjrslms/commit/534ef71173dafb06ceeddf65cdba3fa7b0718b00))
-
-
-### [v1.1.0] (2025-06-28)
-
-* chore(release): 1.1.0 [skip ci] ([78fd730e](https://github.com/neil-jay/sjrslms/commit/78fd730eb260509cf487ba5da966e6d779c5338b))
-* feat: Add & update Order management role-based ([e3e5ac63](https://github.com/neil-jay/sjrslms/commit/e3e5ac639ae26a3779a3fa4be3ed91c65ca3cac1))
-* style: Update card design ([15c0e6c2](https://github.com/neil-jay/sjrslms/commit/15c0e6c2da9ea3f885ed482b10ea569907a54680))
-
-
-### [v1.0.9] (2025-06-26)
-
-* chore(release): 1.0.9 [skip ci] ([117e751f](https://github.com/neil-jay/sjrslms/commit/117e751ffa6035f73326bda1318a3baf43716d32))
-* perf: modify card view & add searchbar ([c81ebbef](https://github.com/neil-jay/sjrslms/commit/c81ebbef966e8cb4a7037b33b54ed9067136370c))
-
-
-### [v1.0.8] (2025-06-26)
-
-* chore(release): 1.0.8 [skip ci] ([998ac15b](https://github.com/neil-jay/sjrslms/commit/998ac15bc987418cfeaaf52cd455a70c2470e753))
-* perf: Modify card view & add searchbar ([0c4b7968](https://github.com/neil-jay/sjrslms/commit/0c4b79689a71f128613f0ee2b4f3cb518a3b81f0))
-
-
-### [v1.0.7] (2025-06-26)
-
-* chore(release): 1.0.7 [skip ci] ([ab49cd02](https://github.com/neil-jay/sjrslms/commit/ab49cd02e034a3bb34b6f6edadaba0bbde01704e))
-* chore: remove unused file ([20cf8b9b](https://github.com/neil-jay/sjrslms/commit/20cf8b9be9dae38e39bde1ec90c6178ae5b07255))
-* perf: Add searchbar & update pagination ([7a055281](https://github.com/neil-jay/sjrslms/commit/7a055281e2e806b26c9593f65a2f4f2505cd4746))
-
-
-### [v1.0.6] (2025-06-26)
-
-* chore(release): 1.0.6 [skip ci] ([cf8c08cc](https://github.com/neil-jay/sjrslms/commit/cf8c08cc8db5f4b840e0ff4f02c2bdc3fbac58ce))
-* perf: add side-drawer, searchbar ([7e2418e7](https://github.com/neil-jay/sjrslms/commit/7e2418e704858fa8df1c31a81117c955d94c3045))
-
-
-### [v1.0.5] (2025-06-26)
-
-* chore(release): 1.0.5 [skip ci] ([acbc4cc8](https://github.com/neil-jay/sjrslms/commit/acbc4cc86d2c876c6cab7284fe23062a33232976))
-* fix: issue with edit & view buttons ([7b6867de](https://github.com/neil-jay/sjrslms/commit/7b6867de387eba513ec8a822306cd16bf7173d2f))
-
-
-### [v1.0.4] (2025-06-26)
-
-* chore(release): 1.0.4 [skip ci] ([cf8bf2a3](https://github.com/neil-jay/sjrslms/commit/cf8bf2a35baba03b94275d558838b9b866b20b6e))
-* perf: Updates to books & related component ([2e9d22ee](https://github.com/neil-jay/sjrslms/commit/2e9d22eea9b38c1578320f8646d875ac93d4c9ff))
-
-
-### [v1.0.3] (2025-06-26)
-
-* chore(release): 1.0.3 [skip ci] ([214f4d48](https://github.com/neil-jay/sjrslms/commit/214f4d48287f6af30bde23774c6d24a2f9118773))
-* perf: Add searchbar, update pagination ([87d8e04b](https://github.com/neil-jay/sjrslms/commit/87d8e04bd2ae85e7c9c57cf947bd1586647137a6))
-* perf: Update to database schema ([0a7cdb2f](https://github.com/neil-jay/sjrslms/commit/0a7cdb2f1db1d45b02176c89f90691f57d642425))
-
-
-### [v1.0.2] (2025-06-26)
-
-* chore(release): 1.0.2 [skip ci] ([0720e595](https://github.com/neil-jay/sjrslms/commit/0720e59595b28d350e2c8d1b1b20fd8d97e2b7ab))
-* perf: Enable realtime update ([31981290](https://github.com/neil-jay/sjrslms/commit/3198129049ae9a28ce5ced1e6d7fb3f1ddd0d931))
-
-
-### [v1.0.1] (2025-06-26)
-
-* chore(release): 1.0.1 [skip ci] ([48a1f539](https://github.com/neil-jay/sjrslms/commit/48a1f539d6ddc470ee9b1c5e002c54cf93a3297f))
-* fix: pagination issue ([f12f5b1b](https://github.com/neil-jay/sjrslms/commit/f12f5b1bbe4efbf912d0202ef72584f1fcc57f87))
-
-
-### [v1.0.0] (2025-06-25)
-
-* chore(release): 1.0.0 [skip ci] ([fe22c781](https://github.com/neil-jay/sjrslms/commit/fe22c781fc514bd950e8daffd8e57924adf4eefa))
-* feat: Add Theme Changer ([16b1c2c0](https://github.com/neil-jay/sjrslms/commit/16b1c2c06acd5dc2c5a540a0e6661ed1db6970a1))
-* test: add pages ([641ea66c](https://github.com/neil-jay/sjrslms/commit/641ea66cd30ad9bb05d8840b1fa2fc3c7e96dc22))
-* test: Add CRUD for pages ([9830b8a6](https://github.com/neil-jay/sjrslms/commit/9830b8a632742a3f96571f91d855b06faacff85a))
-* chore: Move sidebar to header ([d51504a8](https://github.com/neil-jay/sjrslms/commit/d51504a8a08e30c0fc741356c0e3b02c6bc6cf7d))
-* build: work in progress of pages ([69b7ac41](https://github.com/neil-jay/sjrslms/commit/69b7ac415b05d0958ed6ec0fc49cdb70e5a75ab4))
-* build: Making structure ([6cb5d018](https://github.com/neil-jay/sjrslms/commit/6cb5d018b3e91fd1764b6692cc84a2fded1855c0))
-* build: Initializing project with Semantic release ([887beea7](https://github.com/neil-jay/sjrslms/commit/887beea74d62d657b30eff4f29bd62cd8b80fb8f))
-
+1. **Before each release**, update the version section
+2. **Use clear categories**: Added, Changed, Fixed, Removed, Technical
+3. **Use emojis** for quick visual scanning
+4. **Be specific** about what changed
+5. **Include dates** in YYYY-MM-DD format
 
 
 

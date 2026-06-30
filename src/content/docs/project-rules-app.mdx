@@ -1,19 +1,39 @@
 ---
 title: "Project Rules (Application)"
+slug: project-rules-app
 ---
 
+# Architecture & Design Principles
+
+## Rule Classification
+
+- **Industry Standard**: Broad engineering or security practices that are widely applicable beyond this repository.
+- **Project Policy**: Deliberate standards this project chooses to enforce for consistency, quality, or maintainability.
+- **Current Repository Constraint**: Guidance that reflects the current architecture, tooling, rollout state, or operational reality of this repository.
 
 ## Code Organization
 
-- **Feature-Based Organization**: Organize code by features/modules rather than by technical layers
-- **Modular Architecture**: Build self-contained, reusable modules with clear interfaces
-- **Separation of Concerns**: Separate shared code from feature-specific code, keep concerns isolated
-- **Loose Coupling**: Minimize dependencies between modules - changes in one should not require changes in others
-- **High Cohesion**: Keep related functionality together within modules
-- **DRY Principle**: Don't Repeat Yourself - extract common logic into reusable functions/modules
-- **Single Responsibility**: Each module/class should have one reason to change (SOLID principle)
-- **Avoid Circular Dependencies**: Dependencies should form a directed acyclic graph (DAG) - no cycles
-- **Feature Module Guidelines**:
+- **Industry Standard - Feature-Based Organization**: Organize code by features/modules rather than by technical layers
+- **Industry Standard - Modular Architecture**: Build self-contained, reusable modules with clear interfaces
+- **Industry Standard - Separation of Concerns**: Separate shared code from feature-specific code, keep concerns isolated
+- **Industry Standard - Loose Coupling**: Minimize dependencies between modules - changes in one should not require changes in others
+- **Industry Standard - High Cohesion**: Keep related functionality together within modules
+- **Industry Standard - DRY Principle**: Don't Repeat Yourself - extract common logic into reusable functions/modules
+- **Industry Standard - Single Responsibility**: Each module/class should have one reason to change (SOLID principle)
+- **Industry Standard - Avoid Circular Dependencies**: Dependencies should form a directed acyclic graph (DAG) - no cycles
+- **Industry Standard - Architectural Boundaries**: Modules must respect defined architectural boundaries.
+  - Feature modules must not depend on the internal implementation of other features.
+  - Cross-feature interactions should occur through documented public interfaces, shared contracts, or shared domain services.
+  - Deep imports into another feature's internals require explicit architectural review and justification.
+- **Industry Standard - Domain Logic Isolation**: UI components must remain focused on presentation, interaction handling, and local UI state.
+  - Business rules, validation, calculations, permission decisions, and domain workflows should live in dedicated hooks, services, or domain-focused modules.
+  - Components may orchestrate domain logic, but complex business rules should not be implemented directly inside UI components.
+  - If a component accumulates more than minimal validation, data transformation, or business branching logic, extract that logic before merge.
+- **Industry Standard - Container / Presenter Separation**: Complex React features should separate orchestration from presentation.
+  - Data fetching, mutations, permissions, and orchestration should live in container components, dedicated hooks, or equivalent logic-focused modules.
+  - Presentation components should focus on UI rendering, layout, and minimal UI state.
+  - Do not combine large UI trees, data orchestration, mutation handling, permission logic, and business branching into a single multi-responsibility component.
+- **Project Policy - Feature Module Guidelines**:
   - Feature modules (`src/components/features/*`) are for UI components, display utilities, and feature-specific presentation logic
   - Features should import data hooks from `src/hooks/`, types from `src/types/`, and shared utilities from `src/utilities/`
   - Avoid creating thin wrapper re-exports that add no business logic—import directly from shared code instead
@@ -24,25 +44,31 @@ title: "Project Rules (Application)"
 
 These standards are enforced through tooling where possible; deviations must be documented in code or PR descriptions.
 
-- **File Size Limits (Project Policy)**: Keep Components/Handlers ≤ 300 lines, Pages ≤ 500 lines  
+- **Project Policy - File Size Limits**: Keep Components/Handlers ≤ 300 lines, Pages ≤ 500 lines  
   These limits are guardrails, not goals. Prefer logical cohesion and readability over artificial file splitting.
   - Documented exceptions exist for configuration files, migration files, and complex form components (see `scripts/check-file-sizes.js` for the complete ignore list)
-- **Naming Conventions**: Follow TypeScript/React standards
+- **Industry Standard - Complexity Budget**: Functions, modules, and components must remain understandable without excessive mental context.
+  - Refactor code that introduces excessive branching, deep nesting, or multiple unrelated responsibilities before merge.
+  - Treat cognitive complexity as a maintainability signal even when line-count limits are not exceeded.
+- **Industry Standard - Naming Conventions**: Follow TypeScript/React standards
   - Components: PascalCase for identifiers and file names
   - Utilities/Handlers: kebab-case for file names, camelCase for identifiers (functions/variables)
   - Classes: PascalCase (standard TypeScript convention, even in utilities)
   - Constants: UPPER_CASE for true constants (static, environment-independent values).  
     Do not use UPPER_CASE for functions, React components, or computed values.
   - Test files must follow the same casing and naming as the file they test (e.g., `user-utils.ts` → `user-utils.test.ts`)
-- **Export Patterns**: Use barrel exports (`index.ts`) for clean imports.
+- **Project Policy - Export Patterns**: Use barrel exports (`index.ts`) for clean imports.
   - Barrels must only re-export symbols; no logic, side effects, or initialization.
   - Barrels must not import from other barrel files.
-- **Import Boundaries**: Enforce feature-based organization by preventing cross-feature deep imports.
+- **Project Policy - Import Boundaries**: Enforce feature-based organization by preventing cross-feature deep imports.
   - Features may only import from shared code (`src/utilities/`, `src/components/ui/`, `src/types/`, `src/hooks/`).
   - Features must not import from other feature internals; only documented public entry points (if any) are allowed.
-- **ESLint**: Adhere to ESLint rules and fix all linting errors and warnings before committing.
+- **Industry Standard - Explicit Dependency Direction**: Dependency flow must remain intentional and one-directional.
+  - Higher-level modules may depend on lower-level or shared modules, but lower-level/shared modules must not depend on higher-level feature modules.
+  - Shared utilities, shared hooks, and shared types must not depend on feature-specific modules.
+- **Industry Standard - ESLint**: Adhere to ESLint rules and fix all linting errors and warnings before committing.
   - CI treats ESLint warnings as errors unless explicitly suppressed with justification.
-- **TypeScript Errors & Warnings**: Resolve all TypeScript errors before committing.
+- **Industry Standard - TypeScript Errors & Warnings**: Resolve all TypeScript errors before committing.
   - Usage of `any` requires explicit justification or a lint suppression comment explaining why it is safe.
 - **TypeScript Strict Mode**:
   - **Project Policy - Baseline Requirement**: The main TypeScript configuration must keep `strict: true`.
@@ -51,18 +77,19 @@ These standards are enforced through tooling where possible; deviations must be 
 
 ## Backend-First Architecture
 
-- **Backend-First**: Design and validate backend APIs first; frontend may develop in parallel using mocks or contracts.
-- **Thin Frontend**: Frontend handles presentation, UX state, and optimistic updates only. All business rules, security enforcement, and performance-critical logic live on the backend.
-- **Pagination**: All data-heavy endpoints must enforce server-side pagination; unbounded datasets must never be returned.
-- **Secure Operations**: Every security-sensitive operation must be authenticated, authorized, and audit-logged on the backend. Client-side checks exist for UX only and are non-authoritative.
+- **Industry Standard - Backend-First**: Define and validate backend API contracts first. Frontend development may proceed in parallel using mocks, OpenAPI contracts, or typed clients.
+- **Industry Standard - Thin Frontend**: Frontend handles presentation, UX state, and optimistic updates only. All business rules, security enforcement, and performance-critical logic live on the backend.
+- **Industry Standard - Bounded Responses**: APIs must avoid returning unbounded datasets.
+  - Large result sets should use pagination, streaming, or chunked access patterns as appropriate to the use case.
+- **Industry Standard - Secure Operations**: Every security-sensitive operation must be authenticated, authorized, and audit-logged on the backend. Client-side checks exist for UX only and are non-authoritative.
 
 # API Design Standards
 
-- **RESTful Conventions**: Follow resource-oriented design using standard HTTP verbs (GET, POST, PUT, PATCH, DELETE).  
+- **Industry Standard - RESTful Conventions**: Follow resource-oriented design using standard HTTP verbs (GET, POST, PUT, PATCH, DELETE).  
   - PUT = full replacement  
   - PATCH = partial update  
-  - Operations must be idempotent where applicable.
-- **Standardized Response Envelopes**: All API responses must use standardized JSON envelopes from `functions/utilities/response-builder.ts`:
+  - Operations must follow HTTP idempotency rules where applicable (GET, PUT, DELETE are idempotent; POST is not).
+- **Project Policy - Standardized Response Envelopes**: All API responses must use standardized JSON envelopes from `functions/utilities/response-builder.ts`:
   - **List/Paginated Endpoints**: Use `createPaginatedResponse()` which returns:
     ```typescript
     {
@@ -118,74 +145,86 @@ These standards are enforced through tooling where possible; deviations must be 
     ```
     - Error `details` must never include stack traces, SQL errors, or internal identifiers.
   - **Never** use raw `new Response(JSON.stringify({ ... }))` - always use response builder utilities for consistency
-- **HTTP Status Codes**: Use standard HTTP status codes consistently (200, 201, 204, 400, 401, 403, 404, 409, 422, 429, 500, 503).
-- **Versioning (Project Policy)**: Version APIs explicitly (e.g., URI versioning `/api/v1/...`) to maintain backward compatibility
-  - Breaking changes require a new major API version.
-  - Backward-compatible changes must not change response shapes.
-- **Statelessness**: Ensure API is stateless; authentication via tokens (JWT) in headers/cookies
-  - Authentication tokens must be self-contained; server-side session state must not be required.
+- **Industry Standard - HTTP Status Codes**: Use standard HTTP status codes consistently (200, 201, 204, 400, 401, 403, 404, 409, 422, 429, 500, 503).
+- **Industry Standard - Idempotency Keys**: Critical POST operations with side effects should support idempotency keys to prevent duplicate processing during retries, network failures, or client resubmissions.
+  - Apply this especially to payments, order creation, and any resource creation or action endpoint where duplicate execution would be harmful.
+  - Idempotency guarantees must be enforced on the backend; client-side deduplication alone is not sufficient.
+- **Industry Standard - Versioning**: Maintain explicit compatibility boundaries for public APIs.
+  - Prefer explicit API versioning for externally consumed or long-lived endpoints, including URI versioning where appropriate (e.g., `/api/v1/...`).
+  - Breaking changes require a new compatibility boundary and must not silently change established client contracts.
+  - Backward-compatible changes must not change response shapes unexpectedly.
+- **Industry Standard - Additive API Evolution**: Public APIs should evolve through additive changes whenever feasible.
+  - Existing fields, parameters, response structures, and established semantics must not be removed or changed in backward-incompatible ways within the same compatibility boundary.
+  - Prefer adding new fields, optional parameters, optional metadata, or new endpoints instead of renaming or repurposing existing contract elements.
+  - Fields introduced as optional for an existing endpoint must not later become required for existing clients without a new compatibility boundary or equivalent breaking-change process.
+- **Industry Standard - Backward Compatibility Discipline**: Public APIs should maintain backward compatibility for at least one deprecation cycle unless a security, legal, or correctness issue requires immediate change.
+  - Breaking changes should include a documented deprecation path, migration guidance, or both where feasible.
+- **Industry Standard - Statelessness**: APIs should be stateless where possible.
+  - Authentication should rely on self-contained credentials (for example, signed tokens) rather than server-side session state when architectural constraints allow.
 
 # Security Principles
 
-- **Security First**: Security is a core architectural concern, not an afterthought
-- **Backend Validation**: Backend validation is authoritative; client-side validation exists for UX only.
-- **Input Validation**: Validate all user inputs on the backend using schema validation (Zod).  
-  Sanitize inputs where required (e.g., HTML content) before persistence or rendering.
-- **Authentication & Authorization**: Authentication verifies identity; authorization enforces permissions and roles for each resource/action.
-- **Permission-Based Access**: Use granular permission checks for all resource/action combinations
-- **SQL Injection Prevention**: Use parameterized queries (D1 prepared statements) - never concatenate user input into SQL
-- **XSS Protection**: Sanitize and encode output contextually (HTML, attributes, URLs); avoid `dangerouslySetInnerHTML` unless explicitly reviewed.  
-  Use Content Security Policy as defense-in-depth.
-- **CSRF Protection**: State-changing operations (POST/PUT/PATCH/DELETE) must be CSRF-protected; GET endpoints must be side-effect free.
+- **Industry Standard - Security First**: Security is a core architectural concern, not an afterthought
+- **Industry Standard - Backend Validation**: Backend validation is authoritative; client-side validation exists for UX only.
+- **Industry Standard - Input Validation**: Validate all user inputs on the backend using schema validation (Zod).  
+- **Industry Standard - Authentication & Authorization**: Authentication verifies identity; authorization enforces permissions and roles for each resource/action.
+- **Industry Standard - Permission-Based Access**: Use granular permission checks for all resource/action combinations
+- **Industry Standard - SQL Injection Prevention**: Use parameterized queries (D1 prepared statements) - never concatenate user input into SQL
+- **Industry Standard - XSS Protection**: Sanitize and encode output contextually (HTML, attributes, URLs); avoid `dangerouslySetInnerHTML` unless explicitly reviewed.  
+- **Industry Standard - CSRF Protection**: State-changing operations (POST/PUT/PATCH/DELETE) must be CSRF-protected; GET endpoints must be side-effect free.
   - **Cookie-Based Auth**: CSRF protection is critical when authentication uses cookies (session cookies or JWTs stored in HttpOnly cookies) because browsers automatically send cookies with requests, making them vulnerable to cross-site attacks
-  - **Header-Only Token Auth**: CSRF protection is less critical when using purely token-based authentication in headers only (i.e., an `Authorization` header) because browsers don't automatically send custom headers, providing inherent protection
+  - **Header-Only Token Auth**: CSRF protection is generally not required when using purely header-based tokens (e.g., Authorization: Bearer &lt;token&gt;) because browsers do not automatically attach custom headers to cross-site requests.
   - **This Application**: Uses JWTs in HttpOnly cookies, so CSRF protection is required and implemented via double-submit cookie pattern
   - **Implementation**: Enforce double-submit token (`X-XSRF-TOKEN` header matches `XSRF-TOKEN` cookie); enforce allowed `Origin/Referer` (defense-in-depth)
   - Only allow CSRF relaxations in development with explicit flags (`ALLOW_CSRF_DEV_FALLBACK=true`)
-- **Audit Logging**: Log all security-sensitive actions for compliance and debugging.  
+- **Industry Standard - Audit Logging**: Log all security-sensitive actions for compliance and debugging.  
   Audit logs must include actor, action, target, timestamp, and request ID.
-- **Secrets Management**: Never hardcode or commit secrets (API keys, JWT secrets, OAuth secrets, SMTP creds).
+- **Industry Standard - Secrets Management**: Never hardcode or commit secrets (API keys, JWT secrets, OAuth secrets, SMTP creds).
   - Use environment variables / platform secrets.
   - Never echo secrets into logs or error responses.
-- **Sensitive Data Logging**: Never log passwords, tokens, cookies, session IDs, OTPs, or full request/response payloads for authentication and authorization endpoints.
+- **Industry Standard - Sensitive Data Logging**: Never log passwords, tokens, cookies, session IDs, OTPs, or full request/response payloads for authentication and authorization endpoints.
   - Redact sensitive fields in structured logs and audit logs.
-- **Cookie & Session Security**: For cookie-based auth:
+- **Industry Standard - Cookie & Session Security**: For cookie-based auth:
   - Auth cookies must be `HttpOnly`, `Secure`, and set an explicit `SameSite` policy.
   - Keep cookie `Domain/Path` tightly scoped; avoid overly-broad domain sharing.
   - Auth cookies must have explicit expiration and rotation policies.
-- **CORS Safety**:
+- **Industry Standard - CORS Safety**:
   - CORS configuration must be explicit and environment-specific; defaults must be deny-by-default.
   - Never use wildcard origins with credentials.
   - Allow credentials only for explicitly allowed origins.
-- **Rate Limiting & Abuse Prevention**:
+- **Industry Standard - Rate Limiting & Abuse Prevention**:
   - Rate limit all auth/OTP/password-reset endpoints and other expensive endpoints.
   - Rate-limited responses must return 429 and include retry guidance where appropriate.
   - Prefer deny-by-default; log rate-limit events for forensics.
-- **Permission Gating**: Gate features by permissions and roles; superusers have full access
-- **Superuser Powers**: Superuser should manage all features, roles, and grant them to other users
+- **Project Policy - Permission Gating**: Gate features by permissions and roles; superusers have full access
+- **Project Policy - Superuser Powers**: Superuser access should be tightly controlled, fully auditable, and limited to legitimate administrative needs; superusers may manage all features, roles, and grants within those guardrails
 
 # Error Handling, Logging & Observability
 
-- **Centralized Error Handling**: Use a single, centralized error handling mechanism per runtime (frontend and backend) to normalize errors, logging, and responses.
-- **User-Friendly Messages**: Provide user-friendly, non-technical error messages; never expose stack traces or internal details to end users.
-- **Production Logging**: Do not use raw `console.log` in production code; use structured logging utilities (e.g., `src/utilities/logging/logger.ts`, `functions/utilities/logging/logger.ts`) that gate console output appropriately and route to Cloudflare Logs in production
-- **Local Debugging**: Use `console.log` only for temporary local debugging and remove before deploy; prefer structured logging utilities for permanent logging needs
-- **CI Enforcement**: Temporary `console.log` statements must be removed before merge; CI must fail on remaining console usage in production builds.
-- **Production Monitoring**: Errors and structured logs are routed to Cloudflare Logs for production monitoring and investigation.
-- **Accurate UI State (Project Policy)**: Show users accurate data timestamps and state:
+- **Industry Standard - Centralized Error Handling**: Use a single, centralized error handling mechanism per runtime (frontend and backend) to normalize errors, logging, and responses.
+- **Industry Standard - User-Friendly Messages**: Provide user-friendly, non-technical error messages; never expose stack traces or internal details to end users.
+- **Industry Standard - Production Logging**: Raw console logging must not appear in committed production paths.
+  Use structured logging utilities instead.
+- **Project Policy - Local Debugging**: Use `console.log` only for temporary local debugging and remove before deploy; prefer structured logging utilities for permanent logging needs.
+- **Project Policy - Enforcement Expectation**: Exceptions require explicit justification in code review.
+- **Current Repository Constraint - Production Monitoring**: Errors and structured logs are routed to Cloudflare Logs for production monitoring and investigation.
+- **Industry Standard - Observability-Driven Development**: Critical code paths should emit enough structured logs, metrics, and trace/context identifiers to support production debugging and incident response.
+  - Observability must be designed into critical flows, not added only after incidents occur.
+- **Industry Standard - Correlation IDs**: Incoming requests should receive a request ID or trace ID that propagates through logs, metrics, and downstream service calls where applicable.
+- **Project Policy - Accurate UI State**: Show users accurate data timestamps and state:
   - **Last Updated Timestamps**: Use React Query's `dataUpdatedAt` from query results, not `new Date()` on every render
     ```typescript
-    //  Correct - shows when data was actually fetched
+    // ✅ Correct - shows when data was actually fetched
     const { data, dataUpdatedAt } = useD1UsersQuery({ pagination });
     const lastUpdated = dataUpdatedAt ? new Date(dataUpdatedAt).toLocaleTimeString() : 'Never';
     
-    //  Wrong - shows current time on every render, misleading users
+    // ❌ Wrong - shows current time on every render, misleading users
     const lastUpdated = new Date().toLocaleTimeString();
     ```
   - **Manual Tracking**: If using manual refresh tracking (e.g., `lastRefreshTime` state), update it only in refresh handlers, not on every render
   - **Manual Refresh Timestamps**: Manual refresh timestamps must reflect user-initiated refresh actions only.
   - **Expose Refetch**: Always provide explicit refresh/reload buttons for user-initiated data updates
-- **Root Cause Analysis**: Always trace issues to their root cause, not just symptoms. Root cause analysis is required during debugging, incident resolution, and code reviews—not just postmortems. Verify:
+- **Industry Standard - Root Cause Analysis**: Always trace issues to their root cause, not just symptoms. Root cause analysis is required during debugging, incident resolution, and code reviews—not just postmortems. Verify:
   - Function return types and property names match their usage
   - Data flow through the entire call chain (request → middleware → handler → response)
   - Type definitions match actual implementations
@@ -193,35 +232,44 @@ These standards are enforced through tooling where possible; deviations must be 
 
 # Testing Standards
 
-- **Test Pyramid**: Prefer fast unit tests for pure logic; add integration tests for API/database boundaries; add end-to-end tests only for critical user flows.
-- **Regression Tests**: Any bugfix should include a test that fails before the fix and passes after.
-- **Determinism**: Tests must be deterministic (no reliance on real time, random seeds, or external network calls without mocking).
-- **Coverage Focus**: Coverage is a tool, not a goal. Prioritize coverage for authorization paths, input validation, business rules, and error handling.
-- **Test Data Hygiene**: Avoid using production data in tests; use minimal fixtures and factory helpers.
+- **Industry Standard - Test Pyramid**: Prefer fast unit tests for pure logic; add integration tests for API/database boundaries; add end-to-end tests only for critical user flows.
+- **Industry Standard - Regression Tests**: Any bugfix should include a test that fails before the fix and passes after.
+- **Industry Standard - Determinism**: Tests must be deterministic (no reliance on real time, random seeds, or external network calls without mocking).
+- **Industry Standard - Coverage Focus**: Coverage is a tool, not a goal. Prioritize coverage for authorization paths, input validation, business rules, and error handling.
+- **Industry Standard - Test Data Hygiene**: Avoid using production data in tests; use minimal fixtures and factory helpers.
 
 # Pull Requests & Code Review
 
-- **Small PRs**: Prefer small, focused PRs that are easy to review and rollback.
-- **Review Checklist (Industry Standard)**:
+- **Industry Standard - Small PRs**: Prefer small, focused PRs that are easy to review and rollback.
+- **Industry Standard - Review Checklist**:
   - **Correctness**: Handles edge cases; no silent failures.
   - **Security**: Authn/authz enforced server-side; input validation; no secret leakage; safe error messages.
   - **Observability**: Structured logs for critical paths; audit logs for sensitive actions.
   - **Performance**: Avoid N+1 patterns; avoid unnecessary re-renders; pagination for large datasets.
   - **UX/a11y**: Keyboard navigable; semantic HTML; no a11y lint regressions.
   - **Maintainability**: Clear naming; avoids duplication; no circular dependencies; respects import boundaries.
-- **Definition of Done**: Lint/test/build pass; docs updated if behavior changes; migrations included when schema changes.
+- **Project Policy - Definition of Done**: Lint/test/build pass; docs updated if behavior changes; migrations included when schema changes.
+- **Project Policy - Migration-First Thinking**: Breaking changes should include migration guidance, compatibility notes, or migration scripts when feasible.
+- **Industry Standard - Deprecation Lifecycle**: Deprecated code and APIs must follow a defined lifecycle.
+  - Deprecations should be clearly marked, include a recommended replacement, and define an expected removal window where feasible.
+  - Deprecated code must not remain indefinitely without review; stale deprecated paths should be removed during planned cleanup cycles.
+- **Project Policy - Explicit Ownership**: Every major module, subsystem, or operational domain should have a documented owner responsible for reviewing significant architectural changes and maintaining operational quality.
 
 # Operational Security
 
-- **Fail Closed**: On authentication, authorization, or CSRF validation failures, deny access explicitly and return an appropriate HTTP error; never silently allow access in production.
-- **No Internal Details to Clients**: Never return stack traces, raw SQL errors, or sensitive internal debugging details in client-facing responses.
-- **Audit Coverage**: All security-sensitive actions (auth changes, permission/role changes, session termination, admin actions) must be audit-logged with actor, action, target, timestamp, and request ID.
+- **Industry Standard - Fail Closed**: On authentication, authorization, or CSRF validation failures, deny access explicitly and return an appropriate HTTP error; never silently allow access in production.
+- **Industry Standard - No Internal Details to Clients**: Never return stack traces, raw SQL errors, or sensitive internal debugging details in client-facing responses.
+- **Industry Standard - Audit Coverage**: All security-sensitive actions (auth changes, permission/role changes, session termination, admin actions) must be audit-logged with actor, action, target, timestamp, and request ID.
 
 # User Experience & Feature Quality
 
-- **Usability**: Keep user flows simple, discoverable, and consistent; avoid unnecessary steps for common tasks.
-- **Responsiveness**: Ensure features respond quickly to user actions and adapt correctly across screen sizes and input methods.
-- **Accessibility (a11y)**:
+- **Industry Standard - Usability**: Keep user flows simple, discoverable, and consistent; avoid unnecessary steps for common tasks.
+- **Industry Standard - Responsiveness**: Ensure features respond quickly to user actions and adapt correctly across screen sizes and input methods.
+- **Industry Standard - Operational Simplicity**: Prefer simple, well-understood designs over complex optimizations unless measurable evidence justifies the added complexity.
+- **Industry Standard - Explicit State Flow**: Critical application behavior must not depend on hidden global state.
+  - Configuration, permissions, and environment-dependent logic should be explicit and traceable through function inputs, dependency injection, or well-defined configuration modules.
+  - Shared state mechanisms must have clear ownership, lifecycle, and usage boundaries.
+- **Industry Standard - Accessibility (a11y)**:
   - **WCAG Compliance**: Target WCAG 2.1 AA compliance for all UI components.
   - **Semantic HTML**: Prefer native HTML semantics; use ARIA only when native elements are insufficient and never to override native behavior.
   - **Keyboard Navigation**: All interactive elements must be reachable and operable via keyboard alone (focus management, skip links).
@@ -229,7 +277,7 @@ These standards are enforced through tooling where possible; deviations must be 
 
 # Performance Engineering (Blazing-Fast Data Pages)
 
-- **Core Performance Standards (Industry Standard)**:
+- **Industry Standard - Core Performance Standards**:
   - **Core Web Vitals**: 
     - LCP < 2.5s
     - INP < 200ms
@@ -242,19 +290,28 @@ These standards are enforced through tooling where possible; deviations must be 
   - **Query Optimization**: 
     - Use React Query for caching, deduplication, and background synchronization
     - Prevent N+1 queries on the backend
+  - **Database Indexing by Access Pattern**:
+    - Production query patterns should be supported by appropriate indexes based on actual filters, joins, sorting, and scale characteristics.
+    - Columns frequently used in `WHERE`, `JOIN`, or `ORDER BY` clauses should typically be indexed when query plans or observed performance indicate the need.
+    - Composite indexes should be designed around real query structure and ordering requirements rather than guessed prematurely.
+    - Review query plans (for example, `EXPLAIN`) for materially important or potentially expensive queries to confirm the database is not relying on avoidable full table scans.
+  - **Avoid N+1 Queries**:
+    - Avoid query patterns that repeatedly fetch related data in loops.
+    - Prefer joins, batched queries, eager loading, or equivalent prefetch strategies to prevent N+1 database access patterns.
   - **Database Query Timeouts**: 
-    - Backend queries must complete within 5 seconds
-    - Fail fast and log slow queries
-- **Latency SLOs (Project Targets)**:
+    - Backend queries should normally complete well under 1 second.
+    - Queries approaching multi-second latency must be investigated and optimized.
+    - Hard execution timeouts should be enforced (for example, ≤5 seconds) to prevent resource exhaustion.
+- **Project Policy - Latency SLOs**:
   - Dashboard widgets / small lists: p95 < 300ms, p99 < 800ms
   - Standard list endpoints: p95 < 500ms, p99 < 1200ms
   - Measure end-to-end latency (client → edge → API → DB → response) and track regressions continuously.
-- **Instant Read-After-Write UX (Project Policy — Non-Negotiable)**:
+- **Project Policy - Instant Read-After-Write UX**:
   - Create, update, and delete actions must update the UI immediately.
   - Users must never need to refresh the page to see newly created, updated, or deleted data.
   - Users must never observe stale data after a successful mutation.
-  - Full page reloads are forbidden as a mechanism for data freshness.
-- **Perceived Performance — Instant Feedback (Industry Standard)**:
+  - Full page reloads must not be used as the primary mechanism for data freshness in interactive applications.
+- **Industry Standard - Perceived Performance — Instant Feedback**:
   - **Stale-While-Revalidate**: 
     - Render cached data instantly (0ms perceived load)
     - Fetch fresh data in the background
@@ -266,9 +323,10 @@ These standards are enforced through tooling where possible; deviations must be 
     - Defer non-critical content
   - **Skeleton Screens**: 
     - Prefer skeletons/placeholders over spinners or blank states
-  - **Streaming Data**: 
-    - For very large datasets, stream or chunk responses to render partial results immediately
-- **Instant-Close Modal Pattern (Project Policy — Required for all CRUD modals)**:
+  - **Streaming Data**:
+    - Prefer pagination or chunked loading for large datasets.
+    - Streaming responses should only be used when justified by the use case.
+- **Project Policy - Instant-Close Modal Pattern**:
   - **Two-Layer Architecture (Required for all CRUD modals)**:
     1. **Modal Controller Layer** (`useCrudModalState`): Centralizes UI orchestration (visibility, form instances, selected records, field hydration)
     2. **Mutation Layer** (`useInstantCloseMutation`): Standardizes submit lifecycle (close → mutate → reopen on error → refresh)
@@ -306,7 +364,7 @@ These standards are enforced through tooling where possible; deviations must be 
         record: editingRecord,
         config: {
           onClose: editModal.close,
-          setRefreshTime: onRefresh,  //  onRefresh from useCrudModalState — not expanded inline
+          setRefreshTime: onRefresh,  // ✅ onRefresh from useCrudModalState — not expanded inline
           reopenModal: (record, formData) => {
             editModal.form.setFieldsValue(formData);
             editModal.open(record);
@@ -330,11 +388,11 @@ These standards are enforced through tooling where possible; deviations must be 
       mutation: updateMutation,
       record: editingRecord,
       config: {
-        onClose: editModal.close,         //  hook's close handler
-        setRefreshTime: onRefresh,        //  centralized refresh — not duplicated here
+        onClose: editModal.close,         // ✅ hook's close handler
+        setRefreshTime: onRefresh,        // ✅ centralized refresh — not duplicated here
         reopenModal: (record, formData) => {
           editModal.form.setFieldsValue(formData);
-          editModal.open(record);         //  hook's open handler
+          editModal.open(record);         // ✅ hook's open handler
         },
         setLoading: setEditLoading,
       },
@@ -361,18 +419,16 @@ These standards are enforced through tooling where possible; deviations must be 
     - Never `async/await` inside `onOk` — confirm closes instantly; deletion runs in background
   
   - **Reference Implementations**:
-    - [RoleListPage.tsx](https://github.com/neil-jay/sjrslms/blob/main/src/pages/roles/RoleListPage.tsx) — First official implementation
-    - [BorrowLimitList.tsx](https://github.com/neil-jay/sjrslms/blob/main/src/pages/borrow-limits/BorrowLimitList.tsx) — Reference for patterns
-    - [ProfessorsPage.tsx](https://github.com/neil-jay/sjrslms/blob/main/src/pages/professors/index.tsx) — Complete CUD migration with optimistic updates
-    - **Latest Pattern**: All new CRUD pages must follow this pattern as the standard
+    - [RoleListPage.tsx](../src/pages/roles/RoleListPage.tsx) — First official implementation
+    - [BorrowLimitList.tsx](../src/pages/borrow-limits/BorrowLimitList.tsx) — Reference for patterns
   
   - **Common Mistakes (Anti-Patterns)**:
-    -  Using `refreshData` callback (removed; use `setRefreshTime: onRefresh`)
-    -  Expanding refresh inline in mutation config (`setRefreshTime: (time) => { setLastRefreshTime(time); onRefresh(time); }`) — register once at `useCrudModalState` config instead
-    -  Managing modal visibility/form/record directly in the page (use `useCrudModalState`)
-    -  Direct `await mutateAsync()` before close (use `useInstantCloseMutation`)
-    -  `async/await` inside delete `onOk` — use `void onDelete(id)` for instant confirm close
-    -  Keeping `invalidateKeys`/`refetchKeys` on CUD mutations alongside optimistic updates — causes flash/reappear
+    - ❌ Using `refreshData` callback (removed; use `setRefreshTime: onRefresh`)
+    - ❌ Expanding refresh inline in mutation config (`setRefreshTime: (time) => { setLastRefreshTime(time); onRefresh(time); }`) — register once at `useCrudModalState` config instead
+    - ❌ Managing modal visibility/form/record directly in the page (use `useCrudModalState`)
+    - ❌ Direct `await mutateAsync()` before close (use `useInstantCloseMutation`)
+    - ❌ `async/await` inside delete `onOk` — use `void onDelete(id)` for instant confirm close
+    - ❌ Keeping `invalidateKeys`/`refetchKeys` on CUD mutations alongside optimistic updates — causes flash/reappear
   
   - **Benefits**:
     - Modal closes instantly (0ms perceived latency)
@@ -383,6 +439,24 @@ These standards are enforced through tooling where possible; deviations must be 
     - DRY principle: centralized logic in two reusable, composable hooks
   
   - **Migration Path**: All existing modal pages must adopt `useCrudModalState` + `useInstantCloseMutation` together as the standard
+
+- **Industry Standard - React Query Configuration**:
+  - **Default Settings**:
+    - Choose defaults based on data volatility and UX needs rather than one global value for every query.
+    - Prefer preset-driven configuration so cache freshness and retention behavior remain explicit and consistent.
+    - Use `gcTime` terminology for TanStack Query v5 configuration (previously called `cacheTime` in earlier versions).
+  - **Stable Query Keys**:
+    - Query keys must uniquely and deterministically represent the data being requested.
+    - Include all parameters that materially influence the server response in the query key to avoid cache collisions and stale data.
+    - Query keys must be stable across renders; do not use functions, random values, class instances, or unstable ad hoc structures.
+    - Prefer centralized query key factories or shared key definitions for consistency across hooks, invalidation, and refetch logic.
+  - **Pagination UX**: 
+    - Use `placeholderData: keepPreviousData` to prevent UI flicker
+  - **Prefetching Strategy**: 
+    - Prefetch likely next pages or detail views on hover or after initial render
+  - **Background Sync**: 
+    - Let React Query manage background updates
+    - Show subtle refresh indicators during `isRefetching`
 - **Project Policy - Centralized Query Configuration**:
   - **Use Centralized System**: ALL new React Query hooks must use the centralized configuration system in `src/utilities/query/`
   - **Standard Hooks**:
@@ -408,20 +482,19 @@ These standards are enforced through tooling where possible; deviations must be 
     - Existing hooks should be migrated gradually during feature work
     - All new hooks MUST use centralized configuration from day one
     - See the docs site migration and architecture guides for detailed implementation guidance
-  - **Background Sync**: 
-    - Let React Query manage background updates
-    - Show subtle refresh indicators during `isRefetching`
-- **Cache Synchronization After Mutations (Critical)**:
-  - Mutations must synchronously update the React Query cache using:
-    - `setQueryData`
-    - Optimistic updates
-  - `invalidateQueries()` may be used for background revalidation, but must not be the sole mechanism for UI updates.
-  - UI correctness must never depend on a refetch completing.
-- **Instant Navigation (Project Policy)**:
+- **Industry Standard - Cache Synchronization After Mutations**:
+  - Mutations must keep UI state and server state aligned immediately after successful writes.
+  - Prefer one or more of the following, based on complexity and risk:
+    - optimistic updates
+    - targeted `setQueryData`
+    - targeted invalidation/refetch through the standardized mutation wrapper
+  - Do not rely on full page reloads for freshness.
+  - Critical user workflows should not leave users staring at obviously stale data while waiting for unrelated background refreshes.
+- **Project Policy - Instant Navigation**:
   - Previously visited pages must render immediately from cache.
   - Route transitions must not show full-page spinners when cached data exists.
   - Navigation should feel instantaneous even while background refetching occurs.
-- **Polling Strategy (Project Policy — Minimize Polling)**:
+- **Project Policy - Polling Strategy**:
   - **Default: No Polling (≈95% of cases)**: Use React Query's freshness model (refetchOnMount, refetchOnWindowFocus, mutation invalidation).
   - **Conservative Polling (Background Data)**: 
     - 30–60 seconds minimum
@@ -432,63 +505,61 @@ These standards are enforced through tooling where possible; deviations must be 
     - Always include manual refresh
   - **Forbidden**: 
     - Polling intervals < 10 seconds
-    - Polling on detail/show pages
+    - Polling on detail/show pages, unless the page represents live operational data
     - Polling without `refetchIntervalInBackground: false`
-- **Manual Refresh Pattern (Best Practice)**:
+- **Project Policy - Manual Refresh Pattern**:
   - Always provide a manual refresh button for user-initiated updates
   - Expose `refetch()` and `dataUpdatedAt` from React Query hooks
   - Show last updated timestamp: `new Date(dataUpdatedAt).toLocaleTimeString()`
   - Use a dedicated `isRefreshing` state (no full-page spinners)
-  - Show success feedback on refresh (e.g., "Data refreshed successfully")
-  - With `staleTime: 0`, `refetch()` always fetches fresh server data
-  - Reference implementation: `src/pages/borrow-limits/BorrowLimitList.tsx`
-- **Server Pagination Required**:
+  - Show refresh feedback where it improves UX without becoming noisy
+  - With `staleTime: 0`, `refetch()` should request fresh server data subject to network and platform behavior
+  - Reference implementation: [BorrowLimitList.tsx](../src/pages/borrow-limits/BorrowLimitList.tsx)
+- **Industry Standard - Server Pagination Required**:
   - All data-heavy list endpoints must be paginated
   - Never return unbounded datasets
   - Default page size: 20–50 items (based on data density)
   - Support:
     - Cursor-based pagination for infinite scroll
     - Offset pagination for page-based UI
-- **Virtualization Threshold**:
+- **Project Policy - Virtualization Threshold**:
   - Virtualize lists or tables with >200 rows
   - Use `react-window` or `@tanstack/react-virtual`
   - Measure before optimizing — virtualization adds complexity
-- **Caching Strategy (Industry Standard)**:
-  - Never skip caching entirely
-  - **Client**: React Query (`staleTime: 0`, finite `cacheTime`)
+- **Industry Standard - Caching Strategy**:
+  - Do not disable caching by default across the application; use selective no-cache behavior only where security, correctness, or freshness truly require it
+  - **Client**: React Query with preset-driven `staleTime` and finite `gcTime` except for intentionally immutable data
   - **Edge/CDN**: Cache static/public assets only; never cache user-private data
-  - **ETags**: Implement conditional requests (304 Not Modified)
+  - **ETags**: Prefer conditional requests (304 Not Modified) where supported and operationally justified
   - **Cache Invalidation**: Invalidate related queries after mutations, but never rely on invalidation alone for UI updates
-- **Prefetching & Resource Hints (Industry Standard)**:
+- **Industry Standard - Prefetching & Resource Hints**:
   - Preload critical CSS, fonts, and initial API data
   - Predictively prefetch likely next routes or data
   - Lazy-load routes and prefetch on navigation intent
   - Use DNS prefetch for external domains (analytics, CDNs)
-- **Render Optimization (Industry Standard)**:
+- **Industry Standard - Render Optimization**:
   - Use `useMemo` and `React.memo` for expensive computations/components
   - Debounce search and filter inputs (150–300ms)
   - Avoid layout thrashing; batch DOM reads/writes
   - Split large components/routes with dynamic imports
   - Ensure tree-shaking removes dead code
-- **Data Loading Patterns (Industry Standard)**:
+- **Industry Standard - Data Loading Patterns**:
   - Fetch independent data in parallel
   - Use `enabled` for dependent queries to avoid waterfalls
   - Hydrate initial data from SSR or route loaders when available
   - Use `useInfiniteQuery` for infinite scroll and prefetch next pages early
-- **Monitoring & Performance Budgets (Industry Standard)**:
+- **Industry Standard - Monitoring & Performance Budgets**:
   - **Real User Monitoring (RUM)**: Track Core Web Vitals in production (`web-vitals`)
-  - **Synthetic Monitoring**: Run Lighthouse CI in PRs; fail builds on regressions
-  - **Performance Budgets**: Alert on bundle increases >10KB; alert on LCP regressions >200ms
-  - **Slow Query Logging**: Log backend queries >1s; alert when p95 exceeds 500ms
-- **Permission Gating**: Gate features by permissions and roles; superusers have full access
-- **Superuser Powers**: Superuser should manage all features, roles, and grant them to other users
+  - **Synthetic Monitoring**: Use Lighthouse CI or equivalent synthetic performance checks where implemented; performance regressions must be tracked and addressed.
+  - **Performance Budgets**: Define concrete budgets for bundle size and user-facing latency, and tighten them as observability matures.
+  - **Slow Query Logging**: Log materially slow backend queries and investigate recurring p95 regressions.
 
 # Dependencies & Versions
 
-- **Security Updates First**: Prioritize security patches and high-severity advisories; emergency upgrades must still be reviewed and tested.
-- **Pinned + Reviewed (Project Policy)**: Use strict versioning (no `^` or `~`). Avoid unreviewed major upgrades; prefer incremental upgrades with tests. Lockfiles must be committed and reviewed.
-- **Avoid Unnecessary Dependencies**: Do not add new dependencies unless clearly justified in the PR; prefer existing utilities in the codebase.
-- **Supply Chain Hygiene**: Before adding or upgrading a dependency, verify:
+- **Industry Standard - Security Updates First**: Prioritize security patches and high-severity advisories; emergency upgrades must still be reviewed and tested.
+- **Project Policy - Pinned + Reviewed**: Use deterministic lockfiles, review dependency changes carefully, and avoid unreviewed major upgrades. Prefer incremental upgrades with tests. Lockfiles must be committed and reviewed.
+- **Industry Standard - Avoid Unnecessary Dependencies**: Do not add new dependencies unless clearly justified in the PR; prefer existing utilities in the codebase.
+- **Industry Standard - Supply Chain Hygiene**: Before adding or upgrading a dependency, verify:
   - Maintainer reputation and recent activity
   - License compatibility
   - Known vulnerabilities (npm audit / advisories)
@@ -496,16 +567,59 @@ These standards are enforced through tooling where possible; deviations must be 
 
 # Data Privacy & Sensitive Data Handling
 
-- **Data Minimization**: Collect, store, and cache only what is necessary for the feature.
-- **PII Classification**: Treat names, emails, phone numbers, identifiers, IP addresses, and user-generated free text as sensitive data.
-- **No PII in URLs**: Avoid placing sensitive identifiers or user data in query strings or paths where they may leak via logs or referrers. Use opaque, non-guessable identifiers when IDs must appear in URLs.
-- **Encryption in Transit**: All traffic must use HTTPS.
-- **Encryption at Rest**: Sensitive data must be encrypted at rest where supported by the platform.
-- **Retention (Project Policy)**: Define and document retention periods for audit and security logs; enforce purging when data is no longer needed.
+- **Industry Standard - Data Minimization**: Collect, store, and cache only what is necessary for the feature.
+- **Industry Standard - PII Classification**: Treat names, emails, phone numbers, government identifiers, account identifiers, IP addresses, and user-generated free text as sensitive data.
+- **Industry Standard - No PII in URLs**: Avoid placing sensitive identifiers or user data in query strings or paths where they may leak via logs or referrers. Use opaque, non-guessable identifiers when IDs must appear in URLs.
+- **Industry Standard - Encryption in Transit**: All traffic must use HTTPS.
+- **Industry Standard - Encryption at Rest**: Sensitive data must be encrypted at rest where supported by the platform.
+- **Project Policy - Retention**: Define and document retention periods for audit and security logs; enforce purging when data is no longer needed.
 
 # CI/CD & Git Workflow
 
-- **Branching Strategy**: Use a Feature Branch workflow; `main`/`master` is protected (no direct pushes), always deployable, and requires PRs with passing checks.
-- **PR Requirements**: All PRs must pass automated checks (lint, test, build) and be approved by at least one reviewer other than the author.
-- **Automated Gates**: Use `npm run quality-gates` and Husky hooks to enforce standards; CI is the source of truth and cannot be bypassed.
-- **Conventional Commits**: Conventional Commits are required and enforced in CI for semantic versioning and changelog generation.
+- **Project Policy - Branching Strategy**: Prefer a Feature Branch workflow; the default branch must remain deployable, and branch protection plus required checks should be enabled wherever repository settings allow.
+- **Project Policy - PR Requirements**: All PRs must pass automated checks (lint, test, build). When branch protection and review gates are enabled, changes must be approved according to repository policy before merge.
+- **Current Repository Constraint - Automated Gates**: Use `npm run quality-gates` and Husky hooks to enforce standards; CI remains the authoritative merge/deploy gate even if local hooks are skipped or misconfigured.
+- **Project Policy - Conventional Commits**: Use Conventional Commit style for release automation, semantic versioning, and changelog generation. Repository automation currently depends on commit messages following this convention reliably.
+
+# Dashboard Design & User Experience
+
+- **Project Policy - Metrics-Focused Dashboard Architecture**:
+  - **User Dashboard (Regular Users)**: Prioritize actionable metrics and visual analytics over static lists
+    - Display reading trends, loan distribution, genre preferences, and activity timelines using charts
+    - Show key metrics prominently: books read, current loans, overdue items, reading streak
+    - Provide quick-access alerts for overdue books and pending penalties
+    - Include recent activity timeline for transparency and engagement
+  - **Chart Components**: Use Recharts for consistent, responsive visualizations
+    - `ReadingTrendsChart`: Line chart showing books/pages read over 12 months
+    - `LoanDistributionChart`: Pie chart showing borrowed vs. returned books
+    - `GenrePreferencesChart`: Bar chart with genre tags showing reading preferences
+    - `ActivityTimelineChart`: Timeline visualization of recent user actions
+    - `DueLoansAlertChart`: Alert-based list with status indicators and renewal buttons
+  - **Data Hook Pattern**: Use `useEnhancedUserDashboard` for centralized metrics aggregation
+    - Fetches reading trends, loan distribution, genre data, and activities in parallel
+    - Calculates derived metrics (average reading rate, overdue count)
+    - Handles permission-based data filtering
+    - Returns structured metrics object with loading/error states
+  - **Layout Strategy**:
+    - Header section with welcome message and key metric cards (4-column grid)
+    - Analytics section with reading trends and loan distribution charts (2-column grid)
+    - Genre preferences section (full width)
+    - Loan management and activity section (2-column grid)
+    - Quick actions footer with navigation buttons
+  - **Performance Considerations**:
+    - Charts render with responsive containers (ResponsiveContainer from Recharts)
+    - Lazy-load chart data; show empty states gracefully
+    - Use skeleton loaders during data fetch
+    - Limit timeline/activity items to 8-10 most recent
+    - Aggregate data server-side where possible (trends, distributions)
+  - **Accessibility**:
+    - All charts include proper labels, legends, and tooltips
+    - Color-coded status indicators (red for overdue, yellow for due soon, green for on-time)
+    - Keyboard-navigable quick action buttons
+    - Semantic HTML structure with proper heading hierarchy
+  - **Reference Implementation**: `src/pages/dashboard-user-enhanced.tsx`
+    - Demonstrates full metrics-focused layout with all chart components
+    - Shows integration with `useEnhancedUserDashboard` hook
+    - Includes error handling and loading states
+    - Provides quick navigation to related features (catalog, loans, penalties)
+
