@@ -32,12 +32,9 @@ This document captures the finalized login flow, route-guard behavior, and suppo
   - Superusers: bypass `inactive` gating.
 
 ## Role-Based Routing
-- Public routes (`/`, `/home`, `/login`, `/register`, `/forgot-password`, `/reset-password`, `/email-confirmation`, `/resend-confirmation`) redirect authenticated users to role dashboards:
-  - `superuser` → `/dashboard-superuser`
-  - `admin` → `/dashboard-admin`
-  - `librarian` → `/dashboard-librarian`
-  - `dean` → `/dashboard-dean`
-  - others → `/dashboard-user`
+- Public routes (`/`, `/home`, `/login`, `/register`, `/forgot-password`, `/reset-password`, `/email-confirmation`, `/resend-confirmation`) redirect authenticated users to `/dashboard`.
+- Dashboard rendering is role-aware inside the unified dashboard entrypoint (`/dashboard/*`).
+- Legacy role-prefixed dashboard URLs (`/dashboard-superuser/*`, `/dashboard-admin/*`, `/dashboard-librarian/*`, `/dashboard-dean/*`, `/dashboard-user/*`) are preserved as compatibility redirects to `/dashboard/*`.
 - Protected routes: handled exclusively by `AuthGuard` after hydration.
 
 ## Sentry (Dev & Prod)

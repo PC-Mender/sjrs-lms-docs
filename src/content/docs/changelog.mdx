@@ -8,17 +8,22 @@ slug: changelog
 
 ## **Latest Updates**
 
-### **Version 6.19.1** ⭐ **CURRENT** (April 4, 2026)
+### **Version 6.34.7** ⭐ **CURRENT** (June 28, 2026)
 
-#### **Templates + Permissions + Loans**
-- **Templates (6.19.0–6.19.1)**: Template usage is fully wired with regression tests; repetitive icons removed from templates.
-- **Permissions (6.18.0)**: Added a declarative `usePermission()` hook for consistent permission checks in UI components.
-- **Loans (6.16.0)**: Added loan renewal request approval/rejection workflow.
-- **User Dashboard (6.18.3)**: Fixed active/overdue loan counts in user stats with progressive loading.
+#### **Security + Data Integrity**
+- **Cross-User Cache Isolation (6.34.7)**: Fixed cache keying for user-specific GET requests to prevent cross-user data leakage.
+- **CodeQL Hardening (6.34.3)**: Removed useless conditionals and defensive dead code identified by security scanning.
+- **Dependency Security Updates (6.28.0, 6.27.0, 6.26.0)**: Addressed CVEs and npm audit findings via targeted package updates.
 
-#### **Bookmarks + UX polish**
-- **Bookmarks (6.15.0)**: Added folder support and improved mutation handling.
-- **UI (6.14.0)**: Added cards-only view and inline header improvements.
+#### **Core UX and Platform Updates**
+- **Inline Modal Consolidation (6.34.6, 6.34.5)**: Article and loan CRUD flows were consolidated into list-first pages with inline modals.
+- **Dynamic User Types (6.32.1, 6.32.0)**: Completed dynamic user type CRUD and moved student user type loading to API-driven data.
+- **Unified Dashboard Route Model (6.23.1)**: Standardized role dashboards behind a unified `/dashboard/*` route model.
+
+#### **Catalog and Reference Enhancements**
+- **Reference Books Improvements (6.31.0, 6.29.0)**: Added tracking views, linked-items modal, advanced filters, and author-level reference counts.
+- **Author Discovery UX (6.30.0)**: Added A-Z and count filters to author lists.
+- **Storage Management Modules (6.23.0)**: Added locations, shelf-codes, and key-tags pages and routing integration.
 
 ### **Version 6.4.0 – 6.18.3** (March 13 – April 4, 2026)
 
