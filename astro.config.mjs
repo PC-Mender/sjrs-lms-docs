@@ -2,10 +2,13 @@ import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
 import react from '@astrojs/react';
 
+import cloudflare from '@astrojs/cloudflare';
+
 // https://astro.build/config
 export default defineConfig({
   site: 'https://docs.sjrslms.in',
   output: 'static',
+
   integrations: [
     starlight({
       title: 'SJRS LMS Docs',
@@ -117,4 +120,6 @@ export default defineConfig({
     }),
     react(),
   ],
+
+  adapter: cloudflare(),
 });

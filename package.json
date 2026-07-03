@@ -6,14 +6,17 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
-    "preview": "astro preview",
+    "preview": "npm run build && wrangler dev",
     "astro": "astro",
     "lint": "astro check",
     "check:lifecycle": "node scripts/check-doc-lifecycle.js",
-    "release": "standard-version"
+    "release": "standard-version",
+    "generate-types": "wrangler types",
+    "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
     "@astrojs/check": "0.9.9",
+    "@astrojs/cloudflare": "^14.1.1",
     "@astrojs/react": "6.0.1",
     "@astrojs/starlight": "0.41.2",
     "astro": "7.0.6",
@@ -35,6 +38,7 @@
   },
   "devDependencies": {
     "prettier-plugin-astro": "0.14.1",
-    "standard-version": "9.5.0"
+    "standard-version": "9.5.0",
+    "wrangler": "^4.107.0"
   }
 }
