@@ -11,7 +11,7 @@ export default defineConfig({
       title: 'SJRS LMS Docs',
       customCss: ['./src/styles/custom.css'],
       editLink: {
-        baseUrl: 'https://github.com/neil-jay/sjrs-lms-docs/edit/main/',
+        baseUrl: 'https://github.com/PC-Mender/sjrs-lms-docs/edit/main/',
       },
       tableOfContents: {
         minHeadingLevel: 2,
@@ -23,8 +23,8 @@ export default defineConfig({
         SocialIcons: './src/components/SocialIcons.astro',
       },
       social: [
-        { label: 'Open App', href: 'https://staging.sjrslms.in', icon: 'external' },
-        { label: 'GitHub', href: 'https://github.com/neil-jay/sjrs-lms-docs', icon: 'github' },
+        { label: 'Open App', href: 'https://sjrslms.in', icon: 'external' },
+        { label: 'GitHub', href: 'https://github.com/PC-Mender/sjrs-lms-docs', icon: 'github' },
       ],
       sidebar: [
         {
