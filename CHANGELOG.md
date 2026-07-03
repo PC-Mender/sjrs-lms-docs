@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.19](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.18...v1.3.19) (2026-07-03)
+
+
+### Bug Fixes
+
+* replace node:fs with Vite JSON import in CustomFooter for Cloudflare Workers compatibility ([aaf3c48](https://github.com/neil-jay/sjrs-lms-docs/commit/aaf3c48d8e576a550a63841a2c7bd9b0f91e3fb0))
+
 ### [1.3.18](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.17...v1.3.18) (2026-07-03)
 
 
