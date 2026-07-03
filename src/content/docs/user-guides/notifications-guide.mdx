@@ -1,0 +1,110 @@
+---
+title: "Notifications Guide"
+description: "How to view, manage, and configure notifications in the SJRS LMS."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+The SJRS LMS has three types of notifications:
+
+1. **App Notifications** — personal notifications (due date reminders, reservation-ready alerts, badge awards)
+2. **Announcements** — broadcast messages from staff to all users or specific roles
+3. **System Notifications** — system events (deployment updates, Sentry incidents) — visible to superusers
+
+## App Notifications
+
+**Route**: `/dashboard/notifications`
+
+### Viewing Your Notifications
+
+1. Navigate to **Dashboard** → **Notifications** (`/dashboard/notifications`)
+2. You'll see a list of your personal notifications
+3. Notifications are automatically generated — you cannot create them manually
+4. Each notification shows:
+   - Title and message
+   - Type (reminder, alert, badge, etc.)
+   - Priority (low, normal, high)
+   - Status (unread, read)
+   - Created date
+
+### Marking Notifications as Read
+
+- Click a notification to mark it as read
+- Use **Mark All as Read** to clear all unread notifications
+
+### Notification Types
+
+| Type | Trigger | Example |
+|------|---------|---------|
+| Due Date Reminder | Book approaching due date | "Your book 'Physics 101' is due in 2 days" |
+| Overdue Alert | Book past due date | "Your book 'Physics 101' is 3 days overdue" |
+| Reservation Ready | Reservation status changed to Ready | "Your reservation for 'Chemistry Lab Manual' is ready to claim" |
+| Badge Awarded | Badge criteria met | "You earned the 'Review Master' badge!" |
+| Penalty Generated | Overdue book returned with fine | "A penalty of ₹50 has been generated for late return" |
+
+## Announcements
+
+**Route**: `/dashboard/announcements`
+
+### Viewing Announcements
+
+1. Navigate to **Dashboard** → **Announcements** (`/dashboard/announcements`)
+2. See broadcast messages from library staff
+3. Announcements may be targeted to specific roles or all users
+
+## System Notifications
+
+**Route**: `/dashboard/system-notifications`
+
+<Aside type="note" title="Access Control">
+System Notifications require the `notification_events:read` permission. Typically restricted to superusers and admins.
+</Aside>
+
+### Viewing System Notifications
+
+1. Navigate to **Dashboard** → **System Notifications** (`/dashboard/system-notifications`)
+2. View system events including:
+   - Deployment notifications (new version releases)
+   - Sentry incidents (error monitoring alerts)
+   - Platform updates
+3. Filter by status, scope, category, and severity
+4. Paginate through all events
+
+### App Notifications Log (Superuser)
+
+**Route**: `/dashboard/app-notifications-log`
+
+Superusers can view a comprehensive log of all app notifications sent to all users, with:
+- Statistics and charts
+- Advanced filtering by type, priority, status, date range
+- User information for each notification
+
+## Configuring Notification Preferences
+
+**Route**: `/dashboard/notification-preferences`
+
+1. Navigate to **Dashboard** → **Notification Preferences**
+2. Toggle which notification types you want to receive
+3. Choose delivery channels (in-app, email)
+4. Click **Save** to update your preferences
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/notifications` | List user notifications |
+| PUT | `/api/v1/notifications/:id/read` | Mark notification as read |
+| PUT | `/api/v1/notifications/read-all` | Mark all as read |
+| GET | `/api/v1/notifications/events` | List system notification events |
+| GET | `/api/v1/user/preferences` | Get notification preferences |
+| PUT | `/api/v1/user/preferences` | Update notification preferences |
+
+## Related Documentation
+
+- [Reservations Guide](./reservations-guide) — Reservation-ready notifications
+- [Loans Guide](./loans-guide) — Due date reminders
+- [Badges Guide](./badges-guide) — Badge award notifications
+- [Notification Types Guide](../features/notifications/notification-types-guide) — Detailed notification type reference

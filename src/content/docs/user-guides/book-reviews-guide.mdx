@@ -1,0 +1,78 @@
+---
+title: "Book Reviews Guide"
+description: "How to write, view, and manage book reviews in the SJRS LMS."
+lifecycle: Active
+---
+
+## Overview
+
+Book reviews let users share their opinions about books they've read. Students and regular users see only their own reviews. Librarians and admins can moderate all reviews.
+
+**Route**: `/dashboard/book-reviews`
+
+## Viewing Reviews
+
+### As a Regular User
+
+1. Navigate to **Dashboard** → **Book Reviews** (`/dashboard/book-reviews`)
+2. You'll see a table of your reviews with book title, rating, and status
+3. The user column is hidden since you only see your own reviews
+
+### As a Librarian/Admin/Superuser
+
+1. Navigate to **Dashboard** → **Book Reviews**
+2. The table shows all reviews from all users, with user columns visible
+3. Use the **search bar** to find reviews by book title or user
+
+## Writing a Review
+
+1. Go to **Dashboard** → **Book Reviews**
+2. Click **Create Review**
+3. Select the book you want to review
+4. Provide a **rating** (1–5 stars)
+5. Write your **review text**
+6. Click **Submit** to publish
+
+## Editing Your Review
+
+1. Find your review in the list
+2. Click the **Edit** button (pencil icon)
+3. Update the rating or review text
+4. Click **Update** to save
+
+## Deleting Your Review
+
+1. Find your review in the list
+2. Click the **Delete** button (trash icon)
+3. Confirm the deletion
+
+## For Librarians, Admins & Superusers
+
+### Moderating Reviews
+
+Staff can:
+- **View** all reviews from all users
+- **Edit** any review (to remove inappropriate content)
+- **Delete** any review
+
+### Review Statuses
+
+Reviews may have moderation statuses:
+- **Published** — visible to all users
+- **Pending** — awaiting moderation
+- **Hidden** — hidden by staff for policy violations
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/book-reviews` | List reviews (user-scoped or all) |
+| GET | `/api/v1/book-reviews/:id` | Get review details |
+| POST | `/api/v1/book-reviews` | Create a review |
+| PUT | `/api/v1/book-reviews/:id` | Update a review |
+| DELETE | `/api/v1/book-reviews/:id` | Delete a review |
+
+## Related Documentation
+
+- [Catalog Guide](./catalog-guide) — Finding books to review
+- [Badges Guide](./badges-guide) — Earn badges for writing reviews

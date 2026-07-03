@@ -1,0 +1,146 @@
+---
+title: "Loans Guide"
+description: "How to borrow, return, renew, and manage book loans in the SJRS LMS."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+Loans track book copies borrowed by users. Students and regular users see only their own loans. Librarians, admins, and superusers can manage all loans including approving, rejecting, returning, and deleting.
+
+**Route**: `/dashboard/loans`
+
+## Loan Statuses
+
+| Status | Color | Description |
+|--------|-------|-------------|
+| Pending | orange | Loan request submitted, awaiting staff approval |
+| Approved | green | Staff approved the loan; book is ready for pickup |
+| Active | cyan | Book has been borrowed and is currently out |
+| Overdue | red | Due date has passed; book must be returned |
+| Returned | blue | Book has been returned |
+| Rejected | magenta | Staff rejected the loan request |
+| Cancelled | default | Loan was cancelled (by user or staff) |
+
+## For Students & Regular Users
+
+### Viewing Your Loans
+
+1. Navigate to **Dashboard** → **Loans** (`/dashboard/loans`)
+2. You'll see a table listing all your loans with columns for book title, status, due date, and actions
+3. Use the **status filter** dropdown to filter by status (e.g., show only "Active" or "Overdue")
+4. Use the **date range picker** to filter by borrowed date
+5. Use the **search bar** to find loans by book title or status
+
+### Requesting a Loan
+
+1. Go to **Dashboard** → **Catalog** (`/dashboard/catalog`)
+2. Find the book you want to borrow
+3. Click the book card to open the details modal
+4. Click **Reserve** or **Borrow** to place a request
+5. Your loan will appear in the Loans page with status "Pending"
+
+<Aside type="note" title="Borrow Quota">
+The catalog shows a quota tag indicating how many borrow slots you have remaining. Your quota is determined by your role's borrow limits (e.g., Students: 5 books, Professors: 10 books).
+</Aside>
+
+### Renewing a Loan
+
+1. Go to **Dashboard** → **Loans**
+2. Find an active loan that is within 3 days of its due date
+3. Click the **Renew** button (circular arrow icon) next to the loan
+4. A renewal request is sent to staff for approval
+5. The loan's `renewal_request_status` will show "pending" until approved or rejected
+
+<Aside type="caution" title="Renewal Window">
+Renewal requests can only be made when the due date is within 3 days. You cannot renew a loan that has already been returned, cancelled, or rejected.
+</Aside>
+
+### Cancelling a Loan Request
+
+1. Go to **Dashboard** → **Loans**
+2. Find a loan with status "Pending"
+3. Click the **Cancel** button (X icon)
+4. The loan status will change to "Cancelled"
+
+## For Librarians, Admins & Superusers
+
+### Viewing All Loans
+
+1. Navigate to **Dashboard** → **Loans** (`/dashboard/loans`)
+2. The table shows all loans across all users, with the user column visible
+3. Use filters and search as described above
+
+### Creating a Loan Manually
+
+1. Click the **Create Loan** button
+2. In the modal, select:
+   - **User** — search and select the borrower
+   - **Book Copy** — search and select the specific copy
+   - **Due Date** — pick the return date
+3. Click **Create Loan** to save
+
+### Approving a Loan
+
+1. Find a loan with status "Pending"
+2. Click the **Approve** button (checkmark icon)
+3. Confirm in the dialog
+4. The loan status changes to "Approved" and the borrowed date is set
+
+### Rejecting a Loan
+
+1. Find a loan with status "Pending"
+2. Click the **Reject** button (X icon)
+3. Confirm in the dialog
+4. The loan status changes to "Rejected"
+
+### Returning a Book
+
+1. Find a loan with status "Active" or "Overdue"
+2. Click the **Return** button (rollback arrow icon)
+3. Confirm in the dialog
+4. The loan status changes to "Returned" and the return date is recorded
+
+### Approving a Renewal Request
+
+1. Find a loan where `renewal_request_status` is "pending"
+2. Click **Approve Renewal Request** to extend the due date
+3. Or click **Reject Renewal Request** to deny the extension
+
+### Editing a Loan
+
+1. Click the **Edit** button (pencil icon) on any loan
+2. Modify the user, book copy, due date, or status
+3. Click **Update Loan** to save
+
+### Deleting a Loan
+
+1. Click the **Delete** button (trash icon) on a loan
+2. Confirm the deletion in the dialog
+3. The loan is permanently removed
+
+<Aside type="caution" title="Delete Restriction">
+Loans with status "Active" cannot be deleted. Return the book first, then delete the record.
+</Aside>
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/loans` | List loans (user-scoped or all) |
+| GET | `/api/v1/loans/:id` | Get loan details |
+| POST | `/api/v1/loans` | Create a new loan |
+| PUT | `/api/v1/loans/:id` | Update loan (status, due date, etc.) |
+| DELETE | `/api/v1/loans/:id` | Delete a loan |
+| POST | `/api/v1/loans/:id/renew` | Request a renewal |
+| POST | `/api/v1/loans/:id/approve-renewal` | Approve a renewal request |
+| POST | `/api/v1/loans/:id/reject-renewal` | Reject a renewal request |
+
+## Related Documentation
+
+- [Reservations Guide](./reservations-guide) — Reserving books that are currently unavailable
+- [Catalog Guide](./catalog-guide) — Browsing and searching the book catalog
+- [Penalties Guide](./penalties-guide) — Late return penalties
+- [Borrow Limits](../features/borrow-limits/) — Role-based borrowing limits

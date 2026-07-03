@@ -1,0 +1,110 @@
+---
+title: "Catalog Guide"
+description: "How to browse, search, filter, and reserve books from the SJRS LMS catalog."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+The Catalog is your starting point for finding books in the library. It displays all books in a card-grid layout with search, filtering, and sorting capabilities. From the catalog, you can view book details, reserve books, add to wishlist, and check availability.
+
+**Route**: `/dashboard/catalog`
+
+## Browsing the Catalog
+
+1. Navigate to **Dashboard** → **Catalog** (`/dashboard/catalog`)
+2. Books are displayed as cards in a grid layout (up to 24 per page)
+3. Each card shows the book title, author, availability status, and cover image (if available)
+4. Use **pagination** at the bottom to navigate through pages (12, 24, 48, or 96 per page)
+
+## Searching for Books
+
+1. Use the **search bar** in the top-right of the catalog header
+2. Search matches against:
+   - Book title
+   - ISBN
+   - Author name
+   - Book ID
+3. Results filter in real-time as you type
+4. Click the **X** in the search bar to clear the search
+
+## Filtering Books
+
+Click the **Filters** button to open the filter panel:
+
+| Filter | Options | Description |
+|--------|---------|-------------|
+| Category | Dynamic (from books) | Filter by subcategory (e.g., Fiction, Science) |
+| Section | Dynamic (from books) | Filter by library section |
+| Author | Dynamic (from books) | Filter by author name |
+| Publication | Dynamic (from books) | Filter by publisher |
+| Availability | Available / Limited / Unavailable | Filter by copy availability |
+
+- **Available** — copies are ready to borrow
+- **Limited** — some copies available, but not all
+- **Unavailable** — all copies are currently out
+
+Multiple filters can be applied simultaneously. Filters combine with the search text.
+
+## Borrow Quota
+
+The catalog header displays a **quota tag** showing how many borrow slots you have remaining:
+
+- **Green tag**: `X slots left (Y/Z)` — you can place more requests
+- **Red tag**: `Quota full (Y/Z)` — you've reached your limit
+
+Your quota is determined by your role's borrow limits. Active loans and pending requests both count toward your quota.
+
+<Aside type="tip" title="Quota Tooltip">
+Hover over the quota tag for a detailed breakdown of your used and available slots, including items in your request cart.
+</Aside>
+
+## Viewing Book Details
+
+1. Click any **book card** to open the details modal
+2. The modal shows:
+   - Full title, author, ISBN, publication
+   - Category/section information
+   - Total copies and available copies
+   - Description (if available)
+3. From the modal, you can:
+   - **Reserve** the book (if copies are unavailable)
+   - **Add to Wishlist** (to track for later)
+   - **Borrow** the book (if copies are available)
+
+## Reserving from the Catalog
+
+1. Find a book in the catalog
+2. Click the book card to open details
+3. Click **Reserve**
+4. If you already have an active loan for this book, you'll see: "You already borrowed this book. Return it before placing a reservation."
+5. The reservation appears in your Reservations page with status "Pending"
+
+<Aside type="caution" title="Admin Role Restriction">
+Borrow requests are disabled when using an administrative role (librarian, admin, superuser). Switch to your student or member role to place reservations.
+</Aside>
+
+## Adding to Wishlist from the Catalog
+
+1. Find a book in the catalog
+2. Click the book card to open details
+3. Click **Add to Wishlist**
+4. If the book is already in your wishlist, you'll see: "This book is already in your wishlist."
+5. The book appears in your Wishlist page
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/catalog/books` | List catalog books (paginated) |
+| GET | `/api/v1/books/:id` | Get book details |
+| GET | `/api/v1/books` | List all books (admin) |
+| GET | `/api/v1/book-copies` | List book copies (with availability) |
+
+## Related Documentation
+
+- [Loans Guide](./loans-guide) — Managing borrowed books
+- [Reservations Guide](./reservations-guide) — Reserving unavailable books
+- [Wishlist Guide](./wishlist-guide) — Tracking books you want

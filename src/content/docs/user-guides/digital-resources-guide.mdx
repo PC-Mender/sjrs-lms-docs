@@ -1,0 +1,90 @@
+---
+title: "Digital Resources Guide"
+description: "How to browse, read, and manage digital resources like e-books and online materials."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+Digital Resources include e-books, online articles, PDFs, and other digital materials available through the library. Unlike physical books, digital resources can be read directly in the browser without borrowing.
+
+**Route**: `/dashboard/digital-resources`
+
+## Browsing Digital Resources
+
+1. Navigate to **Dashboard** → **Digital Resources** (`/dashboard/digital-resources`)
+2. Resources are displayed in a table or card layout
+3. Use the **search bar** to find resources by title, author, or keyword
+4. Filter by **resource type** (e-book, PDF, web link, etc.)
+
+## Viewing a Digital Resource
+
+1. Click on any resource to open the detail view
+2. The detail page shows:
+   - Title, author, and description
+   - Resource type and format
+   - Availability and access information
+   - File size (for downloadable resources)
+3. Click **Read Now** to open the resource in the built-in reader
+4. Or click **Download** if downloading is permitted
+
+## Reading Digital Books
+
+The built-in digital book reader supports:
+
+- **Page navigation** — flip through pages with next/previous buttons
+- **Table of contents** — jump to specific chapters
+- **Search within book** — find text within the current book
+- **Bookmarks** — save your reading position
+- **Zoom** — adjust text size for readability
+
+Your reading progress is tracked automatically. Return to any digital book and it will resume from where you left off.
+
+**Route for reading**: `/dashboard/digital-book-reads`
+
+## Resource Types
+
+| Type | Description | Access |
+|------|-------------|--------|
+| E-book | Full digital books | Read online or download |
+| PDF | PDF documents | View in browser or download |
+| Web Link | External web resources | Opens in new tab |
+| Audio Book | Audio recordings | Stream in browser |
+
+## For Librarians & Admins
+
+### Managing Digital Resources
+
+1. Navigate to **Dashboard** → **Digital Resources**
+2. Click **Create Resource** to add a new digital resource
+3. Fill in:
+   - Title, author, description
+   - Resource type and format
+   - Upload the file or provide a URL
+   - Set access permissions (public, restricted, role-based)
+4. Click **Save** to publish the resource
+
+### Resource Types Management
+
+**Route**: `/dashboard/resource-types`
+
+Manage the categories of digital resources available in the system.
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/resources` | List digital resources |
+| GET | `/api/v1/resources/:id` | Get resource details |
+| POST | `/api/v1/resources` | Create a resource (admin) |
+| PUT | `/api/v1/resources/:id` | Update a resource (admin) |
+| DELETE | `/api/v1/resources/:id` | Delete a resource (admin) |
+| GET | `/api/v1/digital-book-reads` | Track reading progress |
+| POST | `/api/v1/digital-book-reads` | Update reading position |
+
+## Related Documentation
+
+- [Catalog Guide](./catalog-guide) — Browsing physical books
+- [Journals Guide](./journals-guide) — Academic journals and magazines

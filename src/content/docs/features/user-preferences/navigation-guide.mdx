@@ -11,25 +11,15 @@ The Settings page can be accessed from multiple locations in the application:
 - **Location**: Top-right corner of the application
 - **Icon**: User avatar/icon
 - **Path**: Click on user avatar → Select "Settings" from dropdown menu
-- **Route**: `/dashboard-{role}/settings`
-  - Superuser: `/dashboard-superuser/settings`
-  - Admin: `/dashboard-admin/settings`
-  - Librarian: `/dashboard-librarian/settings`
-  - Dean: `/dashboard-dean/settings`
-  - User (Student/Professor/Guest): `/dashboard-user/settings`
+- **Route**: `/dashboard/settings` (unified dashboard route for all roles)
 
 ### 2. **Profile Page** (Secondary Method)
 - **Location**: Profile page → "Account Settings" section
 - **Path**: Navigate to Profile → Scroll to "Account Settings" card → Click "Open Settings" button
-- **Route**: Same as above based on user role
+- **Route**: `/dashboard/settings`
 
 ### 3. **Direct URL Navigation**
-- Users can directly navigate to:
-  - `/dashboard-superuser/settings` (for superusers)
-  - `/dashboard-admin/settings` (for admins)
-  - `/dashboard-librarian/settings` (for librarians)
-  - `/dashboard-dean/settings` (for deans)
-  - `/dashboard-user/settings` (for regular users)
+- Users can directly navigate to `/dashboard/settings` (all roles use the same unified route)
 
 ## Navigation Menu Structure
 
@@ -88,11 +78,11 @@ The Settings page is organized into tabs:
 
 ## Quick Access Summary
 
-| Method | Location | Icon | Route Pattern |
-|--------|----------|------|---------------|
-| User Menu | Top-right dropdown |  Settings | `/dashboard-{role}/settings` |
-| Profile Page | Account Settings card |  Open Settings | `/dashboard-{role}/settings` |
-| Direct URL | Browser address bar | - | `/dashboard-{role}/settings` |
+| Method | Location | Icon | Route |
+|--------|----------|------|-------|
+| User Menu | Top-right dropdown |  Settings | `/dashboard/settings` |
+| Profile Page | Account Settings card |  Open Settings | `/dashboard/settings` |
+| Direct URL | Browser address bar | - | `/dashboard/settings` |
 
 ## User Experience Flow
 
@@ -107,7 +97,7 @@ The Settings page is organized into tabs:
 ## Notes
 
 - Settings page is accessible to all authenticated users
-- Route is role-aware (uses appropriate dashboard prefix)
+- All roles use the unified `/dashboard/settings` route
 - Settings link appears in both desktop and mobile navigation
 - Profile page provides an alternative entry point
 - All navigation uses React Router for smooth transitions

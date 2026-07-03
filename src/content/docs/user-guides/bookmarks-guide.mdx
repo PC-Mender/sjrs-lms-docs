@@ -1,0 +1,56 @@
+---
+title: "Bookmarks Guide"
+description: "How to save and organize bookmarks for quick access to books and resources."
+lifecycle: Active
+---
+
+## Overview
+
+Bookmarks let you save quick links to books, articles, and other resources for easy access later. Unlike the wishlist (which tracks books you want to borrow), bookmarks are for general reference and quick navigation.
+
+**Route**: `/dashboard/bookmarks`
+
+## Viewing Your Bookmarks
+
+1. Navigate to **Dashboard** → **Bookmarks** (`/dashboard/bookmarks`)
+2. You'll see a table listing all your saved bookmarks
+3. Use the **search bar** to find bookmarks by title
+
+## Adding a Bookmark
+
+1. Go to **Dashboard** → **Bookmarks**
+2. Click **Create Bookmark**
+3. Fill in the bookmark details:
+   - **Title** — a name for the bookmark
+   - **URL** — the link to the resource
+   - **Description** — optional notes
+4. Click **Save** to create the bookmark
+
+You can also bookmark items directly from book detail pages and article pages.
+
+## Editing a Bookmark
+
+1. Find the bookmark in your list
+2. Click the **Edit** button (pencil icon)
+3. Update the title, URL, or description
+4. Click **Update** to save
+
+## Deleting a Bookmark
+
+1. Find the bookmark in your list
+2. Click the **Delete** button (trash icon)
+3. Confirm the deletion
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/bookmarks` | List bookmarks |
+| POST | `/api/v1/bookmarks` | Create a bookmark |
+| PUT | `/api/v1/bookmarks/:id` | Update a bookmark |
+| DELETE | `/api/v1/bookmarks/:id` | Delete a bookmark |
+
+## Related Documentation
+
+- [Catalog Guide](./catalog-guide) — Finding books to bookmark
+- [Wishlist Guide](./wishlist-guide) — Tracking books you want to borrow

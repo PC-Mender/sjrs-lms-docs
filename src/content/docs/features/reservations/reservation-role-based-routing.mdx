@@ -5,29 +5,14 @@ title: "Reservation Role Based Routing"
 
 ## Route Configuration
 
-### Routes Available Per Dashboard Type
+### Unified Dashboard Route
 
-The reservation routes are **automatically generated** for all dashboard types through the dynamic route generation system:
+All reservation routes now use the unified `/dashboard/reservations` path. Role-based access control is handled by permissions and the role-based lazy-loaded dashboard views — there are no longer separate role-prefixed dashboard routes.
 
-1. **Base Dashboard** (`/dashboard/reservations`)
-   - Available to: All authenticated users
-   - Users see: Only their own reservations
-
-2. **Admin Dashboard** (`/dashboard-admin/reservations`)
-   - Available to: Admin, Superuser roles
-   - Users see: All reservations (can filter by user)
-
-3. **Librarian Dashboard** (`/dashboard-librarian/reservations`)
-   - Available to: Librarian, Admin, Superuser roles
-   - Users see: All reservations (can filter by user)
-
-4. **Superuser Dashboard** (`/dashboard-superuser/reservations`)
-   - Available to: Superuser role only
-   - Users see: All reservations (can filter by user)
-
-5. **Dean Dashboard** (`/dashboard-dean/reservations`)
-   - Available to: Dean, Admin, Superuser roles
-   - Users see: All reservations (read-only access)
+1. **Reservations** (`/dashboard/reservations`)
+   - Available to: All authenticated users with `reservations:read` permission
+   - Admin/Librarian/Superuser/Dean: See all reservations (can filter by user)
+   - Regular users: See only their own reservations
 
 ### How Routes Are Generated
 
@@ -40,7 +25,7 @@ const ADDITIONAL_ROUTES: FeatureRoute[] = [
 ];
 ```
 
-These routes are added to `ALL_FEATURE_ROUTES`, which are then dynamically generated for each dashboard type via `generateDashboardRoutes()`. Since reservations route doesn't have `requiresSpecificRoles: true`, it's generated for **all dashboard types**.
+These routes are added to `ALL_FEATURE_ROUTES`, which are generated under the unified `/dashboard/*` route via `generateDashboardRoutes()`. Since reservations route doesn't have `requiresSpecificRoles: true`, it's available to **all roles** with the appropriate permissions.
 
 ## Permission-Based Access Control
 
@@ -89,17 +74,14 @@ When users click "Reservations" in the menu:
 3. Navigates to: `{dashboardPath}/reservations`
 
 Example:
-- Admin user → `/dashboard-admin/reservations`
-- Librarian → `/dashboard-librarian/reservations`
+- Admin user → `/dashboard/reservations`
+- Librarian → `/dashboard/reservations`
 - Student → `/dashboard/reservations`
 
 ### Route Constants
 
 Route constants are defined in `src/constants/config.ts`:
 - `RESERVATIONS: '/dashboard/reservations'`
-- `ADMIN_RESERVATIONS: '/dashboard-admin/reservations'`
-- `LIBRARIAN_RESERVATIONS: '/dashboard-librarian/reservations'`
-- `SUPERUSER_RESERVATIONS: '/dashboard-superuser/reservations'`
 
 ## Verification Checklist
 
@@ -124,12 +106,10 @@ Route constants are defined in `src/constants/config.ts`:
 
 ## Summary
 
-**Routes are role-based** - Each dashboard type has its own route:
-- `/dashboard/reservations` - Regular users
-- `/dashboard-admin/reservations` - Admins
-- `/dashboard-librarian/reservations` - Librarians
-- `/dashboard-superuser/reservations` - Superusers
-- `/dashboard-dean/reservations` - Deans
+**Routes use unified dashboard** - All roles use `/dashboard/reservations`:
+- Role-based access control is handled by permissions and lazy-loaded views
+- Admin users (superuser, admin, librarian, dean) see all reservations
+- Regular users see only their own reservations
 
 **Admin users can see all reservations** - The `ReservationList` component filters by `user_id` only for non-admin users. Admin users (superuser, admin, librarian, dean) see all reservations.
 

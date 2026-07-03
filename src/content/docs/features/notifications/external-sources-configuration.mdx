@@ -114,7 +114,7 @@ Sentry will send events in their format. The ingest handler automatically conver
 
 #### Verification:
 - Check Sentry webhook logs in Sentry dashboard
-- Check System Notifications in `/dashboard-superuser/system-notifications`
+- Check System Notifications in `/dashboard/system-notifications`
 - Look for notifications with source: `monitoring:sentry`
 
 ---
@@ -214,7 +214,7 @@ export default {
 - [ ] Set `NOTIFICATION_INGEST_TOKEN` or `NOTIFICATION_INGEST_TOKEN_RELEASE` in deployment environment
 - [ ] Verify token is accessible during deployment
 - [ ] Test deployment and check for notification in System Notifications
-- [ ] Verify notification appears in `/dashboard-superuser/system-notifications`
+- [ ] Verify notification appears in `/dashboard/system-notifications`
 
 ### Sentry
 - [ ] Set `NOTIFICATION_INGEST_TOKEN_SENTRY` in Cloudflare Workers secrets

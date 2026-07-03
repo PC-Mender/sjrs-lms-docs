@@ -1,0 +1,58 @@
+---
+title: "Plagiarism Checker Guide"
+description: "How to check your documents for plagiarism and originality using the built-in checker."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+The Plagiarism Checker allows you to submit text or documents and check them for potential plagiarism against online sources. This is useful for students submitting assignments and for faculty verifying academic integrity.
+
+**Route**: `/dashboard/plagiarism-checker`
+
+## Checking Text for Plagiarism
+
+1. Navigate to **Dashboard** → **Plagiarism Checker** (`/dashboard/plagiarism-checker`)
+2. Either:
+   - **Paste text** directly into the text area, or
+   - **Upload a file** (supported formats: .txt, .docx, .pdf)
+3. Click **Check for Plagiarism**
+4. Wait for the analysis to complete
+5. Review the results:
+   - **Originality score** — percentage of unique content
+   - **Matched sources** — list of URLs and sources with matching content
+   - **Highlighted text** — sections of your text that match other sources
+
+## Understanding the Results
+
+| Score Range | Interpretation |
+|------------|----------------|
+| 90–100% original | Excellent — highly original content |
+| 75–89% original | Good — minor matches, likely common phrases |
+| 50–74% original | Review — significant matches found, check sources |
+| Below 50% original | Warning — high similarity, revise and cite sources |
+
+<Aside type="caution" title="Interpretation">
+A low originality score doesn't always mean plagiarism. Common phrases, quotes, and bibliographic entries can trigger matches. Always review the matched sources to determine if proper citation is needed.
+</Aside>
+
+## Tips for Better Results
+
+- Remove bibliography/reference sections before checking (they'll always match)
+- Put direct quotes in quotation marks
+- Paraphrase rather than copy-pasting from sources
+- Always cite your sources properly using the [Citation Generator](./citation-generator-guide)
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/plagiarism/check` | Submit text for plagiarism check |
+| GET | `/api/v1/plagiarism/results/:id` | Get check results |
+
+## Related Documentation
+
+- [Citation Generator Guide](./citation-generator-guide) — Generate proper citations
+- [Journals Guide](./journals-guide) — Find academic sources

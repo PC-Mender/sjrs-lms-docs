@@ -1,0 +1,104 @@
+---
+title: "Orders Guide"
+description: "How to place, track, and manage book orders in the SJRS LMS."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+Orders represent book purchase requests. Users can place orders for books they want the library to acquire. Staff can review, approve, reject, and fulfill these orders. The order priority policy determines which orders get processed first.
+
+**Route**: `/dashboard/orders`
+
+## Order Statuses
+
+| Status | Description |
+|--------|-------------|
+| Pending | Order submitted, awaiting review |
+| Approved | Staff approved the purchase |
+| Rejected | Staff rejected the order |
+| Ordered | Book has been ordered from the supplier |
+| Received | Book has arrived and is being processed |
+| Completed | Book is catalogued and available |
+| Cancelled | Order was cancelled |
+
+## For Students & Regular Users
+
+### Placing an Order
+
+1. Navigate to **Dashboard** → **Orders** (`/dashboard/orders`)
+2. Click **Create Order**
+3. Fill in the book details:
+   - **Title** — the book you want
+   - **Author** — if known
+   - **ISBN** — if available
+   - **Publication** — if known
+   - **Notes** — any additional context
+4. Click **Submit** to place the order
+
+### Tracking Your Orders
+
+1. Go to **Dashboard** → **Orders**
+2. View the status of all your orders in the table
+3. Use the **status filter** to see only pending or completed orders
+4. Use the **search bar** to find orders by title
+
+### Cancelling an Order
+
+1. Find an order with status "Pending"
+2. Click the **Cancel** button
+3. Confirm the cancellation
+
+## For Librarians, Admins & Superusers
+
+### Reviewing Orders
+
+1. Navigate to **Dashboard** → **Orders**
+2. All user orders are visible with user columns
+3. Use filters to find pending orders needing review
+
+### Approving an Order
+
+1. Find an order with status "Pending"
+2. Click **Approve**
+3. The order moves to "Approved" status
+
+### Rejecting an Order
+
+1. Find an order with status "Pending"
+2. Click **Reject**
+3. Provide a reason if prompted
+4. The order moves to "Rejected" status
+
+### Fulfilling an Order
+
+Once a book has been ordered and received:
+1. Update the order status to **Ordered** → **Received** → **Completed**
+2. The book is then catalogued and made available in the system
+
+## Order Priority Policy
+
+The system supports an order priority policy that determines processing order based on factors like:
+- Number of users requesting the same book
+- Role-based priority (faculty requests may get higher priority)
+- Strategic acquisition goals
+
+See [Order Priority Policy](../features/orders/order-priority-policy) for configuration details.
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/orders` | List orders |
+| GET | `/api/v1/orders/:id` | Get order details |
+| POST | `/api/v1/orders` | Create an order |
+| PUT | `/api/v1/orders/:id` | Update order status |
+| DELETE | `/api/v1/orders/:id` | Delete an order |
+
+## Related Documentation
+
+- [Catalog Guide](./catalog-guide) — Browsing existing books
+- [Wishlist Guide](./wishlist-guide) — Tracking books you want
+- [Order Priority Policy](../features/orders/order-priority-policy) — Priority configuration

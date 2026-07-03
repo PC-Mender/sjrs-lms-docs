@@ -1,0 +1,104 @@
+---
+title: "Settings Guide"
+description: "How to configure your account settings, notification preferences, and security options."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+The Settings page is your central hub for managing account preferences, notification settings, security options, and more. All roles access settings from the same unified route.
+
+**Route**: `/dashboard/settings`
+
+## Accessing Settings
+
+1. Click your **profile avatar** in the top-right corner
+2. Select **Settings** from the dropdown menu
+3. Or navigate directly to `/dashboard/settings`
+
+## Settings Sections
+
+### General Settings
+
+- **Display name** — how your name appears to other users
+- **Profile picture** — upload or change your avatar
+- **Language preference** — interface language (if multilingual is enabled)
+- **Timezone** — affects date/time display throughout the app
+
+### Notification Preferences
+
+**Route**: `/dashboard/notification-preferences`
+
+1. Toggle which notification types you receive:
+   - Due date reminders
+   - Overdue alerts
+   - Reservation-ready notifications
+   - Badge awards
+   - Penalty notifications
+   - Announcements
+2. Choose delivery channels:
+   - **In-app** — notifications appear in the notification center
+   - **Email** — notifications sent to your registered email
+3. Click **Save** to update preferences
+
+### Security Settings
+
+#### Change Password
+
+1. Go to **Settings** → **Security** tab
+2. Enter your **current password**
+3. Enter your **new password** (minimum 8 characters)
+4. Confirm the new password
+5. Click **Change Password**
+
+#### Multi-Factor Authentication (MFA)
+
+**Route**: `/dashboard/mfa-settings`
+
+1. Go to **Settings** → **Security** → **Two-Factor Authentication**
+2. Click **Enable Two-Factor Authentication**
+3. Choose your method:
+   - **Authenticator App** — scan QR code with Google Authenticator or Authy
+   - **Email** — receive OTP codes via email
+   - **Passkey** — register your device (FaceID, TouchID) for passwordless login
+4. Save your **backup codes** in a safe place
+5. Use a backup code if you lose access to your primary MFA method
+
+<Aside type="danger" title="Backup Codes">
+Store your backup codes securely. If you lose access to your MFA device and don't have backup codes, you'll need to contact a superuser to reset MFA.
+</Aside>
+
+#### Session Management
+
+1. Go to **Settings** → **Security** → **Active Sessions**
+2. View all devices currently logged into your account
+3. See device name, IP address, location, and last active time
+4. Click **Revoke** to end any session you don't recognize
+
+### Privacy Settings
+
+- **Profile visibility** — control who can see your profile information
+- **Activity status** — show/hide your online status
+- **Reading history** — enable/disable tracking of your reading activity
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/user/profile` | Get current user profile |
+| PUT | `/api/v1/user/profile` | Update profile settings |
+| GET | `/api/v1/user/preferences` | Get notification preferences |
+| PUT | `/api/v1/user/preferences` | Update notification preferences |
+| POST | `/api/v1/auth/change-password` | Change password |
+| GET | `/api/v1/auth/sessions` | List active sessions |
+| DELETE | `/api/v1/auth/sessions/:id` | Revoke a session |
+| POST | `/api/v1/auth/mfa/enroll` | Enable MFA |
+| POST | `/api/v1/auth/mfa/disable` | Disable MFA |
+
+## Related Documentation
+
+- [Profile Guide](./profile-guide) — Managing your profile information
+- [Notifications Guide](./notifications-guide) — Understanding notification types
+- [MFA System](../features/mfa-system) — Technical MFA implementation

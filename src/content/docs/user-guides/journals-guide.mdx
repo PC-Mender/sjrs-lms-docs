@@ -1,0 +1,113 @@
+---
+title: "Journals & Magazines Guide"
+description: "How to browse, search, and manage academic journals and magazines in the SJRS LMS."
+lifecycle: Active
+---
+
+## Overview
+
+The SJRS LMS includes a complete periodicals management system for academic journals and magazines. You can browse journal sections, search for specific articles, and manage magazine collections.
+
+## Journals
+
+**Route**: `/dashboard/journals`
+
+### Browsing Journals
+
+1. Navigate to **Dashboard** → **Journals** (`/dashboard/journals`)
+2. View all journals in the library's collection
+3. Use the **search bar** to find journals by title or ISSN
+4. Click a journal to view details including:
+   - Publisher and ISSN
+   - Available sections and volumes
+   - Article count
+
+### Journal Sections
+
+**Route**: `/dashboard/journal-sections`
+
+Journal sections organize articles within a journal by topic or department:
+
+1. Navigate to **Dashboard** → **Journal Sections**
+2. View all configured sections
+3. Each section shows the journals it belongs to and article count
+
+### Journal Articles
+
+**Route**: `/dashboard/articles`
+
+1. Navigate to **Dashboard** → **Journal Articles** (`/dashboard/articles`)
+2. Browse all articles across all journals
+3. Use the **search bar** to find articles by title, author, or keyword
+4. Filter by journal, section, or publication date
+5. Click an article to view:
+   - Title, authors, abstract
+   - Journal and section
+   - Publication date and volume/issue
+   - DOI (if available)
+   - Full text (if digital access is available)
+
+### Viewing a Specific Journal
+
+**Route**: `/dashboard/journals/show/:id`
+
+1. Click on any journal to open its detail page
+2. See all sections and volumes for that journal
+3. Browse articles within each section
+
+## Magazines
+
+**Route**: `/dashboard/magazines`
+
+### Browsing Magazines
+
+1. Navigate to **Dashboard** → **Magazines** (`/dashboard/magazines`)
+2. View all magazines in the collection
+3. Use the **search bar** to find magazines by title
+4. Click a magazine to view details including:
+   - Publisher and frequency
+   - Available issues
+   - Category
+
+## For Librarians & Admins
+
+### Managing Journals
+
+1. Go to **Dashboard** → **Journals**
+2. Click **Create Journal** to add a new journal
+3. Fill in title, publisher, ISSN, and description
+4. Create journal sections to organize articles
+
+### Managing Articles
+
+1. Go to **Dashboard** → **Journal Articles**
+2. Click **Create Article** to add a new article
+3. Select the journal and section
+4. Fill in article metadata (title, authors, abstract, DOI)
+5. Upload the full text if digital access is available
+
+### Managing Magazines
+
+1. Go to **Dashboard** → **Magazines**
+2. Click **Create Magazine** to add a new magazine
+3. Fill in title, publisher, frequency, and category
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/journals` | List journals |
+| GET | `/api/v1/journals/:id` | Get journal details |
+| GET | `/api/v1/journal-sections` | List journal sections |
+| GET | `/api/v1/journal-articles` | List journal articles |
+| GET | `/api/v1/journal-articles/:id` | Get article details |
+| GET | `/api/v1/magazines` | List magazines |
+| POST | `/api/v1/journals` | Create a journal (admin) |
+| POST | `/api/v1/journal-articles` | Create an article (admin) |
+| POST | `/api/v1/magazines` | Create a magazine (admin) |
+
+## Related Documentation
+
+- [Digital Resources Guide](./digital-resources-guide) — Reading digital content
+- [Citation Generator Guide](./citation-generator-guide) — Citing journal articles
+- [Catalog Guide](./catalog-guide) — Browsing physical books

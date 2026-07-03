@@ -1,0 +1,75 @@
+---
+title: "Wishlist Guide"
+description: "How to create, manage, and track books you want to read in the future."
+lifecycle: Active
+---
+
+## Overview
+
+The Wishlist lets you bookmark books you're interested in reading later. You can set priority levels, add notes, and easily convert wishlist items into reservations when you're ready to borrow.
+
+**Route**: `/dashboard/wishlist`
+
+## Viewing Your Wishlist
+
+1. Navigate to **Dashboard** → **Wishlist** (`/dashboard/wishlist`)
+2. You'll see a table listing all your wishlist items with book title, priority, status, and actions
+3. Use the **search bar** to find items by book title
+
+## Adding Books to Your Wishlist
+
+**From the Catalog:**
+1. Go to **Dashboard** → **Catalog** (`/dashboard/catalog`)
+2. Find the book you want
+3. Click the book card to open details
+4. Click **Add to Wishlist**
+5. If the book is already in your wishlist, you'll see: "This book is already in your wishlist."
+
+**From the Wishlist Page:**
+1. Go to **Dashboard** → **Wishlist**
+2. Click **Create Wishlist Item**
+3. In the modal, select a book and set the priority
+4. Click **Create** to save
+
+## Wishlist Priorities
+
+| Priority | Description |
+|----------|-------------|
+| Low | Nice to have — no rush |
+| Normal | Interested in reading |
+| High | Really want to read soon |
+
+## Editing a Wishlist Item
+
+1. Find the item in your wishlist
+2. Click the **Edit** button (pencil icon)
+3. Update the priority or notes
+4. Click **Update** to save
+
+## Viewing Wishlist Item Details
+
+1. Click the **View** button (eye icon) on any wishlist item
+2. The detail page shows book information, priority, status, and timestamps
+
+## Removing a Wishlist Item
+
+1. Find the item in your wishlist
+2. Click the **Delete** button (trash icon)
+3. Confirm the deletion
+4. The item is permanently removed from your wishlist
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/wishlist` | List wishlist items |
+| GET | `/api/v1/wishlist/:id` | Get wishlist item details |
+| POST | `/api/v1/wishlist` | Create a wishlist item |
+| PUT | `/api/v1/wishlist/:id` | Update a wishlist item |
+| DELETE | `/api/v1/wishlist/:id` | Delete a wishlist item |
+
+## Related Documentation
+
+- [Catalog Guide](./catalog-guide) — Browsing and searching books
+- [Reservations Guide](./reservations-guide) — Reserving books
+- [Loans Guide](./loans-guide) — Managing borrowed books

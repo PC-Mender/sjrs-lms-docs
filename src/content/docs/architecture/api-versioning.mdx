@@ -1,0 +1,165 @@
+---
+title: "API Versioning"
+---
+
+## Overview
+
+All SJRS LMS API routes use **URI versioning** with the `/api/v1/` prefix. This is a full migration — legacy `/api/` paths (without `v1/`) are rejected with HTTP 400. There is no fallback.
+
+The versioning system consists of three components:
+1. **Path normalization** in the main request pipeline
+2. **Version negotiation** via `Accept-Version` header
+3. **Response stamping** with `X-API-Version` header
+
+## How It Works
+
+### Request Flow
+
+```
+Client sends:  POST /api/v1/books
+                     │
+                     ▼
+1. functions/index.ts detects /api/v1/ prefix
+2. Rewrites path: /api/v1/books → /api/books (internal)
+3. Rejects legacy /api/books (without v1/) → 400 error
+4. negotiateApiVersion() checks Accept-Version header
+   - No header → pass through
+   - Supported version → pass through
+   - Unsupported version → 406 error
+5. Route matching uses normalized /api/ path
+6. Response stamped with X-API-Version: 1
+```
+
+### Path Normalization
+
+The main request pipeline (`functions/index.ts`) normalizes `/api/v1/<resource>` to `/api/<resource>` before route matching. This means **handlers only strip `/api/<resource>`** — they never need to deal with the `v1/` prefix:
+
+```typescript
+// In functions/index.ts
+const isV1Path = originalPath.startsWith('/api/v1/') || originalPath === '/api/v1';
+if (isV1Path) {
+  url.pathname = originalPath.replace('/api/v1/', '/api/');
+}
+```
+
+### Legacy Path Rejection
+
+Requests to `/api/<resource>` without the `v1/` prefix are rejected:
+
+```json
+{
+  "success": false,
+  "message": "API version v1 is required. Use /api/v1/ prefix for all API requests.",
+  "error": {
+    "code": "VALIDATION_ERROR",
+    "details": "Legacy API path deprecated"
+  },
+  "status": 400
+}
+```
+
+### Version Negotiation
+
+Clients can optionally send an `Accept-Version` header to negotiate the API version:
+
+```http
+GET /api/v1/books
+Accept-Version: 1
+```
+
+- **No header** → request proceeds (client doesn't care about version)
+- **Supported version** (currently `1`) → request proceeds
+- **Unsupported version** → HTTP 406 with supported versions listed:
+
+```json
+{
+  "success": false,
+  "message": "Unsupported API version: 2. Supported versions: 1.",
+  "error": {
+    "code": "UNSUPPORTED_API_VERSION",
+    "details": "The requested API version '2' is not supported."
+  },
+  "status": 406
+}
+```
+
+### Response Stamping
+
+All API responses include the `X-API-Version` header:
+
+```http
+HTTP/1.1 200 OK
+X-API-Version: 1
+Content-Type: application/json
+```
+
+## Frontend Integration
+
+### createCrudHooks Factory
+
+The `createCrudHooks` factory (`src/hooks/d1/factories/createCrudHooks.ts`) automatically prepends `v1/` to the `resource` parameter. **Frontend developers never need to manually add the `v1/` prefix**:
+
+```typescript
+const apiResource = `v1/${resource}`;  // e.g., 'v1/books'
+
+// All generated hooks use /api/v1/books automatically
+const { useQuery, useCreate, useUpdate, useDelete } = createCrudHooks<D1Book>({
+  resource: 'books',      // ← no v1/ prefix needed
+  queryKey: 'd1-books',
+});
+```
+
+### Manual API Calls
+
+When making manual API calls (not using `createCrudHooks`), always use the `/api/v1/` prefix:
+
+```typescript
+// ✅ Correct
+const response = await d1Request('/api/v1/books', { method: 'GET' });
+
+// ❌ Wrong — will be rejected with 400
+const response = await d1Request('/api/books', { method: 'GET' });
+```
+
+## Configuration
+
+### Supported Versions
+
+Defined in `functions/middleware/api-versioning/index.ts`:
+
+```typescript
+export const CURRENT_API_VERSION = 1;
+export const SUPPORTED_API_VERSIONS = [1] as const;
+```
+
+When a new version is introduced, add it to `SUPPORTED_API_VERSIONS` and update `CURRENT_API_VERSION`.
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `functions/index.ts` | Path normalization (`/api/v1/` → `/api/`) and legacy rejection |
+| `functions/middleware/api-versioning/index.ts` | `negotiateApiVersion()`, `stampApiVersion()`, version constants |
+| `src/hooks/d1/factories/createCrudHooks.ts` | Auto-prepends `v1/` to resource parameter |
+
+## Adding a New API Version
+
+When introducing a breaking change that requires a new version boundary:
+
+1. **Add version to supported list**: Update `SUPPORTED_API_VERSIONS` in `functions/middleware/api-versioning/index.ts`
+2. **Add path normalization**: Update `functions/index.ts` to handle `/api/v2/` prefix
+3. **Create versioned handlers**: Either new handler files or version-aware branching in existing handlers
+4. **Update frontend**: New `createCrudHooks` calls or manual API calls should use the new version
+5. **Deprecation path**: Keep `v1` working with documented deprecation timeline
+6. **Document breaking changes**: Update changelog and migration guides
+
+## Related Documentation
+
+- **[Project Rules (Application)](../project-rules-app)** — API versioning policy and backward compatibility discipline
+- **[API Response Standardization](../api/api-response-standardization)** — Response envelopes
+- **[Idempotency System](../architecture/idempotency-system)** — Duplicate prevention for critical operations
+
+---
+
+**Last Updated**: July 2026
+**Status**: Production Ready
