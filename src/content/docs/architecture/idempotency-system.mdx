@@ -1,0 +1,224 @@
+---
+title: "Idempotency System"
+---
+
+## Overview
+
+The SJRS LMS implements **D1-backed idempotency** for critical POST operations to prevent duplicate processing during retries, network failures, or client resubmissions. Unlike KV-based approaches, D1's `INSERT ... ON CONFLICT DO UPDATE` provides a truly atomic compare-and-swap that eliminates race conditions between concurrent duplicate requests.
+
+## When to Use Idempotency
+
+Apply idempotency to create/update operations where duplicate execution would be harmful:
+
+- **Payments** — duplicate charges
+- **Orders** — duplicate order creation
+- **Loans** — duplicate loan records
+- **Reservations** — duplicate reservations
+- Any operation with **financial side effects**, **inventory changes**, or **irreversible workflow transitions**
+
+## How It Works
+
+### Request Flow
+
+```
+Client sends POST with `Idempotency-Key: <uuid>` header
+         │
+         ▼
+1. Extract Idempotency-Key header
+2. If no key:
+   - requireKey: true → 400 IDEMPOTENCY_KEY_REQUIRED
+   - requireKey: false → proceed normally (opt-in)
+3. Atomically claim the key via D1 upsert:
+   - Fresh insert → we own it → proceed with handler
+   - Existing record is stale/failed/expired → reclaim → proceed
+   - Existing record is completed or in-progress → conflict
+4. On conflict:
+   - completed → replay stored response (with X-Idempotency-Replay: true header)
+   - in_progress → 409 IDEMPOTENCY_IN_PROGRESS
+5. After handler completes → store response for future replays
+6. If handler throws → mark as failed (key becomes reclaimable)
+```
+
+### Key Scoping
+
+Idempotency keys are scoped per **user + resource** using a composite primary key:
+
+```sql
+PRIMARY KEY (idempotency_key, user_id, resource)
+```
+
+This means the same `Idempotency-Key` value can be reused across different users or different resources without conflict.
+
+### Resource Naming
+
+The `resource` parameter identifies the operation type (e.g., `'payments:create'`, `'loans:create'`). This prevents the same key from being replayed across different operations on the same resource type.
+
+## Usage
+
+### Basic Usage
+
+```typescript
+import { withIdempotency } from '../../middleware/idempotency';
+
+export async function handleCreatePayment(
+  request: Request,
+  env: Environment,
+  user: { id: number }
+): Promise<Response> {
+  return withIdempotency(
+    request,
+    env,
+    user.id,
+    'payments:create',
+    async () => {
+      // Your handler logic — runs only if idempotency check passes
+      const payment = await createPayment(/* ... */);
+      return createCreatedResponse(payment, 'Payment created');
+    }
+  );
+}
+```
+
+### Requiring an Idempotency Key
+
+For operations where duplicate execution is unacceptable (payments, orders):
+
+```typescript
+return withIdempotency(
+  request, env, user.id, 'payments:create',
+  async () => { /* handler */ },
+  { requireKey: true }  // 400 if no Idempotency-Key header
+);
+```
+
+### Fail-Closed Mode
+
+When idempotency infrastructure (D1) is unavailable, the default behavior is to **fail open** (proceed without idempotency). For critical operations, use `failClosed` to return 503 instead:
+
+```typescript
+return withIdempotency(
+  request, env, user.id, 'payments:create',
+  async () => { /* handler */ },
+  {
+    requireKey: true,
+    failClosed: true,  // 503 if D1 unavailable — never execute without protection
+  }
+);
+```
+
+### Recommended: Both Options for Critical Operations
+
+```typescript
+return withIdempotency(
+  request, env, user.id, 'payments:create',
+  async () => { /* handler */ },
+  { requireKey: true, failClosed: true }
+);
+```
+
+## Options Reference
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `requireKey` | `boolean` | `false` | If true, rejects requests without `Idempotency-Key` header (400) |
+| `failClosed` | `boolean` | `false` | If true, returns 503 when D1 is unavailable instead of proceeding without idempotency |
+
+## Response Headers
+
+| Header | Value | Description |
+|--------|-------|-------------|
+| `X-Idempotency-Replay` | `true` | Set on replayed responses (same `Idempotency-Key` was already processed) |
+
+## Error Codes
+
+| Code | HTTP Status | Description |
+|------|-------------|-------------|
+| `IDEMPOTENCY_KEY_REQUIRED` | 400 | `requireKey: true` and no `Idempotency-Key` header |
+| `IDEMPOTENCY_IN_PROGRESS` | 409 | A request with this key is already being processed |
+| `IDEMPOTENCY_UNAVAILABLE` | 503 | `failClosed: true` and D1 is unavailable |
+
+## Database Schema
+
+Migration: `sql/migrations/2026-07-02_add-idempotency-records-table.sql`
+
+```sql
+CREATE TABLE IF NOT EXISTS idempotency_records (
+  idempotency_key TEXT NOT NULL,
+  user_id INTEGER NOT NULL,
+  resource TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'in_progress',  -- 'in_progress' | 'completed' | 'failed'
+  response_status INTEGER,
+  response_body TEXT,
+  created_at TEXT NOT NULL DEFAULT (datetime('now')),
+  completed_at TEXT,
+  expires_at TEXT NOT NULL,
+  PRIMARY KEY (idempotency_key, user_id, resource)
+);
+
+CREATE INDEX IF NOT EXISTS idx_idempotency_expires ON idempotency_records(expires_at);
+CREATE INDEX IF NOT EXISTS idx_idempotency_status_created ON idempotency_records(status, created_at);
+```
+
+## TTL and Expiry
+
+| Status | TTL | Behavior |
+|--------|-----|----------|
+| `in_progress` | 2 minutes | Auto-expires; key becomes reclaimable by new requests |
+| `completed` | 24 hours | Stored response available for replay; then cleaned up |
+| `failed` | 1 hour | Key reclaimable immediately; cleaned up after 1 hour |
+
+## Scheduled Cleanup
+
+A scheduled task (`functions/scheduled/cleanup-idempotency-records.ts`) purges expired records daily at 3:00 AM UTC:
+
+```sql
+DELETE FROM idempotency_records
+WHERE expires_at < datetime('now')
+   OR (status = 'in_progress' AND created_at < datetime('now', '-2 minutes'))
+   OR (status = 'failed' AND completed_at < datetime('now', '-1 hour'))
+```
+
+## Response Body Storage
+
+- Max response body size: **512KB** (D1 rows can hold up to 1MB)
+- If the response body exceeds the limit, the key still prevents concurrent duplicates, but the response cannot be replayed (409 is returned instead)
+- Response bodies are stored as serialized JSON text
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `functions/middleware/idempotency/idempotency.ts` | `withIdempotency()` — main entry point |
+| `functions/middleware/idempotency/idempotency-helpers.ts` | `claimKey()`, `storeResult()`, `replayStoredResponse()`, `markFailed()` |
+| `functions/middleware/idempotency/index.ts` | Barrel export |
+| `functions/scheduled/cleanup-idempotency-records.ts` | Daily cleanup scheduled task |
+| `sql/migrations/2026-07-02_add-idempotency-records-table.sql` | Database migration |
+| `shared/types/error-codes.ts` | `IDEMPOTENCY_*` error codes |
+
+## Client-Side Usage
+
+Clients send an `Idempotency-Key` header with a unique value (typically a UUID v4) on POST requests:
+
+```typescript
+const response = await fetch('/api/v1/payments', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    'Idempotency-Key': crypto.randomUUID(),
+  },
+  body: JSON.stringify(paymentData),
+});
+```
+
+If the request times out or fails, retry with the **same** `Idempotency-Key` — the server will either replay the completed response or return 409 if still processing.
+
+## Related Documentation
+
+- **[Project Rules (Application)](../project-rules-app)** — Idempotency key policy and guidelines
+- **[API Response Standardization](../api/api-response-standardization)** — Response envelopes and error codes
+- **[Validation System](../development/validation-system)** — Input validation architecture
+
+---
+
+**Last Updated**: July 2026
+**Status**: Production Ready

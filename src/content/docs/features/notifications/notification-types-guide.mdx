@@ -17,18 +17,18 @@ The platform uses three distinct notification systems, each serving different pu
 
 ## UI Navigation (Header Menu)
 
-The app exposes these notification areas under the header **Notifications** menu. The exact dashboard prefix varies by role (e.g. `/dashboard-superuser`, `/dashboard-admin`, `/dashboard`).
+The app exposes these notification areas under the header **Notifications** menu. All roles use the unified `/dashboard/` route.
 
 ### Common
-- **My Notifications**: `/<dashboard-prefix>/notifications`
+- **My Notifications**: `/dashboard/notifications`
   - Shows only the signed-in user's in-app notifications (App Notifications).
 
 ### Superuser / Permission-Based
-- **System Notifications**: `/<dashboard-prefix>/system-notifications`
+- **System Notifications**: `/dashboard/system-notifications`
   - Requires `notification_events` permissions.
-- **App Notifications Log**: `/<dashboard-prefix>/app-notifications-log`
+- **App Notifications Log**: `/dashboard/app-notifications-log`
   - Superuser/audit view across users.
-- **Announcements**: `/<dashboard-prefix>/announcements`
+- **Announcements**: `/dashboard/announcements`
   - Requires `announcements` permissions.
 
 ---
@@ -191,8 +191,8 @@ System Notifications are **platform-wide event notifications automatically pulle
 - **Delete Event**: `DELETE /api/notifications/events/:id`
 
 ### Frontend Components
-- **Admin Page**: `/dashboard-superuser/system-notifications` (requires `notification_events` resource permissions)
-- **Component**: `src/pages/dashboard-superuser/notification-center.tsx`
+- **Admin Page**: `/dashboard/system-notifications` (requires `notification_events` resource permissions)
+- **Component**: `src/pages/dashboard/notification-center.tsx`
 - **User Feed**: Integrated into user notification feed
 - **Note**: View-only interface - System Notifications are **auto-generated only**
 
@@ -369,13 +369,13 @@ The following automatic notifications are **not yet implemented**:
   -  **No create/edit access** (notifications are automatic)
 
 #### Superuser View (Delivery Log)
-- **Page**: `/dashboard-superuser/app-notifications-log`
+- **Page**: `/dashboard/app-notifications-log`
 - **Purpose**:
   - View all app notifications across all users
   - Filter by user, notification type, date range
   - See delivery statistics
   - Track notification delivery status
-- **Component**: `src/pages/dashboard-superuser/app-notifications-log.tsx`
+- **Component**: `src/pages/dashboard/app-notifications-log.tsx`
 
 #### Legacy Create/Edit Pages (Should Be Removed)
 - **Note**: The following pages exist but **should not be accessible** for regular users:

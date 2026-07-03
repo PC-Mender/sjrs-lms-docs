@@ -149,10 +149,26 @@ These standards are enforced through tooling where possible; deviations must be 
 - **Industry Standard - Idempotency Keys**: Critical POST operations with side effects should support idempotency keys to prevent duplicate processing during retries, network failures, or client resubmissions.
   - Apply this especially to payments, order creation, and any resource creation or action endpoint where duplicate execution would be harmful.
   - Idempotency guarantees must be enforced on the backend; client-side deduplication alone is not sufficient.
+  - **Implementation (D1-Based)**: Idempotency is enforced via `functions/middleware/idempotency/idempotency.ts` using D1's `INSERT ... ON CONFLICT DO UPDATE` for atomic key claiming (no race conditions).
+    - Clients send an `Idempotency-Key` header; if absent, the request proceeds without idempotency (opt-in).
+    - The `idempotency_records` table (migration `2026-07-02_add-idempotency-records-table.sql`) stores claim status and cached responses.
+    - In-progress records auto-expire after 2 minutes; completed records are retained for 24 hours for replay.
+    - Failed records are reclaimable so clients can retry with the same key after a handler error.
+    - Handlers wrap their logic with `withIdempotency(request, env, userId, resource, handler, options?)`.
+    - Options: `{ requireKey: true }` rejects requests without an Idempotency-Key header (400); `{ failClosed: true }` returns 503 instead of executing the handler when idempotency infrastructure (D1) is unavailable.
+    - Use `failClosed: true` for operations where duplicate execution is unacceptable, such as payments, orders, loans, and reservations.
+    - Apply idempotency to create/update operations that can cause duplicate records, financial side effects, inventory changes, or irreversible workflow transitions.
+    - A scheduled task (`cleanup-idempotency-records.ts`) purges expired records daily.
 - **Industry Standard - Versioning**: Maintain explicit compatibility boundaries for public APIs.
   - Prefer explicit API versioning for externally consumed or long-lived endpoints, including URI versioning where appropriate (e.g., `/api/v1/...`).
   - Breaking changes require a new compatibility boundary and must not silently change established client contracts.
   - Backward-compatible changes must not change response shapes unexpectedly.
+  - **URI Versioning (Full Migration)**: All API routes use the `/api/v1/` prefix.
+    - The main request pipeline (`functions/index.ts`) normalizes `/api/v1/<resource>` to `/api/<resource>` before route matching, so handlers only strip `/api/<resource>`.
+    - Legacy `/api/<resource>` paths (without `v1/`) are rejected with HTTP 400 and a clear error message — no fallback.
+    - Frontend calls use `/api/v1/` paths exclusively.
+    - The `createCrudHooks` factory (`src/hooks/d1/factories/createCrudHooks.ts`) automatically prepends `v1/` to the `resource` parameter.
+    - The API version middleware (`functions/middleware/api-versioning`) stamps all API responses with `X-API-Version: 1` and rejects unsupported `Accept-Version` header values with HTTP 406.
 - **Industry Standard - Additive API Evolution**: Public APIs should evolve through additive changes whenever feasible.
   - Existing fields, parameters, response structures, and established semantics must not be removed or changed in backward-incompatible ways within the same compatibility boundary.
   - Prefer adding new fields, optional parameters, optional metadata, or new endpoints instead of renaming or repurposing existing contract elements.

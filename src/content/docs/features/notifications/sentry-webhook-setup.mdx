@@ -61,7 +61,7 @@ Choose which events should trigger notifications:
    - Check webhook delivery logs
 
 3. **Check System Notifications**:
-   - Go to `/dashboard-superuser/system-notifications`
+   - Go to `/dashboard/system-notifications`
    - Should see notification with:
      - Source: `monitoring:sentry`
      - Category: `incident`
@@ -132,7 +132,7 @@ Sentry will send events in their format. The ingest handler automatically conver
    - Look for successful deliveries (200 status)
 
 2. **In System Notifications**:
-   - Go to `/dashboard-superuser/system-notifications`
+   - Go to `/dashboard/system-notifications`
    - Filter by source: `monitoring:sentry`
    - Should see Sentry notifications
 
@@ -209,7 +209,7 @@ curl -X POST https://your-api-domain.com/api/notifications/events/ingest \
 
 2. **Check Permissions**:
    - Verify you have `notification_events:read` permission
-   - Check `/dashboard-superuser/system-notifications` is accessible
+   - Check `/dashboard/system-notifications` is accessible
 
 3. **Check Source Filtering**:
    - Notifications are filtered by permission

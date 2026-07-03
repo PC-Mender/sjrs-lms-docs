@@ -1,0 +1,85 @@
+---
+title: "Institution Settings Guide"
+description: "How to configure institution-wide settings including UPI payments and library policies."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+Institution Settings allow admins and superusers to configure library-wide parameters. These settings affect all users and operations in the system.
+
+**Route**: `/dashboard/institution-settings`
+
+<Aside type="note" title="Access Control">
+Institution Settings are restricted to **admins** and **superusers** only.
+</Aside>
+
+## Accessing Institution Settings
+
+1. Navigate to **Dashboard** → **Institution Settings** (`/dashboard/institution-settings`)
+2. The settings page is organized into tabs:
+   - **General** — institution name, address, contact info
+   - **UPI Payments** — payment configuration for penalties
+   - **Policies** — library rules and policies
+
+## General Settings
+
+Configure basic institution information:
+
+- **Institution name** — displayed throughout the system
+- **Address** — physical library address
+- **Contact email** — for user inquiries
+- **Contact phone** — for user inquiries
+- **Library hours** — operating schedule
+
+## UPI Payment Settings
+
+Configure UPI payment integration for penalty payments:
+
+1. Navigate to the **UPI Payments** tab
+2. Fill in:
+   - **UPI ID** — your institution's UPI ID (e.g., `library@upi`)
+   - **Payee name** — name as it appears in UPI apps
+   - **Merchant code** — if applicable
+3. Click **Save** to update
+
+<Aside type="caution" title="UPI Configuration">
+Without UPI settings configured, users cannot pay penalties online. They will need to pay offline and have a staff member manually mark the penalty as paid.
+</Aside>
+
+The old UPI Settings route (`/dashboard/upi-settings`) now redirects to this tab.
+
+## Policy Settings
+
+Configure library-wide policies:
+
+- **Borrow period** — default number of days for loans
+- **Renewal period** — number of days extended on renewal
+- **Max reservations** — maximum active reservations per user
+- **Reservation hold period** — days a "Ready" reservation can be claimed before expiring
+- **Late fine policy** — fine calculation rules
+
+## For Superusers Only
+
+Superusers have additional capabilities:
+
+- **Reset institution settings** — restore defaults
+- **View audit log** — see who changed settings and when
+- **Export configuration** — download settings as JSON
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/institution-settings` | Get institution settings |
+| PUT | `/api/v1/institution-settings` | Update institution settings |
+| GET | `/api/v1/institution-settings/upi` | Get UPI config |
+| PUT | `/api/v1/institution-settings/upi` | Update UPI config |
+
+## Related Documentation
+
+- [Penalties Guide](./penalties-guide) — Penalty payment flow
+- [Settings Guide](./settings-guide) — User-level settings
+- [Superuser Guide](./superuser-guide) — Superuser operations

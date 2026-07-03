@@ -1,0 +1,296 @@
+---
+title: "Issue Reports"
+description: "User-submitted issue reporting with automatic GitHub Issue mirroring for developer triage."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+<Aside type="note" title="Feature Status">
+Production-ready. Available to all authenticated users.
+</Aside>
+
+## Overview
+
+The Issue Reports feature allows any authenticated user to submit bug reports, feature-broken complaints, performance issues, and other problems directly from the application UI. Each report is automatically mirrored to a GitHub Issue in a configured repository, enabling developer triage without leaving the existing workflow.
+
+Key capabilities:
+- **User-facing form** with category, severity, title, and description
+- **Automatic technical context capture** — browser user-agent, page URL, and app version are included with every report
+- **GitHub Issue mirroring** — reports are automatically created as GitHub Issues with appropriate labels
+- **Status sync** — users can check for updates from GitHub (open/closed/resolved) without leaving the app
+- **User-scoped visibility** — users see only their own reports; no admin panel required
+
+## User Flow
+
+### Submitting a Report
+
+1. User navigates to the Report an Issue page (`/dashboard/report-issue`)
+2. Fills in the form:
+   - **Category** — bug, feature-broken, performance, ui-ux, data-loss, security, other
+   - **Severity** — low, normal, high, critical
+   - **Title** — 5–200 characters
+   - **Description** — 10–5000 characters
+3. Technical context (browser, page URL, app version) is auto-captured
+4. On submit, the report is stored in D1 and a GitHub Issue is created (best-effort)
+5. User sees a success alert and is redirected to the "My Reports" tab
+
+### Tracking Reports
+
+1. User switches to the "My Reports" tab
+2. Sees a paginated table of all their submitted reports with status badges
+3. Clicks "Check for Updates" to sync statuses from GitHub:
+   - Open GitHub Issues that have been closed are updated to `resolved` (if completed) or `closed` (if not completed)
+   - The sync button refetches the list after syncing
+
+## Categories and Severities
+
+### Categories
+
+| Value | Label | Description |
+|-------|-------|-------------|
+| `bug` | Bug | Something isn't working |
+| `feature-broken` | Feature Broken | Existing feature not working |
+| `performance` | Performance | Slow loading, timeouts, lag |
+| `ui-ux` | UI/UX | Visual or interaction problem |
+| `data-loss` | Data Loss | Data missing or corrupted |
+| `security` | Security | Security vulnerability or concern |
+| `other` | Other | Doesn't fit other categories |
+
+### Severities
+
+| Value | Label | Description |
+|-------|-------|-------------|
+| `low` | Low | Minor inconvenience |
+| `normal` | Normal | Should be fixed |
+| `high` | High | Major impact on work |
+| `critical` | Critical | Blocking all work |
+
+### Statuses
+
+| Value | Label | Color | How it's set |
+|-------|-------|-------|-------------|
+| `submitted` | Submitted | blue | Default on creation |
+| `acknowledged` | Acknowledged | cyan | Set by developer (manual) |
+| `in_progress` | In Progress | gold | Set by developer (manual) |
+| `resolved` | Resolved | green | Synced from GitHub (closed + completed) |
+| `closed` | Closed | default | Synced from GitHub (closed + not completed) |
+
+## API Endpoints
+
+All endpoints require authentication. Base path: `/api/v1/issue-reports`.
+
+### Create Report
+
+```http
+POST /api/v1/issue-reports
+Content-Type: application/json
+```
+
+**Request body:**
+
+```json
+{
+  "category": "bug",
+  "severity": "normal",
+  "title": "Search bar returns no results for valid queries",
+  "description": "When I search for 'physics', the results page is empty even though physics books exist in the catalog.",
+  "appVersion": "3.41.0",
+  "pageUrl": "https://sjrslms.in/dashboard/books"
+}
+```
+
+**Response (201):**
+
+```json
+{
+  "success": true,
+  "data": {
+    "id": 42,
+    "reporterUserId": 15,
+    "reporterEmail": "student@example.com",
+    "category": "bug",
+    "severity": "normal",
+    "title": "Search bar returns no results for valid queries",
+    "description": "When I search for 'physics'...",
+    "browserUserAgent": "Mozilla/5.0...",
+    "browserUrl": "https://sjrslms.in/dashboard/books",
+    "appVersion": "3.41.0",
+    "githubIssueNumber": 87,
+    "githubIssueUrl": "https://github.com/PC-Mender/sjrslms-issues/issues/87",
+    "status": "submitted",
+    "createdAt": "2026-07-03T06:30:00Z",
+    "updatedAt": "2026-07-03T06:30:00Z"
+  },
+  "message": "Issue report submitted successfully"
+}
+```
+
+### List Reports
+
+```http
+GET /api/v1/issue-reports?limit=25&offset=0
+```
+
+Returns only the authenticated user's reports, ordered by `created_at` descending.
+
+**Query parameters:**
+- `limit` — 1–200 (default: 25)
+- `offset` — 0+ (default: 0)
+
+**Response (200):**
+
+```json
+{
+  "success": true,
+  "data": {
+    "items": [/* IssueReport[] */],
+    "total": 3,
+    "limit": 25,
+    "offset": 0
+  },
+  "message": "Issue reports retrieved successfully"
+}
+```
+
+### Get Report by ID
+
+```http
+GET /api/v1/issue-reports/:id
+```
+
+Returns the report only if it belongs to the authenticated user.
+
+### Sync from GitHub
+
+```http
+POST /api/v1/issue-reports/sync
+```
+
+Fetches the user's open reports that have a linked GitHub Issue, checks their status via the GitHub API, and updates the D1 record if the issue has been closed.
+
+**Response (200):**
+
+```json
+{
+  "success": true,
+  "data": {
+    "synced": 5,
+    "updated": 2
+  },
+  "message": "Synced 5 reports from GitHub (2 updated)"
+}
+```
+
+## GitHub Integration
+
+### How It Works
+
+1. When a report is created, the backend calls `createGitHubIssue()` which uses the GitHub REST API to create an issue in the configured repository
+2. The issue is labeled with the category, severity, and `user-reported` label
+3. The issue body includes the full description plus technical context (browser, URL, app version, reporter email)
+4. The GitHub issue number and URL are stored in the `issue_reports` row
+5. If GitHub is unavailable or not configured, the report is still saved — GitHub mirroring is best-effort
+
+### GitHub Issue Labels
+
+Each created issue receives these labels:
+
+| Label | Source | Example |
+|-------|--------|---------|
+| Category | `category` field | `bug`, `performance`, `ui-ux` |
+| Severity | `severity` field | `severity:low`, `severity:critical` |
+| `user-reported` | Fixed | Always applied |
+
+### Environment Variables
+
+Configure these in `wrangler.toml` or via `wrangler secret put`:
+
+| Variable | Description | Example |
+|----------|-------------|---------|
+| `GITHUB_ISSUES_TOKEN` | Fine-grained PAT with "Issues: Read and Write" on the target repo | `github_pat_...` |
+| `GITHUB_ISSUES_REPO_OWNER` | GitHub repository owner | `PC-Mender` |
+| `GITHUB_ISSUES_REPO_NAME` | GitHub repository name | `sjrslms-issues` |
+
+<Aside type="caution" title="Token Security">
+The `GITHUB_ISSUES_TOKEN` must be set as a Cloudflare Workers secret — never commit it to the repository. Use `wrangler secret put GITHUB_ISSUES_TOKEN`.
+</Aside>
+
+If any of these variables are missing, GitHub mirroring is silently skipped. Reports are still stored in D1 and visible to users.
+
+## Frontend Architecture
+
+### Components
+
+| File | Purpose |
+|------|---------|
+| `src/pages/issue-reports/ReportIssuePage.tsx` | Main page with two tabs: "Submit New" and "My Reports" |
+| `src/hooks/use-issue-reports.ts` | React Query hooks: `useIssueReports`, `useCreateIssueReport`, `useSyncIssueReports` |
+| `shared/types/issue-reports.ts` | Shared TypeScript types for issue reports |
+
+### Hooks
+
+```typescript
+// List reports (paginated)
+const { data, isLoading } = useIssueReports(10, 0);
+
+// Create a new report
+const createMutation = useCreateIssueReport();
+await createMutation.mutateAsync({
+  category: 'bug',
+  severity: 'normal',
+  title: '...',
+  description: '...',
+  appVersion: getAppVersion(),
+  pageUrl: window.location.href,
+});
+
+// Sync statuses from GitHub
+const syncMutation = useSyncIssueReports();
+await syncMutation.mutateAsync();
+```
+
+All hooks use the centralized React Query utilities (`useStandardQuery`, `useStandardMutation`) with automatic cache invalidation via `invalidateKeys`.
+
+## Database Schema
+
+### `issue_reports` Table
+
+```sql
+CREATE TABLE IF NOT EXISTS issue_reports (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  reporter_user_id INTEGER NOT NULL,
+  reporter_email TEXT NOT NULL,
+  category TEXT NOT NULL CHECK (category IN ('bug', 'feature-broken', 'performance', 'ui-ux', 'data-loss', 'security', 'other')),
+  severity TEXT NOT NULL DEFAULT 'normal' CHECK (severity IN ('low', 'normal', 'high', 'critical')),
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  browser_user_agent TEXT,
+  browser_url TEXT,
+  app_version TEXT,
+  github_issue_number INTEGER,
+  github_issue_url TEXT,
+  status TEXT NOT NULL DEFAULT 'submitted' CHECK (status IN ('submitted', 'acknowledged', 'in_progress', 'resolved', 'closed')),
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (reporter_user_id) REFERENCES library_users(id) ON DELETE CASCADE
+);
+```
+
+### Indexes
+
+- `idx_issue_reports_reporter_user_id` — Fast user-scoped queries
+- `idx_issue_reports_status` — Filter by status
+- `idx_issue_reports_created_at` — Sort by date
+
+### Trigger
+
+- `update_issue_reports_timestamp` — Auto-updates `updated_at` on row update
+
+## Security
+
+- **Authentication required** — all endpoints use `securityMiddleware` with `requireAuthentication: true`
+- **User-scoped data** — list and detail endpoints filter by `reporter_user_id`; users cannot see other users' reports
+- **CSRF protection** — mutations are protected by the standard security middleware
+- **Input validation** — category, severity, title length (5–200), and description length (10–5000) are validated server-side
+- **GitHub token** — stored as a Cloudflare Workers secret, never exposed to the frontend

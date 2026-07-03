@@ -251,9 +251,7 @@ await ActionLogger.logAction({
 ## Integration Points
 
 ### Navigation
-- **Superuser Dashboard**: `/dashboard-superuser/action-logs`
-- **Admin Dashboard**: `/dashboard-admin/action-logs`
-- **Librarian Dashboard**: `/dashboard-librarian/action-logs`
+- **Action Logs**: `/dashboard/action-logs` (all roles with appropriate permissions)
 
 ### Routing Configuration
 ```typescript
@@ -268,7 +266,7 @@ const ActionLogsPage = lazy(() => import("./pages/action-logs"));
 ```typescript
 // config.ts
 ACTION_LOGS: '/dashboard/action-logs',
-SUPERUSER_ACTION_LOGS: '/dashboard-superuser/action-logs',
+SUPERUSER_ACTION_LOGS: '/dashboard/action-logs',
 ```
 
 ## Performance Considerations

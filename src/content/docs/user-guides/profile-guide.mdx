@@ -1,0 +1,99 @@
+---
+title: "Profile Guide"
+description: "How to view and manage your profile, complete profile setup, and update personal information."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+Your profile contains your personal information, role, and account status. Keeping your profile complete and up-to-date ensures smooth library operations and proper access to features.
+
+**Route**: `/dashboard/profile`
+
+## Viewing Your Profile
+
+1. Click your **profile avatar** in the top-right corner
+2. Select **My Profile** from the dropdown
+3. Or navigate directly to `/dashboard/profile`
+
+Your profile page displays:
+- **Personal information** — name, email, phone, date of birth
+- **Role and permissions** — your assigned role(s) and what you can access
+- **Account status** — active, pending, suspended
+- **Member details** — student ID, department, year (for students)
+- **Activity summary** — books borrowed, reservations, reviews, badges
+
+## Completing Your Profile
+
+New users must complete their profile after email confirmation:
+
+1. After registering and confirming your email, you'll be redirected to the **Profile Completion** page (`/dashboard/profile-completion`)
+2. Fill in required fields:
+   - **First name** and **last name**
+   - **Phone number**
+   - **Date of birth**
+   - Role-specific fields (e.g., student ID for students, department for professors)
+3. Click **Submit** to complete your profile
+4. Your account moves to "Pending Approval" status
+5. A librarian or admin will review and approve your account
+
+<Aside type="note" title="Approval Required">
+After completing your profile, your account must be approved by library staff before you can access the full system. You'll receive a notification when your account is approved.
+</Aside>
+
+## Editing Your Profile
+
+1. Go to **Dashboard** → **Profile** (`/dashboard/profile`)
+2. Click **Edit Profile**
+3. Update your personal information
+4. Click **Save** to update
+
+### What You Can Edit
+
+- First name, last name
+- Phone number
+- Date of birth
+- Profile picture
+- Department/section (if applicable)
+
+### What You Cannot Edit
+
+- **Email address** — contact a superuser to change your email
+- **Role** — assigned by superusers only
+- **Account status** — managed by admins/superusers
+
+## Profile Statuses
+
+| Status | Description | What You Can Do |
+|--------|-------------|-----------------|
+| Pending Email Confirmation | Just registered, email not yet confirmed | Confirm email to proceed |
+| Profile Incomplete | Email confirmed but profile not filled | Complete profile to proceed |
+| Pending Approval | Profile complete, awaiting staff review | Wait for approval notification |
+| Active | Account approved and in good standing | Full system access |
+| Suspended | Account suspended by staff | Contact library staff |
+
+## Switching Roles
+
+If you have multiple roles (e.g., Student and Library Assistant):
+
+1. Click your **profile avatar** in the top-right
+2. Select **Switch Role**
+3. Choose the role you want to use
+4. The dashboard updates to show role-appropriate features
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/user/profile` | Get current user profile |
+| PUT | `/api/v1/user/profile` | Update profile |
+| POST | `/api/v1/auth/profile-completion` | Complete profile (new users) |
+| GET | `/api/v1/auth/check-status` | Check account status |
+
+## Related Documentation
+
+- [Settings Guide](./settings-guide) — Account settings and security
+- [Registration Flow](./registration-flow) — Account creation process
+- [Onboarding Status System](../features/onboarding-status) — Technical onboarding workflow

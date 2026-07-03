@@ -215,7 +215,7 @@ if (!hasReportsPermission) {
 { path: 'reports', component: ReportsPage }
 
 // Router protection
-<Route path="/dashboard-superuser/*" element={
+<Route path="/dashboard/*" element={
   <RequireAuth>
     <Layout />
   </RequireAuth>
@@ -223,7 +223,7 @@ if (!hasReportsPermission) {
 ```
 
 **Verification:**
-- Route is under `/dashboard-superuser/*` which requires:
+- Route is under `/dashboard/*` which requires:
   1. `RequireAuth` wrapper (authentication required)
   2. `DashboardSubRouter` validates superuser role
   3. Component-level permission check
@@ -231,7 +231,7 @@ if (!hasReportsPermission) {
 
 **Test Cases:**
 - Unauthenticated user → Redirected to login
-- Authenticated non-superuser → Cannot access `/dashboard-superuser/*`
+- Authenticated non-superuser → Cannot access `/dashboard/*`
 - Authenticated superuser without `reports:read` → Component shows access denied
 - Authenticated superuser with `reports:read` → Access granted
 

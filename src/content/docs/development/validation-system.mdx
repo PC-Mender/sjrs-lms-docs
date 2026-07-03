@@ -2,314 +2,274 @@
 title: "Validation System"
 ---
 
-
 ## Overview
 
-The SJRS LMS features a **modern, modular validation system** designed for performance, security, and maintainability. The system provides comprehensive input validation and sanitization across the frontend application.
+The SJRS LMS uses **Zod** as its sole validation library for all backend input validation. The previous custom validation engine (`StreamlinedValidationEngine`, `ValidationRule`, `ValidationConfig`) has been fully retired. All schemas are now Zod schemas, and validation runs through `schema.safeParse()`.
+
+The system follows a **two-phase architecture**:
+1. **Validation** — Zod schemas validate request body shape, types, and constraints
+2. **Sanitization** — Post-validation XSS/SQL sanitization applied in security middleware
 
 ## Architecture
 
-### **Clean Modular Design**
+### **Backend Validation Pipeline**
+
 ```
-src/utilities/validation/
+Request → Security Middleware → Validation Handler → API Handler
+                                   │
+                                   ├─ 1. Parse JSON body
+                                   ├─ 2. schema.safeParse(body)
+                                   ├─ 3. If invalid → 400 error with field-level details
+                                   ├─ 4. If valid → XSS/SQL sanitization (post-validation)
+                                   └─ 5. Pass sanitizedData to handler
+```
+
+### **Key Files**
+
+```
+functions/middleware/validation/
 ├── core/
-│   ├── engine.ts           # Main validation orchestration
-│   ├── cache-manager.ts    # Performance optimization
-│   └── config.ts           # Configuration management
-├── validators/
-│   ├── basic-validators.ts    # String, number, boolean
-│   ├── format-validators.ts   # Email, phone, URL, ISBN
-│   ├── password-validators.ts # Password complexity
-│   └── security-validators.ts # Security threat detection
-├── utils/
-│   └── error-creators.ts   # Result creation utilities
-├── types.ts                # TypeScript definitions
-└── index.ts                # Single entry point
+│   └── validation-engine.ts    # validateInput() — Zod safeParse wrapper
+├── schemas/                     # 23 Zod schema files (one per resource)
+│   ├── user-schemas.ts
+│   ├── book-schemas.ts
+│   ├── role-schemas.ts
+│   ├── loan-schemas.ts
+│   └── ... (20 more)
+├── patterns/                    # Shared regex patterns (VALIDATION_PATTERNS)
+├── sanitizers/                  # XSS/SQL sanitization utilities
+├── types.ts                     # ValidationError, ValidationResult
+└── index.ts                     # Barrel exports
+
+functions/middleware/security/
+└── handlers/validation-handler.ts  # Orchestrates validate + sanitize
 ```
 
-## Quick Start
+### **Validation Engine**
 
-### **Basic Usage**
+The engine (`validation-engine.ts`) is a thin wrapper around `schema.safeParse()`:
+
 ```typescript
-import { validate, validateForm } from '@/utilities/validation';
+export async function validateInput(
+  data: Record<string, unknown>,
+  schema: ZodType,
+  _config: Record<string, unknown> = {},
+  env?: Environment
+): Promise<ValidationResult> {
+  const result = schema.safeParse(data);
 
-// Single field validation
-const emailResult = validate(email, { 
-  type: 'email', 
-  required: true 
-});
-
-// Form validation
-const schema = {
-  email: { type: 'email', required: true },
-  password: { type: 'password', required: true },
-  name: { type: 'name', required: true }
-};
-
-const formResult = validateForm(formData, schema);
-```
-
-### **React Hook Integration**
-```typescript
-// Primary usage via useInputValidation hook
-import { useInputValidation } from '@/hooks/useInputValidation';
-
-const { validateField, validateForm, fieldErrors, isValid } = useInputValidation({
-  schema: {
-    email: { type: 'email', required: true },
-    password: { type: 'password', required: true }
+  if (result.success) {
+    return { isValid: true, errors: [], sanitizedData: result.data };
+  } else {
+    const zodErrors = extractZodIssues(result.error).map(err => ({
+      field: Array.isArray(err.path) ? err.path.map(String).join('.') : '',
+      message: String(err.message),
+      code: err.code ? String(err.code).toUpperCase() : 'VALIDATION_ERROR',
+    }));
+    return { isValid: false, errors: zodErrors };
   }
-});
-```
-
-## Advanced Usage
-
-### **Tree-Shakable Validators**
-```typescript
-// Import only what you need for optimal bundle size
-import { FormatValidators } from '@/utilities/validation';
-const emailResult = FormatValidators.validateEmail(email);
-
-import { PasswordValidators } from '@/utilities/validation';
-const strength = PasswordValidators.assessPasswordStrength(password);
-```
-
-### **Convenience Functions**
-```typescript
-// Pre-configured validation functions
-import { validateEmail, validatePassword, validatePhone } from '@/utilities/validation';
-
-const emailResult = validateEmail('user@example.com');
-const passwordResult = validatePassword('SecurePass123!');
-const phoneResult = validatePhone('+1234567890');
-```
-
-## Security Features
-
-### **Comprehensive Threat Detection**
-- **XSS Prevention**: Detects and blocks cross-site scripting attempts
-- **SQL Injection Protection**: Identifies malicious SQL patterns
-- **Command Injection Protection**: Blocks system command execution attempts
-- **Path Traversal Protection**: Prevents directory traversal attacks
-- **LDAP Injection Protection**: Detects LDAP injection patterns
-- **NoSQL Injection Protection**: Blocks NoSQL injection attempts
-
-### **Security Validation Example**
-```typescript
-import { SecurityValidators } from '@/utilities/validation';
-
-const securityResult = SecurityValidators.validateSecurity(userInput);
-if (!securityResult.valid) {
-  console.warn('Security threat detected:', securityResult.errors);
 }
 ```
 
-## Performance Features
+The engine supports both Zod v3 (`.errors`) and Zod v4 (`.issues`) error formats via `extractZodIssues()`.
 
-### **Intelligent Caching**
-- **Validation Result Caching**: Avoids re-validation of identical inputs
-- **Security Pattern Caching**: Optimizes repeated security checks
-- **Memory Management**: FIFO cache eviction prevents memory bloat
-- **Configurable Cache Sizes**: Adjustable for different deployment scenarios
+### **Validation Types**
 
-### **Cache Management**
 ```typescript
-import { clearValidationCache, getCacheStats } from '@/utilities/validation';
-
-// Clear cache when needed
-clearValidationCache();
-
-// Monitor cache performance
-const stats = getCacheStats();
-console.log('Cache stats:', stats);
-```
-
-## Validation Rules
-
-### **Basic Rules**
-```typescript
-interface ValidationRule {
-  required?: boolean;        // Field is required
-  minLength?: number;        // Minimum string length
-  maxLength?: number;        // Maximum string length
-  min?: number;             // Minimum numeric value
-  max?: number;             // Maximum numeric value
-  pattern?: RegExp;         // Custom regex pattern
-  trimWhitespace?: boolean; // Auto-trim whitespace
-  custom?: (value: any) => boolean | string; // Custom validation
+interface ValidationError {
+  field: string;
+  message: string;
+  code: string;
 }
-```
 
-### **Type-Specific Validation**
-```typescript
-// Email validation
-{ type: 'email', required: true }
-
-// Password with complexity requirements
-{ type: 'password', required: true }
-
-// Phone number validation
-{ type: 'phone' }
-
-// URL validation
-{ type: 'url' }
-
-// ISBN validation (10 or 13 digits)
-{ type: 'isbn' }
-
-// Year validation (1900 to current+10)
-{ type: 'year' }
-
-// Name validation (letters, spaces, hyphens)
-{ type: 'name', minLength: 2, maxLength: 50 }
-```
-
-## Configuration
-
-### **Global Configuration**
-```typescript
-import { StreamlinedValidationEngine } from '@/utilities/validation';
-
-const engine = StreamlinedValidationEngine.getInstance({
-  enableXSSProtection: true,
-  enableSQLInjectionProtection: true,
-  enableCommandInjectionProtection: true,
-  enableSanitization: true,
-  trimWhitespace: true,
-  strictMode: false,
-  debug: false
-});
-```
-
-### **Available Options**
-- `enableXSSProtection`: Enable XSS detection (default: true)
-- `enableSQLInjectionProtection`: Enable SQL injection detection (default: true)
-- `enableCommandInjectionProtection`: Enable command injection detection (default: true)
-- `enableSanitization`: Enable input sanitization (default: true)
-- `trimWhitespace`: Auto-trim whitespace (default: true)
-- `allowEmpty`: Allow empty values when not required (default: false)
-- `strictMode`: Enable strict validation mode (default: false)
-- `debug`: Enable debug logging (default: DEV mode)
-
-## Validation Results
-
-### **Result Format**
-```typescript
 interface ValidationResult {
-  valid: boolean;           // Whether validation passed
-  errors: string[];         // Array of error messages
-  sanitizedValue?: any;     // Cleaned/sanitized value
-  originalValue?: any;      // Original input value
+  isValid: boolean;
+  errors: ValidationError[];
+  sanitizedData?: any;
 }
 ```
 
-### **Form Validation Results**
+## Writing Zod Schemas
+
+### **Schema Conventions**
+
+All backend schemas follow these patterns:
+
+- Use `.passthrough()` on object schemas to match the system's unknown-field tolerance (extra fields are not rejected)
+- Use `.optional()` for non-required fields
+- Use `VALIDATION_PATTERNS` from `patterns/` for shared regex (email, phone, ISBN, year, password, etc.)
+- Define create and update schemas separately — update schemas make all fields `.optional()`
+
+### **Example: Creating a Schema**
+
 ```typescript
-interface FormValidationResult {
-  isValid: boolean;                    // Overall form validity
-  errors: Record<string, string[]>;    // Field-specific errors
-  sanitizedData?: Record<string, any>; // Cleaned form data
+import { z } from 'zod';
+import { VALIDATION_PATTERNS } from '../patterns';
+
+export const USER_REGISTRATION_SCHEMA = z.object({
+  email: z.string().email('Invalid email format').max(255),
+  password: z.string().min(8, 'Password must be at least 8 characters')
+    .regex(VALIDATION_PATTERNS.PASSWORD, 'Password must contain lowercase, uppercase, number, and special character'),
+  first_name: z.string().min(2).max(50).regex(VALIDATION_PATTERNS.ALPHABETIC),
+  last_name: z.string().min(2).max(50).regex(VALIDATION_PATTERNS.ALPHABETIC),
+  user_type: z.string(),
+  phone: z.string().regex(VALIDATION_PATTERNS.PHONE).optional(),
+  turnstile_token: z.string().optional(),
+}).passthrough();
+```
+
+### **Example: Update Schema (all fields optional)**
+
+```typescript
+export const USER_UPDATE_SCHEMA = z.object({
+  first_name: z.string().min(2).max(50).regex(VALIDATION_PATTERNS.ALPHABETIC).optional(),
+  last_name: z.string().min(2).max(50).regex(VALIDATION_PATTERNS.ALPHABETIC).optional(),
+  email: z.string().email().max(255).optional(),
+  phone: z.string().regex(VALIDATION_PATTERNS.PHONE).optional(),
+  status: z.string().refine(
+    (v) => ['active', 'inactive', 'suspended', 'pending'].includes(String(v)),
+    'Invalid status value'
+  ).optional(),
+}).passthrough();
+```
+
+### **Available Validation Patterns**
+
+Import from `functions/middleware/validation/patterns`:
+
+| Pattern | Description |
+|---------|-------------|
+| `VALIDATION_PATTERNS.EMAIL` | Standard email format |
+| `VALIDATION_PATTERNS.PASSWORD` | Lowercase + uppercase + number + special char |
+| `VALIDATION_PATTERNS.PHONE` | International phone format |
+| `VALIDATION_PATTERNS.ISBN` | ISBN-10 or ISBN-13 |
+| `VALIDATION_PATTERNS.YEAR` | 4-digit year (1800–current+1) |
+| `VALIDATION_PATTERNS.ALPHABETIC` | Letters, spaces, hyphens only |
+| `VALIDATION_PATTERNS.ALPHANUMERIC` | Letters, numbers, hyphens, underscores |
+
+## Using Schemas in Handlers
+
+### **Wiring a Schema to an Endpoint**
+
+Schemas are attached to endpoints via the `SecurityConfig` object in the security middleware:
+
+```typescript
+import { VALIDATION_SCHEMAS } from '../middleware/validation';
+import { withSecurity } from '../middleware/security';
+
+export async function handleCreateUser(request: Request, env: Environment) {
+  return withSecurity(request, env, {
+    validationSchema: VALIDATION_SCHEMAS.USER_CREATE,
+    enableValidation: true,
+    enableXSSProtection: true,
+  }, async (req, env, { sanitizedData }) => {
+    // sanitizedData is already validated + sanitized
+    // Use sanitizedData directly — do NOT re-read request body
+    const result = await createUser(sanitizedData, env);
+    return createCreatedResponse(result, 'User created');
+  });
 }
 ```
 
-## Best Practices
+### **Critical Rules**
 
-### **1. Use Type-Specific Validation**
+- **Never re-read `request.json()` in the handler** — the validation handler consumes the body once and passes `sanitizedData` via the security context
+- **Always use `sanitizedData`** from the security context, not the raw request body
+- GET/DELETE/HEAD/OPTIONS requests skip body validation (no body to validate)
+
+## Sanitization (Post-Validation)
+
+Sanitization is applied **after** Zod validation succeeds, inside `validation-handler.ts`. This separation ensures schemas stay focused on shape/type validation.
+
+### **How It Works**
+
+1. Zod validation passes → `sanitizedData` contains validated data
+2. For each field in `sanitizedData`:
+   - **Password fields** (any key containing `password`) → **skipped** (must match exactly for auth; SQL injection prevented by D1 parameterized queries)
+   - **Turnstile tokens** (any key containing `turnstile`) → **skipped** (must be submitted verbatim to Cloudflare)
+   - **URL fields** (`url` or `*_url`) → `sanitizeURLInput()` (avoids entity-encoding slashes)
+   - **All other fields** → `sanitizeXSSInput()` (HTML entity encoding)
+3. Result is the final `sanitizedData` passed to the handler
+
+### **Why Not Sanitize in Schemas?**
+
+- Schemas define **what valid data looks like** (types, constraints)
+- Sanitizers define **how to make data safe** (XSS encoding, SQL escaping)
+- Keeping them separate means schema changes don't accidentally affect sanitization and vice versa
+- Passwords and Turnstile tokens need to bypass sanitization — this is easier to manage as a post-validation step
+
+## Frontend Response Validation
+
+The frontend `d1Client.ts` optionally validates API responses using Zod schemas via `safeParse()`:
+
 ```typescript
-//  Good: Use specific types
-{ type: 'email', required: true }
-{ type: 'password', required: true }
+const { data } = await d1Request('/api/v1/users', {
+  schema: UserResponseSchema, // optional Zod schema
+});
 
-//  Avoid: Generic validation for specific formats
-{ type: 'string', pattern: /email-regex/ }
-```
-
-### **2. Leverage Tree-Shaking**
-```typescript
-//  Good: Import specific validators for small bundles
-import { FormatValidators } from '@/utilities/validation/validators/format-validators';
-
-//  Okay: Convenience imports (slightly larger bundle)
-import { validateEmail } from '@/utilities/validation';
-```
-
-### **3. Handle Validation Results Properly**
-```typescript
-//  Good: Check validity and handle errors
-const result = validate(value, rules);
-if (!result.valid) {
-  setErrors(result.errors);
-  return;
+// In d1Client.ts:
+if (schema) {
+  const result = schema.safeParse(dataToValidate);
+  if (!result.success) {
+    console.warn(`[d1Request] Schema validation warning for ${path}: ${issues}`);
+    // Returns original data on failure — non-breaking
+  } else {
+    validated = result.data;
+  }
 }
-// Use result.sanitizedValue for further processing
 ```
 
-### **4. Use Form-Level Validation**
-```typescript
-//  Good: Validate entire forms at once
-const formResult = validateForm(formData, schema);
-if (formResult.isValid) {
-  // Submit formResult.sanitizedData
-}
-```
+Response validation is **non-breaking**: schema mismatches produce `console.warn`, not throws. The original data is returned on failure so the UI continues to function.
 
-## Debugging
+## Schema File Organization
 
-### **Debug Mode**
-```typescript
-// Enable debug logging
-const engine = StreamlinedValidationEngine.getInstance({ debug: true });
+All 23 schema files live in `functions/middleware/validation/schemas/`, organized by resource:
 
-// Validation failures will be logged to console
-const result = validate(value, rules);
-```
+| File | Schemas |
+|------|---------|
+| `user-schemas.ts` | `USER_REGISTRATION_SCHEMA`, `USER_UPDATE_SCHEMA`, `LOGIN_SCHEMA`, `PASSWORD_CHANGE_SCHEMA` |
+| `book-schemas.ts` | `BOOK_CREATION_SCHEMA`, `BOOK_UPDATE_SCHEMA`, `BOOK_SEARCH_SCHEMA` |
+| `role-schemas.ts` | `ROLE_CREATE_SCHEMA`, `ROLE_UPDATE_SCHEMA` |
+| `loan-schemas.ts` | `LOAN_CREATE_SCHEMA` |
+| `order-schemas.ts` | `ORDER_CREATE_SCHEMA` |
+| `payment-schemas.ts` | `PAYMENT_CREATE_SCHEMA` |
+| `penalty-schemas.ts` | `PENALTY_CREATE_SCHEMA` |
+| `professor-schemas.ts` | `PROFESSOR_CREATE_SCHEMA`, `PROFESSOR_UPDATE_SCHEMA` |
+| `magazine-schemas.ts` | `MAGAZINE_CREATE_SCHEMA`, `MAGAZINE_UPDATE_SCHEMA` |
+| `reference-book-schemas.ts` | `REFERENCE_BOOK_CREATION_SCHEMA`, `REFERENCE_BOOK_UPDATE_SCHEMA` |
+| `common-schemas.ts` | `VALIDATION_SCHEMAS` aggregate object (re-exports from all files) |
+| ... | 12 more files |
 
-### **Cache Statistics**
-```typescript
-import { getCacheStats } from '@/utilities/validation';
+Schemas are exported via the barrel at `functions/middleware/validation/schemas/index.ts` and re-exported from `functions/middleware/validation/index.ts`.
 
-const stats = getCacheStats();
-console.log('Validation cache:', stats.validationCache);
-console.log('Security cache:', stats.securityCache);
-```
+## Adding a New Schema
 
-## Performance Metrics
+1. **Create or edit** the appropriate file in `functions/middleware/validation/schemas/`
+2. **Define the Zod schema** following the conventions above (`.passthrough()`, `.optional()` for non-required)
+3. **Export from** `schemas/index.ts`
+4. **Add to** `VALIDATION_SCHEMAS` in `common-schemas.ts` if it should be part of the aggregate
+5. **Wire to handler** via `withSecurity({ validationSchema: ... })`
 
-### **Bundle Size Impact**
-- **Full system**: ~35KB (gzipped)
-- **Tree-shaken (email only)**: ~10KB (gzipped)
-- **Single validator**: ~5KB (gzipped)
+## Migration History
 
-### **Performance Benchmarks**
-- **Cache hit rate**: >90% for repeated validations
-- **Security validation**: &lt;1ms per check
-- **Form validation**: &lt;5ms for typical forms
-- **Memory usage**: &lt;2MB cache limit with auto-cleanup
+The system was migrated from a custom validation engine to Zod in four phases:
 
-## Recent Improvements
+1. **Phase 1**: Converted backend schema files to Zod with `.passthrough()` and `.optional()` patterns
+2. **Phase 2**: Enabled Zod response validation in `d1Client.ts` (non-breaking, `console.warn` on mismatch)
+3. **Phase 3**: All 23 schema files in `functions/middleware/validation/schemas/` converted to Zod; sanitizers removed from schemas
+4. **Phase 4**: ~30 inline custom schemas converted to Zod; custom validation engine retired; `ValidationSchema`, `ValidationRule`, `ValidationConfig` type exports removed
 
-### **Clean Architecture Refactoring**
-- **73% reduction** in largest file size (1,038 → 280 lines)
-- **Modular design** with clear separation of concerns
-- **Tree-shakable exports** for optimal bundle size
-- **Enhanced performance** with dedicated caching
-- **Simplified API** with single entry point
-
-### **Security Enhancements**
-- **Comprehensive threat detection** across all input types
-- **Password-specific security** with appropriate rules
-- **Security event logging** for monitoring
-- **Configurable security levels** for different environments
+The custom `StreamlinedValidationEngine`, cache manager, and rule-based validation system no longer exist. All validation goes through `schema.safeParse()`.
 
 ## Related Documentation
 
-- **[useInputValidation Hook](#react-hook-integration)** - React hook for form validation
-- **[Security Best Practices](../security/)** - Application security guidelines
-- **[API Validation](../api/api-response-standardization)** - Backend validation integration
-- **[Performance Guide](../performance/)** - Optimization strategies
+- **[Project Rules (Application)](../project-rules-app)** — Security principles, input validation policies
+- **[Security Best Practices](../security/)** — Application security guidelines
+- **[API Response Standardization](../api/api-response-standardization)** — Backend response envelopes
+- **[Performance Guide](../performance/)** — Optimization strategies
 
 ---
 
-**Last Updated**: November 2025  
-**Version**: 2.0.0 (Clean Architecture)  
-**Status**:  Production Ready
+**Last Updated**: July 2026
+**Version**: 3.0.0 (Zod)
+**Status**: Production Ready

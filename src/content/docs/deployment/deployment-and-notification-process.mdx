@@ -262,7 +262,7 @@ In Cloudflare Workers environment variables, ensure:
    - Reads from: `import.meta.env.VITE_APP_VERSION`
    - Injected at build time via `vite.config.ts`
 
-2. **Notification Center** (`src/pages/dashboard-superuser/notification-center.tsx`)
+2. **Notification Center** (`src/pages/dashboard/notification-center.tsx`)
    - Shows version in notification details
    - Displays changelog, commit type, deployment time
 
@@ -313,7 +313,7 @@ CREATE TABLE notification_events (
    - Sets status to `'active'` (explicitly)
    - Stores in database
 
-3. **Display** (`src/pages/dashboard-superuser/notification-center.tsx`)
+3. **Display** (`src/pages/dashboard/notification-center.tsx`)
    - Fetches from `/api/notifications/events`
    - Filters by category: `'deployment'`
    - Shows version, commit type, changelog sections
@@ -467,7 +467,7 @@ Edit `.versionrc`:
 
 ### Modifying Notification Display
 
-Edit `src/pages/dashboard-superuser/notification-center.tsx`:
+Edit `src/pages/dashboard/notification-center.tsx`:
 - Columns definition (line 229)
 - Metadata display (line 270-299)
 - Source/Version column (line 335-370)
@@ -499,7 +499,7 @@ Edit `.versionrc`:
 ### Notification System
 - `functions/api/notifications/handlers/ingest-notification-event.ts` - Notification ingest handler
 - `functions/api/notifications/repositories/notification-events-admin-repository.ts` - Database operations
-- `src/pages/dashboard-superuser/notification-center.tsx` - Notification display UI
+- `src/pages/dashboard/notification-center.tsx` - Notification display UI
 
 ### Database
 - `sql/migrations/2025-11-11_create-notification-events.sql` - Notification events table schema

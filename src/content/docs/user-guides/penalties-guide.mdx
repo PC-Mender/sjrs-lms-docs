@@ -1,0 +1,86 @@
+---
+title: "Penalties Guide"
+description: "How to view, pay, and manage late return penalties in the SJRS LMS."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+Penalties are automatically generated when books are returned late. The penalty amount is calculated based on your role's fine rate and the number of overdue days. Penalties can be paid online via UPI or waived by staff.
+
+**Route**: `/dashboard/penalties`
+
+## Penalty Statuses
+
+| Status | Description |
+|--------|-------------|
+| Pending | Penalty has been generated but not yet paid |
+| Paid | Penalty has been paid via UPI |
+| Waived | Penalty has been waived by staff (admin/superuser) |
+| Disputed | Penalty is under review |
+
+## Viewing Your Penalties
+
+1. Navigate to **Dashboard** → **Penalties** (`/dashboard/penalties`)
+2. You'll see a table listing all your penalties with columns for loan reference, amount, status, and date
+3. Use the **search bar** to find penalties by book title or status
+4. Use the **status filter** to show only pending or paid penalties
+
+## Paying a Penalty
+
+1. Find a penalty with status "Pending"
+2. Click the **Pay** button
+3. You'll be redirected to the UPI payment page
+4. Complete the payment
+5. The penalty status will update to "Paid" once payment is confirmed
+
+<Aside type="note" title="UPI Integration">
+Penalty payments use the UPI payment system. Ensure your institution has configured UPI settings in Institution Settings.
+</Aside>
+
+## How Penalties Are Calculated
+
+Penalties are based on your role's borrow limits configuration:
+
+- **Fine per day** — e.g., ₹10/day for students, ₹50/day for guests
+- **Number of overdue days** — counted from the due date to the return date
+- **Total penalty** = fine per day × overdue days
+
+Example: A student returns a book 5 days late with a fine rate of ₹10/day → Penalty = ₹50
+
+## For Librarians, Admins & Superusers
+
+### Viewing All Penalties
+
+1. Navigate to **Dashboard** → **Penalties**
+2. The table shows all penalties across all users, with user columns visible
+
+### Waiving a Penalty
+
+1. Find a penalty with status "Pending"
+2. Click the **Waive** button
+3. Confirm in the dialog
+4. The penalty status changes to "Waived"
+
+### Managing Penalties
+
+Staff can:
+- **View** any penalty's details
+- **Waive** pending penalties (for valid reasons)
+- **Mark as paid** if payment was received offline
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/penalties` | List penalties (user-scoped or all) |
+| GET | `/api/v1/penalties/:id` | Get penalty details |
+| PUT | `/api/v1/penalties/:id` | Update penalty (waive, mark paid) |
+| POST | `/api/v1/payments` | Initiate UPI payment for a penalty |
+
+## Related Documentation
+
+- [Loans Guide](./loans-guide) — Managing borrowed books and due dates
+- [Borrow Limits](../features/borrow-limits/) — Role-based fine rates and limits

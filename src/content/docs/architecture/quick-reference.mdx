@@ -85,14 +85,18 @@ import { useRoles } from '../hooks/useRoles';
 
 ### API Calls
 ```typescript
-// Service layer
-import { bookService } from '../services/book.service';
+// CRUD hooks (recommended — auto-prepends v1/ prefix)
+import { createCrudHooks } from '../hooks/d1/factories/createCrudHooks';
 
-// Direct API calls
-import { apiClient } from '../utilities/api-client';
+const { useQuery, useCreate, useUpdate, useDelete } = createCrudHooks<D1Book>({
+  resource: 'books',
+  queryKey: 'd1-books',
+});
 
-// React Query hooks
-import { useUnifiedQuery } from '../hooks/unified/useUnifiedQuery';
+// Direct API calls (must include v1/ prefix)
+import { d1Request } from '../utilities/api/d1Client';
+
+const { data } = await d1Request('/api/v1/books', { method: 'GET' });
 ```
 
 ## Common Patterns
@@ -102,10 +106,15 @@ import { useUnifiedQuery } from '../hooks/unified/useUnifiedQuery';
 // 1. Create page component
 // src/pages/feature/index.tsx
 import React from 'react';
-import { useUnifiedQuery } from '../../hooks/unified/useUnifiedQuery';
+import { useStandardQuery } from '../../utilities/query';
+import { d1Request } from '../../utilities/api/d1Client';
 
 export const FeaturePage: React.FC = () => {
-  const { data, isLoading, error } = useUnifiedQuery('feature', '/api/feature');
+  const { data, isLoading, error } = useStandardQuery({
+    queryKey: ['feature'],
+    queryFn: () => d1Request('/api/v1/feature'),
+    preset: 'REAL_TIME',
+  });
   
   if (isLoading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -115,51 +124,45 @@ export const FeaturePage: React.FC = () => {
       {/* Your component content */}
     </div>
   );
-};
 ```
 
 ### Creating a New API Endpoint
 ```typescript
 // functions/api/feature.ts
+// Note: All API routes use /api/v1/ prefix (normalized to /api/ by the pipeline)
 import { getAuthenticatedUser } from '../../middleware/auth';
-import { addCORSHeaders } from '../../middleware/cors';
+import { withSecurity } from '../../middleware/security';
+import { createSuccessResponse, createPaginatedResponse } from '../../utilities/response-builder';
 import { handleError } from '../../utilities/error/unified-error-handler';
 
 export async function feature(request: Request, env: any) {
   const url = new URL(request.url);
   const path = url.pathname.replace('/api/feature', '');
-  
+
   try {
-    // Authentication
     const user = await getAuthenticatedUser(request, env);
     if (!user) {
-      const response = new Response(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return addCORSHeaders(response, request.headers.get('Origin'));
+      return createErrorResponse('Unauthorized', 401, 'UNAUTHORIZED');
     }
-    
-    // Route handling
+
     if (request.method === 'GET' && (path === '' || path === '/')) {
       const result = await env.DB.prepare('SELECT * FROM feature').all();
-      const response = new Response(JSON.stringify({ success: true, data: result.results }), {
-        headers: { 'Content-Type': 'application/json' }
-      });
-      return addCORSHeaders(response, request.headers.get('Origin'));
+      return createPaginatedResponse(result.results, result.results.length, 1, 20);
     }
-    
+
     // Handle other methods...
-    
+
   } catch (error) {
     return await handleError(error, {
       operation: 'feature_api',
       component: 'FeatureAPI',
-      context: { endpoint: '/api/feature' }
+      context: { endpoint: '/api/v1/feature' }
     });
   }
 }
 ```
+
+See [API Versioning](../architecture/api-versioning) for details on the `/api/v1/` prefix.
 
 ### Adding Permissions
 ```typescript
@@ -179,18 +182,21 @@ INSERT INTO role_permissions (role_id, permission_id) VALUES (1, (SELECT id FROM
 
 ### Input Validation
 ```typescript
-import { validateInput } from '../utilities/validation/input';
+import { validateInput } from '../middleware/validation';
+import { z } from 'zod';
 
-const schema = {
-  name: { type: 'string', required: true, minLength: 2 },
-  email: { type: 'email', required: true }
-};
+const schema = z.object({
+  name: z.string().min(2),
+  email: z.string().email(),
+}).passthrough();
 
-const validation = validateInput(data, schema);
+const validation = await validateInput(data, schema);
 if (!validation.isValid) {
-  throw new Error(validation.errors.join(', '));
+  throw new Error(validation.errors.map(e => e.message).join(', '));
 }
 ```
+
+See [Validation System](../development/validation-system) for full details on the Zod-based validation architecture.
 
 ### CSRF Protection
 ```typescript
@@ -304,20 +310,22 @@ import { OptimizedTable } from '../components/optimized/OptimizedTable';
 
 ### React Query for Server State
 ```typescript
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useStandardQuery, useStandardMutation } from '../../utilities/query';
 
-// Query
-const { data, isLoading } = useQuery({
+// Query (uses centralized preset system)
+const { data, isLoading } = useStandardQuery({
   queryKey: ['books'],
-  queryFn: () => bookService.getAll()
+  queryFn: () => d1Request('/api/v1/books'),
+  preset: 'REAL_TIME',
 });
 
-// Mutation
-const mutation = useMutation({
-  mutationFn: bookService.create,
-  onSuccess: () => {
-    queryClient.invalidateQueries({ queryKey: ['books'] });
-  }
+// Mutation (automatic cache invalidation via invalidateKeys)
+const mutation = useStandardMutation({
+  mutationFn: (variables) => d1Request('/api/v1/books', {
+    method: 'POST',
+    body: variables,
+  }),
+  invalidateKeys: [['books']],
 });
 ```
 

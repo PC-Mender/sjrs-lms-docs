@@ -158,10 +158,10 @@ if (!hasReportsPermission) {
 { path: 'reports', component: ReportsPage },
 ```
 
-**Route Context:** `/dashboard-superuser/reports`
+**Route Context:** `/dashboard/reports`
 
 **Status:**  **SECURE**
-- Route is under `/dashboard-superuser/*` which requires:
+- Route is under `/dashboard/*` which requires:
   1. `RequireAuth` wrapper (authentication required)
   2. `DashboardSubRouter` validates superuser role
   3. Component-level permission check

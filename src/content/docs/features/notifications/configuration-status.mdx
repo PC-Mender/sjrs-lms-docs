@@ -37,7 +37,7 @@ npm run release
 
 **Expected Result**: 
 - Deployment notification should appear in System Notifications
-- Check `/dashboard-superuser/system-notifications`
+- Check `/dashboard/system-notifications`
 
 ---
 
@@ -115,7 +115,7 @@ Can be set up later when needed.
 3. **Check logs** for:
    -  ` Posted deployment update to system notifications feed.`
 4. **Check System Notifications**:
-   - Go to `/dashboard-superuser/system-notifications`
+   - Go to `/dashboard/system-notifications`
    - Should see deployment notification with source: `release:pipeline`
 
 ### Test Sentry Webhook (After Configuration)
@@ -167,7 +167,7 @@ x-notification-ingest-token: <token>
 - `analytics:cloudflare` -  Needs monitoring setup
 
 ### View Notifications
-- Admin: `/dashboard-superuser/system-notifications`
+- Admin: `/dashboard/system-notifications`
 - Requires: `notification_events` resource read permission
 
 ---

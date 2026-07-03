@@ -1,0 +1,57 @@
+---
+title: "Citation Generator Guide"
+description: "How to generate academic citations in various styles for books and articles."
+lifecycle: Active
+---
+
+## Overview
+
+The Citation Generator helps you create properly formatted academic citations for books, journal articles, and other resources in the library. It supports multiple citation styles and automatically pulls metadata from the library database.
+
+**Route**: `/dashboard/citation-generator`
+
+## Generating a Citation
+
+1. Navigate to **Dashboard** → **Citation Generator** (`/dashboard/citation-generator`)
+2. Select the **source type** (book, journal article, magazine, etc.)
+3. Search for the resource by title, author, or ISBN
+4. Select the matching result from the search
+5. Choose your **citation style**:
+   - APA (7th edition)
+   - MLA (9th edition)
+   - Chicago (17th edition)
+   - Harvard
+   - IEEE
+6. The citation is generated automatically from the resource metadata
+7. Click **Copy** to copy the citation to your clipboard
+
+## Manual Citation
+
+If the resource isn't in the library database:
+
+1. Select **Manual Entry** mode
+2. Fill in the metadata fields:
+   - Title, author(s), publication year
+   - Publisher, ISBN/DOI
+   - Volume, issue, pages (for articles)
+3. Select the citation style
+4. Click **Generate** to produce the citation
+
+## Tips
+
+- Always verify generated citations against your institution's style guide
+- The generator pulls metadata from the library database, which may occasionally have incomplete information
+- For web resources, include the access date in manual entry mode
+
+## API Reference
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/citations/generate` | Generate a citation from metadata |
+| GET | `/api/v1/citations/styles` | List supported citation styles |
+
+## Related Documentation
+
+- [Catalog Guide](./catalog-guide) — Finding books to cite
+- [Journals Guide](./journals-guide) — Finding journal articles to cite
+- [Plagiarism Checker Guide](./plagiarism-checker-guide) — Check your work for originality
