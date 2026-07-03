@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.18](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.17...v1.3.18) (2026-07-03)
+
+
+### Documentation
+
+* add 17 comprehensive user guides for all app features ([58258ff](https://github.com/neil-jay/sjrs-lms-docs/commit/58258ff91f8d26bd4c67098756b18af47e6e4a45))
+* update GitHub repository references from neil-jay to PC-Mender ([c3585c0](https://github.com/neil-jay/sjrs-lms-docs/commit/c3585c052986b0e414ea5fe64a351bb334fd6b92))
+
 ### [1.3.17](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.16...v1.3.17) (2026-06-30)
 
 
