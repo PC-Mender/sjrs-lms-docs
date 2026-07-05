@@ -3,11 +3,7 @@ title: "Overview"
 ---
 
 
-This document provides comprehensive documentation for the Badge System in the SJRS LMS platform.
-
-## Overview
-
-The Badge System is a gamification feature that recognizes and rewards user achievements and milestones. Badges can be automatically awarded based on user actions (e.g., first visit, loan milestones, reviews) or manually assigned by administrators. The system supports both explicit badge assignments and role-based virtual badges.
+This document provides comprehensive documentation for the Badge System in the SJRS LMS platform. The Badge System is a gamification feature that recognizes and rewards user achievements and milestones. Badges can be automatically awarded based on user actions (e.g., first visit, loan milestones, reviews) or manually assigned by administrators. The system supports both explicit badge assignments and role-based virtual badges.
 
 ## Key Features
 
@@ -203,27 +199,7 @@ When viewing active badges, expired badges are automatically filtered out. The s
 
 ## Automatic Badge Evaluation
 
-The system includes evaluators that automatically check and award badges based on user actions:
-
-### Welcome Evaluator (`functions/lib/badges/evaluators/welcome.ts`)
-- Checks for first visit and account approval
-- Awards `welcome_member` and `approved_member` badges
-
-### Visit Evaluator (`functions/lib/badges/evaluators/visits.ts`)
-- Tracks user visit counts
-- Awards milestone badges (`visit_1`, `visit_5`, `visit_10`, etc.)
-
-### Loan Evaluator (`functions/lib/badges/evaluators/loans.ts`)
-- Tracks loan counts
-- Awards milestone badges (`loan_1`, `loan_5`, `loan_10`, etc.)
-
-### Review Evaluator (`functions/lib/badges/evaluators/reviews.ts`)
-- Tracks review counts
-- Awards milestone badges (`review_1`, `review_5`, `review_10`, etc.)
-
-### Approval Evaluator (`functions/lib/badges/evaluators/approval.ts`)
-- Monitors account approval status
-- Awards `approved_member` badge
+The system includes evaluators that automatically check and award badges based on user actions. See the **[Badge Evaluators](../badge-evaluators)** page for full architecture, logic, and integration details.
 
 ## User Interface
 
