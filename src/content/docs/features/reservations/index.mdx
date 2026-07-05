@@ -1,7 +1,58 @@
 ---
-title: "Reservations"
+title: "Overview"
 sidebar:
   label: "Reservations"
 ---
 
-Welcome to the Reservations documentation section.
+The reservation system allows users to reserve books that are currently unavailable and automatically join a queue. When a copy becomes available, the next user in the queue is notified and given 48 hours to claim their reservation.
+
+## Key Features
+
+- **Queue-based reservations**: First-come-first-served queue with automatic position management
+- **Automatic activation**: When a book is returned, the next pending reservation is automatically activated
+- **48-hour claim window**: Ready reservations expire after 48 hours if not claimed
+- **Notification support**: Email and in-app notifications for reservation creation, readiness, and claiming
+- **Permission-based access control**: Role-based visibility — admins see all reservations, regular users see only their own
+- **Scheduled expiry job**: Daily job at 2 AM UTC expires overdue reservations and activates the next in queue
+
+## Reservation Statuses
+
+| Status | Description |
+|--------|-------------|
+| `pending` | Waiting in queue for a copy to become available |
+| `ready` | A copy is available — user has 48 hours to claim |
+| `claimed` | User claimed the reservation (converted to a loan) |
+| `expired` | 48-hour claim window passed without claiming |
+| `cancelled` | User or admin cancelled the reservation |
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| `POST` | `/api/reservations` | Create a new reservation |
+| `GET` | `/api/reservations` | List reservations (with filters) |
+| `GET` | `/api/reservations/:id` | Get reservation details |
+| `POST` | `/api/reservations/:id/claim` | Claim a ready reservation (converts to loan) |
+| `PUT` | `/api/reservations/:id/cancel` | Cancel a reservation |
+| `DELETE` | `/api/reservations/:id` | Delete a reservation (same as cancel) |
+
+## Workflow
+
+1. **User reserves an unavailable book** — reservation created with status `pending`, queue position assigned, notification sent
+2. **Book is returned** — copy status updated to `available`, next pending reservation activated (status → `ready`), 48-hour expiry set, user notified
+3. **User claims reservation** — reservation status → `claimed`, loan created automatically, copy status → `borrowed`, queue positions updated
+4. **Reservation expires** — scheduled job marks expired reservations, activates next reservation, updates queue positions
+
+## Permissions
+
+| Role | Access |
+|------|--------|
+| Superuser / Admin / Librarian | Full access (create, read, update, delete) |
+| Dean | Read-only access |
+| Students / Professors / Guests | Create, read, and update own reservations only |
+
+## Sub-Pages
+
+- **[Reservation System Implementation](./reservation-system-implementation)** — Database schema, API usage examples, and implementation details
+- **[Reservation Role-Based Routing](./reservation-role-based-routing)** — Unified dashboard routing and permission-based access control
+- **[Reservation System Security Review](./reservation-system-security-review)** — Security assessment covering authorization, race conditions, and data access controls
