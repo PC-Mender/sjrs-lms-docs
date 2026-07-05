@@ -1,6 +1,18 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+## [1.3.20](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.19...v1.3.20) (2026-07-05)
+
+
+### Documentation
+
+* fix duplicate content on badges page, add reservations overview, update homepage and footer text ([8307185](https://github.com/neil-jay/sjrs-lms-docs/commit/830718506420ba7a68b1e31aa49e046bd10895f0))
+
+
+### Build System
+
+* remove unused packages, update starlight, replace deprecated standard-version ([f41e3fc](https://github.com/neil-jay/sjrs-lms-docs/commit/f41e3fcf147222f2030d6cc12a280c0ff17bb759))
 
 ### [1.3.19](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.18...v1.3.19) (2026-07-03)
 
