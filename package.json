@@ -2,6 +2,17 @@
   "name": "sjrslms-docs",
   "type": "module",
   "version": "1.3.22",
+  "description": "Official documentation site for the SJRS Library Management System",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PC-Mender/sjrs-lms-docs.git"
+  },
+  "homepage": "https://docs.sjrslms.in",
+  "bugs": {
+    "url": "https://github.com/PC-Mender/sjrs-lms-docs/issues"
+  },
+  "license": "ISC",
+  "author": "",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
