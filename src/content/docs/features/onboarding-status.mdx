@@ -183,7 +183,7 @@ graph TD
 
 ### Frontend Constants
 
-All status values are defined in [`src/constants/user-status.ts`](e:\GitHub\sjrslms\src\constants\user-status.ts):
+All status values are defined in [`src/constants/user-status.ts`](https://github.com/PC-Mender/sjrslms/blob/main/src/constants/user-status.ts):
 
 ```typescript
 export const USER_STATUS = {
@@ -248,7 +248,7 @@ const label = USER_STATUS_LABELS[status];
 
 ### Auto-Update Logic
 
-**Email Confirmation** ([`functions/api/auth/email-confirmation.ts`](e:\GitHub\sjrslms\functions\api\auth\email-confirmation.ts)):
+**Email Confirmation** ([`functions/api/auth/email-confirmation.ts`](https://github.com/PC-Mender/sjrslms/blob/main/functions/api/auth/email-confirmation.ts)):
 ```typescript
 // After email verification
 await env.DB.prepare(
@@ -263,7 +263,7 @@ await env.DB.prepare(
 ).run();
 ```
 
-**Profile Completion** ([`src/pages/profile-completion/hooks/useProfileSubmission.ts`](e:\GitHub\sjrslms\src\pages\profile-completion\hooks\useProfileSubmission.ts)):
+**Profile Completion** ([`src/pages/profile-completion/hooks/useProfileSubmission.ts`](https://github.com/PC-Mender/sjrslms/blob/main/src/pages/profile-completion/hooks/useProfileSubmission.ts)):
 ```typescript
 // After profile submission
 updateUser({ 
@@ -272,7 +272,7 @@ updateUser({
 });
 ```
 
-**Admin Approval** ([`functions/api/users/handlers/update-user.ts`](e:\GitHub\sjrslms\functions\api\users\handlers\update-user.ts)):
+**Admin Approval** ([`functions/api/users/handlers/update-user.ts`](https://github.com/PC-Mender/sjrslms/blob/main/functions/api/users/handlers/update-user.ts)):
 ```typescript
 // When admin activates account
 if (status === 'active') {

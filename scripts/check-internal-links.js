@@ -7,6 +7,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const DOCS_ROOT = path.join(__dirname, '../src/content/docs');
+const PUBLIC_ROOT = path.join(__dirname, '../public');
 
 function getAllFiles(dirPath, arrayOfFiles = []) {
   const files = fs.readdirSync(dirPath);
@@ -41,8 +42,13 @@ function resolveLink(sourceFile, link) {
   }
 
   if (linkWithoutAnchor.startsWith('/')) {
-    // Absolute path relative to docs root
-    // For Starlight/Astro, / usually maps to the root of the site (src/content/docs)
+    // Absolute path: could be a public asset or a docs page
+    // For Starlight/Astro, / maps to the site root; docs pages live under
+    // src/content/docs and public assets live under public/
+    const publicTarget = path.join(PUBLIC_ROOT, linkWithoutAnchor);
+    if (fs.existsSync(publicTarget)) {
+      return { exists: true, path: publicTarget };
+    }
     targetPath = path.join(DOCS_ROOT, linkWithoutAnchor);
   } else {
     // Relative path
@@ -96,9 +102,10 @@ function checkLinks() {
     }
   });
 
+  const reportPath = path.join(__dirname, 'broken-links.txt');
+  let report;
   if (brokenLinks.length > 0) {
-    const reportPath = path.join(__dirname, 'broken-links.txt');
-    let report = `Found ${brokenLinks.length} broken links:\n\n`;
+    report = `Found ${brokenLinks.length} broken links:\n\n`;
     brokenLinks.forEach(item => {
       report += `File: ${item.file}\n`;
       report += `  Link Text: [${item.text}]\n`;
@@ -106,11 +113,11 @@ function checkLinks() {
       report += `  Resolved to: ${item.resolvedPath}\n`;
       report += '---\n';
     });
-    fs.writeFileSync(reportPath, report);
-    console.log(`Report written to ${reportPath}`);
   } else {
-    console.log('No broken links found.');
+    report = 'No broken links found.\n';
   }
+  fs.writeFileSync(reportPath, report);
+  console.log(`Report written to ${reportPath}`);
 }
 
 checkLinks();
