@@ -1,47 +1,61 @@
 ---
 title: "Overview"
+description: "Feature-specific documentation and architecture deep-dives for the SJRS Library Management System."
 ---
 
-
-This directory contains detailed documentation for specific features and systems within the SJRS LMS, including reference books, email services, and other specialized functionality.
+This directory contains detailed documentation for specific features and systems within the SJRS LMS.
 
 ## Documentation Index
 
-### ** Reference Books System**
+### **Reference Books System**
 - **[Reference Books System Guide](./reference-books/system-guide)** - Complete guide to the reference books feature
 - **[Reference Books Database Diagram](./reference-books/database-diagram)** - Database schema and relationships for reference books
 
-### ** Email Service**
+### **Email Service**
 - **[Email Service Documentation](./email-service/)** - Comprehensive email service architecture and implementation
 
-### ** Action Logging System**
+### **Action Logging System**
 - **[Action Logging Documentation](./action-logging)** - Comprehensive audit trail and monitoring system
 - **[Action Logs User Guide](../user-guides/action-logs-guide)** - User guide for administrators
 
-### ** Permissions System**
+### **Permissions System**
 - **[Permissions System Documentation](./permissions/)** - Role-based access control with Zustand optimization
 - **[Permission System Architecture](../architecture/permission-system)** - System design and database schema
 - **[Roles and Permissions Guide](../development/roles-and-permissions)** - Role management and hierarchy
 
-### **� User Onboarding**
+### **User Onboarding**
 - **[Onboarding Status System](./onboarding-status)** - Complete workflow status reference (pending_email_confirmation, profile_incomplete, pending_approval, complete)
 - **[Registration Flow Guide](../user-guides/registration-flow)** - User registration and approval process
 
-### **� Notifications System**
+### **Dashboard System**
+- **[Dashboard Configuration Guide](./dashboard-config-guide)** - Unified, config-driven dashboard for all roles
+- **[Modular Dashboard System](../architecture/modular-dashboard-system)** - Historical proposal (archived)
+- **[Unified Dashboard Pilot](../development/unified-dashboard-pilot-ready)** - Pilot documentation (archived)
+
+### **Forms & Claims**
+- **[TADA Guide](../user-guides/tada-guide)** - Travel Allowance / Dearness Allowance claims
+- **[PAPM Guide](../user-guides/papm-guide)** - Private Account Payment Module submissions
+
+### **Personal Productivity**
+- **[Notes Guide](../user-guides/notes-guide)** - Personal notes with revisions, trash bin, and restore
+- **[Bookmarks Guide](../user-guides/bookmarks-guide)** - Save and organize quick links
+
+### **Community & Feedback**
+- **[Issue Reports Guide](../user-guides/issue-reports-guide)** - Public bug reports, upvotes, and GitHub sync
+
+### **Notifications System**
 - **[App Notifications Module](./notifications/)** - User-specific in-app notifications
 - **[Notification Types Guide](./notifications/notification-types-guide)** - Complete guide to Announcements, System Notifications, and App Notifications
 
-### ** Badge System**
+### **Badge System**
 - **[Badge System Documentation](./badges/)** - Comprehensive gamification and achievement system
 
-### ** Location Services**
+### **Location Services**
 - **[Location Services Documentation](./locations/)** - Global location data system (Countries, States, Cities)
 
-### ** Help & Support**
+### **Help & Support**
 - **[Frequently Asked Questions](./faqs/)** - Comprehensive FAQs for all user roles
 - **[Notification Types Guide](./notifications/notification-types-guide)** - Guide to system notifications and announcements
-
-
 
 ## Quick Navigation
 
@@ -49,10 +63,12 @@ This directory contains detailed documentation for specific features and systems
 - Start with [Reference Books System Guide](./reference-books/system-guide) for managing reference materials
 - Review [Email Service Documentation](./email-service/) for notification systems
 - Learn about [Notification Types](./notifications/notification-types-guide) for sending announcements and system notifications
+- Manage [Digital Resources](../user-guides/digital-resources-guide) and [Resource Types](../user-guides/digital-resources-guide#resource-types)
 
 ### **For Developers**
 - Begin with [Reference Books Database Diagram](./reference-books/database-diagram) for data structure
 - Reference [Email Service Documentation](./email-service/) for integration
+- Review [Dashboard Configuration Guide](./dashboard-config-guide) for the unified dashboard architecture
 - Review [Notification Types Guide](./notifications/notification-types-guide) for API endpoints and implementation details
 
 ### **For System Administrators**
@@ -60,6 +76,7 @@ This directory contains detailed documentation for specific features and systems
 - Review [Reference Books System Guide](./reference-books/system-guide) for feature management
 - Monitor [Action Logging Documentation](./action-logging) for system audit trails
 - Manage [Permissions System](./permissions/) for role-based access control
+- Customize the [Dashboard Configuration Guide](./dashboard-config-guide) for each role
 - Use [Notification Types Guide](./notifications/notification-types-guide) for managing announcements and system notifications
 - Manage [Badge System](./badges/) for user achievements and gamification
 
@@ -68,6 +85,7 @@ This directory contains detailed documentation for specific features and systems
 - **[Architecture Documentation](../architecture/)** - Overall system architecture
 - **[API Documentation](../api/)** - API endpoints and integration
 - **[Development Guide](../development/)** - Implementation details and workflows
+- **[User Guides](../user-guides/)** - Task-oriented guides for end users
 
 ## Import Conventions
 
@@ -86,23 +104,23 @@ import { Notification, NotificationType } from 'src/types/notifications';
 // import * as Entities from 'src/types/entities';
 ```
 
-## �� Features Overview
+## Features Overview
 
-### ** Reference Books System**
+### **Reference Books System**
 - **Purpose**: Manage reference materials and digital resources
-- **Key Features**: 
+- **Key Features**:
   - Digital book management
   - Category organization
   - Search and filtering
   - Access control
 - **Technology**: Cloudflare D1 database with React frontend
 
-### ** Email Service**
+### **Email Service**
 - **Purpose**: Send notifications and communications to users
 - **Architecture**: Direct Mailjet integration
 - **Types**: Account and transactional emails via Mailjet
 
-### ** Action Logging System**
+### **Action Logging System**
 - **Purpose**: Comprehensive audit trail and system monitoring
 - **Key Features**:
   - Automatic action capture
@@ -111,7 +129,7 @@ import { Notification, NotificationType } from 'src/types/notifications';
   - Role-based access control
 - **Technology**: Cloudflare D1 database with comprehensive logging
 
-### ** Permissions System**
+### **Permissions System**
 - **Purpose**: Role-based access control with performance optimization
 - **Key Features**:
   - Zustand-powered state management
@@ -121,7 +139,17 @@ import { Notification, NotificationType } from 'src/types/notifications';
   - Audit logging for security
 - **Technology**: React hooks with Zustand store, TypeScript support
 
-### ** Badge System**
+### **Dashboard System**
+- **Purpose**: Single, config-driven dashboard for all user roles
+- **Key Features**:
+  - Unified `/dashboard` route
+  - Role-specific widget layouts
+  - Widget registry for reuse
+  - Superuser config editor
+  - Permission-based widget filtering
+- **Technology**: React, TypeScript, centralized config files
+
+### **Badge System**
 - **Purpose**: Gamification and achievement recognition system
 - **Key Features**:
   - Automatic badge awarding based on user actions
@@ -132,7 +160,33 @@ import { Notification, NotificationType } from 'src/types/notifications';
   - Full audit logging
 - **Technology**: Cloudflare D1 database with React frontend
 
+### **Digital Resources**
+- **Purpose**: Manage and read e-books, PDFs, and online materials
+- **Key Features**:
+  - In-app PDF reader
+  - Read session tracking
+  - Multiple download sources
+  - Resource type management
+  - Activity analytics
+- **Technology**: Cloudflare R2 storage, React PDF viewer, D1
 
+### **User Notes**
+- **Purpose**: Private note-taking for users
+- **Key Features**:
+  - Rich text notes
+  - Revision history with restore
+  - Soft delete and trash bin
+  - Dashboard widget
+- **Technology**: Cloudflare D1 with React frontend
+
+### **Issue Reports**
+- **Purpose**: Community-driven bug reporting and feature requests
+- **Key Features**:
+  - Public issue list
+  - Upvotes
+  - Image attachments
+  - GitHub sync
+- **Technology**: Cloudflare D1, GitHub API, R2
 
 ## Getting Started
 
@@ -162,61 +216,10 @@ import { Notification, NotificationType } from 'src/types/notifications';
 3. **Configure automatic badge evaluators** for user actions
 4. **Set up badge management** for administrators
 
-
-
-## Implementation Details
-
-### **Reference Books Database Schema**
-```sql
--- Core reference books table
-CREATE TABLE reference_books (
-  id INTEGER PRIMARY KEY,
-  title TEXT NOT NULL,
-  author TEXT,
-  category_id INTEGER,
-  description TEXT,
-  file_path TEXT,
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
-
--- Categories for organization
-CREATE TABLE reference_categories (
-  id INTEGER PRIMARY KEY,
-  name TEXT NOT NULL,
-  description TEXT,
-  parent_id INTEGER
-);
-```
-
-### **Email Service Architecture**
-```typescript
-// Account emails (direct Mailjet)
-async function sendConfirmationEmail(email: string, firstName: string, token: string, env: any) {
-  const emailData = {
-    Messages: [{
-      From: { Email: env.MAILJET_FROM_EMAIL, Name: "SJRS LMS" },
-      To: [{ Email: email, Name: firstName }],
-      Subject: "Confirm Your Email Address",
-      HTMLPart: `<h2>Welcome to SJRS LMS!</h2>...`
-    }]
-  };
-
-  const response = await fetch('https://api.mailjet.com/v3.1/send', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Basic ${btoa(`${env.MAILJET_API_KEY}:${env.MAILJET_API_SECRET}`)}`
-    },
-    body: JSON.stringify(emailData)
-  });
-}
-
-// Transactional emails (direct Mailjet)
-async function sendLoanNotification(userEmail: string, bookTitle: string) {
-  // Use unified EmailService to send via Mailjet
-}
-```
+### **Dashboard System**
+1. **Read the [Dashboard Configuration Guide](./dashboard-config-guide)**
+2. **Review the widget registry** in the application source
+3. **Use the config editor** (superusers) to customize layouts
 
 ## Best Practices
 
@@ -238,46 +241,27 @@ async function sendLoanNotification(userEmail: string, bookTitle: string) {
 - **Implement proper error handling** for logging reliability
 - **Monitor log performance** for system optimization
 
-
-
-## Feature Metrics
-
-### **Reference Books System**
-- **Total Books**: Track number of reference materials
-- **Category Distribution**: Monitor organization effectiveness
-- **Access Patterns**: Analyze usage statistics
-- **Search Performance**: Optimize search functionality
-
-### **Email Service**
-- **Delivery Rates**: Monitor Mailjet delivery success
-- **Queue Performance**: Track queue processing times
-- **Error Rates**: Monitor failed email deliveries
-- **User Engagement**: Track email open rates
-
-### **Action Logging System**
-- **Total Actions**: Track overall system activity
-- **Action Types**: Monitor distribution of operations
-- **User Activity**: Analyze most active users
-- **Security Events**: Monitor suspicious activities
-
-
+### **Dashboard System**
+- **Keep configs serializable** — no JSX in config files
+- **Register widgets centrally** before using them in configs
+- **Use permission checks** to hide widgets users cannot access
+- **Test layout changes** in a non-production environment first
 
 ## Integration Points
 
 ### **User Experience & Analytics**
-### Enhanced User Dashboard
 - **Reading Analytics**: Comprehensive reading trends and patterns
 - **Loan Distribution**: Visual breakdown of borrowing habits
 - **Activity Metrics**: Login frequency and engagement tracking
 - **Performance**: < 2s load time with parallel data fetching
 
-### System Notifications
+### **System Notifications**
 - **Bell Dropdown**: Centralized notification hub with per-type counts
 - **Event Cards**: Rich notification content with actions
 - **Smart Filtering**: Category-based organization
 - **Permission-Aware**: Role-based notification access
 
-### User Interface
+### **User Interface**
 - **Responsive Design**: Mobile-first approach with adaptive layouts
 - **Theme Support**: Dark/light mode with consistent styling
 - **Accessibility**: WCAG 2.1 AA compliance throughout
@@ -301,29 +285,27 @@ async function sendLoanNotification(userEmail: string, bookTitle: string) {
 - **Authentication**: Log login/logout events
 - **Security Monitoring**: Track suspicious activities
 
-### Library Management
+### **Library Management**
 
-### Book Operations
+#### Book Operations
 - **Catalog Management**: Advanced book catalog with search and filtering
 - **Book Copies**: Inventory tracking and availability management
 - **Reference Books**: Academic reference material management
 - **Digital Resources**: E-book and digital content handling
 
-### User Management
+#### User Management
 - **Multi-Role System**: Students, faculty, staff, and administrators
 - **Profile Management**: Comprehensive user profiles with preferences
 - **Permission System**: Granular access control and permissions
 - **Authentication**: Secure login with MFA support
 
-### Circulation
+#### Circulation
 - **Loan Management**: Book borrowing and return tracking
 - **Reservations**: Book reservation system and queue management
 - **Penalties**: Fine calculation and payment processing
-- **Borrow Limits**: Configurable borrowing quotas and restrictions activities
-
-
+- **Borrow Limits**: Configurable borrowing quotas and restrictions
 
 ---
 
-**Last Updated:** November 2025  
-**Version:** 3.41.25
+**Last Updated:** July 19, 2026  
+**Version:** 7.27.0

@@ -6,31 +6,32 @@ slug: status
 
 ## **System Status**
 
-### ** Production Ready**
-- **Onboarding Status Management**: New persistent tracking across user lifecycle
-- **Advanced Account Administration**: Comprehensive status visibility in all admin lists
-- **Dynamic Role System**: Fully implemented and deployed
-- **Advanced Session Management**: Cross-tab sync and security features deployed
-- **Database Schema**: Enhanced with onboarding status and metadata fields
-- **API Endpoints**: Complete CRUD operations with metadata enrichment
-- **Frontend Components**: All updated with latest improvements
-- **Performance Optimizations**: Enhanced table rendering and optimized queries
-- **Security Features**: Advanced security monitoring and activity tracking active
-- **Build Status**:  Zero errors, production-ready
+### **Production Ready — Version 7.27.0**
+- **Unified Dashboard System**: Single `/dashboard` route with config-driven, role-specific layouts for all roles
+- **Dashboard Configuration Editor**: Superusers can customize widget layouts and save per-role configs
+- **Gamified Onboarding**: Welcome modal, first-quest banner, and first-badge celebration for patron roles
+- **Digital Resources & PDF Reader**: In-app PDF reader with read-session tracking and download sources
+- **User Notes System**: Personal notes with soft delete, trash bin, revision history, and restore
+- **Issue Reports & GitHub Sync**: Public issue list, upvotes, attachments, and scheduled GitHub sync
+- **TADA & PAPM Forms**: Travel Allowance / Dearness Allowance and Private Account Payment Module forms
+- **Affiliations Management**: Dioceses and congregations with profile integration and member counts
+- **Magazines Module**: Simplified magazine catalog with full CRUD
+- **Dynamic User Types & Roles**: API-driven user types with granular permission-based access
+- **Advanced Session Management**: Cross-tab sync, idle timeout, and global rate-limit countdown banner
+- **API Versioning & Idempotency**: All routes under `/api/v1/` with idempotency support for critical writes
+- **Security Hardening**: Probe-filter middleware, CSRF double-submit cookies, JWT in HttpOnly cookies, Turnstile CAPTCHA
+- **Build Status**: Zero errors, production-ready
 
-### ** Key Achievements**
-- **Onboarding Workflow**: Persistent status tracking through entire user lifecycle
-- **Account Visibility**: Dual-status tracking (Account + Onboarding) for better admin insights
-- **Hybrid System**: Exact matching for routing, dynamic for permissions
-- **Zero Downtime**: Role changes and feature updates without deployment
-- **Full CRUD**: Complete management interfaces for all features
-- **Cross-Tab Sync**: Seamless session management across browser tabs
-- **Enhanced Security**: Advanced security features with real-time monitoring
-- **Performance First**: Optimized queries and component rendering
-- **Future Proof**: Extensible architecture for growth
+### **Key Achievements**
+- **One Dashboard to Rule Them All**: Consolidated admin, librarian, dean, superuser, and user dashboards behind a single component
+- **Widget Reuse**: Centralized widget registry powers every role dashboard
+- **Config-Driven UX**: Role layouts defined in config files; superusers can edit layouts at runtime
+- **Instant Feedback**: Instant-close modal pattern and optimistic updates across CRUD operations
+- **Perceived Performance**: React Query presets, stale-while-revalidate, skeleton screens, and manual refresh patterns
+- **Future Proof**: Extensible widget registry and dashboard config system for growth
 
 ---
 
-**Last Updated**: March 2, 2026  
-**Version**: 3.49.0 (Onboarding Status & Account Management)  
-**Status**:  Production Ready
+**Last Updated**: July 19, 2026  
+**Version**: 7.27.0 (Unified Dashboard, Gamification & Config Editor)  
+**Status**: ✅ Production Ready

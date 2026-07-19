@@ -3,66 +3,63 @@ title: "Documentation Review"
 ---
 
 
-**Date**: March 2026  
-**Version**: 6.3.3  
-**Status**:  Complete
+**Date**: July 19, 2026  
+**Version**: 7.27.0  
+**Status**: ✅ Complete
 
 ## Summary
 
-Comprehensive review and update of all documentation to ensure accuracy, consistency, and alignment with current codebase implementation.
+Comprehensive review and update of all documentation to ensure accuracy, consistency, and alignment with the current codebase implementation. The application has moved from the 6.x architecture to a unified 7.x platform with a config-driven dashboard, new user-facing modules, and hardened security.
 
 ## Changes Made
 
-### 1. Version Number Standardization 
-- Updated documentation version references to match the application version (6.3.3)
+### 1. Version Number Standardization
+- Updated documentation version references to match the application version (7.27.0)
 - Removed outdated version references that no longer reflect the current codebase
+- Updated the [Status](/status) page to reflect the current production release
 
-### 2. Token Management Documentation 
-- Documented cookie-based auth (JWT stored in HttpOnly cookies)
-- Removed header-based token / client-managed JWT examples
-- Clarified `tokenManager` usage for session/UI state only (not JWT storage)
+### 2. Unified Dashboard Documentation
+- Documented the production unified dashboard system (`/dashboard`) that serves all roles
+- Removed references to the archived pilot feature flag (`VITE_USE_UNIFIED_DASHBOARD`)
+- Documented the widget registry, role-specific configs, and LayoutEngine rendering
+- Added the Dashboard Configuration Editor guide for superusers
 
-**Files Updated:**
-- `docs/api/index.md` - Token management best practices
-- `docs/development/auth-flow.md` - Authentication flow documentation
+### 3. New User-Facing Feature Guides
+- **TADA Forms** — Travel Allowance / Dearness Allowance claim workflow
+- **PAPM Forms** — Private Account Payment Module submissions and drawee management
+- **User Notes** — Personal notes with revision history, soft delete, trash bin, and restore
+- **Issue Reports** — Public issue list, GitHub sync, upvotes, and attachments
+- **Digital Resources Refresh** — In-app PDF reader, read sessions, and download sources
 
-### 3. Logging System Documentation 
-- Fixed API references: `getLogger` → `createLogger`
-- Removed non-existent methods (`logSecurityEvent`, `logDatabaseOperation`, `logPerformance`, `logRequest`, `logResponse`)
-- Updated examples to use actual logger API (`debug`, `info`, `warn`, `error`)
-- Removed `critical` level (not in implementation)
-- Updated environment setup to reflect Sentry integration
-- Clarified development vs production behavior
+### 4. Version & Changelog Updates
+- Updated the highlights changelog to cover releases from 6.34.7 through 7.27.0
+- Updated the full technical changelog to the latest application CHANGELOG.md
+- Added entries for dashboard consolidation, gamification, security hardening, and new modules
 
-**Files Updated:**
-- `docs/development/logging-system.md` - Complete rewrite of usage examples
+### 5. Status & Operational Docs
+- Updated system status with current features and achievements
+- Documented new security layers: probe-filter middleware, idempotency, API versioning
 
-### 4. Authentication Flow Documentation 
-- Updated to reflect cookie-based auth and CSRF bootstrap requirements
-- Aligned refresh/hydration narrative with `GET /api/auth/validate-session` and `GET /api/auth/me`
-
-**Files Updated:**
-- `docs/development/auth-flow.md`
-
-### 5. Date Standardization 
-- Updated dates where they were presented as “current” but were no longer accurate
+### 6. Link & Navigation Maintenance
+- Updated index pages and card grids to point to new and updated guides
+- Verified internal links and removed references to archived pages where appropriate
 
 ## Verification Checklist
 
-- Version references align with the current application
-- Auth examples align with cookie-based auth and CSRF protection
-- All logging API calls match actual implementation
-- Code examples use current APIs (`createLogger`, `unifiedAPIClient`)
+- Version references align with the current application (7.27.0)
+- New feature guides reflect actual routes and behavior
+- Dashboard documentation matches the production unified implementation
+- API examples use the current `/api/v1/` prefix
+- Code examples use current APIs (`createLogger`, `unifiedAPIClient`, `useStandardQuery`)
 - Environment setup instructions are accurate
 - “Last Updated” labels are not misleading
 
 ## Remaining Documentation
 
 The following documentation files may need periodic review but were not part of this update:
-- Feature-specific documentation (reference books, email service, etc.)
-- User guides
-- Architecture diagrams
-- Archive documentation
+- Deep API endpoint enumeration (the API surface grew significantly)
+- Detailed database schema diagrams for new tables
+- Archive documentation (kept for historical reference)
 
 ## Notes
 
@@ -73,7 +70,7 @@ The following documentation files may need periodic review but were not part of 
 
 ---
 
-**Review Status**:  Complete  
+**Review Status**: ✅ Complete  
 **Next Review**: As needed when major features are added or APIs change
 
 

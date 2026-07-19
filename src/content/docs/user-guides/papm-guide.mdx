@@ -1,0 +1,82 @@
+---
+title: "PAPM Guide"
+description: "How to create, submit, and manage Private Account Payment Module (PAPM) forms."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+**PAPM** stands for **Private Account Payment Module**. It is used to record and request reimbursement of payments made from a private account on behalf of the institution.
+
+**Route**: `/dashboard/papm`
+
+## Who Can Use PAPM
+
+- Students, professors, staff, and guests with permission to create PAPM submissions
+- Administrative roles can review, approve, or reject submissions
+
+## Creating a PAPM Submission
+
+1. Navigate to **Dashboard** → **PAPM** (`/dashboard/papm`)
+2. Click **Create PAPM**
+3. Complete the form:
+   - **Payment details** — amount, date, purpose, and description
+   - **Drawee information** — one or more people on whose behalf the payment was made
+   - **Drawee metadata** — registration number, year of study, and department where applicable
+4. Save as a **draft** or **submit** for approval
+
+## Drawees
+
+A drawee is the person benefiting from the payment.
+
+- You can add multiple drawees to a single PAPM form
+- Drafts may be saved without drawees and completed later
+- Once submitted, the drawee list is locked
+
+## Viewing and Printing
+
+The PAPM list shows:
+
+- Submission reference
+- Date and amount
+- Drawee names
+- Status
+- Quick actions: view, edit (draft only), print
+
+Clicking a submission opens a read-only modal view. Click **Print** to generate a printable version with watermark.
+
+## Finalizing a Submission
+
+When you are ready to submit:
+
+1. Open the draft
+2. Confirm all drawee details are correct
+3. Click **Finalize & Submit**
+4. The form will lock and enter the approval workflow
+
+## For Approvers
+
+Administrative users can:
+
+- View all PAPM submissions
+- Filter by status, amount, or date
+- Approve or reject with comments
+- Track submission history
+
+## Important Notes
+
+- Submitted PAPM forms cannot be edited
+- Keep supporting receipts or documents for verification
+- Use the print preview to review before final submission
+
+## Related Documentation
+
+- [TADA Guide](./tada-guide) — Travel Allowance / Dearness Allowance
+- [Orders Guide](./orders-guide) — Book purchase requests
+
+---
+
+**Last Updated:** July 19, 2026  
+**Version:** 7.27.0

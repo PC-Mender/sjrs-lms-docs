@@ -435,8 +435,8 @@ These standards are enforced through tooling where possible; deviations must be 
     - Never `async/await` inside `onOk` — confirm closes instantly; deletion runs in background
   
   - **Reference Implementations**:
-    - [RoleListPage.tsx](../src/pages/roles/RoleListPage.tsx) — First official implementation
-    - [BorrowLimitList.tsx](../src/pages/borrow-limits/BorrowLimitList.tsx) — Reference for patterns
+    - `src/pages/roles/RoleListPage.tsx` — First official implementation
+    - `src/pages/borrow-limits/BorrowLimitList.tsx` — Reference for patterns
   
   - **Common Mistakes (Anti-Patterns)**:
     - ❌ Using `refreshData` callback (removed; use `setRefreshTime: onRefresh`)
@@ -530,7 +530,7 @@ These standards are enforced through tooling where possible; deviations must be 
   - Use a dedicated `isRefreshing` state (no full-page spinners)
   - Show refresh feedback where it improves UX without becoming noisy
   - With `staleTime: 0`, `refetch()` should request fresh server data subject to network and platform behavior
-  - Reference implementation: [BorrowLimitList.tsx](../src/pages/borrow-limits/BorrowLimitList.tsx)
+  - Reference implementation: `src/pages/borrow-limits/list.tsx`
 - **Industry Standard - Server Pagination Required**:
   - All data-heavy list endpoints must be paginated
   - Never return unbounded datasets
