@@ -149,14 +149,14 @@ sql/
 
 ## API Architecture
 
-### **Direct Function API Pattern**
+### Direct Function API Pattern
 The SJRS LMS uses a **direct function API pattern** optimized for Cloudflare Workers, providing:
 - **Better Performance** - Native Cloudflare Workers functions without framework overhead
 - **Simpler Debugging** - Direct function calls with clear stack traces
 - **Consistent Patterns** - Standardized routing and error handling across all endpoints
 - **Type Safety** - Full TypeScript support throughout the API layer
 
-### **API Structure**
+### API Structure
 ```typescript
 // Standard API function pattern
 export async function resourceName(request: Request, env: any) {
@@ -185,7 +185,7 @@ export async function resourceName(request: Request, env: any) {
 }
 ```
 
-### **Standardized Routing Pattern**
+### Standardized Routing Pattern
 All APIs follow a consistent routing pattern:
 ```typescript
 const path = url.pathname.replace('/api/resourceName', '');
@@ -205,7 +205,7 @@ if (path.startsWith('/')) {
 ### Legacy Permissions Compatibility
 Legacy permission endpoints are preserved for backward compatibility and internally routed to the unified `/api/permissions` service.
 
-### **Error Handling & CORS**
+### Error Handling & CORS
 All APIs use unified error handling with automatic CORS headers:
 ```typescript
 import { handleError } from '../../utilities/error/unified-error-handler';
@@ -222,7 +222,7 @@ try {
 }
 ```
 
-### **Main Router**
+### Main Router
 The main router (`functions/index.ts`) directs requests to appropriate API functions:
 ```typescript
 // Direct function calls (no .fetch() needed)

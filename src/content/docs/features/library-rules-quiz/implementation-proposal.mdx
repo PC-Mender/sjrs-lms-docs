@@ -22,19 +22,19 @@ Library users often forget library rules, leading to:
 
 ## Proposed Solution
 
-### 1. **Library Rules Quiz System**
+### 1. Library Rules Quiz System
 - Interactive quiz with multiple-choice questions
 - Questions based on actual library rules (borrow limits, loan periods, fines, etc.)
 - Score tracking and completion status
 - Required passing score (e.g., 80%)
 
-### 2. **Reminder Triggers**
+### 2. Reminder Triggers
 - **First-time users**: After account approval, before first book borrow
 - **Periodic reminders**: Every 30/60/90 days (configurable)
 - **Before critical actions**: Before borrowing books (if quiz expired)
 - **Notification-based**: Push notifications for overdue quiz completion
 
-### 3. **User Experience**
+### 3. User Experience
 - Non-intrusive modal/popup
 - Can be dismissed temporarily (with reminder)
 - Accessible from dashboard and help section
@@ -44,7 +44,7 @@ Library users often forget library rules, leading to:
 
 ## Implementation Approach
 
-### Option A: **Modal-Based Quiz (Recommended)**
+### Option A: Modal-Based Quiz (Recommended)
 **Location**: Dashboard overlay modal
 **Trigger**: 
 - First login after approval
@@ -59,7 +59,7 @@ Library users often forget library rules, leading to:
 **Cons**:
 - Users might dismiss without completing
 
-### Option B: **Dedicated Quiz Page**
+### Option B: Dedicated Quiz Page
 **Location**: `/library-rules-quiz` route
 **Trigger**: 
 - Redirect from dashboard if quiz required
@@ -75,7 +75,7 @@ Library users often forget library rules, leading to:
 - More intrusive
 - Requires navigation
 
-### Option C: **Hybrid Approach (Best)**
+### Option C: Hybrid Approach (Best)
 **Location**: 
 - Modal for quick reminders
 - Dedicated page for full quiz
@@ -93,7 +93,7 @@ Library users often forget library rules, leading to:
 
 ## Recommended Implementation: Hybrid Approach
 
-### 1. **Database Schema**
+### 1. Database Schema
 
 ```sql
 -- Library rules quiz questions
@@ -134,7 +134,7 @@ CREATE TABLE library_rules_quiz_preferences (
 );
 ```
 
-### 2. **Backend API Endpoints**
+### 2. Backend API Endpoints
 
 ```
 GET  /api/library-rules-quiz/questions     - Get quiz questions
@@ -144,7 +144,7 @@ POST /api/library-rules-quiz/dismiss       - Dismiss reminder
 GET  /api/library-rules-quiz/history        - Get quiz attempt history
 ```
 
-### 3. **Frontend Components**
+### 3. Frontend Components
 
 **Components to Create:**
 1. `LibraryRulesQuizModal.tsx` - Modal for quick quiz
@@ -160,7 +160,7 @@ GET  /api/library-rules-quiz/history        - Get quiz attempt history
 4. Navigation menu - "Library Rules Quiz" link
 5. Notifications - Reminder notifications
 
-### 4. **Quiz Questions (Sample)**
+### 4. Quiz Questions (Sample)
 
 Based on `LIBRARY_RULES` from `src/constants/config.ts`:
 

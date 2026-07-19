@@ -11,33 +11,33 @@ title: "Api Response Standardization"
 
 The SJRS LMS now features a **standardized API response system** that ensures consistent response formats across all backend endpoints. This system provides better frontend integration, improved error handling, and enhanced debugging capabilities.
 
-## **Key Features**
+## Key Features
 
-### **Standardized Response Formats**
+### Standardized Response Formats
 - **Consistent Structure**: All API responses follow the same format
 - **Type Safety**: Full TypeScript support with proper interfaces
 - **Frontend Compatible**: Perfect integration with React hooks
 - **Debugging Support**: Request IDs and timestamps in all responses
 
-### **Response Builder System**
+### Response Builder System
 - **Centralized Logic**: Single source of truth for response creation
 - **Automatic CORS**: CORS headers added automatically
 - **Error Handling**: Structured error responses with codes
 - **Performance Tracking**: Built-in processing time measurement
 
-### **Backward Compatibility**
+### Backward Compatibility
 - **Re-exports**: All utility files maintain backward compatibility
 - **No Breaking Changes**: Existing handlers continue to work
 - **Gradual Migration**: Handlers can be updated incrementally
 
-## **Architecture**
+## Architecture
 
-### **Response Builder Location**
+### Response Builder Location
 ```
 functions/utilities/response-builder.ts
 ```
 
-### **Response Format Structure**
+### Response Format Structure
 ```typescript
 // Success Response
 {
@@ -90,11 +90,11 @@ functions/utilities/response-builder.ts
 }
 ```
 
-## **Implementation**
+## Implementation
 
-### **Response Builder Functions**
+### Response Builder Functions
 
-#### **Success Responses**
+#### Success Responses
 ```typescript
 import { createSuccessResponse } from '../utilities/response-builder';
 
@@ -115,7 +115,7 @@ const createdResponse = createCreatedResponse(
 );
 ```
 
-#### **Error Responses**
+#### Error Responses
 ```typescript
 import { createErrorResponse } from '../utilities/response-builder';
 
@@ -140,7 +140,7 @@ const validationResponse = createValidationErrorResponse(
 );
 ```
 
-#### **Paginated Responses**
+#### Paginated Responses
 ```typescript
 import { createPaginatedResponse } from '../utilities/response-builder';
 
@@ -157,7 +157,7 @@ const paginatedResponse = createPaginatedResponse(
 );
 ```
 
-### **Utility File Integration**
+### Utility File Integration
 
 All base utility files (`*-utils.ts`) now re-export the standardized functions:
 
@@ -173,9 +173,9 @@ export const createSuccessResponse = _createSuccessResponse;
 export const createErrorResponse = _createErrorResponse;
 ```
 
-## **Error Codes**
+## Error Codes
 
-### **Standard Error Codes**
+### Standard Error Codes
 ```typescript
 export const ERROR_CODES = {
   VALIDATION_ERROR: 'VALIDATION_ERROR',
@@ -191,7 +191,7 @@ export const ERROR_CODES = {
 } as const;
 ```
 
-### **Error Code Usage**
+### Error Code Usage
 - **VALIDATION_ERROR**: Field validation failures
 - **NOT_FOUND**: Resource not found (404)
 - **UNAUTHORIZED**: Authentication required (401)
@@ -203,9 +203,9 @@ export const ERROR_CODES = {
 - **DATABASE_ERROR**: Database operation failures
 - **EXTERNAL_SERVICE_ERROR**: Third-party service failures
 
-## **Frontend Integration**
+## Frontend Integration
 
-### **React Hook Integration**
+### React Hook Integration
 The standardized responses work perfectly with the existing React hooks:
 
 ```typescript
@@ -221,7 +221,7 @@ const { data, pagination, isLoading } = usePaginatedQuery<Book>(
 );
 ```
 
-### **Response Validation**
+### Response Validation
 The frontend automatically validates response formats:
 
 ```typescript
@@ -239,18 +239,18 @@ function isValidAPIResponse(response: any): response is APIResponse<any> {
 }
 ```
 
-## **Development Guide**
+## Development Guide
 
-## **Numeric Error Codes (codeNo)**
+## Numeric Error Codes (codeNo)
 - Backend includes a numeric `codeNo` in error responses aligned with `ERROR_CODE_NO` in `shared/types/error-codes.ts`.
 - Use `error.code` for programmatic branching and `error.codeNo` for analytics, dashboards, and compact logs.
 - Frontend types in `src/types/api-response.ts` include `error.codeNo?: number`.
 
-## **Auto-Generated Error Code Reference**
+## Auto-Generated Error Code Reference
 - Run `npm run docs:generate:error-codes` to generate `docs/api/error-codes-reference.md` directly from `shared/types/error-codes.ts`.
 - This table is the single source of truth for codes, numeric IDs, and default messages.
 
-### **Error Handling Standardization**
+### Error Handling Standardization
 
 All API handlers follow a standardized error handling pattern:
 
@@ -294,7 +294,7 @@ export async function handleSomeOperation(request: Request, env: Environment): P
 - Stack traces automatically included in development mode
 - Consistent error message extraction pattern
 
-### **Creating New API Endpoints**
+### Creating New API Endpoints
 
 1. **Import the response builder and error handler**:
 ```typescript
@@ -348,7 +348,7 @@ export async function handleGetBooks(request: Request, env: Environment): Promis
 }
 ```
 
-### **Best Practices**
+### Best Practices
 
 1. **Always include origin for CORS**:
 ```typescript
@@ -385,15 +385,15 @@ return createUpdatedResponse(updatedResource, 'Resource', origin);
 return createDeletedResponse(resourceId, 'Resource', origin);
 ```
 
-## **Debugging & Monitoring**
+## Debugging & Monitoring
 
-### **Request Tracking**
+### Request Tracking
 Every response includes a unique `requestId` for tracking:
 ```
 req_1705312200000_abc123def
 ```
 
-### **Performance Monitoring**
+### Performance Monitoring
 Processing time is automatically tracked:
 ```typescript
 const tracker = createPerformanceTracker();
@@ -401,7 +401,7 @@ const tracker = createPerformanceTracker();
 const metadata = tracker.getMetadata(); // includes processingTime
 ```
 
-### **Error Analysis**
+### Error Analysis
 Structured error responses help with debugging:
 ```typescript
 {
@@ -415,45 +415,45 @@ Structured error responses help with debugging:
 }
 ```
 
-## **Benefits**
+## Benefits
 
-### **For Developers**
+### For Developers
 - **Consistent APIs**: All endpoints follow the same pattern
 - **Better Debugging**: Request IDs and timestamps
 - **Type Safety**: Full TypeScript support
 - **Easy Testing**: Predictable response formats
 
-### **For Frontend**
+### For Frontend
 - **Reliable Integration**: Responses always match expected format
 - **Better UX**: Consistent error handling
 - **Performance Insights**: Processing time visibility
 - **Debugging Support**: Request tracking capabilities
 
-### **For Operations**
+### For Operations
 - **Monitoring**: Request IDs for log correlation
 - **Performance**: Built-in timing measurements
 - **Error Tracking**: Structured error information
 - **Audit Trail**: Complete request/response logging
 
-## **Migration Guide**
+## Migration Guide
 
-### **Existing Handlers**
+### Existing Handlers
 No changes required! The response builder maintains backward compatibility through re-exports in utility files.
 
-### **New Handlers**
+### New Handlers
 Use the standardized response builder directly:
 ```typescript
 import { createSuccessResponse, createErrorResponse } from '../../../utilities/response-builder';
 ```
 
-### **Gradual Updates**
+### Gradual Updates
 Update existing handlers incrementally to use more specific response functions:
 - `createCreatedResponse()` for POST operations
 - `createUpdatedResponse()` for PUT/PATCH operations
 - `createDeletedResponse()` for DELETE operations
 - `createPaginatedResponse()` for list operations
 
-## **Related Documentation**
+## Related Documentation
 
 - **[API Documentation](/api/index)** - API endpoints and usage
 - **`src/hooks/useStandardizedAPI.ts`** - React integration

@@ -13,7 +13,7 @@ The email notification system is **partially implemented**. While the core infra
 
 ## What's Currently Implemented
 
-### 1. **Core Email Infrastructure** 
+### 1. Core Email Infrastructure 
 - **Location**: `functions/utilities/email-service.ts`
 - **Status**: Fully functional
 - **Features**:
@@ -23,7 +23,7 @@ The email notification system is **partially implemented**. While the core infra
   - Bulk email sending with rate limiting
   - Analytics integration
 
-### 2. **Email Templates** 
+### 2. Email Templates 
 - **Location**: `functions/email-templates/`
 - **Status**: Comprehensive template library
 - **Available Templates**:
@@ -34,7 +34,7 @@ The email notification system is **partially implemented**. While the core infra
   -  Orders: `order-notification`
   -  Profile: `admin-approval`, `profile-completion`
 
-### 3. **Transaction Notifications** 
+### 3. Transaction Notifications 
 - **Location**: `functions/lib/notifications/transaction-notifications.ts`
 - **Status**: Fully implemented
 - **Features**:
@@ -44,7 +44,7 @@ The email notification system is **partially implemented**. While the core infra
   -  Payment receipt notifications (email + in-app)
   - Respects user notification preferences
 
-### 4. **Email API Endpoints** 
+### 4. Email API Endpoints 
 - **Location**: `functions/api/email/index.ts`
 - **Status**: Fully functional with permission checks
 - **Endpoints**:
@@ -55,7 +55,7 @@ The email notification system is **partially implemented**. While the core infra
   -  `/api/email/send-auth-email`
   -  `/api/email/send-template-email`
 
-### 5. **User Preferences Support** 
+### 5. User Preferences Support 
 - **Location**: `user_notification_preferences` table
 - **Status**: Database schema exists
 - **Fields**: `email_notifications`, `loan_notifications`, `order_notifications`
@@ -65,7 +65,7 @@ The email notification system is **partially implemented**. While the core infra
 
 ## Missing Features
 
-### 1. **Penalty Email Notifications**  CRITICAL
+### 1. Penalty Email Notifications  CRITICAL
 
 **Current Status**: 
 - Penalty notifications only create **in-app notifications**
@@ -92,7 +92,7 @@ async function sendPenaltyNotification(...) {
 
 ---
 
-### 2. **Automated Due Date Reminders**  CRITICAL
+### 2. Automated Due Date Reminders  CRITICAL
 
 **Current Status**: 
 - **Not implemented** - No scheduled task exists
@@ -115,7 +115,7 @@ async function sendPenaltyNotification(...) {
 
 ---
 
-### 3. **Automated Overdue Reminders**  HIGH
+### 3. Automated Overdue Reminders  HIGH
 
 **Current Status**: 
 - Overdue status change notifications exist (when loan status changes to overdue)
@@ -137,7 +137,7 @@ async function sendPenaltyNotification(...) {
 
 ---
 
-### 4. **Reservation Email Notifications**  BUG
+### 4. Reservation Email Notifications  BUG
 
 **Current Status**: 
 - Code exists but **incorrect function signature**
@@ -173,7 +173,7 @@ await sendSystemNotification(user.email, {
 
 ---
 
-### 5. **Reservation Expiry Warnings**  MEDIUM
+### 5. Reservation Expiry Warnings  MEDIUM
 
 **Current Status**: 
 - Reservation expiry scheduled task exists (`functions/scheduled/reservation-expiry.ts`)
@@ -188,7 +188,7 @@ await sendSystemNotification(user.email, {
 
 ---
 
-### 6. **Order Status Change Notifications**  MEDIUM
+### 6. Order Status Change Notifications  MEDIUM
 
 **Current Status**: 
 - Order creation notifications exist (to admins)
@@ -207,7 +207,7 @@ await sendSystemNotification(user.email, {
 
 ---
 
-### 7. **Borrow Limit Warnings**  LOW
+### 7. Borrow Limit Warnings  LOW
 
 **Current Status**: 
 - In-app notifications may exist
@@ -222,7 +222,7 @@ await sendSystemNotification(user.email, {
 
 ---
 
-### 8. **Wishlist Availability Notifications**  LOW
+### 8. Wishlist Availability Notifications  LOW
 
 **Current Status**: 
 - **Not implemented**
@@ -239,7 +239,7 @@ await sendSystemNotification(user.email, {
 
 ## Technical Issues
 
-### 1. **Inconsistent User Preference Checking**
+### 1. Inconsistent User Preference Checking
 
 **Issue**: Some notification functions check user preferences, others don't.
 
@@ -252,7 +252,7 @@ await sendSystemNotification(user.email, {
 - Add preference checking to all email notification functions
 - Create utility function: `shouldSendEmailNotification(userId, notificationType)`
 
-### 2. **Missing Email Template for Penalties**
+### 2. Missing Email Template for Penalties
 
 **Issue**: No dedicated penalty notification email template exists.
 
@@ -260,7 +260,7 @@ await sendSystemNotification(user.email, {
 - Create `functions/email-templates/notifications/penalty-notification.ts`
 - Include: penalty amount, days overdue, book title, payment link, due date
 
-### 3. **Missing Email Template for Due Date Reminders**
+### 3. Missing Email Template for Due Date Reminders
 
 **Issue**: `return-reminder` template exists but may not be suitable for due date reminders.
 

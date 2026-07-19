@@ -15,7 +15,7 @@ title: "Order Approval Review"
 
 ### Critical Issues Found
 
-#### 1. **Non-Atomic Copy Claiming** (CRITICAL)
+#### 1. Non-Atomic Copy Claiming (CRITICAL)
 
 **Location**: `functions/api/orders/handlers/update-order.ts:60-90`
 
@@ -37,7 +37,7 @@ title: "Order Approval Review"
 
 **If batch fails**: Copy is already claimed, but no loan/order update happened.
 
-#### 2. **Redundant Verification Step**
+#### 2. Redundant Verification Step
 
 **Location**: `functions/api/orders/handlers/update-order.ts:83-90`
 
@@ -46,7 +46,7 @@ title: "Order Approval Review"
 - Doesn't prevent the issue if batch fails later
 - Adds unnecessary database round trip
 
-#### 3. **Missing Rollback Logic**
+#### 3. Missing Rollback Logic
 
 **Location**: `functions/api/orders/handlers/update-order.ts:106-127`
 

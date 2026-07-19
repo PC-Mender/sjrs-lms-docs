@@ -42,29 +42,29 @@ src/hooks/d1/
 
 ## Key Features
 
-### 1. **Backend Alignment**
+### 1. Backend Alignment
 - Types match the database schema exactly
 - Field names align with backend API (`penalty_type`, `description`, etc.)
 - Proper validation and error handling
 
-### 2. **Modular Components**
+### 2. Modular Components
 - **PenaltyTableColumns**: Column definitions as a hook for flexibility
 - **PenaltyTableActions**: Action definitions as a hook (extracted from inline code)
 - **PenaltyFormFields**: Reusable form fields component (extracted from PenaltyForm)
 - **PenaltyForm**: Simplified form wrapper
 - **PenaltyDetails**: Organized display of penalty information
 
-### 3. **Custom Hooks**
+### 3. Custom Hooks
 - **useD1PenaltiesQuery**: Centralized data fetching from `src/hooks/d1/penalties.ts`
 - **useD1PenaltyQuery**: Single penalty data management
 - **useD1CreatePenalty**, **useD1UpdatePenalty**, **useD1DeletePenalty**: CRUD operations
 
-### 4. **Type Safety**
+### 4. Type Safety
 - Comprehensive TypeScript interfaces
 - Proper type checking for all operations
 - Backend schema alignment
 
-### 5. **Utility Functions**
+### 5. Utility Functions
 - Consistent formatting (dates, currency, names)
 - Status color mapping
 - Permission checking utilities
@@ -116,7 +116,7 @@ The module now properly aligns with the backend database schema:
 - **due_date**: Optional due date for payment
 - **loan_id**: Optional reference to borrow record
 
-### **Backend Data Limitation**
+### Backend Data Limitation
 Currently, the backend penalty handlers only return basic user information (`first_name`, `last_name`). The frontend expects additional fields like `email`, `user_type`, and `phone` for full functionality. These fields are marked as optional in the types to prevent runtime errors.
 
 **Recommended Backend Improvement:**

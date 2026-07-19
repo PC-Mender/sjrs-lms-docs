@@ -9,19 +9,19 @@ The **Superuser role** is the highest level of access in SJRS LMS, designed for 
 
 ## When Superuser Access is Needed
 
-### **Development Scenarios**
+### Development Scenarios
 - **System Development**: Testing new features and configurations
 - **Debugging**: Investigating system issues and user problems
 - **Database Maintenance**: Performing system-level operations
 - **Configuration Changes**: Modifying system settings
 
-### **Security Scenarios**
+### Security Scenarios
 - **Emergency Access**: Urgent access to locked accounts
 - **Security Investigations**: Investigating suspicious activities
 - **Data Recovery**: Recovering lost or corrupted data
 - **Account Recovery**: Helping users regain access
 
-### **Administrative Scenarios**
+### Administrative Scenarios
 - **Role Management**: Creating and modifying user roles
 - **Permission Overrides**: Bypassing normal restrictions
 - **System Audits**: Comprehensive system analysis
@@ -29,7 +29,7 @@ The **Superuser role** is the highest level of access in SJRS LMS, designed for 
 
 ## Superuser Capabilities
 
-### **System-Level Access**
+### System-Level Access
 ```
  Override any permission or restriction
  Access any user account (impersonation)
@@ -43,7 +43,7 @@ The **Superuser role** is the highest level of access in SJRS LMS, designed for 
  System-level troubleshooting
 ```
 
-### **Inherited Access Levels**
+### Inherited Access Levels
 ```
  ADMIN LEVEL ACCESS (inherited):
  All admin features (Books, Orders, Members, etc.)
@@ -65,13 +65,13 @@ The **Superuser role** is the highest level of access in SJRS LMS, designed for 
 
 ## Test Accounts
 
-### **Superuser Accounts**
+### Superuser Accounts
 ```
  Superuser:           SUPERUSER_EMAIL / SUPERUSER_PASSWORD
  Student Superuser:   STUDENT_SUPERUSER_EMAIL / STUDENT_SUPERUSER_PASSWORD
 ```
 
-### **Access Level Hierarchy**
+### Access Level Hierarchy
 ```
  Superuser     → System Level (Override Everything)
  Admin         → Admin Level (Library Management)
@@ -81,19 +81,19 @@ The **Superuser role** is the highest level of access in SJRS LMS, designed for 
 
 ## Security Features
 
-### **Action Logging**
+### Action Logging
 - **All superuser actions** are logged in `superuser_actions` table
 - **IP address tracking** for security monitoring
 - **User agent logging** for device identification
 - **Detailed action records** with timestamps
 
-### **Emergency Access Control**
+### Emergency Access Control
 - **Time-limited access** with automatic expiration
 - **Approval workflow** for sensitive operations
 - **Reason documentation** for all emergency access
 - **Audit trail** for accountability
 
-### **Permission Management**
+### Permission Management
 - **Granular permissions** that can be enabled/disabled
 - **Individual permission control** for fine-tuning access
 - **Permission audit logs** for tracking changes
@@ -101,7 +101,7 @@ The **Superuser role** is the highest level of access in SJRS LMS, designed for 
 
 ## Database Structure
 
-### **Superuser Tables**
+### Superuser Tables
 ```sql
 -- Superuser permissions
 CREATE TABLE superuser_permissions (
@@ -134,7 +134,7 @@ CREATE TABLE emergency_access (
 
 ## Usage Scenarios
 
-### **Scenario 1: System Development**
+### Scenario 1: System Development
 ```
 Login: SUPERUSER_EMAIL
 Purpose: Testing new features and configurations
@@ -145,7 +145,7 @@ Actions:
 - Test user impersonation
 ```
 
-### **Scenario 2: Emergency Account Recovery**
+### Scenario 2: Emergency Account Recovery
 ```
 Login: SUPERUSER_EMAIL
 Purpose: Help user regain access to locked account
@@ -156,7 +156,7 @@ Actions:
 - Log all actions for audit
 ```
 
-### **Scenario 3: Security Investigation**
+### Scenario 3: Security Investigation
 ```
 Login: SUPERUSER_EMAIL
 Purpose: Investigate suspicious activity
@@ -167,7 +167,7 @@ Actions:
 - Document investigation findings
 ```
 
-### **Scenario 4: Database Maintenance**
+### Scenario 4: Database Maintenance
 ```
 Login: SUPERUSER_EMAIL
 Purpose: Perform system maintenance
@@ -193,21 +193,21 @@ Actions:
 
 ## Security Best Practices
 
-### **For Superusers**
+### For Superusers
 1. **Use sparingly**: Only use superuser access when absolutely necessary
 2. **Document actions**: Log all superuser operations with reasons
 3. **Time limits**: Set expiration times for emergency access
 4. **Approval workflow**: Get approval for sensitive operations
 5. **Audit regularly**: Review superuser activity logs frequently
 
-### **For System Administrators**
+### For System Administrators
 1. **Monitor access**: Track all superuser login attempts
 2. **Review logs**: Regularly audit superuser action logs
 3. **Limit accounts**: Keep superuser accounts to minimum necessary
 4. **Multi-factor auth**: Require MFA for superuser accounts
 5. **Emergency procedures**: Have clear emergency access protocols
 
-### **For Organizations**
+### For Organizations
 1. **Clear policies**: Define when superuser access is appropriate
 2. **Training**: Train superusers on security best practices
 3. **Incident response**: Have procedures for superuser-related incidents
@@ -216,21 +216,21 @@ Actions:
 
 ## Future Enhancements
 
-### **Advanced Security Features**
+### Advanced Security Features
 - **Multi-factor authentication** for superuser accounts
 - **Geographic restrictions** for superuser access
 - **Time-based access** limitations
 - **Approval workflows** for sensitive operations
 - **Real-time monitoring** of superuser activities
 
-### **Developer Tools**
+### Developer Tools
 - **System health dashboard** for superusers
 - **Performance monitoring** tools
 - **Database query interface** for debugging
 - **User activity analytics** for investigations
 - **Automated security alerts** for suspicious activities
 
-### **Emergency Features**
+### Emergency Features
 - **One-time emergency codes** for urgent access
 - **Automated incident response** procedures
 - **Emergency contact escalation** systems

@@ -11,7 +11,7 @@ Based on review of migration files and schema, here are the pending migrations t
 
 ## Confirmed Pending Migrations
 
-### 1. **Reservations System** (2025-01-15)
+### 1. Reservations System (2025-01-15)
 **Files**:
 - `2025-01-15_add-reservations-table.sql` - Creates reservations table
 - `2025-01-15_add-reservations-permissions.sql` - Adds reservation permissions
@@ -27,7 +27,7 @@ Based on review of migration files and schema, here are the pending migrations t
 
 ---
 
-### 2. **Loan Renewal Tracking** 
+### 2. Loan Renewal Tracking 
 **File**: `add-renewed-count-to-loans.sql`
 
 **Status**:  **PENDING** - `renewed_count` column not in loans table schema
@@ -40,7 +40,7 @@ Based on review of migration files and schema, here are the pending migrations t
 
 ---
 
-### 3. **Penalty Calculation Indexes** (2025-01-15)
+### 3. Penalty Calculation Indexes (2025-01-15)
 **File**: `2025-01-15_add-penalty-calculation-indexes.sql`
 
 **Status**:  **PENDING** - Performance indexes for penalty calculation
@@ -53,7 +53,7 @@ Based on review of migration files and schema, here are the pending migrations t
 
 ---
 
-### 4. **Announcements Table** (2025-01-15)
+### 4. Announcements Table (2025-01-15)
 **File**: `2025-01-15_create-announcements-table.sql`
 
 **Status**:  **PENDING** - Announcements table not found in main schema
@@ -66,7 +66,7 @@ Based on review of migration files and schema, here are the pending migrations t
 
 ---
 
-### 5. **Badges System** (2025-11-06)
+### 5. Badges System (2025-11-06)
 **File**: `2025-11-06_add-badges-tables.sql`
 
 **Status**:  **PENDING** - Listed in README as pending
@@ -79,7 +79,7 @@ Based on review of migration files and schema, here are the pending migrations t
 
 ---
 
-### 6. **Password Reset & Email Confirmation** (2025-11-12)
+### 6. Password Reset & Email Confirmation (2025-11-12)
 **File**: `2025-11-12_add-password-reset-and-email-confirmation-tables.sql`
 
 **Status**:  **PENDING** - Listed in README as pending
@@ -95,17 +95,17 @@ Based on review of migration files and schema, here are the pending migrations t
 
 ## Migration Priority
 
-### **High Priority** (Required for Current Features)
+### High Priority (Required for Current Features)
 1. `add-renewed-count-to-loans.sql` - Required for loan renewal feature
 2. `2025-01-15_add-reservations-table.sql` - Required for reservation system
 3. `2025-01-15_add-reservations-permissions.sql` - Required for reservation system
 4. `2025-01-15_add-penalty-calculation-indexes.sql` - Performance optimization
 
-### **Medium Priority** (Feature Support)
+### Medium Priority (Feature Support)
 5. `2025-01-15_create-announcements-table.sql` - Announcements feature
 6. `2025-11-06_add-badges-tables.sql` - Badge system
 
-### **Low Priority** (Auth Enhancements)
+### Low Priority (Auth Enhancements)
 7. `2025-11-12_add-password-reset-and-email-confirmation-tables.sql` - Auth improvements
 
 ---

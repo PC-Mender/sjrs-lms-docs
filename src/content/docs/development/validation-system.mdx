@@ -12,7 +12,7 @@ The system follows a **two-phase architecture**:
 
 ## Architecture
 
-### **Backend Validation Pipeline**
+### Backend Validation Pipeline
 
 ```
 Request → Security Middleware → Validation Handler → API Handler
@@ -24,7 +24,7 @@ Request → Security Middleware → Validation Handler → API Handler
                                    └─ 5. Pass sanitizedData to handler
 ```
 
-### **Key Files**
+### Key Files
 
 ```
 functions/middleware/validation/
@@ -45,7 +45,7 @@ functions/middleware/security/
 └── handlers/validation-handler.ts  # Orchestrates validate + sanitize
 ```
 
-### **Validation Engine**
+### Validation Engine
 
 The engine (`validation-engine.ts`) is a thin wrapper around `schema.safeParse()`:
 
@@ -73,7 +73,7 @@ export async function validateInput(
 
 The engine supports both Zod v3 (`.errors`) and Zod v4 (`.issues`) error formats via `extractZodIssues()`.
 
-### **Validation Types**
+### Validation Types
 
 ```typescript
 interface ValidationError {
@@ -91,7 +91,7 @@ interface ValidationResult {
 
 ## Writing Zod Schemas
 
-### **Schema Conventions**
+### Schema Conventions
 
 All backend schemas follow these patterns:
 
@@ -100,7 +100,7 @@ All backend schemas follow these patterns:
 - Use `VALIDATION_PATTERNS` from `patterns/` for shared regex (email, phone, ISBN, year, password, etc.)
 - Define create and update schemas separately — update schemas make all fields `.optional()`
 
-### **Example: Creating a Schema**
+### Example: Creating a Schema
 
 ```typescript
 import { z } from 'zod';
@@ -118,7 +118,7 @@ export const USER_REGISTRATION_SCHEMA = z.object({
 }).passthrough();
 ```
 
-### **Example: Update Schema (all fields optional)**
+### Example: Update Schema (all fields optional)
 
 ```typescript
 export const USER_UPDATE_SCHEMA = z.object({
@@ -133,7 +133,7 @@ export const USER_UPDATE_SCHEMA = z.object({
 }).passthrough();
 ```
 
-### **Available Validation Patterns**
+### Available Validation Patterns
 
 Import from `functions/middleware/validation/patterns`:
 
@@ -149,7 +149,7 @@ Import from `functions/middleware/validation/patterns`:
 
 ## Using Schemas in Handlers
 
-### **Wiring a Schema to an Endpoint**
+### Wiring a Schema to an Endpoint
 
 Schemas are attached to endpoints via the `SecurityConfig` object in the security middleware:
 
@@ -171,7 +171,7 @@ export async function handleCreateUser(request: Request, env: Environment) {
 }
 ```
 
-### **Critical Rules**
+### Critical Rules
 
 - **Never re-read `request.json()` in the handler** — the validation handler consumes the body once and passes `sanitizedData` via the security context
 - **Always use `sanitizedData`** from the security context, not the raw request body
@@ -181,7 +181,7 @@ export async function handleCreateUser(request: Request, env: Environment) {
 
 Sanitization is applied **after** Zod validation succeeds, inside `validation-handler.ts`. This separation ensures schemas stay focused on shape/type validation.
 
-### **How It Works**
+### How It Works
 
 1. Zod validation passes → `sanitizedData` contains validated data
 2. For each field in `sanitizedData`:
@@ -191,7 +191,7 @@ Sanitization is applied **after** Zod validation succeeds, inside `validation-ha
    - **All other fields** → `sanitizeXSSInput()` (HTML entity encoding)
 3. Result is the final `sanitizedData` passed to the handler
 
-### **Why Not Sanitize in Schemas?**
+### Why Not Sanitize in Schemas?
 
 - Schemas define **what valid data looks like** (types, constraints)
 - Sanitizers define **how to make data safe** (XSS encoding, SQL escaping)

@@ -7,7 +7,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 
 ## Authentication Endpoints
 
-### **User Authentication**
+### User Authentication
 - **POST** `/api/auth/login` - User login
 - **POST** `/api/auth/register` - User registration
 - **POST** `/api/auth/logout` - User logout
@@ -16,19 +16,19 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **PUT** `/api/auth/change-password` - Change user password
 - **GET** `/api/auth/check-email` - Check if email is usable (enumeration-safe)
 
-### **Email Confirmation**
+### Email Confirmation
 - **POST** `/api/auth/confirm-email` - Confirm email address
 - **POST** `/api/auth/complete-profile` - Complete user profile setup
 - **POST** `/api/auth/resend-confirmation` - Resend confirmation email
 
-### **Password Management**
+### Password Management
 - **POST** `/api/auth/password-reset` - Request password reset
 - **POST** `/api/auth/validate-reset-token` - Validate reset token
 - **POST** `/api/auth/confirm-reset-password` - Confirm password reset
   - *Note: Requires `recoveryCode` if MFA is enabled on the account.*
 - **POST** `/api/auth/reset-user-password` - Admin reset user password
 
-### **Multi-Factor Authentication**
+### Multi-Factor Authentication
 - **POST** `/api/auth/mfa/setup` - Setup MFA for user
 - **POST** `/api/auth/mfa/verify` - Verify and enable MFA
 - **POST** `/api/auth/mfa/disable` - Disable MFA
@@ -36,7 +36,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **POST** `/api/auth/mfa/challenge/verify` - Verify TOTP/Backup code
 - **POST** `/api/auth/mfa/backup-codes/regenerate` - Regenerate backup codes
 
-### **WebAuthn / Passkeys**
+### WebAuthn / Passkeys
 - **POST** `/api/auth/webauthn/register/begin` - Start Passkey registration
 - **POST** `/api/auth/webauthn/register/finish` - Complete Passkey registration
 - **POST** `/api/auth/mfa/challenge/webauthn/begin` - Start Passkey authentication
@@ -44,7 +44,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **POST** `/api/auth/webauthn/credentials/revoke` - Revoke a Passkey
 - **POST** `/api/auth/webauthn/credentials/revoke/send-otp` - Send OTP for revocation
 
-### **Session Management**
+### Session Management
 - **GET** `/api/auth/sessions` - Get user sessions
 - **POST** `/api/auth/sessions/terminate` - Terminate specific session
 - **POST** `/api/auth/sessions/terminate-all` - Terminate all user sessions
@@ -53,19 +53,19 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **POST** `/api/auth/force-deactivate-sessions` - Force deactivate sessions
 - **POST** `/api/auth/force-logout-other-sessions` - Force logout other sessions
 
-### **Public Status Check**
+### Public Status Check
 - **POST** `/api/auth/check-status/send-otp` - Send OTP to check account status
 - **POST** `/api/auth/check-status/verify` - Verify OTP and return workflow status
 
 ## User Management Endpoints
 
-### **User Operations**
+### User Operations
 - **GET** `/api/users` - Get all users (admin/librarian)
 - **GET** `/api/users/:id` - Get specific user
 - **PUT** `/api/users/:id` - Update user
 - **DELETE** `/api/users/:id` - Delete user (admin)
 
-### **Student Management**
+### Student Management
 - **GET** `/api/students` - Get all students
 - **GET** `/api/students/meta` - Get student metadata (filters, counts)
 - **GET** `/api/students/:id` - Get specific student
@@ -73,7 +73,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **PUT** `/api/students/:id` - Update student
 - **DELETE** `/api/students/:id` - Delete student
 
-### **Professor Management**
+### Professor Management
 - **GET** `/api/professors` - Get all professors
 - **GET** `/api/professors/meta` - Get professor metadata (filters, counts)
 - **GET** `/api/professors/:id` - Get specific professor
@@ -83,7 +83,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 
 ## Location Endpoints
 
-### **Location Data**
+### Location Data
 - **GET** `/api/locations/countries` - Get all countries
 - **GET** `/api/locations/states` - Get states by country (`?country=CODE`)
 - **GET** `/api/locations/districts` - Get districts by state (`?country=CODE&state=CODE`)
@@ -91,7 +91,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 
 ## Book Management Endpoints
 
-### **Book Operations**
+### Book Operations
 - **GET** `/api/books` - Get all books
 - **GET** `/api/books/search` - Search books
 - **GET** `/api/books/sections` - Get distinct book sections with assigned books
@@ -100,28 +100,28 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **PUT** `/api/books/:id` - Update book (requires `books:update`)
 - **DELETE** `/api/books/:id` - Delete book (requires `books:delete`)
 
-### **Book Copies**
+### Book Copies
 - **GET** `/api/book-copies` - Get book copies
 - **GET** `/api/book-copies/:id` - Get specific book copy
 - **POST** `/api/book-copies` - Create book copy
 - **PUT** `/api/book-copies/:id` - Update book copy
 - **DELETE** `/api/book-copies/:id` - Delete book copy
 
-### **Book Reviews**
+### Book Reviews
 - **GET** `/api/book-reviews` - Get book reviews
 - **GET** `/api/book-reviews/:id` - Get specific review
 - **POST** `/api/book-reviews` - Create book review
 - **PUT** `/api/book-reviews/:id` - Update book review
 - **DELETE** `/api/book-reviews/:id` - Delete book review
 
-### **Authors**
+### Authors
 - **GET** `/api/authors` - Get all authors
 - **GET** `/api/authors/:id` - Get specific author
 - **POST** `/api/authors` - Create author
 - **PUT** `/api/authors/:id` - Update author
 - **DELETE** `/api/authors/:id` - Delete author
 
-### **Publications**
+### Publications
 - **GET** `/api/publications` - Get all publications
 - **GET** `/api/publications/:id` - Get specific publication
 - **POST** `/api/publications` - Create publication
@@ -130,56 +130,56 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 
 ## Reference Material Endpoints
 
-### **Reference Books**
+### Reference Books
 - **GET** `/api/reference-books` - Get reference books
 - **GET** `/api/reference-books/:id` - Get specific reference book
 - **POST** `/api/reference-books` - Create reference book
 - **PUT** `/api/reference-books/:id` - Update reference book
 - **DELETE** `/api/reference-books/:id` - Delete reference book
 
-### **Reference Categories**
+### Reference Categories
 - **GET** `/api/reference-categories` - Get reference categories
 - **GET** `/api/reference-categories/:id` - Get specific category
 - **POST** `/api/reference-categories` - Create category
 - **PUT** `/api/reference-categories/:id` - Update category
 - **DELETE** `/api/reference-categories/:id` - Delete category
 
-### **Reference Resources**
+### Reference Resources
 - **GET** `/api/reference-resources` - Get reference resources
 - **GET** `/api/reference-resources/:id` - Get specific resource
 - **POST** `/api/reference-resources` - Create resource
 - **PUT** `/api/reference-resources/:id` - Update resource
 - **DELETE** `/api/reference-resources/:id` - Delete resource
 
-### **Reference Sections**
+### Reference Sections
 - **GET** `/api/reference-sections` - Get reference sections
 - **GET** `/api/reference-sections/:id` - Get specific section
 - **POST** `/api/reference-sections` - Create section
 - **PUT** `/api/reference-sections/:id` - Update section
 - **DELETE** `/api/reference-sections/:id` - Delete section
 
-### **Sections**
+### Sections
 - **GET** `/api/sections` - Get sections
 - **GET** `/api/sections/:id` - Get specific section
 - **POST** `/api/sections` - Create section
 - **PUT** `/api/sections/:id` - Update section
 - **DELETE** `/api/sections/:id` - Delete section
 
-### **Resource Types**
+### Resource Types
 - **GET** `/api/resource-types` - Get resource types
 - **GET** `/api/resource-types/:id` - Get specific resource type
 - **POST** `/api/resource-types` - Create resource type
 - **PUT** `/api/resource-types/:id` - Update resource type
 - **DELETE** `/api/resource-types/:id` - Delete resource type
 
-### **Resources**
+### Resources
 - **GET** `/api/resources` - Get all resources
 - **GET** `/api/resources/:id` - Get specific resource
 - **POST** `/api/resources` - Create resource
 - **PUT** `/api/resources/:id` - Update resource
 - **DELETE** `/api/resources/:id` - Delete resource
 
-### **Journals**
+### Journals
 - **GET** `/api/journals` - Get journals
 - **GET** `/api/journals/:id` - Get specific journal
 - **POST** `/api/journals` - Create journal
@@ -188,7 +188,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 
 ## Loan Management Endpoints
 
-### **Loan Operations**
+### Loan Operations
 - **GET** `/api/loans` - Get all loans
 - **GET** `/api/loans/:id` - Get specific loan
 - **POST** `/api/loans` - Create loan (requires `loans:create`)
@@ -198,21 +198,21 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 - **POST** `/api/loans/:id/renew/approve` - Approve a renewal request (requires `loans:update`)
 - **POST** `/api/loans/:id/renew/reject` - Reject a renewal request (requires `loans:update`)
 
-### **Borrow Limits**
+### Borrow Limits
 - **GET** `/api/borrow-limits` - Get borrow limits
 - **GET** `/api/borrow-limits/:id` - Get specific borrow limit
 - **POST** `/api/borrow-limits` - Create borrow limit
 - **PUT** `/api/borrow-limits/:id` - Update borrow limit
 - **DELETE** `/api/borrow-limits/:id` - Delete borrow limit
 
-### **Digital Book Reads**
+### Digital Book Reads
 - **GET** `/api/digital-book-reads` - Get digital book reads
 - **GET** `/api/digital-book-reads/:id` - Get specific read record
 - **POST** `/api/digital-book-reads` - Create read record
 - **PUT** `/api/digital-book-reads/:id` - Update read record
 - **DELETE** `/api/digital-book-reads/:id` - Delete read record
 
-### **Book Views**
+### Book Views
 - **GET** `/api/book-views` - Get book views
 - **GET** `/api/book-views/:id` - Get specific book view
 - **POST** `/api/book-views` - Create book view
@@ -221,21 +221,21 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 
 ## Order & Payment Endpoints
 
-### **Orders**
+### Orders
 - **GET** `/api/orders` - Get all orders
 - **GET** `/api/orders/:id` - Get specific order
 - **POST** `/api/orders` - Create order
 - **PUT** `/api/orders/:id` - Update order
 - **DELETE** `/api/orders/:id` - Delete order
 
-### **Payments**
+### Payments
 - **GET** `/api/payments` - Get payments
 - **GET** `/api/payments/:id` - Get specific payment
 - **POST** `/api/payments` - Process payment
 - **PUT** `/api/payments/:id` - Update payment
 - **DELETE** `/api/payments/:id` - Delete payment
 
-### **Receipts**
+### Receipts
 - **GET** `/api/receipts` - Get receipts
 - **GET** `/api/receipts/:id` - Get specific receipt
 - **POST** `/api/receipts` - Generate receipt
@@ -244,52 +244,52 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 
 ## System Management Endpoints
 
-### **Roles & Permissions**
+### Roles & Permissions
 - **GET** `/api/roles` - Get all roles
 - **GET** `/api/roles/:id` - Get specific role
 - **POST** `/api/roles` - Create role
 - **PUT** `/api/roles/:id` - Update role
 - **DELETE** `/api/roles/:id` - Delete role
 
-### **Permissions**
+### Permissions
 - **GET** `/api/permissions/check` - Check user permissions
 - **POST** `/api/permissions` - Manage permissions
 
-### **System Logs**
+### System Logs
 - **GET** `/api/system_logs` - Get system logs
 - **GET** `/api/system_logs/:id` - Get specific log entry
 - **POST** `/api/system_logs` - Create log entry
 - **PUT** `/api/system_logs/:id` - Update log entry
 - **DELETE** `/api/system_logs/:id` - Delete log entry
 
-### **Action Logs**
+### Action Logs
 - **GET** `/api/action_logs` - Get action logs
 - **GET** `/api/action_logs/:id` - Get specific action log
 - **POST** `/api/action_logs` - Create action log
 - **PUT** `/api/action_logs/:id` - Update action log
 - **DELETE** `/api/action_logs/:id` - Delete action log
 
-### **Migrations**
+### Migrations
 - **GET** `/api/migrations` - Get migration status
 - **POST** `/api/migrations` - Run migrations
 
 ## User Experience Endpoints
 
-### **Wishlist**
+### Wishlist
 - **GET** `/api/wishlist` - Get user wishlist
 - **GET** `/api/wishlist/:id` - Get specific wishlist item
 - **POST** `/api/wishlist` - Add to wishlist
 - **PUT** `/api/wishlist/:id` - Update wishlist item
 - **DELETE** `/api/wishlist/:id` - Remove from wishlist
 
-### **Notifications**
+### Notifications
 - **GET** `/api/notifications` - Get user notifications
 - **GET** `/api/notifications/:id` - Get specific notification
 - **POST** `/api/notifications` - Create notification
 - **PUT** `/api/notifications/:id` - Update notification
 - **DELETE** `/api/notifications/:id` - Delete notification
 
-### **Penalties**
+### Penalties
 - **GET** `/api/penalties` - Get penalties
 - **GET** `/api/penalties/:id` - Get specific penalty
 - **POST** `/api/penalties` - Create penalty
@@ -298,7 +298,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 
 ## Badge System Endpoints
 
-### **Badge Operations**
+### Badge Operations
 - **GET** `/api/badges` - Get all badges (catalog) - Requires `badges:read` permission
 - **GET** `/api/badges/me` - Get current user's badges (includes role-based badges)
 - **GET** `/api/badges/granted` - Get all granted badges (admin view) - Requires `badges:read` permission
@@ -317,14 +317,14 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 
 ## File Management Endpoints
 
-### **Upload**
+### Upload
 - **POST** `/api/upload` - Upload file
 - **GET** `/api/upload/:id` - Get uploaded file
 - **DELETE** `/api/upload/:id` - Delete uploaded file
 
 ## Help & Support Endpoints
 
-### **Help System**
+### Help System
 - **GET** `/api/help` - Get help content
 - **GET** `/api/help/:id` - Get specific help article
 - **POST** `/api/help` - Create help article
@@ -333,26 +333,26 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 
 ## Health & System Endpoints
 
-### **Health Check**
+### Health Check
 - **GET** `/api/health` - System health status
 
 ## Email Service Endpoints
 
-### **Email Management**
+### Email Management
 - **GET** `/api/email` - Get email configuration
 - **POST** `/api/email` - Send email
 - **PUT** `/api/email` - Update email configuration
 
 ## Legacy Permission Endpoints
 
-### **Legacy Permission System**
+### Legacy Permission System
 - **POST** `/api/role_permissions` - Manage role permissions
 - **POST** `/api/permission_resources` - Manage permission resources
 - **POST** `/api/permission_actions` - Manage permission actions
 - **POST** `/api/permission_audit_log` - Access permission audit log
 - **POST** `/api/update_role_permission` - Update role permissions
 
-### ** RBAC Policy: Backend Permission Endpoint is Single Source of Truth**
+###  RBAC Policy: Backend Permission Endpoint is Single Source of Truth
 
 **The backend permissions endpoint (`GET /api/permissions/check`) is the single source of truth for all permission decisions.**
 
@@ -382,28 +382,28 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 
 ## Quick Reference
 
-### **Public Endpoints** (No Authentication)
+### Public Endpoints (No Authentication)
 - `GET /api/health` - Health check
 
-### **User Endpoints** (User Authentication Required)
+### User Endpoints (User Authentication Required)
 - `GET /api/auth/me` - Current user profile
 - `PUT /api/auth/profile` - Update own profile
 - `GET /api/books` - Browse books
 - `GET /api/books/search` - Search books
 - `GET /api/wishlist` - User wishlist
 
-### **Librarian Endpoints** (Librarian+ Required)
+### Librarian Endpoints (Librarian+ Required)
 - All book management operations
 - All loan management operations
 - User management (limited)
 
-### **Admin Endpoints** (Admin+ Required)
+### Admin Endpoints (Admin+ Required)
 - All system management operations
 - All user management operations
 - Badge assignment and management
 - System configuration
 
-### **Superuser Endpoints** (Superuser Only)
+### Superuser Endpoints (Superuser Only)
 - All operations
 - System migrations
 - Advanced system management
@@ -415,7 +415,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
 
 ## Academic Tools Endpoints
 
-### **Citation Generator**
+### Citation Generator
 - **GET** `/api/citations` — List supported formats and source types
   - Permissions: `citations:read`
   - Implementation: `functions/api/citations/handlers/get-citation-formats.ts:7`
@@ -435,7 +435,7 @@ This document provides comprehensive documentation for all SJRS LMS API endpoint
   - Permissions: `citations:delete`
   - Implementation: `functions/api/citations/handlers/delete-citation.ts:7`
 
-### **Plagiarism Checker**
+### Plagiarism Checker
 - **POST** `/api/plagiarism` — Check text for plagiarism
   - Body: `{ text, title?, sensitivity? }`
   - Permissions: `plagiarism:create`

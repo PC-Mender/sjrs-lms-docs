@@ -32,7 +32,7 @@ src/pages/students/
 
 ## Key Features
 
-### 1. **Modular Components**
+### 1. Modular Components
 - **StudentTable**: Displays student data with sorting, filtering, and pagination
 - **StudentForm**: Reusable form for creating and editing students
 - **StudentViewModal**: Comprehensive student details view
@@ -40,7 +40,7 @@ src/pages/students/
 - **StudentCreateModal**: Modal for creating new students from existing users
 - **StudentDeleteModal**: Confirmation modal for student deletion
 
-### 2. **Status Tracking (v3.49.0+)**
+### 2. Status Tracking (v3.49.0+)
 - **Account Status Column**: Displays user account state (Active, Pending Approval, etc.)
 - **Onboarding Status Column**: Shows user setup progress (In Progress, Completed, etc.)
 - **Status Badges**: Color-coded visual indicators for quick identification
@@ -49,19 +49,19 @@ src/pages/students/
   - `GET /api/v1/students/:id/meta` - Fetch student metadata with status info
   - Enhanced backend handlers for status enrichment
 
-### 3. **Service Layer**
+### 3. Service Layer
 - **StudentService**: Handles all API communication with the backend
 - **Data Transformation**: Converts between API and frontend data formats
 - **Error Handling**: Consistent error handling across all operations
 - **Metadata Fetching**: New methods to retrieve student metadata with status details
 
-### 4. **Custom Hooks**
+### 4. Custom Hooks
 - **useStudents**: Manages all student-related state and operations
 - **React Query Integration**: Efficient data fetching and caching
 - **Modal State Management**: Centralized modal visibility control
 - **Status Management**: Handles account and onboarding status updates
 
-### 5. **Type Safety**
+### 5. Type Safety
 - **StudentWithDetails**: Extended user interface with student-specific fields plus status fields
 - **StudentFormData**: Form data interface for validation
 - **API Response Types**: Proper typing for backend communication

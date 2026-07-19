@@ -7,7 +7,7 @@ title: "Role Descriptions"
 
 This document describes the implementation of role descriptions in the SJRS Library Management System, which adds meaningful descriptions to each role to improve clarity and user understanding.
 
-## **Problem Statement**
+## Problem Statement
 
 The original roles table only contained `id` and `name` columns, making it difficult for users to understand:
 - What each role can do
@@ -15,9 +15,9 @@ The original roles table only contained `id` and `name` columns, making it diffi
 - The differences between similar roles
 - The appropriate role to assign to new users
 
-## **Solution Implemented**
+## Solution Implemented
 
-### **1. Database Schema Enhancement**
+### 1. Database Schema Enhancement
 
 **Added Description Column:**
 ```sql
@@ -32,22 +32,22 @@ ADD COLUMN IF NOT EXISTS description TEXT;
 - **Student**: Student user with access to browse books, place orders, and manage personal account. Limited to viewing and basic user features.
 - **Professor**: Faculty member with access to browse books, place orders, and manage personal account. Has extended borrowing privileges compared to students.
 
-### **2. Frontend Enhancements**
+### 2. Frontend Enhancements
 
-#### **Roles Management Interface:**
+#### Roles Management Interface:
 - **List View**: Added description column with truncated display
 - **Search Functionality**: Extended to search by description text
 - **Create Form**: Added description textarea with character limit (500 chars)
 - **Edit Form**: Added description field for role updates
 - **Show View**: Displays full description in role details
 
-#### **UI Improvements:**
+#### UI Improvements:
 - **Responsive Design**: Description column adapts to screen size
 - **Text Truncation**: Long descriptions are truncated with ellipsis
 - **Character Counter**: Shows remaining characters in forms
 - **Search Enhancement**: Users can search by role capabilities
 
-### **3. TypeScript Type Updates**
+### 3. TypeScript Type Updates
 
 **Updated Role Interface:**
 ```typescript
@@ -71,44 +71,44 @@ ROLES: {
 }
 ```
 
-## **Benefits Achieved**
+## Benefits Achieved
 
-### **1. Improved User Experience**
+### 1. Improved User Experience
 - **Role Clarity**: Users can understand what each role does
 - **Better Decision Making**: Administrators can choose appropriate roles
 - **Reduced Confusion**: Clear descriptions prevent role misuse
 
-### **2. Enhanced Administration**
+### 2. Enhanced Administration
 - **Role Management**: Easier to manage and update role descriptions
 - **Documentation**: Built-in documentation for role system
 - **Onboarding**: New administrators can understand role hierarchy
 
-### **3. System Maintainability**
+### 3. System Maintainability
 - **Self-Documenting**: Role descriptions serve as system documentation
 - **Consistency**: Standardized role descriptions across the system
 - **Scalability**: Easy to add new roles with clear descriptions
 
-## **Implementation Details**
+## Implementation Details
 
-### **Migration File:**
+### Migration File:
 - **File**: `sql/migrations/add-role-descriptions.sql`
 - **Purpose**: Adds description column and populates existing roles
 - **Safety**: Uses `IF NOT EXISTS` to prevent conflicts
 
-### **Updated Files:**
+### Updated Files:
 1. **Database Schema**: `sql/setup/consolidated-setup.sql`, `sql/setup/complete-setup.sql`
 2. **Frontend Components**: `src/pages/roles/index.tsx`
 3. **Type Definitions**: `src/types/rbac.ts` (already included description)
 4. **Constants**: `src/constants/database-columns.ts`
 
-### **Form Validation:**
+### Form Validation:
 - **Description Length**: Maximum 500 characters
 - **Required Fields**: Only role name is required
 - **Character Counter**: Real-time feedback on remaining characters
 
-## **User Interface Features**
+## User Interface Features
 
-### **Roles List View:**
+### Roles List View:
 ```
 ┌─────┬─────────────┬─────────────────────────────────────────────┬─────────┐
 │ ID  │ Name        │ Description                                │ Actions │
@@ -119,32 +119,32 @@ ROLES: {
 └─────┴─────────────┴─────────────────────────────────────────────┴─────────┘
 ```
 
-### **Role Creation Form:**
+### Role Creation Form:
 - **Role Name**: Required field (2-50 characters)
 - **Description**: Optional textarea (max 500 characters)
 - **Character Counter**: Shows remaining characters
 - **Validation**: Real-time feedback
 
-### **Role Details View:**
+### Role Details View:
 - **Full Description**: Complete description display
 - **Formatted Layout**: Clean, readable presentation
 - **Responsive Design**: Adapts to different screen sizes
 
-## **Search Functionality**
+## Search Functionality
 
-### **Enhanced Search:**
+### Enhanced Search:
 - **Search by ID**: Find roles by their numeric ID
 - **Search by Name**: Find roles by role name
 - **Search by Description**: Find roles by capabilities mentioned in description
 
-### **Search Examples:**
+### Search Examples:
 - `"delete"` → Finds roles that can delete records
 - `"user management"` → Finds roles with user management capabilities
 - `"student"` → Finds student-related roles
 
-## **Technical Implementation**
+## Technical Implementation
 
-### **Database Migration:**
+### Database Migration:
 ```sql
 -- Add description column
 ALTER TABLE roles ADD COLUMN IF NOT EXISTS description TEXT;
@@ -158,7 +158,7 @@ UPDATE roles SET description =
   END;
 ```
 
-### **Frontend Components:**
+### Frontend Components:
 ```typescript
 // Enhanced table columns
 const columns = [
@@ -177,15 +177,15 @@ const columns = [
 ];
 ```
 
-## **Testing Checklist**
+## Testing Checklist
 
-### **Database Testing:**
+### Database Testing:
 - [ ] Migration runs successfully
 - [ ] Description column added to roles table
 - [ ] Existing roles have meaningful descriptions
 - [ ] New roles can be created with descriptions
 
-### **Frontend Testing:**
+### Frontend Testing:
 - [ ] Roles list displays descriptions
 - [ ] Search works with description text
 - [ ] Create form includes description field
@@ -193,43 +193,43 @@ const columns = [
 - [ ] Show view displays full description
 - [ ] Character counter works properly
 
-### **User Experience Testing:**
+### User Experience Testing:
 - [ ] Role descriptions are clear and helpful
 - [ ] Search functionality finds relevant roles
 - [ ] Forms provide good user feedback
 - [ ] Responsive design works on different screens
 
-## **Future Enhancements**
+## Future Enhancements
 
-### **Potential Improvements:**
+### Potential Improvements:
 1. **Role Templates**: Pre-defined role templates for common scenarios
 2. **Permission Summary**: Show key permissions in role description
 3. **Role Comparison**: Side-by-side role comparison feature
 4. **Role History**: Track changes to role descriptions over time
 5. **Role Categories**: Group roles by access level or function
 
-### **Integration Opportunities:**
+### Integration Opportunities:
 1. **Permission Management**: Link descriptions to actual permissions
 2. **User Onboarding**: Use descriptions in user creation workflows
 3. **Audit Logging**: Track when role descriptions are modified
 4. **API Documentation**: Include role descriptions in API responses
 
-## **Impact Assessment**
+## Impact Assessment
 
-### **Before Implementation:**
+### Before Implementation:
 - Role names only (Superuser, Admin, Librarian, etc.)
 - No context about role capabilities
 - Difficult to choose appropriate roles
 - Limited search functionality
 
-### **After Implementation:**
+### After Implementation:
 - Clear role descriptions with capabilities
 - Better role selection for new users
 - Enhanced search by role capabilities
 - Improved system documentation
 - Better user experience for administrators
 
-## **Conclusion**
+## Conclusion
 
 The role descriptions implementation significantly improves the clarity and usability of the role management system. By providing meaningful descriptions for each role, users can better understand the system's permission structure and make informed decisions about role assignments.
 

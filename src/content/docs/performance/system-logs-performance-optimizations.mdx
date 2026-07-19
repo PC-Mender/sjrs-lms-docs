@@ -11,7 +11,7 @@ title: "System Logs Performance Optimizations"
 
 ## Performance Issues Addressed
 
-### 1. **Table Rendering (Large Datasets)**  FIXED
+### 1. Table Rendering (Large Datasets)  FIXED
 **Problem**: Tables rendered plain rows without virtualization, causing heavy DOM load for page sizes up to 200  
 **Location**: `src/pages/system-logs/index.tsx`
 
@@ -45,7 +45,7 @@ title: "System Logs Performance Optimizations"
 
 ---
 
-### 2. **Search Input Debouncing**  FIXED
+### 2. Search Input Debouncing  FIXED
 **Problem**: Search/operation inputs fired API requests on every keystroke, causing excessive request volume  
 **Locations**: 
 - `src/components/features/system-logs/SystemLogFilters.tsx`
@@ -100,7 +100,7 @@ useEffect(() => {
 
 ---
 
-### 3. **Export Safety & Progress**  FIXED
+### 3. Export Safety & Progress  FIXED
 **Problem**: Export downloaded full filtered dataset without size warnings, progress indicators, or client-side safety checks  
 **Locations**:
 - `src/hooks/useSystemLogs.ts`

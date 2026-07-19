@@ -7,25 +7,25 @@ This directory contains comprehensive documentation for the SJRS LMS email servi
 
 ## Documentation Index
 
-### ** Architecture**
+###  Architecture
 - **[Direct Mailjet Integration](#-account-email-direct-mailjet)** - Account-related emails sent directly via Mailjet
 - **[Queue + Mailjet Integration](#-transactional-email-queue--mailjet)** - Transactional emails processed via Cloudflare Queues
 
-### ** Email Operations**
+###  Email Operations
 - **[Email Trigger Frequency Matrix](./email-trigger-frequency-matrix)** - Code-synced reference for when each email is sent and general send frequency
 
 ## Quick Navigation
 
-### **For Developers**
+### For Developers
 - Start with [Direct Mailjet Integration](#-account-email-direct-mailjet) for account emails
 - Review [Queue + Mailjet Integration](#-transactional-email-queue--mailjet) for transactional emails
 - Use [Email Trigger Frequency Matrix](./email-trigger-frequency-matrix) to understand trigger timing and expected send counts
 
-### **For System Administrators**
+### For System Administrators
 - Focus on [Direct Mailjet Integration](#-account-email-direct-mailjet) for immediate feedback
 - Reference [Queue + Mailjet Integration](#-transactional-email-queue--mailjet) for scalability
 
-### **For DevOps Engineers**
+### For DevOps Engineers
 - Begin with [Queue + Mailjet Integration](#-transactional-email-queue--mailjet) for background processing
 - Review architecture decisions and scaling strategies
 
@@ -37,18 +37,18 @@ This directory contains comprehensive documentation for the SJRS LMS email servi
 
 ## Email Service Overview
 
-### **Hybrid Architecture**
+### Hybrid Architecture
 Our email system uses a **hybrid approach** combining **Mailjet** for email delivery with **Cloudflare Queues** for reliability and scalability.
 
-### **Email Types**
+### Email Types
 
-#### ** Account-Related Emails (Direct Mailjet)**
+####  Account-Related Emails (Direct Mailjet)
 - **Registration confirmation**
 - **Password reset**
 - **Email verification**
 - **Account status changes**
 
-#### ** Transactional Emails (Queue + Mailjet)**
+####  Transactional Emails (Queue + Mailjet)
 - **Loan notifications** (`borrow_notification`)
 - **Return reminders** (`return_reminder`)
 - **Overdue notices** (`overdue_notification`)
@@ -57,7 +57,7 @@ Our email system uses a **hybrid approach** combining **Mailjet** for email deli
 
 ## Getting Started
 
-### **1. Environment Configuration**
+### 1. Environment Configuration
 ```bash
 # Mailjet Configuration (for both direct and queue)
 MAILJET_API_KEY=your_mailjet_api_key
@@ -71,7 +71,7 @@ FRONTEND_URL=https://your-frontend-domain.com
 VITE_API_BASE_URL=https://your-api-domain.com
 ```
 
-### **2. Account Email (Direct Mailjet)**
+### 2. Account Email (Direct Mailjet)
 ```typescript
 // Registration confirmation
 async function sendConfirmationEmail(email: string, firstName: string, token: string, env: any) {
@@ -99,7 +99,7 @@ async function sendConfirmationEmail(email: string, firstName: string, token: st
 }
 ```
 
-### **3. Transactional Email (Queue + Mailjet)**
+### 3. Transactional Email (Queue + Mailjet)
 ```typescript
 // Send to queue
 async function sendLoanNotification(userEmail: string, bookTitle: string) {
@@ -140,13 +140,13 @@ async sendEmailViaMailjet(to: string, content: { subject: string; body: string; 
 
 ## Why This Hybrid Approach?
 
-### ** Direct Mailjet Benefits (Account Emails)**
+###  Direct Mailjet Benefits (Account Emails)
 - **Immediate Feedback**: User gets instant confirmation
 - **Simple Implementation**: No queue complexity
 - **Low Volume**: Account emails are infrequent
 - **Critical Path**: Registration flow shouldn't be delayed
 
-### ** Queue + Mailjet Benefits (Transactional Emails)**
+###  Queue + Mailjet Benefits (Transactional Emails)
 - **Non-Blocking**: User experience isn't affected
 - **Reliability**: Automatic retries and dead letter queues
 - **Scalability**: Handles traffic spikes automatically
@@ -161,7 +161,7 @@ async sendEmailViaMailjet(to: string, content: { subject: string; body: string; 
 
 ## Implementation Examples
 
-### **Account Email (Direct Mailjet)**
+### Account Email (Direct Mailjet)
 ```typescript
 // Registration confirmation
 if (env.MAILJET_API_KEY && env.MAILJET_API_SECRET) {
@@ -169,7 +169,7 @@ if (env.MAILJET_API_KEY && env.MAILJET_API_SECRET) {
 }
 ```
 
-### **Transactional Email (Queue + Mailjet)**
+### Transactional Email (Queue + Mailjet)
 ```typescript
 // Loan notification
 await sendLoanNotification('borrow_notification', {
@@ -183,7 +183,7 @@ await sendLoanNotification('borrow_notification', {
 
 ## Error Handling
 
-### **Direct Mailjet Error Handling**
+### Direct Mailjet Error Handling
 ```typescript
 try {
   await sendConfirmationEmail(email, name, token, env);
@@ -193,7 +193,7 @@ try {
 }
 ```
 
-### **Queue Error Handling (Automatic)**
+### Queue Error Handling (Automatic)
 ```typescript
 async queue(batch: MessageBatch<EmailQueueMessage>, env: any) {
   for (const message of batch.messages) {
@@ -213,12 +213,12 @@ async queue(batch: MessageBatch<EmailQueueMessage>, env: any) {
 
 ## Monitoring and Metrics
 
-### **Direct Mailjet Monitoring**
+### Direct Mailjet Monitoring
 - **Delivery Rates**: Monitor Mailjet delivery success
 - **Error Logs**: Track failed email deliveries
 - **Response Times**: Monitor API response performance
 
-### **Queue + Mailjet Monitoring**
+### Queue + Mailjet Monitoring
 - **Queue Metrics**: Monitor queue processing times
 - **Retry Rates**: Track automatic retry success
 - **Dead Letter Queue**: Monitor failed message handling
@@ -226,27 +226,27 @@ async queue(batch: MessageBatch<EmailQueueMessage>, env: any) {
 
 ## Best Practices
 
-### **1. Choose the Right Approach**
+### 1. Choose the Right Approach
 - **Account emails** → Direct Mailjet
 - **Transactional emails** → Queue + Mailjet
 
-### **2. Error Handling**
+### 2. Error Handling
 - Implement graceful degradation for email failures
 - Use automatic retries for transient failures
 - Log errors for debugging and monitoring
 
-### **3. Monitoring**
+### 3. Monitoring
 - **Direct Mailjet**: Log success/failure immediately
 - **Queue + Mailjet**: Monitor queue metrics and dead letter queues
 
-### **4. Security**
+### 4. Security
 - Store API keys in environment variables
 - Use HTTPS for all API communications
 - Validate email addresses before sending
 
 ## Migration Guide
 
-### **From Generic Email Service to Mailjet Backend**
+### From Generic Email Service to Mailjet Backend
 ```typescript
 // Before (generic email service)
 const response = await fetch('https://api.email-service.com/send', {

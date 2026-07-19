@@ -8,7 +8,7 @@ This document explains the optimized login alert email system that eliminates re
 
 ## Current Optimized Approach
 
-### 1. **Streamlined Data Flow**
+### 1. Streamlined Data Flow
 ```
 User Login → Action Logged → Email Queued → Email Sent
      ↓              ↓              ↓            ↓
@@ -17,14 +17,14 @@ User Login → Action Logged → Email Queued → Email Sent
                  action_logs     Directly
 ```
 
-### 2. **What Gets Logged vs What Gets Emailed**
+### 2. What Gets Logged vs What Gets Emailed
 
-#### **Logged to Database (`action_logs` table):**
+#### Logged to Database (`action_logs` table):
 - User ID, action type ('login'), table name
 - IP address, user agent, timestamp
 - Login details as JSON in `new_values` field
 
-#### **Sent in Email (Essential Only):**
+#### Sent in Email (Essential Only):
 - **User Name**: First + Last name
 - **User Role**: Student, Professor, etc.
 - **Login Time**: When the login occurred
@@ -32,40 +32,40 @@ User Login → Action Logged → Email Queued → Email Sent
 - **IP Address**: For security tracking
 - **Location**: If available (currently "Unknown Location")
 
-### 3. **Key Improvements**
+### 3. Key Improvements
 
-#### **Before (Inefficient):**
+#### Before (Inefficient):
 1. Login details logged to `action_logs`
 2. Email queued with basic data
 3. Email handler makes **separate database query** to fetch user profile
 4. Email sent with excessive user details (phone, stream, account creation date, etc.)
 
-#### **After (Optimized):**
+#### After (Optimized):
 1. Login details logged to `action_logs`
 2. Email queued with **essential user details already included**
 3. **No additional database query** in email handler
 4. Email sent with only relevant information
 
-### 4. **Benefits**
+### 4. Benefits
 
-#### **Performance:**
+#### Performance:
 - Eliminates redundant database query
 - Faster email processing
 - Reduced database load
 
-#### **Security:**
+#### Security:
 - Only essential information in emails
 - No sensitive data (phone, stream) in emails
 - Cleaner audit trail
 
-#### **Maintainability:**
+#### Maintainability:
 - Simpler code flow
 - Easier to debug
 - Less complex email templates
 
-### 5. **Technical Implementation**
+### 5. Technical Implementation
 
-#### **Login Handler (`functions/api/auth/index.ts`):**
+#### Login Handler (`functions/api/auth/index.ts`):
 ```typescript
 // Pass essential user details directly to email queue
 await env.EMAIL_QUEUE.send({
@@ -85,7 +85,7 @@ await env.EMAIL_QUEUE.send({
 });
 ```
 
-#### **Email Processing (`functions/email-templates/index.ts`):**
+#### Email Processing (`functions/email-templates/index.ts`):
 ```typescript
 // No database query needed - use passed data directly
 const emailContent = generateLoginAlertTemplate({
@@ -100,7 +100,7 @@ const emailContent = generateLoginAlertTemplate({
 });
 ```
 
-#### **Email Template (`functions/email-templates/index.ts`):**
+#### Email Template (`functions/email-templates/index.ts`):
 ```html
 {/* Simplified account information section */}
 <div class="info-card">
@@ -111,7 +111,7 @@ const emailContent = generateLoginAlertTemplate({
 </div>
 ```
 
-### 6. **Data Flow Summary**
+### 6. Data Flow Summary
 
 | Component | Action | Data Stored/Fetched |
 |-----------|--------|-------------------|
@@ -120,21 +120,21 @@ const emailContent = generateLoginAlertTemplate({
 | **Email Templates** | Processes email | Uses passed data (no DB query) |
 | **Email Template** | Generates email | Clean, focused content |
 
-### 7. **Future Enhancements**
+### 7. Future Enhancements
 
-#### **Geolocation Integration:**
+#### Geolocation Integration:
 ```typescript
 // Could enhance loginLocation with IP geolocation
 const loginLocation = await getLocationFromIP(ipAddress);
 ```
 
-#### **Device Fingerprinting:**
+#### Device Fingerprinting:
 ```typescript
 // Could add more detailed device information
 const deviceInfo = getDetailedDeviceInfo(userAgent);
 ```
 
-#### **Security Alerts:**
+#### Security Alerts:
 ```typescript
 // Could add suspicious activity detection
 if (isSuspiciousLogin(ipAddress, deviceInfo, userHistory)) {

@@ -21,7 +21,7 @@ export type UserRole = 'superuser' | 'admin' | 'librarian' | 'dean' | 'professor
 
 ### Dashboard Architecture Overview
 
-#### **Category 1: Administrative Dashboards (System-Wide Stats)**
+#### Category 1: Administrative Dashboards (System-Wide Stats)
 These show aggregated system statistics and are role-specific:
 
 | Role | Dashboard Page | Hook | Endpoint | Data Type |
@@ -38,7 +38,7 @@ These show aggregated system statistics and are role-specific:
 
 ---
 
-#### **Category 2: User Dashboard (Personal Stats)**
+#### Category 2: User Dashboard (Personal Stats)
 This shows personal user data, NOT system-wide stats:
 
 | Roles | Dashboard Page | Hooks | Endpoints | Data Type |
@@ -54,18 +54,18 @@ This shows personal user data, NOT system-wide stats:
 
 ## What My Proposal DOES NOT DO
 
-### **WILL NOT Mix Roles**
+### WILL NOT Mix Roles
 - Each role keeps its DEDICATED endpoint
 - Each role keeps its DEDICATED hook  
 - Each role keeps its DEDICATED data model
 - NO cross-contamination between roles
 
-### **WILL NOT Create United Endpoint**
+### WILL NOT Create United Endpoint
 - I am **NOT** proposing a single `/api/dashboard` for all roles
 - Each role-specific endpoint remains independent
 - Path separation preserved: `/admin`, `/librarian`, `/dean`, `/superuser`
 
-### **WILL NOT Change Authorization**
+### WILL NOT Change Authorization
 - Backend still validates user role on EVERY request
 - Permission checks stay exactly as they are
 - Superuser/admin fallback permissions preserved
@@ -74,7 +74,7 @@ This shows personal user data, NOT system-wide stats:
 
 ## What My Proposal DOES Do
 
-### **Shared Implementation Pattern (DRY Principle)**
+### Shared Implementation Pattern (DRY Principle)
 
 Instead of duplicating code across 4 hooks, use a **shared base implementation**:
 
@@ -205,7 +205,7 @@ export const useSuperuserDashboard = () => {
 
 ## Role Isolation Guarantees
 
-### **Backend Enforcement (EXISTS NOW, STAYS)**
+### Backend Enforcement (EXISTS NOW, STAYS)
 ```typescript
 // functions/api/dashboard-stats/index.ts
 
@@ -246,7 +246,7 @@ if (path === '/superuser') {
 }
 ```
 
-### **Frontend Routing (EXISTS NOW, STAYS)**
+### Frontend Routing (EXISTS NOW, STAYS)
 ```typescript
 // src/router/components/DashboardSubRouter.tsx
 
@@ -284,7 +284,7 @@ if (dashboardRoles.length > 0 && !dashboardRoles.includes(userRole)) {
 
 These roles use the **"User Dashboard"** which has a **completely different architecture**:
 
-### **User Dashboard Does NOT Use Role-Based Stats**
+### User Dashboard Does NOT Use Role-Based Stats
 
 ```typescript
 // dashboard-user.tsx
@@ -312,7 +312,7 @@ const { recommendations } = useRecommendations(userId); // → /api/recommendati
 
 ## Summary: What Changes vs What Stays
 
-### **STAYS THE SAME (NO CHANGES):**
+### STAYS THE SAME (NO CHANGES):
 - 4 separate administrative dashboard endpoints
 - 1 separate user dashboard (for professor/student/guest)
 - Backend role validation on every request
@@ -320,7 +320,7 @@ const { recommendations } = useRecommendations(userId); // → /api/recommendati
 - Each role's data model and query logic
 - Authorization hierarchy (superuser > admin > dean/librarian)
 
-### **CHANGES (STANDARDIZATION ONLY):**
+### CHANGES (STANDARDIZATION ONLY):
 - All admin hooks use `useBaseDashboard` pattern (eliminate duplication)
 - Consistent React Query configuration across dashboards
 - Unified error handling pattern
@@ -328,7 +328,7 @@ const { recommendations } = useRecommendations(userId); // → /api/recommendati
 - Version all endpoints `/api/v1/...`
 - Fix type safety (eliminate `any`)
 
-### **RESULT:**
+### RESULT:
 - Same role separation
 - Same endpoints
 - Same authorization

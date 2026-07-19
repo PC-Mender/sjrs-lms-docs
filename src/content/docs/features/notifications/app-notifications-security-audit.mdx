@@ -3,7 +3,7 @@ title: "App Notifications Security Audit"
 ---
 
 
-## Security Assessment: **FOOL-PROOF** 
+## Security Assessment: FOOL-PROOF 
 
 This document provides a comprehensive security audit of the App Notifications implementation to confirm there are no loopholes or vulnerabilities.
 
@@ -11,7 +11,7 @@ This document provides a comprehensive security audit of the App Notifications i
 
 ## Security Controls Verified
 
-### 1. **SQL Injection Protection**  **SECURE**
+### 1. SQL Injection Protection  SECURE
 
 **Status**:  **All queries use prepared statements**
 
@@ -41,9 +41,9 @@ await env.DB.prepare(`SELECT * FROM notifications WHERE title LIKE ?`)
 
 ---
 
-### 2. **User Data Access Control**  **SECURE**
+### 2. User Data Access Control  SECURE
 
-#### **Regular User Endpoints**
+#### Regular User Endpoints
 
 **GET `/api/notifications`** (User's own notifications):
 - Handler: `handleGetNotifications()` → Uses `fetchNotificationFeed()`
@@ -74,7 +74,7 @@ await env.DB.prepare(`SELECT * FROM notifications WHERE title LIKE ?`)
 - SQL: `WHERE user_id = ? AND is_read = 0` - **Enforced at database level**
 - **Cannot mark other users' notifications as read**
 
-#### **Superuser Endpoint**
+#### Superuser Endpoint
 
 **GET `/api/notifications/all`** (All notifications - superuser only):
 - Handler: `handleGetAllAppNotifications()` → **Permission check + role check**
@@ -90,7 +90,7 @@ await env.DB.prepare(`SELECT * FROM notifications WHERE title LIKE ?`)
 
 ---
 
-### 3. **Permission System**  **SECURE**
+### 3. Permission System  SECURE
 
 **All endpoints have permission checks**:
 
@@ -113,7 +113,7 @@ await env.DB.prepare(`SELECT * FROM notifications WHERE title LIKE ?`)
 
 ---
 
-### 4. **Input Validation**  **SECURE**
+### 4. Input Validation  SECURE
 
 **Query Parameter Validation**:
 - `parseNumber()` - Validates and sanitizes numeric inputs
@@ -140,7 +140,7 @@ type: url.searchParams.get('type') as AppNotificationType || undefined
 
 ---
 
-### 5. **Type Safety**  **SECURE**
+### 5. Type Safety  SECURE
 
 **TypeScript Protection**:
 - All functions are type-safe
@@ -170,7 +170,7 @@ function updateAppNotification(
 
 ---
 
-### 6. **Error Handling**  **SECURE**
+### 6. Error Handling  SECURE
 
 **Error Handling Pattern**:
 - All errors are caught and handled
@@ -194,7 +194,7 @@ try {
 
 ## Minor Security Enhancement (Defense in Depth)
 
-### **Issue**: `/all` Endpoint Missing Routing-Level Permission Check
+### Issue: `/all` Endpoint Missing Routing-Level Permission Check
 
 **Current**: Permission check only in handler
 **Recommendation**: Add permission check at routing level for defense in depth
@@ -207,7 +207,7 @@ try {
 
 ## Attack Vector Analysis
 
-### **Attack Vector 1: User A tries to access User B's notifications**
+### Attack Vector 1: User A tries to access User B's notifications
 
 **Scenario**: User A (ID: 1) tries to access User B's (ID: 2) notification
 
@@ -221,7 +221,7 @@ try {
 
 ---
 
-### **Attack Vector 2: Regular user tries to access `/all` endpoint**
+### Attack Vector 2: Regular user tries to access `/all` endpoint
 
 **Scenario**: Regular user tries to call `GET /api/notifications/all`
 
@@ -234,7 +234,7 @@ try {
 
 ---
 
-### **Attack Vector 3: User tries to update another user's notification**
+### Attack Vector 3: User tries to update another user's notification
 
 **Scenario**: User A tries to update User B's notification
 
@@ -247,7 +247,7 @@ try {
 
 ---
 
-### **Attack Vector 4: SQL Injection attempt**
+### Attack Vector 4: SQL Injection attempt
 
 **Scenario**: Attacker tries to inject SQL via query parameters
 
@@ -260,7 +260,7 @@ try {
 
 ---
 
-### **Attack Vector 5: Type coercion attack**
+### Attack Vector 5: Type coercion attack
 
 **Scenario**: Attacker sends invalid types to cause errors
 
@@ -317,7 +317,7 @@ try {
 
 ## Recommended Enhancement (Optional)
 
-### **Add Routing-Level Permission Check for `/all` Endpoint**
+### Add Routing-Level Permission Check for `/all` Endpoint
 
 **File**: `functions/api/notifications/index.ts`
 
@@ -348,7 +348,7 @@ try {
 
 ## Final Security Verdict
 
-### **Security Status: FOOL-PROOF** 
+### Security Status: FOOL-PROOF 
 
 **Summary**:
 - **Zero SQL injection vulnerabilities**
@@ -368,12 +368,12 @@ try {
 
 ## Security Enhancements Applied
 
-### **1. Routing-Level Permission Check Added** 
+### 1. Routing-Level Permission Check Added 
 - Added permission check at routing level for `/all` endpoint
 - Provides defense in depth (handler + routing level checks)
 - Prevents unauthorized access even if handler logic is bypassed
 
-### **2. Repository Safety Documentation** 
+### 2. Repository Safety Documentation 
 - Added security comments in `listAppNotifications()` 
 - Clarifies that function requires `requestingUserId` for regular users
 - Documents that superusers should use `listAllAppNotificationsWithUsers()` instead

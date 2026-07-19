@@ -9,7 +9,7 @@ The unified session management system combines the comprehensive features of the
 
 ## Architecture
 
-### **Clean Modular Design**
+### Clean Modular Design
 ```
 src/utilities/session/
 ├── core/
@@ -20,14 +20,14 @@ src/utilities/session/
 └── index.md                   # Documentation
 ```
 
-### **Legacy Compatibility**
+### Legacy Compatibility
 - Legacy API functions provided for backward compatibility
 - All existing APIs continue to work via compatibility layer
 - New code can use the cleaner React hooks
 
 ## Quick Start
 
-### **Modern React Usage (Recommended)**
+### Modern React Usage (Recommended)
 ```typescript
 import { useSessionEngine } from '@/utilities/session';
 
@@ -55,7 +55,7 @@ const MyComponent = () => {
 };
 ```
 
-### **Direct Engine Usage**
+### Direct Engine Usage
 ```typescript
 import { SessionEngine } from '@/utilities/session';
 
@@ -70,19 +70,19 @@ const state = engine.getSessionState();
 
 ## Features
 
-### **Core Session Management**
+### Core Session Management
 - **Automatic timeout detection** with configurable duration
 - **Activity tracking** across multiple event types
 - **Warning system** with customizable warning period
 - **Session extension** capabilities
 
-### **Advanced Security Features**
+### Advanced Security Features
 - **Security hash validation** - Detects tampering attempts
 - **Activity pattern analysis** - Monitors user behavior
 - **Cross-tab synchronization** - Consistent state across tabs
 - **System sleep detection** - Handles system wake gracefully
 
-### **React Integration**
+### React Integration
 - **Reactive state updates** - Automatic re-renders on state changes
 - **Automatic cleanup** - Event listeners cleaned up on unmount
 - **Hook-based API** - Modern React patterns
@@ -90,7 +90,7 @@ const state = engine.getSessionState();
 
 ## Configuration
 
-### **Session Configuration Options**
+### Session Configuration Options
 ```typescript
 interface SessionConfig {
   timeoutMinutes?: number;           // Default: 15
@@ -101,7 +101,7 @@ interface SessionConfig {
 }
 ```
 
-### **Security Features**
+### Security Features
 ```typescript
 // Get security status
 const securityStatus = getSecurityStatus();
@@ -112,7 +112,7 @@ console.log('Security hash:', securityStatus.hash);
 
 ## Session State
 
-### **Complete Session Information**
+### Complete Session Information
 ```typescript
 interface SessionState {
   isActive: boolean;              // Whether session is still valid
@@ -134,7 +134,7 @@ interface SessionState {
 
 ## Security Features
 
-### **Activity Monitoring**
+### Activity Monitoring
 ```typescript
 // Monitored events:
 const ACTIVITY_EVENTS = [
@@ -147,7 +147,7 @@ const ACTIVITY_EVENTS = [
 - focus/blur (window focus changes)
 ```
 
-### **Security Validation**
+### Security Validation
 ```typescript
 // Security hash includes:
 - Session start time
@@ -160,7 +160,7 @@ const ACTIVITY_EVENTS = [
 // Security violations trigger immediate logout
 ```
 
-### **System Sleep Detection**
+### System Sleep Detection
 ```typescript
 // Detects system sleep/wake cycles
 // Adjusts session timing appropriately
@@ -169,7 +169,7 @@ const ACTIVITY_EVENTS = [
 
 ## Migration Guide
 
-### **From Legacy session-manager.ts**
+### From Legacy session-manager.ts
 ```typescript
 // OLD: Class-based approach (now handled by compatibility layer)
 import { initSessionManager } from '@/utilities/session';
@@ -180,7 +180,7 @@ import { useSessionEngine } from '@/utilities/session';
 const { sessionState, extendSession } = useSessionEngine(config);
 ```
 
-### **From session-context.tsx**
+### From session-context.tsx
 ```typescript
 // OLD: Basic context implementation
 import { useSession } from '@/contexts/session-context';
@@ -193,25 +193,25 @@ const { sessionState, extendSession } = useSessionEngine();
 
 ## Benefits
 
-### **Developer Experience**
+### Developer Experience
 - **Type Safety** - Full TypeScript support
 - **Clean API** - Intuitive hook-based interface
 - **Comprehensive State** - All session info in one place
 - **Automatic Management** - No manual event listener setup
 
-### **Performance**
+### Performance
 - **Optimized Updates** - Minimal re-renders with proper memoization
 - **Memory Efficient** - Automatic cleanup prevents memory leaks
 - **Bundle Size** - Tree-shakable modular design
 - **Runtime Performance** - Efficient event handling
 
-### **Security**
+### Security
 - **Advanced Protection** - Multiple security validation layers
 - **Tamper Detection** - Hash-based integrity checking
 - **Pattern Analysis** - Unusual activity detection
 - **Cross-Tab Sync** - Consistent security state
 
-### **Maintainability**
+### Maintainability
 - **Single Source of Truth** - One unified implementation
 - **Modular Design** - Easy to extend and modify
 - **Clear Separation** - Core logic separate from React integration
@@ -219,14 +219,14 @@ const { sessionState, extendSession } = useSessionEngine();
 
 ## Architecture Migration Summary
 
-### **Before: Duplicate Session Systems**
+### Before: Duplicate Session Systems
 ```
  session-manager.ts (613 lines)     # Comprehensive but unused standalone utility
  session-context.tsx (242+ lines)   # React context with duplicate logic
  Total: 855+ lines of overlapping functionality
 ```
 
-### **After: Unified Modern System**
+### After: Unified Modern System
 ```
  core/session-engine.ts (322 lines)      # Clean core logic
  hooks/use-session-engine.ts (214 lines) # React integration
@@ -234,7 +234,7 @@ const { sessionState, extendSession } = useSessionEngine();
  Total: 620 lines of organized, non-duplicate code
 ```
 
-### **Issues Resolved**
+### Issues Resolved
 - **Code Duplication ELIMINATED** - Single source of truth
 - **Security Features INTEGRATED** - Advanced security now available in React
 - **Performance OPTIMIZED** - Modern React patterns and efficient updates

@@ -103,7 +103,7 @@ Our email system uses a **hybrid approach**:
 
 ### Configuration
 
-#### **Direct Mailjet (Account Emails)**
+#### Direct Mailjet (Account Emails)
 ```typescript
 // Registration confirmation email
 const emailData = {
@@ -129,7 +129,7 @@ const response = await fetch('https://api.mailjet.com/v3.1/send', {
 });
 ```
 
-#### **Queue + Mailjet (Transactional Emails)**
+#### Queue + Mailjet (Transactional Emails)
 ```typescript
 // Send to queue
 await env.EMAIL_QUEUE.send({
@@ -179,13 +179,13 @@ FRONTEND_URL=https://your-frontend-domain.com
 
 ### Email Service Strategy
 
-#### ** Account-Related Emails (Direct Mailjet)**
+####  Account-Related Emails (Direct Mailjet)
 - **Registration confirmation**
 - **Password reset**
 - **Email verification**
 - **Account status changes**
 
-#### ** Transactional Emails (Queue + Mailjet)**
+####  Transactional Emails (Queue + Mailjet)
 - **Loan notifications** (`borrow_notification`)
 - **Return reminders** (`return_reminder`)
 - **Overdue notices** (`overdue_notification`)
@@ -194,12 +194,12 @@ FRONTEND_URL=https://your-frontend-domain.com
 
 ### Benefits of This Approach
 
-#### ** Direct Mailjet Benefits**
+####  Direct Mailjet Benefits
 - **Immediate feedback** for critical account emails
 - **Simple implementation** for low-volume emails
 - **No queue complexity** for account flows
 
-#### ** Queue + Mailjet Benefits**
+####  Queue + Mailjet Benefits
 - **Reliability** with automatic retries
 - **Scalability** for high-volume transactional emails
 - **Non-blocking** user experience
@@ -207,7 +207,7 @@ FRONTEND_URL=https://your-frontend-domain.com
 
 ### Usage Examples
 
-#### **Account Email (Direct)**
+#### Account Email (Direct)
 ```typescript
 // Registration confirmation
 if (env.MAILJET_API_KEY && env.MAILJET_API_SECRET) {
@@ -215,7 +215,7 @@ if (env.MAILJET_API_KEY && env.MAILJET_API_SECRET) {
 }
 ```
 
-#### **Transactional Email (Queue)**
+#### Transactional Email (Queue)
 ```typescript
 // Loan notification
 await sendLoanNotification('borrow_notification', {
@@ -229,7 +229,7 @@ await sendLoanNotification('borrow_notification', {
 
 ### Error Handling
 
-#### **Direct Mailjet Error Handling**
+#### Direct Mailjet Error Handling
 ```typescript
 try {
   await sendConfirmationEmail(email, name, token, env);
@@ -239,7 +239,7 @@ try {
 }
 ```
 
-#### **Queue Error Handling (Automatic)**
+#### Queue Error Handling (Automatic)
 ```typescript
 async queue(batch: MessageBatch<EmailQueueMessage>, env: any) {
   for (const message of batch.messages) {

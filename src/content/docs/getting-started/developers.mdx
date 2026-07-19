@@ -18,33 +18,33 @@ The system is built on a **Serverless Architecture** using the Cloudflare stack:
 
 ## Development Setup
 
-### **Prerequisites**
+### Prerequisites
 * Node.js (Latest LTS)
 * npm or pnpm
 * Wrangler CLI (`npm install -g wrangler`)
 
-### **1. Clone & Install**
+### 1. Clone & Install
 ```bash
 git clone https://github.com/your-org/sjrs-lms.git
 cd sjrs-lms
 npm install
 ```
 
-### **2. Environment Configuration**
+### 2. Environment Configuration
 Copy the example environment file:
 ```bash
 cp .env.example .env
 ```
 Update the variables with your local or staging credentials.
 
-### **3. Database Setup (Local)**
+### 3. Database Setup (Local)
 Initialize the local D1 database:
 ```bash
 npm run db:migrate:local
 npm run db:seed:local
 ```
 
-### **4. Run Development Server**
+### 4. Run Development Server
 ```bash
 npm run dev
 ```

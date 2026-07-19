@@ -5,7 +5,7 @@ title: "Order Approval Deep Review"
 
 ## Critical Issues Found
 
-### 1. **Missing Borrow Limit Check on Approval** (CRITICAL)
+### 1. Missing Borrow Limit Check on Approval (CRITICAL)
 
 **Location**: `functions/api/orders/handlers/update-order.ts:47-90`
 
@@ -64,7 +64,7 @@ if (Number(limitCheck?.current_count || 0) >= Number(limitCheck?.max_books || 0)
 
 ---
 
-### 2. **Missing User Validation** (HIGH)
+### 2. Missing User Validation (HIGH)
 
 **Location**: `functions/api/orders/handlers/update-order.ts:50-54`
 
@@ -96,7 +96,7 @@ if (userCheck.status !== 'active') {
 
 ---
 
-### 3. **Missing Book Validation** (MEDIUM)
+### 3. Missing Book Validation (MEDIUM)
 
 **Location**: `functions/api/orders/handlers/update-order.ts:50-54`
 
@@ -127,7 +127,7 @@ if (bookCheck.status === 'deleted' || bookCheck.status === 'unavailable') {
 
 ---
 
-### 4. **Missing Order Type Validation** (MEDIUM)
+### 4. Missing Order Type Validation (MEDIUM)
 
 **Location**: `functions/api/orders/handlers/update-order.ts:48-65`
 
@@ -151,7 +151,7 @@ if (String(order.order_type || '').toLowerCase() !== 'request') {
 
 ---
 
-### 5. **Missing 'Cancelled' Status Check** (MEDIUM)
+### 5. Missing 'Cancelled' Status Check (MEDIUM)
 
 **Location**: `functions/api/orders/handlers/update-order.ts:56-65`
 
@@ -170,7 +170,7 @@ if (orderStatus === 'cancelled') {
 
 ---
 
-### 6. **General Update Path Lacks Validation** (MEDIUM)
+### 6. General Update Path Lacks Validation (MEDIUM)
 
 **Location**: `functions/api/orders/handlers/update-order.ts:253-343`
 
@@ -209,7 +209,7 @@ if (orderStatus === 'rejected') {
 
 ---
 
-### 7. **Missing Order.user_id Validation** (LOW)
+### 7. Missing Order.user_id Validation (LOW)
 
 **Location**: `functions/api/orders/handlers/update-order.ts:50`
 
@@ -228,7 +228,7 @@ if (!order.user_id || isNaN(Number(order.user_id))) {
 
 ---
 
-### 8. **Copy Status Check Only for 'available'** (LOW)
+### 8. Copy Status Check Only for 'available' (LOW)
 
 **Location**: `functions/api/orders/handlers/update-order.ts:68-72`
 
@@ -246,7 +246,7 @@ if (!order.user_id || isNaN(Number(order.user_id))) {
 
 ## Flow Issues
 
-### 9. **Race Condition with Multiple Order Approvals** (MEDIUM)
+### 9. Race Condition with Multiple Order Approvals (MEDIUM)
 
 **Scenario**: 
 - User has 2 pending orders
@@ -263,7 +263,7 @@ if (!order.user_id || isNaN(Number(order.user_id))) {
 
 ---
 
-### 10. **No Handling for Book Copy Status Changes** (LOW)
+### 10. No Handling for Book Copy Status Changes (LOW)
 
 **Scenario**:
 - Order created when book has available copies

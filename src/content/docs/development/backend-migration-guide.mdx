@@ -12,11 +12,11 @@ title: "Backend Migration Guide"
 
 The backend now lives under `functions/` as direct function APIs (Cloudflare Workers native). This guide summarizes the completed migration to the **standardized API response system** and the move away from framework-based routing. All existing code continues to work thanks to backward compatibility features.
 
-## **Migration Status: COMPLETE**
+## Migration Status: COMPLETE
 
 Good news! **No immediate action required.** The migration has been completed and all existing code continues to work.
 
-### **What Was Changed:**
+### What Was Changed:
 - **Response Builder**: New centralized response creation system
 - **Standardized Format**: All responses follow consistent structure
 - **Backward Compatibility**: All existing handlers continue to work
@@ -25,20 +25,20 @@ Good news! **No immediate action required.** The migration has been completed an
  -  **Direct Function APIs**: Replaced framework routing with `functions/api/*` modules
  -  **Unified Entry**: Worker entry at `functions/index.ts` with module routers
 
-### **What Wasn't Broken:**
+### What Wasn't Broken:
 - **Existing Handlers**: All continue to work without changes
 - **Frontend Integration**: All React hooks work seamlessly
 - **API Contracts**: No breaking changes to API endpoints
 - **Authentication**: All auth flows remain the same
 
-## **For New Development**
+## For New Development
 
 When creating **new API endpoints**, use the standardized response builder:
 
-### **Where to Add Endpoints**
+### Where to Add Endpoints
 New endpoints belong under `functions/api/<feature>/` following the standardized module pattern. See `docs/development/functions-folder-architecture.md` for structure and examples.
 
-### **Quick Start**
+### Quick Start
 ```typescript
 // Import the standardized response functions
 import { 
@@ -83,23 +83,23 @@ export async function handleNewEndpoint(
 }
 ```
 
-## **Optional Improvements**
+## Optional Improvements
 
 While not required, you can **optionally** update existing handlers to use more specific response functions:
 
-### **Before (Still Works)**
+### Before (Still Works)
 ```typescript
 return createSuccessResponse({ book: createdBook });
 ```
 
-### **After (Recommended for New Code)**
+### After (Recommended for New Code)
 ```typescript
 return createCreatedResponse(createdBook, 'Book', request.headers.get('Origin'));
 ```
 
-## **Response Format Reference**
+## Response Format Reference
 
-### **Old Format (Still Supported)**
+### Old Format (Still Supported)
 ```typescript
 // Basic success response
 {
@@ -112,7 +112,7 @@ return createCreatedResponse(createdBook, 'Book', request.headers.get('Origin'))
 }
 ```
 
-### **New Standardized Format**
+### New Standardized Format
 ```typescript
 // Success response
 {
@@ -145,9 +145,9 @@ return createCreatedResponse(createdBook, 'Book', request.headers.get('Origin'))
 }
 ```
 
-## **Available Response Functions**
+## Available Response Functions
 
-### **Basic Response Functions**
+### Basic Response Functions
 ```typescript
 // Success responses
 createSuccessResponse(data, message?, status?, meta?, origin?)
@@ -161,7 +161,7 @@ createUnauthorizedResponse(message?, origin?)
 createForbiddenResponse(message?, origin?)
 ```
 
-### **Specialized Response Functions**
+### Specialized Response Functions
 ```typescript
 // Resource operations
 createCreatedResponse(data, resourceName?, origin?)
@@ -177,7 +177,7 @@ createRateLimitResponse(retryAfter?, origin?)
 createInternalErrorResponse(message?, error?, origin?)
 ```
 
-## **Error Codes Reference**
+## Error Codes Reference
 
 Use these standardized error codes for consistent error handling:
 
@@ -196,14 +196,14 @@ ERROR_CODES = {
 }
 ```
 
-## **Best Practices**
+## Best Practices
 
-### **1. Always Include Origin for CORS**
+### 1. Always Include Origin for CORS
 ```typescript
 request.headers.get('Origin')
 ```
 
-### **2. Use Appropriate Error Codes**
+### 2. Use Appropriate Error Codes
 ```typescript
 // For validation errors
 createErrorResponse(message, 422, 'VALIDATION_ERROR', details, fields, origin);
@@ -212,7 +212,7 @@ createErrorResponse(message, 422, 'VALIDATION_ERROR', details, fields, origin);
 createErrorResponse(message, 404, 'NOT_FOUND', details, undefined, origin);
 ```
 
-### **3. Include Meaningful Metadata**
+### 3. Include Meaningful Metadata
 ```typescript
 createSuccessResponse(data, message, 200, {
   processingTime: Date.now() - startTime,
@@ -221,7 +221,7 @@ createSuccessResponse(data, message, 200, {
 }, origin);
 ```
 
-### **4. Use Specialized Functions When Appropriate**
+### 4. Use Specialized Functions When Appropriate
 ```typescript
 // For creation operations
 return createCreatedResponse(newResource, 'Resource', origin);
@@ -230,29 +230,29 @@ return createCreatedResponse(newResource, 'Resource', origin);
 return createPaginatedResponse(items, paginationInfo, message, meta, origin);
 ```
 
-## **Benefits of Migration**
+## Benefits of Migration
 
-### **For Developers**
+### For Developers
 - **Consistent APIs**: All endpoints follow the same pattern
 - **Better Debugging**: Request IDs and timestamps
 - **Type Safety**: Full TypeScript support
 - **Easy Testing**: Predictable response formats
 
-### **For Frontend**
+### For Frontend
 - **Reliable Integration**: Responses always match expected format
 - **Better UX**: Consistent error handling
 - **Performance Insights**: Processing time visibility
 - **Request Tracking**: Unique IDs for debugging
 
-### **For Operations**
+### For Operations
 - **Monitoring**: Request IDs for log correlation
 - **Performance**: Built-in timing measurements
 - **Error Tracking**: Structured error information
 - **Audit Trail**: Complete request/response logging
 
-## **Example Migration**
+## Example Migration
 
-### **Old Handler (Still Works)**
+### Old Handler (Still Works)
 ```typescript
 export async function handleOldEndpoint(request: Request, env: any): Promise<Response> {
   try {
@@ -271,7 +271,7 @@ export async function handleOldEndpoint(request: Request, env: any): Promise<Res
 }
 ```
 
-### **New Handler (Recommended)**
+### New Handler (Recommended)
 ```typescript
 import { createSuccessResponse, createErrorResponse } from '../../../utilities/response-builder';
 
@@ -298,22 +298,22 @@ export async function handleNewEndpoint(request: Request, env: any): Promise<Res
 }
 ```
 
-## **Related Documentation**
+## Related Documentation
 
 - **[API Response Standardization](/api/api-response-standardization)** - Complete response system guide
 - **[Functions Folder Architecture](/api/functions-folder-architecture)** - Backend architecture overview
 - **[API Documentation](/api/index)** - API endpoint reference
 - **`src/hooks/useStandardizedAPI.ts`** - React hooks usage
 
-## **Need Help?**
+## Need Help?
 
-### **Questions About:**
+### Questions About:
 - **Response Format**: See [API Response Standardization](/api/api-response-standardization)
 - **Backend Structure**: See [Functions Folder Architecture](/api/functions-folder-architecture)
 - **Error Handling**: Check the error codes section above
 - **Frontend Integration**: Review the React hooks documentation
 
-### **Common Issues:**
+### Common Issues:
 1. **CORS Issues**: Make sure to include `request.headers.get('Origin')` in all responses
 2. **Type Errors**: Import response functions from the correct path
 3. **Error Codes**: Use the standardized error codes for consistency

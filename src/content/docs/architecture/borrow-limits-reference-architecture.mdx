@@ -386,25 +386,25 @@ Use this checklist when refactoring other feature modules:
 
 ## What Makes This a Good Example
 
-### 1. **Security First**
+### 1. Security First
 - Every page checks permissions before rendering
 - Users see clear "Access Denied" messages
 - Actions are conditionally available based on permissions
 - Backend enforces security; frontend provides UX
 
-### 2. **Clean Architecture**
+### 2. Clean Architecture
 - No thin wrapper re-exports
 - Direct imports from shared code
 - Feature module is pure presentation
 - Clear separation: data (shared) vs. UI (feature)
 
-### 3. **Import Hygiene**
+### 3. Import Hygiene
 - No deep relative imports in pages
 - Minimal deep imports in feature (1 acceptable case)
 - Easy to follow where code comes from
 - No circular dependency risk
 
-### 4. **Server-Side Pagination**
+### 4. Server-Side Pagination
 - Backend controls data flow (not client)
 - List page passes pagination state to query
 - Parameter names match backend expectations
@@ -412,13 +412,13 @@ Use this checklist when refactoring other feature modules:
 - No unbounded dataset fetching
 - **No aggressive polling** - uses React Query defaults for optimal performance
 
-### 5. **Maintainability**
+### 5. Maintainability
 - Easy to add new permissions
 - Easy to add new UI components
 - Easy to refactor shared hooks without touching feature
 - Clear pattern for other developers
 
-### 5. **Follows Project Rules**
+### 5. Follows Project Rules
 - Adheres to Feature Module Guidelines (project-rules.md)
 - Implements Security First principle
 - Uses Permission-Based Access control

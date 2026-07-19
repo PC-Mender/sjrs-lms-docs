@@ -18,22 +18,22 @@ src/pages/borrow-limits/
 
 ## Key Improvements
 
-### 1. **Modular Architecture**
+### 1. Modular Architecture
 - **Separated concerns**: Each component is now in its own file
 - **Shared components**: `BorrowLimitForm` eliminates duplication between create/edit
 - **Clean exports**: Main index file provides clean API
 
-### 2. **Backend Alignment**
+### 2. Backend Alignment
 - **Field mapping**: Updated to use `loan_period_days` instead of `loan_duration_days`
 - **Schema consistency**: Frontend now matches backend database schema
 - **Type safety**: Proper TypeScript interfaces aligned with backend
 
-### 3. **Code Quality**
+### 3. Code Quality
 - **Eliminated duplication**: Shared form component reduces maintenance
 - **Consistent validation**: All forms use the same validation rules
 - **Better error handling**: Consistent error handling across components
 
-### 4. **User Experience**
+### 4. User Experience
 - **Year-based limits**: Support for Student_1, Student_2, Student_3, Student_4
 - **Proper validation**: Form validation with meaningful error messages
 - **Currency formatting**: Indian Rupee (₹) formatting for fine amounts

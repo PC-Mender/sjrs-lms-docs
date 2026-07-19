@@ -7,12 +7,12 @@ This document provides comprehensive testing resources for the SJRS LMS API, inc
 
 ## Postman Collection
 
-### **Import Instructions**
+### Import Instructions
 1. Download the [SJRS LMS API Collection](https://github.com/PC-Mender/sjrslms/blob/main/sjrs-lms-api.postman_collection.json)
 2. Import into Postman
 3. Set up environment variables (see Environment Setup below)
 
-### **Environment Variables**
+### Environment Variables
 ```json
 {
   "base_url": "https://your-api-domain.com",
@@ -23,7 +23,7 @@ This document provides comprehensive testing resources for the SJRS LMS API, inc
 }
 ```
 
-### **Collection Structure**
+### Collection Structure
 ```
 SJRS LMS API
 ├──  Authentication
@@ -50,7 +50,7 @@ SJRS LMS API
 
 ## cURL Examples
 
-### **One-Time Setup**
+### One-Time Setup
 ```bash
 curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
   -H "Content-Type: application/json" \
@@ -64,9 +64,9 @@ curl -i -b cookies.txt -c cookies.txt "https://your-api-domain.com/api/auth/csrf
 xsrf=$(grep -E "\tXSRF-TOKEN\t" cookies.txt | tail -n 1 | awk '{print $7}')
 ```
 
-### **Authentication Endpoints**
+### Authentication Endpoints
 
-#### **User Login**
+#### User Login
 ```bash
 curl -X POST "https://your-api-domain.com/api/auth/login" \
   -H "Content-Type: application/json" \
@@ -76,7 +76,7 @@ curl -X POST "https://your-api-domain.com/api/auth/login" \
   }'
 ```
 
-#### **User Registration**
+#### User Registration
 ```bash
 curl -X POST "https://your-api-domain.com/api/auth/register" \
   -H "Content-Type: application/json" \
@@ -89,24 +89,24 @@ curl -X POST "https://your-api-domain.com/api/auth/register" \
   }'
 ```
 
-#### **Get Current User Profile**
+#### Get Current User Profile
 ```bash
 curl -b cookies.txt "https://your-api-domain.com/api/auth/me"
 ```
 
-### **Book Management Endpoints**
+### Book Management Endpoints
 
-#### **Get All Books**
+#### Get All Books
 ```bash
 curl -b cookies.txt "https://your-api-domain.com/api/books?page=1&limit=20"
 ```
 
-#### **Search Books**
+#### Search Books
 ```bash
 curl -b cookies.txt "https://your-api-domain.com/api/books/search?q=harry&category=fiction"
 ```
 
-#### **Create Book (Librarian+)**
+#### Create Book (Librarian+)
 ```bash
 curl -X POST "https://your-api-domain.com/api/books" \
   -b cookies.txt \
@@ -122,14 +122,14 @@ curl -X POST "https://your-api-domain.com/api/books" \
   }'
 ```
 
-### **Loan Management Endpoints**
+### Loan Management Endpoints
 
-#### **Get All Loans**
+#### Get All Loans
 ```bash
 curl -b cookies.txt "https://your-api-domain.com/api/loans?status=active"
 ```
 
-#### **Create Loan (Librarian+)**
+#### Create Loan (Librarian+)
 ```bash
 curl -X POST "https://your-api-domain.com/api/loans" \
   -b cookies.txt \
@@ -142,35 +142,35 @@ curl -X POST "https://your-api-domain.com/api/loans" \
   }'
 ```
 
-### **User Management Endpoints**
+### User Management Endpoints
 
-#### **Get All Users (Admin/Librarian)**
+#### Get All Users (Admin/Librarian)
 ```bash
 curl -b cookies.txt "https://your-api-domain.com/api/users?role=student&status=active"
 ```
 
-#### **Get Specific User**
+#### Get Specific User
 ```bash
 curl -b cookies.txt "https://your-api-domain.com/api/users/123"
 ```
 
-### **System Management Endpoints**
+### System Management Endpoints
 
-#### **Check Permissions**
+#### Check Permissions
 ```bash
 curl -b cookies.txt "https://your-api-domain.com/api/permissions/check?resource=books&action=create"
 ```
 
-#### **Get System Logs (Admin+)**
+#### Get System Logs (Admin+)
 ```bash
 curl -b cookies.txt "https://your-api-domain.com/api/system_logs?level=error&component=auth"
 ```
 
 ## Testing Procedures
 
-### **1. Authentication Testing**
+### 1. Authentication Testing
 
-#### **Test User Registration**
+#### Test User Registration
 ```bash
 # 1. Register new user
 curl -X POST "https://your-api-domain.com/api/auth/register" \
@@ -186,7 +186,7 @@ curl -X POST "https://your-api-domain.com/api/auth/register" \
 # Expected: 201 Created with user data
 ```
 
-#### **Test User Login**
+#### Test User Login
 ```bash
 # 2. Login with registered user
 curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
@@ -199,7 +199,7 @@ curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
 # Expected: 200 OK with user data (auth cookie is set)
 ```
 
-#### **Test Protected Endpoint**
+#### Test Protected Endpoint
 ```bash
 # 3. Bootstrap CSRF (required for unsafe methods)
 curl -i -b cookies.txt -c cookies.txt "https://your-api-domain.com/api/auth/csrf"
@@ -210,9 +210,9 @@ curl -b cookies.txt "https://your-api-domain.com/api/auth/me"
 # Expected: 200 OK with user profile data
 ```
 
-### **2. Book Management Testing**
+### 2. Book Management Testing
 
-#### **Test Book Creation (Librarian+)**
+#### Test Book Creation (Librarian+)
 ```bash
 # 1. Create book (requires librarian role)
 xsrf=$(grep -E "\tXSRF-TOKEN\t" cookies.txt | tail -n 1 | awk '{print $7}')
@@ -231,7 +231,7 @@ curl -X POST "https://your-api-domain.com/api/books" \
 # Expected: 201 Created with book data
 ```
 
-#### **Test Book Retrieval**
+#### Test Book Retrieval
 ```bash
 # 2. Get created book
 curl -b cookies.txt "https://your-api-domain.com/api/books/BOOK_ID_HERE"
@@ -239,9 +239,9 @@ curl -b cookies.txt "https://your-api-domain.com/api/books/BOOK_ID_HERE"
 # Expected: 200 OK with book details
 ```
 
-### **3. Error Handling Testing**
+### 3. Error Handling Testing
 
-#### **Test Invalid Authentication**
+#### Test Invalid Authentication
 ```bash
 # Test without auth cookie
 curl -i "https://your-api-domain.com/api/auth/me"
@@ -249,7 +249,7 @@ curl -i "https://your-api-domain.com/api/auth/me"
 # Expected: 401 Unauthorized
 ```
 
-#### **Test Missing Required Fields**
+#### Test Missing Required Fields
 ```bash
 # Test registration without required fields
 curl -X POST "https://your-api-domain.com/api/auth/register" \
@@ -261,7 +261,7 @@ curl -X POST "https://your-api-domain.com/api/auth/register" \
 # Expected: 400 Bad Request with validation errors
 ```
 
-#### **Test Insufficient Permissions**
+#### Test Insufficient Permissions
 ```bash
 xsrf=$(grep -E "\tXSRF-TOKEN\t" cookies.txt | tail -n 1 | awk '{print $7}')
 curl -X POST "https://your-api-domain.com/api/books" \
@@ -278,7 +278,7 @@ curl -X POST "https://your-api-domain.com/api/books" \
 
 ## Testing Tools Setup
 
-### **Postman Environment Setup**
+### Postman Environment Setup
 
 1. **Create Environment**
    - Name: `SJRS LMS API - Development`
@@ -301,7 +301,7 @@ curl -X POST "https://your-api-domain.com/api/books" \
    // - sets X-XSRF-TOKEN header from XSRF-TOKEN cookie (if present)
    ```
 
-### **Automated Testing with Newman**
+### Automated Testing with Newman
 
 ```bash
 # Install Newman
@@ -314,7 +314,7 @@ newman run sjrs-lms-api.postman_collection.json \
   --reporter-json-export results.json
 ```
 
-### **Continuous Integration Testing**
+### Continuous Integration Testing
 
 ```yaml
 # GitHub Actions example
@@ -342,21 +342,21 @@ jobs:
 
 ## Test Results Analysis
 
-### **Success Criteria**
+### Success Criteria
 - **Authentication**: All auth endpoints return correct status codes
 - **Authorization**: Permission checks work correctly
 - **Data Validation**: Required fields are properly validated
 - **Error Handling**: Appropriate error codes and messages
 - **Response Format**: Consistent JSON response structure
 
-### **Performance Benchmarks**
+### Performance Benchmarks
 - **Response Time**: < 500ms for simple operations
 - **Throughput**: Handle 100+ concurrent requests
 - **Error Rate**: < 1% for valid requests
 
-### **Common Issues & Solutions**
+### Common Issues & Solutions
 
-#### **CORS Errors**
+#### CORS Errors
 ```bash
 # Check if CORS headers are present
 curl -H "Origin: https://example.com" \
@@ -364,13 +364,13 @@ curl -H "Origin: https://example.com" \
   -v
 ```
 
-#### **Token Expiration**
+#### Token Expiration
 ```bash
 # Check session validity
 curl -v -b cookies.txt "https://your-api-domain.com/api/auth/me"
 ```
 
-#### **Rate Limiting**
+#### Rate Limiting
 ```bash
 # Test rate limiting
 for i in {1..10}; do
@@ -381,38 +381,38 @@ done
 
 ## Testing Checklist
 
-### **Pre-Testing Setup**
+### Pre-Testing Setup
 - [ ] Environment variables configured
 - [ ] Test database available
 - [ ] Test users created
 - [ ] Postman collection imported
 
-### **Authentication Testing**
+### Authentication Testing
 - [ ] User registration
 - [ ] User login
 - [ ] Token validation
 - [ ] Logout functionality
 - [ ] Password reset flow
 
-### **Authorization Testing**
+### Authorization Testing
 - [ ] Student permissions
 - [ ] Librarian permissions
 - [ ] Admin permissions
 - [ ] Permission escalation prevention
 
-### **Data Validation Testing**
+### Data Validation Testing
 - [ ] Required field validation
 - [ ] Data type validation
 - [ ] Business rule validation
 - [ ] SQL injection prevention
 
-### **Error Handling Testing**
+### Error Handling Testing
 - [ ] Invalid input handling
 - [ ] Authentication errors
 - [ ] Authorization errors
 - [ ] Server error handling
 
-### **Performance Testing**
+### Performance Testing
 - [ ] Response time measurement
 - [ ] Concurrent request handling
 - [ ] Database query optimization

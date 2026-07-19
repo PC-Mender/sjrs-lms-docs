@@ -45,36 +45,36 @@ src/pages/members/
 
 ## Key Improvements
 
-### 1. **Centralized Types**
+### 1. Centralized Types
 - Single source of truth for `MemberData` interface
 - Eliminates duplicate interface definitions
 - Consistent type usage across all components
 
-### 2. **Modular Components**
+### 2. Modular Components
 - **MemberFilters**: Handles search, status, role, and user type filtering
 - **MemberActions**: Manages bulk actions, export, and superuser features
 - **MemberTable**: Displays member data with consistent styling
 - **MemberModals**: Handles bulk operations and confirmations
 
-### 3. **Custom Hook (`useMembers`)**
+### 3. Custom Hook (`useMembers`)
 - Centralizes all member-related state and operations
 - Provides consistent API for member management
 - Handles data fetching, filtering, sorting, and mutations
 - Manages modal states and user interactions
 
-### 4. **Utility Functions**
+### 4. Utility Functions
 - Common formatting and validation functions
 - Status and role color mapping
 - Filtering and sorting logic
 - Reusable across components
 
-### 5. **Backend Alignment**
+### 5. Backend Alignment
 - Uses unified API hooks (`useD1UsersQuery`, `useD1RolesQuery`)
 - Consistent error handling with `handleError`
 - Proper action logging with `ActionLogger`
 - Follows backend API patterns
 
-### 6. **Status Display (v3.49.0+)**
+### 6. Status Display (v3.49.0+)
 - **Dual Status Tracking**: Shows both Account Status and Onboarding Status
 - **Card-Based Layout**: 3-column grid with enhanced information grouping
 - **Status Badges**: Color-coded indicators for quick recognition
