@@ -11,7 +11,7 @@ The ordering and borrowing facility has a **solid foundation** and the previous 
 
 ## Current Flow Architecture
 
-### **Backend Flow (Well Organized)**
+### Backend Flow (Well Organized)
 
 1. **Order Creation** (`POST /api/orders`)
    - Users create borrow requests with `order_type: 'request'`
@@ -34,16 +34,16 @@ The ordering and borrowing facility has a **solid foundation** and the previous 
    - Due date calculation based on user type limits
    - Badge system integration
 
-### **Frontend Flow (Fully Integrated)**
+### Frontend Flow (Fully Integrated)
 
-#### **Key Components:**
+#### Key Components:
 1. **Request Cart Context** (`RequestCartProvider`) - Manages cart state globally.
 2. **Request Cart Drawer** - UI for reviewing and submitting requests.
 3. **Cart Access Button** - Header button with badge count to open drawer.
 4. **Book Interaction** - Both Modal and Table correctly add items to cart via context.
 5. **Order & Loan Lists** - Full visibility into request status and active loans.
 
-#### **Resolved Issues:**
+#### Resolved Issues:
 - **Cart Access**: `CartButton` component added to header.
 - **Table Integration**: `BookCatalogTable` now uses `useRequestCart` instead of broken utility.
 - **Navigation**: Users are redirected to Orders page after successful submission.
@@ -53,14 +53,14 @@ The ordering and borrowing facility has a **solid foundation** and the previous 
 
 ## Detailed Flow Analysis
 
-### **Intended User Journey:**
+### Intended User Journey:
 
 ```
 1. Browse Catalog → 2. Add to Cart → 3. Review Cart → 4. Submit Requests → 
 5. View Orders → 6. Admin Approves → 7. Loan Created → 8. View Loans
 ```
 
-### **Current Implementation Status:**
+### Current Implementation Status:
 
 | Step | Component | Status | Notes |
 |------|-----------|--------|--------|
@@ -78,15 +78,15 @@ The ordering and borrowing facility has a **solid foundation** and the previous 
 
 ## Historical Code Issues (Resolved)
 
-### 1. **BookCatalogUtils.handlePlaceOrder** (Deprecated)
+### 1. BookCatalogUtils.handlePlaceOrder (Deprecated)
 - **Issue**: Utility function was a stub.
 - **Fix**: Replaced usage with `useRequestCart` hook in all components.
 
-### 2. **Missing Cart Trigger**
+### 2. Missing Cart Trigger
 - **Issue**: Drawer existed but no button to open it.
 - **Fix**: Added `CartButton` to `AppLayout`.
 
-### 3. **Request Cart Context Not Used in Table**
+### 3. Request Cart Context Not Used in Table
 - **Issue**: Table used broken utility.
 - **Fix**: Updated `BookCatalogTable.tsx` to use `addToCart`.
 ```typescript
@@ -108,7 +108,7 @@ static async handlePlaceOrder(...) {
 - Use `addToCart` from request cart context, OR
 - Directly call `/api/orders` endpoint
 
-### 2. **Missing Cart Trigger**
+### 2. Missing Cart Trigger
 ```typescript
 // src/components/layout/templates/AppLayout.tsx:67
 const [cartOpen, setCartOpen] = useState(false);
@@ -121,7 +121,7 @@ const [cartOpen, setCartOpen] = useState(false);
 
 **Fix Needed**: Add cart button/icon in header with badge showing item count.
 
-### 3. **Request Cart Context Not Used in Table**
+### 3. Request Cart Context Not Used in Table
 ```typescript
 // src/pages/book-catalog/components/BookCatalogTable.tsx:105
 onClick={() => BookCatalogUtils.handlePlaceOrder(record, user, messageApi)}
@@ -135,7 +135,7 @@ onClick={() => BookCatalogUtils.handlePlaceOrder(record, user, messageApi)}
 
 ## Recommendations
 
-### **Priority 1: Critical Fixes**
+### Priority 1: Critical Fixes
 
 1. **Fix Table Order Button**
    - Update `BookCatalogTable` to use request cart context
@@ -150,7 +150,7 @@ onClick={() => BookCatalogUtils.handlePlaceOrder(record, user, messageApi)}
    - Either implement properly or remove it
    - Update all references to use request cart
 
-### **Priority 2: UX Improvements**
+### Priority 2: UX Improvements
 
 4. **Add Cart Badge Indicator**
    - Show item count in header cart icon
@@ -164,7 +164,7 @@ onClick={() => BookCatalogUtils.handlePlaceOrder(record, user, messageApi)}
    - Notify users when orders are approved/rejected
    - Link to loan details when loan is created
 
-### **Priority 3: Polish**
+### Priority 3: Polish
 
 7. **Empty State Messages**
    - Better messaging when cart is empty

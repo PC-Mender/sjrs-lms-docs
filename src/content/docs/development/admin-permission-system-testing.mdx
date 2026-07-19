@@ -8,24 +8,24 @@ This document outlines how to test the admin permission system to ensure it prop
 
 ## Key Changes Made
 
-### 1. **Backend Permission Middleware**
+### 1. Backend Permission Middleware
 - **File**: `functions/middleware/permissions/has-permission.ts`
 - **Change**: Removed automatic admin bypass
 - **Before**: Admin and Superuser automatically got access to everything
 - **After**: Only Superuser gets automatic access, Admin must have explicit permissions
 
-### 2. **Frontend Permission Hook**
+### 2. Frontend Permission Hook
 - **File**: `src/hooks/usePermissions.ts`
 - **Change**: Replaced hardcoded permissions with database API calls
 - **Before**: Used static `ROLE_PERMISSIONS` object
 - **After**: Calls `/api/permissions/check` endpoint to get real permissions
 
-### 3. **New Permission Check API**
+### 3. New Permission Check API
 - **File**: `functions/api/permissions/handlers/check-permissions.ts`
 - **Endpoint**: `GET /api/permissions/check`
 - **Purpose**: Check user permissions against database
 
-### 4. **Admin Dashboard Warning**
+### 4. Admin Dashboard Warning
 - **File**: `src/pages/dashboard-admin.tsx`
 - **Feature**: Shows warning when admin lacks permissions
 - **Action**: Links to superuser permission management
@@ -148,17 +148,17 @@ curl "https://your-domain.com/api/permissions/check?role=Admin&resources=all"
 
 ## Security Verification
 
-### 1. **No Automatic Admin Bypass**
+### 1. No Automatic Admin Bypass
 - Admin users must have explicit permissions
 - Backend middleware checks database permissions
 - No hardcoded permission grants
 
-### 2. **Superuser Control**
+### 2. Superuser Control
 - Only superusers can modify permissions
 - Permission changes are audited
 - Changes take effect immediately
 
-### 3. **Frontend Validation**
+### 3. Frontend Validation
 - UI respects backend permissions
 - No client-side permission bypass
 - Graceful degradation when permissions denied
@@ -167,18 +167,18 @@ curl "https://your-domain.com/api/permissions/check?role=Admin&resources=all"
 
 ### Common Issues
 
-#### 1. **Admin Dashboard Shows No Actions**
+#### 1. Admin Dashboard Shows No Actions
 - **Cause**: Admin has no permissions granted
 - **Solution**: Superuser must grant permissions via permission management
 
-#### 2. **Permission Changes Not Reflecting**
+#### 2. Permission Changes Not Reflecting
 - **Cause**: Frontend cache or backend cache
 - **Solution**: 
   - Clear browser cache
   - Check backend permission cache
   - Use `/api/permission_cache_clear` endpoint
 
-#### 3. **API Permission Check Fails**
+#### 3. API Permission Check Fails
 - **Cause**: Database permission tables not set up
 - **Solution**: Ensure permission_resources and permission_actions tables exist
 

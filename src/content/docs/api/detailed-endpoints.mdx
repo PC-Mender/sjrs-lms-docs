@@ -7,7 +7,7 @@ This document provides detailed documentation for the most important SJRS LMS AP
 
 ## Authentication Endpoints
 
-### **User Login**
+### User Login
 **Endpoint:** `POST /api/auth/login`  
 **Description:** Authenticate user and create session  
 **Authentication:** None (public endpoint)
@@ -57,7 +57,7 @@ Note:
 }
 ```
 
-### **User Registration**
+### User Registration
 **Endpoint:** `POST /api/auth/register`  
 **Description:** Register new user account  
 **Authentication:** None (public endpoint)
@@ -90,7 +90,7 @@ Notes:
 - Newly created accounts have `status = "pending"` and `email_verified = false` until email confirmation and admin approval.
 - `role_id` is resolved using `user_type_role_mapping` during creation; if no mapping exists, `role_id` remains `NULL` until an admin assigns a role.
 
-### **Get Current User Profile**
+### Get Current User Profile
 **Endpoint:** `GET /api/auth/me`  
 **Description:** Get current authenticated user's profile  
 **Authentication:** Required (cookie-based session)
@@ -124,7 +124,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-### **Update User Profile**
+### Update User Profile
 **Endpoint:** `PUT /api/auth/profile`  
 **Description:** Update current user's profile information  
 **Authentication:** Required (cookie-based session)
@@ -158,7 +158,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 
 ## Book Management Endpoints
 
-### **Get All Books**
+### Get All Books
 **Endpoint:** `GET /api/books`  
 **Description:** Retrieve list of all books with pagination and filtering  
 **Authentication:** Required (cookie-based session)
@@ -197,7 +197,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-### **Search Books**
+### Search Books
 **Endpoint:** `GET /api/books/search`  
 **Description:** Search books by various criteria  
 **Authentication:** Required (cookie-based session)
@@ -232,7 +232,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-### **Get Specific Book**
+### Get Specific Book
 **Endpoint:** `GET /api/books/:id`  
 **Description:** Retrieve detailed information about a specific book  
 **Authentication:** Required (cookie-based session)
@@ -277,7 +277,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-### **Create Book**
+### Create Book
 **Endpoint:** `POST /api/books`  
 **Description:** Create a new book (Librarian+ only)  
 **Authentication:** Required (cookie-based session + Librarian role)
@@ -325,7 +325,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 
 ## Resource Management Endpoints
 
-### **Get All Resources**
+### Get All Resources
 **Endpoint:** `GET /api/resources`  
 **Description:** Retrieve list of all resources with pagination and filtering  
 **Authentication:** Required (cookie-based session)
@@ -364,7 +364,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-### **Get Specific Resource**
+### Get Specific Resource
 **Endpoint:** `GET /api/resources/:id`  
 **Description:** Retrieve detailed information about a specific resource  
 **Authentication:** Required (cookie-based session)
@@ -388,7 +388,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-### **Create Resource**
+### Create Resource
 **Endpoint:** `POST /api/resources`  
 **Description:** Create a new resource (Admin/Librarian only)  
 **Authentication:** Required (cookie-based session + appropriate permissions)
@@ -425,7 +425,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 
 ## Loan Management Endpoints
 
-### **Get All Loans**
+### Get All Loans
 **Endpoint:** `GET /api/loans`  
 **Description:** Retrieve list of all loans with filtering options  
 **Authentication:** Required (cookie-based session)
@@ -475,7 +475,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-### **Create Loan**
+### Create Loan
 **Endpoint:** `POST /api/loans`  
 **Description:** Create a new loan (Librarian+ only)  
 **Authentication:** Required (cookie-based session + Librarian role)
@@ -518,7 +518,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-### **Update Loan (Return Book)**
+### Update Loan (Return Book)
 **Endpoint:** `PUT /api/loans/:id`  
 **Description:** Update loan status (e.g., return book)  
 **Authentication:** Required (cookie-based session + Librarian role)
@@ -548,7 +548,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 
 ## User Management Endpoints
 
-### **Get All Users**
+### Get All Users
 **Endpoint:** `GET /api/users`  
 **Description:** Retrieve list of all users (Admin/Librarian only)  
 **Authentication:** Required (cookie-based session + Admin/Librarian role)
@@ -586,7 +586,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-### **Get Specific User**
+### Get Specific User
 **Endpoint:** `GET /api/users/:id`  
 **Description:** Retrieve detailed information about a specific user  
 **Authentication:** Required (cookie-based session + Admin/Librarian role or own profile)
@@ -617,7 +617,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 
 ## User Experience Endpoints
 
-### **Get User Wishlist**
+### Get User Wishlist
 **Endpoint:** `GET /api/wishlist`  
 **Description:** Retrieve current user's wishlist  
 **Authentication:** Required (cookie-based session)
@@ -646,7 +646,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-### **Add to Wishlist**
+### Add to Wishlist
 **Endpoint:** `POST /api/wishlist`  
 **Description:** Add a book to user's wishlist  
 **Authentication:** Required (cookie-based session)
@@ -679,7 +679,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-### **Get User Notifications**
+### Get User Notifications
 **Endpoint:** `GET /api/notifications`  
 **Description:** Retrieve current user's notifications  
 **Authentication:** Required (cookie-based session)
@@ -722,7 +722,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 
 ## System Management Endpoints
 
-### **Check User Permissions**
+### Check User Permissions
 **Endpoint:** `GET /api/permissions/check`  
 **Description:** Check current user's permissions for specific resources  
 **Authentication:** Required (cookie-based session)
@@ -755,7 +755,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-### **Get System Logs**
+### Get System Logs
 **Endpoint:** `GET /api/system_logs`  
 **Description:** Retrieve system logs (Admin+ only)  
 **Authentication:** Required (cookie-based session + Admin role)
@@ -798,7 +798,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 
 ## File Management Endpoints
 
-### **Upload File**
+### Upload File
 **Endpoint:** `POST /api/upload`  
 **Description:** Upload a file to the system  
 **Authentication:** Required (cookie-based session + appropriate permissions)
@@ -832,7 +832,7 @@ description: "Book cover image"
 
 ## Health & System Endpoints
 
-### **Health Check**
+### Health Check
 **Endpoint:** `GET /api/health`  
 **Description:** Check system health status  
 **Authentication:** None (public endpoint)
@@ -855,7 +855,7 @@ description: "Book cover image"
 
 ## Email Service Endpoints
 
-### **Send Email**
+### Send Email
 **Endpoint:** `POST /api/email`  
 **Description:** Send an email through the system  
 **Authentication:** Required (cookie-based session + appropriate permissions)
@@ -892,7 +892,7 @@ description: "Book cover image"
 
 ## Common Response Patterns
 
-### **Success Response Format**
+### Success Response Format
 ```json
 {
   "success": true,
@@ -901,7 +901,7 @@ description: "Book cover image"
 }
 ```
 
-### **Error Response Format**
+### Error Response Format
 ```json
 {
   "success": false,
@@ -911,7 +911,7 @@ description: "Book cover image"
 }
 ```
 
-### **Pagination Format**
+### Pagination Format
 ```json
 {
   "pagination": {
@@ -927,7 +927,7 @@ description: "Book cover image"
 
 ## Badge Management Endpoints
 
-### **Get Badge Catalog**
+### Get Badge Catalog
 **Endpoint:** `GET /api/badges/catalog`  
 **Description:** Get all available badges in the system  
 **Authentication:** Required (cookie-based session)  
@@ -980,7 +980,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 
 ---
 
-### **Assign Badge to User**
+### Assign Badge to User
 **Endpoint:** `POST /api/badges/assign`  
 **Description:** Manually assign a badge to a user  
 **Authentication:** Required (cookie-based session)  
@@ -1081,7 +1081,7 @@ Content-Type: application/json
 
 ---
 
-### **Revoke Badge from User**
+### Revoke Badge from User
 **Endpoint:** `POST /api/badges/revoke`  
 **Description:** Revoke a badge from a user  
 **Authentication:** Required (cookie-based session)  
@@ -1142,7 +1142,7 @@ Content-Type: application/json
 
 ---
 
-### **Get Granted Badges (All Users)**
+### Get Granted Badges (All Users)
 **Endpoint:** `GET /api/badges/granted`  
 **Description:** Get paginated list of all granted badges across all users  
 **Authentication:** Required (cookie-based session)  
@@ -1215,7 +1215,7 @@ GET /api/badges/granted?page=1&limit=20&status=active
 
 ---
 
-### **Get User's Badges**
+### Get User's Badges
 **Endpoint:** `GET /api/badges/my-badges`  
 **Description:** Get all badges for the current authenticated user  
 **Authentication:** Required (cookie-based session)
@@ -1259,7 +1259,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 
 ---
 
-### **Get Specific User's Granted Badges**
+### Get Specific User's Granted Badges
 **Endpoint:** `GET /api/badges/granted/:userId`  
 **Description:** Get all badges for a specific user  
 **Authentication:** Required (cookie-based session)  
@@ -1321,7 +1321,7 @@ GET /api/badges/granted/123
 
 ---
 
-### **Badge Evaluators (Automatic Awards)**
+### Badge Evaluators (Automatic Awards)
 
 The system includes automatic badge evaluators that run on specific triggers:
 
@@ -1363,7 +1363,7 @@ The system includes automatic badge evaluators that run on specific triggers:
 
 ---
 
-### **Pagination Format**
+### Pagination Format
 ```json
 {
   "pagination": {

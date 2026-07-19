@@ -9,7 +9,7 @@ This document outlines the API patterns and architecture used in the SJRS LMS, i
 
 ## API Architecture
 
-### **Direct Function API Pattern**
+### Direct Function API Pattern
 
 The SJRS LMS uses a **direct function API pattern** optimized for Cloudflare Workers, providing:
 
@@ -18,7 +18,7 @@ The SJRS LMS uses a **direct function API pattern** optimized for Cloudflare Wor
 - **Consistent Patterns** - Standardized routing and error handling across all endpoints
 - **Type Safety** - Full TypeScript support throughout the API layer
 
-### **Migration from Hono Framework**
+### Migration from Hono Framework
 
 The project was migrated from Hono-based APIs to direct function APIs for the following reasons:
 
@@ -29,11 +29,11 @@ The project was migrated from Hono-based APIs to direct function APIs for the fo
 
 ## API Structure
 
-### **Standard API Function Pattern**
+### Standard API Function Pattern
 
 All API endpoints follow a consistent pattern that separates routing, security, and business logic:
 
-#### **1. The Router (index.ts)**
+#### 1. The Router (index.ts)
 The router handles security middleware, permission checks, and dispatches requests to specific handlers.
 
 ```typescript
@@ -76,7 +76,7 @@ export async function authors(request: Request, env: Environment): Promise<Respo
 }
 ```
 
-#### **2. The Handler**
+#### 2. The Handler
 Handlers focus on business logic. They receive the authenticated user and pre-validated data.
 
 ```typescript
@@ -109,7 +109,7 @@ export async function handleCreateAuthor(
 }
 ```
 
-### **Standardized Routing Pattern**
+### Standardized Routing Pattern
 
 All APIs follow a consistent routing pattern:
 
@@ -128,7 +128,7 @@ if (path.startsWith('/')) {
 }
 ```
 
-### **Main Router Pattern**
+### Main Router Pattern
 
 The main router (`functions/index.ts`) directs requests to appropriate API functions:
 
@@ -174,7 +174,7 @@ export default {
 
 ## Error Handling
 
-### **Unified Error Handling**
+### Unified Error Handling
 
 All APIs use the unified error handling system:
 
@@ -192,7 +192,7 @@ try {
 }
 ```
 
-### **CORS Headers**
+### CORS Headers
 
 All responses include CORS headers:
 
@@ -207,7 +207,7 @@ return addCORSHeaders(response, request.headers.get('Origin'));
 
 ## Migration Summary
 
-### **Before Migration (Hono-based)**
+### Before Migration (Hono-based)
 ```typescript
 // functions/api/resource.ts
 import { Hono } from 'hono';
@@ -222,7 +222,7 @@ app.get('/', async (c) => {
 export default app;
 ```
 
-### **After Migration (Direct Function)**
+### After Migration (Direct Function)
 ```typescript
 // functions/api/resource.ts
 export async function resource(request: Request, env: any) {
@@ -239,7 +239,7 @@ export async function resource(request: Request, env: any) {
 }
 ```
 
-### **Router Changes**
+### Router Changes
 ```typescript
 // Before
 if (path.startsWith('/api/books')) {
@@ -254,34 +254,34 @@ if (path.startsWith('/api/books')) {
 
 ## Best Practices
 
-### **1. Consistent Patterns**
+### 1. Consistent Patterns
 - Use the same routing pattern across all APIs
 - Apply CORS headers to all responses
 - Use unified error handling for all errors
 
-### **2. Authentication**
+### 2. Authentication
 - Always check authentication at the start of each API function
 - Return consistent unauthorized responses
 - Include user context in error handling
 
-### **3. Database Operations**
+### 3. Database Operations
 - Use parameterized queries to prevent SQL injection
 - Handle database errors gracefully
 - Use appropriate database methods (`.all()`, `.first()`, `.run()`)
 
-### **4. Response Format**
+### 4. Response Format
 - Use consistent response structure
 - Include appropriate HTTP status codes
 - Provide meaningful error messages
 
-### **5. Performance**
+### 5. Performance
 - Minimize database queries
 - Use appropriate indexes
 - Consider caching for frequently accessed data
 
 ## API Endpoints
 
-### **Core APIs**
+### Core APIs
 - **Authentication**: `/api/auth` - Login, registration, session management
 - **Users**: `/api/users` - User management and profiles
 - **Books**: `/api/books` - Book catalog and management
@@ -290,7 +290,7 @@ if (path.startsWith('/api/books')) {
 - **Payments**: `/api/payments` - Create, list, verify, user payments
 - **Receipts**: `/api/receipts` - Create, get, download receipts
 
-### **Supporting APIs**
+### Supporting APIs
 - **Authors**: `/api/authors` - Author management
 - **Book Copies**: `/api/book-copies` - Physical copy tracking
 - **Reviews**: `/api/book-reviews` - Book review system
@@ -328,7 +328,7 @@ if (path.startsWith('/api/books')) {
 
 ## Migration Status
 
-### **Completed Migrations**
+### Completed Migrations
 - **Authors API** - Migrated from Hono to direct function
 - **Book Copies API** - Migrated from Hono to direct function
 - **Book Reviews API** - Migrated from Hono to direct function
@@ -340,7 +340,7 @@ if (path.startsWith('/api/books')) {
 - **Upload API** - Migrated from Hono to direct function
 - **Wishlist API** - Migrated from Hono to direct function
 
-### **Already Direct Function APIs**
+### Already Direct Function APIs
 - **Auth API** - Already using direct function pattern
 - **Books API** - Already using direct function pattern
 - **Loans API** - Already using direct function pattern
@@ -349,7 +349,7 @@ if (path.startsWith('/api/books')) {
 - **Students API** - Already using direct function pattern
 - **Permissions API** - Already using direct function pattern
 
-### **Special Purpose APIs**
+### Special Purpose APIs
 - **Migrations API** - Uses direct function pattern for database migrations
 - **Action Logs API** - Uses direct function pattern for audit logging
 - **System Logs API** - Structured logs for system events
@@ -357,10 +357,10 @@ if (path.startsWith('/api/books')) {
 
 ## Dependencies
 
-### **Removed Dependencies**
+### Removed Dependencies
 - **Hono** - Removed from `package.json` after migration
 
-### **Required Dependencies**
+### Required Dependencies
 - **Cloudflare Workers** - Native runtime environment
 - **TypeScript** - Type safety throughout
 - **D1 Database** - SQLite-based database

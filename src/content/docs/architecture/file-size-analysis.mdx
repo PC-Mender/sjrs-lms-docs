@@ -112,7 +112,7 @@ A file is considered **too large** when:
 
 ## How Modular Structure Prevents Large Files
 
-### **Before Modular Structure** (Hypothetical)
+### Before Modular Structure (Hypothetical)
 
 ```
  BAD: Single large file
@@ -130,7 +130,7 @@ functions/api/books.ts (2000+ lines)
 - Hard to maintain (changes affect everything)
 - Merge conflicts (multiple developers editing same file)
 
-### **After Modular Structure** (Current)
+### After Modular Structure (Current)
 
 ```
  GOOD: Modular structure
@@ -168,14 +168,14 @@ functions/api/books/
 
 ## Current Codebase Assessment
 
-### **Well-Sized Files** (Most of the codebase)
+### Well-Sized Files (Most of the codebase)
 
 - **Backend handlers**: 70-150 lines 
 - **Backend routers**: 90-150 lines 
 - **Frontend components**: 50-150 lines 
 - **Frontend pages**: 100-300 lines 
 
-### **Files That Could Be Split** (Few exceptions)
+### Files That Could Be Split (Few exceptions)
 
 1. **`vite.config.ts`** (501 lines)
    - **Status:** Acceptable (configuration file)
@@ -186,7 +186,7 @@ functions/api/books/
    - **Status:** Acceptable but could be improved
    - **Recommendation:** Split into smaller components
 
-### **No Files That Are "Too Big"**
+### No Files That Are "Too Big"
 
 The modular structure has successfully prevented files from becoming unmanageably large.
 
@@ -194,27 +194,27 @@ The modular structure has successfully prevented files from becoming unmanageabl
 
 ## Benefits of Small, Focused Files
 
-### 1. **Easier to Understand**
+### 1. Easier to Understand
 - Small files = single responsibility
 - Clear purpose = easier to read
 - Less cognitive load
 
-### 2. **Easier to Test**
+### 2. Easier to Test
 - Focused functionality = easier to test
 - Fewer dependencies = simpler tests
 - Isolated changes = safer tests
 
-### 3. **Easier to Maintain**
+### 3. Easier to Maintain
 - Changes are isolated
 - Less risk of breaking other code
 - Easier to debug
 
-### 4. **Better Collaboration**
+### 4. Better Collaboration
 - Fewer merge conflicts
 - Multiple developers can work simultaneously
 - Clear ownership
 
-### 5. **Better Performance**
+### 5. Better Performance
 - Faster IDE indexing
 - Faster file searches
 - Better code splitting
@@ -223,20 +223,20 @@ The modular structure has successfully prevented files from becoming unmanageabl
 
 ## Recommendations
 
-### **Current Structure is Good**
+### Current Structure is Good
 
 The modular structure is working well. Files are appropriately sized:
 - **Average handler**: ~100 lines 
 - **Average router**: ~100 lines 
 - **Average component**: ~100 lines 
 
-### **Minor Improvements**
+### Minor Improvements
 
 1. **Split large pages** (>300 lines) into smaller components
 2. **Consider splitting `vite.config.ts`** if it grows beyond 600 lines
 3. **Monitor file sizes** - Set up linting rules to warn about large files
 
-### **File Size Monitoring**
+### File Size Monitoring
 
 Consider adding ESLint rules to warn about large files:
 
@@ -256,7 +256,7 @@ Consider adding ESLint rules to warn about large files:
 
 ## Conclusion
 
-### **Modular Structure Prevents Large Files** 
+### Modular Structure Prevents Large Files 
 
 The modular structure in this codebase is **successfully preventing files from becoming too large**:
 
@@ -265,7 +265,7 @@ The modular structure in this codebase is **successfully preventing files from b
 - **No files exceed 500 lines** (except config, which is acceptable)
 - **Clear separation of concerns** (each file has single responsibility)
 
-### **Answer to Your Question**
+### Answer to Your Question
 
 **"Will the code in particular be too big in lines?"**
 

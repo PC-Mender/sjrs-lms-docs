@@ -8,9 +8,9 @@ title: "Permission System Loopholes Fixed"
 
 ---
 
-## **Fixes Applied**
+## Fixes Applied
 
-### **Fix #1: Removed `allowIf: () => true` Bypasses from Auth Endpoints** 
+### Fix #1: Removed `allowIf: () => true` Bypasses from Auth Endpoints 
 
 **Location:** `functions/api/auth/index.ts`
 
@@ -42,7 +42,7 @@ title: "Permission System Loopholes Fixed"
 
 ---
 
-### **Fix #2: Replaced Hardcoded Role Check in Action Log Utils** 
+### Fix #2: Replaced Hardcoded Role Check in Action Log Utils 
 
 **Location:** `functions/api/action-logs/base/action-log-utils.ts`
 
@@ -77,7 +77,7 @@ if (!hasAccess) {
 
 ---
 
-### **Fix #3: Added Deprecation Warnings to `allowIf` Mechanism** 
+### Fix #3: Added Deprecation Warnings to `allowIf` Mechanism 
 
 **Location:** `functions/middleware/permissions/assert-permission.ts`
 
@@ -115,7 +115,7 @@ allowIf?: () => boolean | Promise<boolean>;
 
 ---
 
-### **Fix #4: Added Deprecation Warning to `isAdminLike` Function** 
+### Fix #4: Added Deprecation Warning to `isAdminLike` Function 
 
 **Location:** `functions/middleware/permissions/assert-permission.ts`
 
@@ -148,16 +148,16 @@ export function isAdminLike(user: unknown, extras: string[] = []): boolean {
 
 ---
 
-## **Verification Results**
+## Verification Results
 
-### **All Loopholes Fixed**
+### All Loopholes Fixed
 
 1. **Auth Endpoints:** 0 `allowIf: () => true` bypasses remaining
 2. **Action Log Utils:** 0 hardcoded role checks remaining
 3. **`allowIf` Mechanism:** Documented and warned against misuse
 4. **`isAdminLike` Function:** Deprecated with clear warnings
 
-### **Security Status**
+### Security Status
 
 - **Main API Endpoints:**  100% database-driven (25/25 endpoints)
 - **Auth Endpoints:**  100% secure (handlers enforce ownership)
@@ -166,24 +166,24 @@ export function isAdminLike(user: unknown, extras: string[] = []): boolean {
 
 ---
 
-## **Final Status**
+## Final Status
 
-### **100% Achievement:**
+### 100% Achievement:
 - **API Endpoints:** 100% database-driven
 - **Auth Endpoints:** 100% secure (ownership enforced)
 - **Utility Functions:** 100% database-driven
 - **Core Permission System:** 100% database-driven
 
-### **Overall System Status:**
+### Overall System Status:
 - **100% Complete** - All loopholes fixed
 - **Security Enhanced** - No permission bypasses
 - **Code Quality:** Excellent (consistent patterns, clear warnings)
 
 ---
 
-## **Notes**
+## Notes
 
-### **Why Handlers Don't Need Permission Checks:**
+### Why Handlers Don't Need Permission Checks:
 
 The auth endpoint handlers (`handleTerminateSession`, `handleUpdateProfile`, etc.) already enforce ownership:
 

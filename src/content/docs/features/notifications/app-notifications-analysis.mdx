@@ -13,7 +13,7 @@ This document analyzes the **App Notifications** feature - user-specific in-app 
 
 ### What Exists
 
-#### 1. **UI Components** 
+#### 1. UI Components 
 - **List Page**: `/dashboard/notifications` - Shows user's notifications in a table
 - **Create Page**: `/dashboard/notifications/create` - Form to create new notifications
 - **Edit Page**: `/dashboard/notifications/edit/:id` - Form to edit existing notifications
@@ -27,7 +27,7 @@ This document analyzes the **App Notifications** feature - user-specific in-app 
 - Create/Edit/View notifications
 - Pagination
 
-#### 2. **API Endpoints** 
+#### 2. API Endpoints 
 - `GET /api/notifications` - List user's notifications
 - `GET /api/notifications/:id` - Get single notification
 - `POST /api/notifications` - Create notification
@@ -35,7 +35,7 @@ This document analyzes the **App Notifications** feature - user-specific in-app 
 - `DELETE /api/notifications/:id` - Delete notification
 - `PUT /api/notifications/mark-all-read` - Mark all as read
 
-#### 3. **Automatic Generation** 
+#### 3. Automatic Generation 
 
 **Currently Auto-Generated:**
 
@@ -72,7 +72,7 @@ This document analyzes the **App Notifications** feature - user-specific in-app 
 
 ## Missing Functionality
 
-### 1. **Penalty Notifications** 
+### 1. Penalty Notifications 
 **Issue**: No App Notifications created when penalties are assigned
 - **When**: Penalty is created for a user
 - **Who should receive**: The user who got the penalty
@@ -99,7 +99,7 @@ await createAppNotification(env, {
 });
 ```
 
-### 2. **Borrow Limit Notifications** 
+### 2. Borrow Limit Notifications 
 **Issue**: No App Notifications when user reaches/exceeds borrow limit
 - **When**: User tries to borrow but has reached max books limit
 - **Who should receive**: The user who tried to borrow
@@ -125,7 +125,7 @@ await createAppNotification(env, {
 });
 ```
 
-### 3. **Wishlist Notifications** 
+### 3. Wishlist Notifications 
 **Issue**: No App Notifications when wishlist item becomes available
 - **When**: Book in user's wishlist becomes available (status changes to 'available')
 - **Who should receive**: Users who have the book in their wishlist
@@ -158,7 +158,7 @@ for (const user of wishlistUsers.results) {
 }
 ```
 
-### 4. **Loan Due Date Reminders** 
+### 4. Loan Due Date Reminders 
 **Issue**: No automatic reminders before due date
 - **When**: X days before loan due date (e.g., 3 days, 1 day)
 - **Who should receive**: Users with loans approaching due date
@@ -202,7 +202,7 @@ for (const loan of loansDueSoon.results) {
 }
 ```
 
-### 5. **Order Status Notifications** 
+### 5. Order Status Notifications 
 **Issue**: No notifications when order status changes
 - **When**: Order is approved, rejected, or cancelled
 - **Who should receive**: The user who created the order
@@ -230,7 +230,7 @@ if (orderStatusChanged) {
 }
 ```
 
-### 6. **Reservation Notifications** 
+### 6. Reservation Notifications 
 **Issue**: No notifications for reservations (if reservations exist)
 - **When**: Reservation is created, confirmed, or cancelled
 - **Who should receive**: User who made the reservation
@@ -241,7 +241,7 @@ if (orderStatusChanged) {
 
 ## Permission & Preference Issues
 
-### 1. **User Preferences Not Fully Respected** 
+### 1. User Preferences Not Fully Respected 
 **Issue**: Some notifications may not check `in_app_notifications` preference
 - **Current**: Orders check `in_app_notifications` 
 - **Missing**: Loans and payments don't check preferences
@@ -263,7 +263,7 @@ if (!preferences?.in_app_notifications || !preferences?.loan_notifications) {
 }
 ```
 
-### 2. **Permission-Based Order Notifications** 
+### 2. Permission-Based Order Notifications 
 **Issue**: Order notifications use role names instead of permissions
 - **Current**: Checks roles: `superuser`, `admin`, `librarian`, `dean`
 - **Better**: Check permissions: `orders:read` or `orders:update`
@@ -293,7 +293,7 @@ const adminUsers = await env.DB.prepare(`
 `).all();
 ```
 
-### 3. **No Role-Based Notification Type Filtering** 
+### 3. No Role-Based Notification Type Filtering 
 **Issue**: Cannot disable specific notification types for specific roles
 - **Current**: All notification types sent to all users (if preferences allow)
 - **Expected**: Superuser can configure which notification types each role receives

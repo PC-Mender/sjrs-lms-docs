@@ -32,7 +32,7 @@ The SJRS LMS now uses a **unified Cloudflare Workers deployment** with Static As
 
 ## Configuration
 
-### **wrangler.toml**
+### wrangler.toml
 
 The project uses a comprehensive `wrangler.toml` configuration:
 
@@ -73,7 +73,7 @@ dataset = "sjrslms-logs"
 
 ## Deployment Process
 
-### **1. Automatic Deployment with Versioning**
+### 1. Automatic Deployment with Versioning
 
 The project includes an intelligent auto-versioning system:
 
@@ -91,7 +91,7 @@ This command:
 - Creates git tags for the release
 - Commits version changes
 
-#### **Version Bump Logic**
+#### Version Bump Logic
 
 Based on [Conventional Commits](https://www.conventionalcommits.org/):
 
@@ -102,7 +102,7 @@ Based on [Conventional Commits](https://www.conventionalcommits.org/):
 | `BREAKING CHANGE: major update` | **Major** | 1.0.0 → 2.0.0 |
 | `chore: update dependencies` | **Patch** | 1.0.0 → 1.0.1 |
 
-### **2. Manual Deployment**
+### 2. Manual Deployment
 
 For manual control over the deployment process:
 
@@ -117,7 +117,7 @@ wrangler deploy
 wrangler deploy --env production
 ```
 
-### **3. Environment-Specific Deployment**
+### 3. Environment-Specific Deployment
 
 ```bash
 # Staging environment
@@ -129,7 +129,7 @@ wrangler deploy --env production
 
 ## How It Works
 
-### **Request Routing**
+### Request Routing
 
 The unified deployment intelligently routes requests:
 
@@ -139,7 +139,7 @@ The unified deployment intelligently routes requests:
 
 **Note**: This is a **Single Page Application (SPA)**, meaning all client-side routing is handled by React Router. The server serves the main `index.html` for all routes, and React Router manages navigation and page rendering on the client side.
 
-### **Static Asset Handling**
+### Static Asset Handling
 
 ```typescript
 // In functions/index.ts
@@ -155,7 +155,7 @@ if (env.ASSETS) {
 }
 ```
 
-### **API Function Integration**
+### API Function Integration
 
 ```typescript
 // Route to appropriate API using registry
@@ -170,19 +170,19 @@ for (const route of routeRegistry) {
 
 ## Benefits of Unified Deployment
 
-### **Performance Benefits**
+### Performance Benefits
 - **Reduced Latency**: Static assets and API served from same edge location
 - **Faster Cold Starts**: Single Worker initialization
 - **Edge Computing**: Both frontend and backend at the edge
 - **Optimized Caching**: Unified caching strategy
 
-### **Operational Benefits**
+### Operational Benefits
 - **Simplified Deployment**: Single command deploys everything
 - **Unified Monitoring**: All logs and metrics in one place
 - **Easier Debugging**: Single deployment to troubleshoot
 - **Cost Optimization**: Unified billing and resource usage
 
-### **Development Benefits**
+### Development Benefits
 - **Consistent Environment**: Same deployment model for dev/staging/prod
 - **Faster Iteration**: Single deployment cycle
 - **Better DX**: One configuration file to manage
@@ -190,7 +190,7 @@ for (const route of routeRegistry) {
 
 ## Security Features
 
-### **Built-in Security Headers**
+### Built-in Security Headers
 
 ```typescript
 // Security headers added automatically
@@ -202,7 +202,7 @@ const securityHeaders = {
 };
 ```
 
-### **CORS Configuration**
+### CORS Configuration
 
 ```typescript
 // Environment-driven CORS configuration
@@ -216,7 +216,7 @@ const corsConfig = {
 
 ## Monitoring and Analytics
 
-### **Built-in Analytics**
+### Built-in Analytics
 
 The deployment includes comprehensive monitoring:
 
@@ -234,7 +234,7 @@ await env.ANALYTICS.writeDataPoint({
 });
 ```
 
-### **Observability**
+### Observability
 
 ```toml
 # Observability configuration
@@ -244,7 +244,7 @@ enabled = true
 
 ## Development Workflow
 
-### **Local Development**
+### Local Development
 
 ```bash
 # Start local development server
@@ -254,7 +254,7 @@ npm run dev
 # API calls go to the remote Workers deployment
 ```
 
-### **Testing Deployment**
+### Testing Deployment
 
 ```bash
 # Preview the build locally
@@ -266,14 +266,14 @@ wrangler deploy --dry-run
 
 ## Migration from Pages
 
-### **What Changed**
+### What Changed
 
 1. **Deployment Model**: Pages + Workers → Unified Workers
 2. **Configuration**: `wrangler.toml` updated with `[assets]` section
 3. **Build Process**: Added static asset serving to Workers
 4. **Deploy Command**: `wrangler pages deploy` → `wrangler deploy`
 
-### **What Stayed the Same**
+### What Stayed the Same
 
 1. **Frontend Code**: No changes required
 2. **Backend Code**: No changes required
@@ -282,20 +282,20 @@ wrangler deploy --dry-run
 
 ## Deployment Checklist
 
-### **Pre-Deployment**
+### Pre-Deployment
 - [ ] Environment variables configured
 - [ ] D1 database schema up to date
 - [ ] R2 buckets created
 - [ ] KV namespaces configured
 - [ ] Analytics datasets configured
 
-### **Deployment**
+### Deployment
 - [ ] Code committed and pushed
 - [ ] Tests passing
 - [ ] Build successful (`npm run build`)
 - [ ] Deploy command executed (`npm run release` or `wrangler deploy`)
 
-### **Post-Deployment**
+### Post-Deployment
 - [ ] Application accessible
 - [ ] API endpoints responding
 - [ ] Static assets loading
@@ -304,7 +304,7 @@ wrangler deploy --dry-run
 
 ## Troubleshooting
 
-### **Common Issues**
+### Common Issues
 
 **Static Assets Not Loading**
 ```bash

@@ -5,9 +5,9 @@ title: "Badge System Security Analysis"
 
 ## Identified Security Loopholes
 
-### **CRITICAL ISSUES**
+### CRITICAL ISSUES
 
-#### 1. **Self-Assignment Loophole**
+#### 1. Self-Assignment Loophole
 **Location**: `functions/api/badges/index.ts:152-183`
 
 **Issue**: Users with `badges:create` permission can assign badges to themselves, including high-level badges like `superuser_crown`.
@@ -27,7 +27,7 @@ await env.DB.prepare(`
 
 ---
 
-#### 2. **Role Badge Manipulation**
+#### 2. Role Badge Manipulation
 **Location**: `functions/api/badges/index.ts:152-183`
 
 **Issue**: No protection against manually assigning role-based badges (e.g., `superuser_crown`, `professor_mortarboard`). These should only be assigned automatically based on user role.
@@ -45,7 +45,7 @@ await env.DB.prepare(`
 
 ---
 
-#### 3. **No Audit Logging**
+#### 3. No Audit Logging
 **Location**: `functions/api/badges/index.ts:152-214`
 
 **Issue**: Badge assignments and revocations are not logged to `action_logs` table, unlike permission changes which have full audit trails.
@@ -72,9 +72,9 @@ await logAction(env, {
 
 ---
 
-### **MEDIUM PRIORITY ISSUES**
+### MEDIUM PRIORITY ISSUES
 
-#### 4. **Expired Badges in Admin View**
+#### 4. Expired Badges in Admin View
 **Location**: `functions/api/badges/index.ts:216-345`
 
 **Issue**: The `handleGetGrantedBadges` function doesn't filter out expired badges, while `handleGetMyBadges` does.
@@ -92,7 +92,7 @@ AND (ub.expires_at IS NULL OR ub.expires_at > datetime('now'))
 
 ---
 
-#### 5. **Input Validation - expires_at Format**
+#### 5. Input Validation - expires_at Format
 **Location**: `functions/api/badges/index.ts:152-183`
 
 **Issue**: The `expires_at` field is not validated for:
@@ -119,7 +119,7 @@ if (expires_at) {
 
 ---
 
-#### 6. **No High-Level Badge Protection**
+#### 6. No High-Level Badge Protection
 **Location**: `functions/api/badges/index.ts:152-183`
 
 **Issue**: No checks to prevent assignment of high-level badges (e.g., level 10 badges like `superuser_crown`) to unauthorized users.
@@ -136,7 +136,7 @@ if (badge.level >= 5 && !isSuperuser(user)) {
 
 ---
 
-#### 7. **Revocation Doesn't Verify Badge Exists**
+#### 7. Revocation Doesn't Verify Badge Exists
 **Location**: `functions/api/badges/index.ts:185-214`
 
 **Issue**: The revoke function doesn't check if the badge was actually assigned before attempting to revoke it. It silently succeeds even if the badge doesn't exist.
@@ -162,9 +162,9 @@ if (result.meta.changes === 0) {
 
 ---
 
-### **LOW PRIORITY / ENHANCEMENTS**
+### LOW PRIORITY / ENHANCEMENTS
 
-#### 8. **No Rate Limiting on Badge Operations**
+#### 8. No Rate Limiting on Badge Operations
 **Issue**: No rate limiting on badge assignment/revocation endpoints.
 
 **Risk**: Potential for abuse or accidental mass operations.
@@ -173,7 +173,7 @@ if (result.meta.changes === 0) {
 
 ---
 
-#### 9. **Role Badge Revocation Attempt**
+#### 9. Role Badge Revocation Attempt
 **Issue**: Users can attempt to revoke role-based badges, which will silently fail (they're virtual).
 
 **Risk**: Confusing UX - users might think they revoked a role badge but it still appears.

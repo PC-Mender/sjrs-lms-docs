@@ -3,13 +3,13 @@ title: "Cloudflare Products"
 ---
 
 
-## **Overview**
+## Overview
 
 This document provides a comprehensive guide to all Cloudflare products used in the SJRS Library Management System, including setup, configuration, and best practices.
 
 **Note**: The SJRS LMS is a **Single Page Application (SPA)** built with React. All client-side routing is handled by React Router, and the server serves the main `index.html` for all routes.
 
-## **Architecture Overview**
+## Architecture Overview
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
@@ -30,12 +30,12 @@ This document provides a comprehensive guide to all Cloudflare products used in 
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-## **Cloudflare Workers with Static Assets**
+## Cloudflare Workers with Static Assets
 
-### **What It Is**
+### What It Is
 Cloudflare Workers with Static Assets is a unified deployment model that combines serverless functions with static asset hosting in a single Worker.
 
-### **Features Used**
+### Features Used
 - **Unified Deployment**: Single deployment for both frontend and backend
 - **Static Asset Serving**: Serves React application directly from Workers
 - **API Integration**: Backend API and static assets in one deployment
@@ -43,7 +43,7 @@ Cloudflare Workers with Static Assets is a unified deployment model that combine
 - **Automatic SSL/TLS**: Built-in security certificates
 - **Edge Computing**: Both API and assets served from the edge
 
-### **Configuration**
+### Configuration
 ```toml
 # wrangler.toml
 name = "sjrslms"
@@ -58,7 +58,7 @@ html_handling = "auto-trailing-slash"
 binding = "ASSETS"
 ```
 
-### **Benefits**
+### Benefits
 - **Simplified Architecture**: Single deployment for full-stack application
 - **Global Performance**: &lt;50ms latency worldwide for both API and assets
 - **Cost Effective**: Unified billing and resource usage
@@ -66,18 +66,18 @@ binding = "ASSETS"
 - **Zero Configuration**: Automatic HTTPS, CDN, and security
 - **Easier Maintenance**: One deployment to manage instead of two
 
-## **Cloudflare Workers**
+## Cloudflare Workers
 
-### **What It Is**
+### What It Is
 Serverless functions that run on Cloudflare's edge network, providing low-latency API endpoints.
 
-### **Features Used**
+### Features Used
 - **API Endpoints**: RESTful API for the application
 - **Edge Computing**: Functions run close to users
 - **Auto-scaling**: Handles traffic spikes automatically
 - **Built-in Security**: DDoS protection and rate limiting
 
-### **Configuration**
+### Configuration
 ```toml
 # wrangler.toml
 main = "functions/index.ts"
@@ -97,7 +97,7 @@ JWT_SECRET = "your-jwt-secret-key"
 # JWT_AUD = "https://your-api-domain.com"
 ```
 
-### **API Structure**
+### API Structure
 ```
 functions/
 ├── index.ts              # Main worker entry point
@@ -117,24 +117,24 @@ functions/
     └── notifications/   # Borrow/return/payment emails
 ```
 
-### **Benefits**
+### Benefits
 - **Low Latency**: &lt;50ms response times globally
 - **High Availability**: 99.9% uptime SLA
 - **Cost Effective**: Pay only for requests
 - **Security**: Built-in DDoS protection
 
-## **Cloudflare D1**
+## Cloudflare D1
 
-### **What It Is**
+### What It Is
 A serverless SQL database built on SQLite, designed for edge computing.
 
-### **Features Used**
+### Features Used
 - **SQLite Database**: ACID-compliant database at the edge
 - **Global Replication**: Data available worldwide
 - **Full-text Search**: Built-in search capabilities
 - **Migrations**: Version-controlled schema changes
 
-### **Configuration**
+### Configuration
 ```toml
 # wrangler.toml
 [[d1_databases]]
@@ -143,7 +143,7 @@ database_name = "sjrs-lms-db"
 database_id = "8abd4159-69b4-4686-ad2b-046d79fa4bf9"
 ```
 
-### **Database Schema**
+### Database Schema
 ```sql
 -- Core tables
 CREATE TABLE library_users (
@@ -160,24 +160,24 @@ CREATE TABLE library_users (
 -- Additional tables for books, loans, etc.
 ```
 
-### **Benefits**
+### Benefits
 - **Edge Database**: Runs at the edge for low latency
 - **ACID Transactions**: Full data integrity
 - **Global Replication**: Data available worldwide
 - **Cost Effective**: No egress fees
 
-## **Cloudflare R2**
+## Cloudflare R2
 
-### **What It Is**
+### What It Is
 Object storage service compatible with Amazon S3 API, with no egress fees.
 
-### **Features Used**
+### Features Used
 - **File Uploads**: Book covers, user avatars, documents
 - **S3 Compatibility**: Easy integration with existing tools
 - **Global Distribution**: Fast access worldwide
 - **Cost Savings**: No egress fees
 
-### **Configuration**
+### Configuration
 ```toml
 # wrangler.toml
 [[r2_buckets]]
@@ -186,7 +186,7 @@ bucket_name = "sjrslms-assets"
 preview_bucket_name = "sjrslms-assets-dev"
 ```
 
-### **Usage Examples**
+### Usage Examples
 ```typescript
 // Upload a file
 const upload = await env.STORAGE.put(fileName, fileData, {
@@ -199,23 +199,23 @@ const upload = await env.STORAGE.put(fileName, fileData, {
 const url = env.STORAGE.get(fileName);
 ```
 
-### **Benefits**
+### Benefits
 - **No Egress Fees**: Significant cost savings
 - **S3 Compatible**: Easy migration from AWS
 - **Global CDN**: Fast access worldwide
 - **Durability**: 99.999999999% (11 9's) durability
 
-## **Cloudflare KV**
+## Cloudflare KV
 
-### **What It Is**
+### What It Is
 Global, low-latency key-value data store for caching and session management.
 
-### **Features Used**
+### Features Used
 - **Session Storage**: User session data (essential for authentication)
 - **Rate Limiting**: API request throttling (essential for security)
 - **Temporary Data**: Short-lived data that needs persistence across requests
 
-### **Configuration**
+### Configuration
 ```toml
 # wrangler.toml
 [[kv_namespaces]]
@@ -224,7 +224,7 @@ id = "your-kv-namespace-id"
 preview_id = "your-preview-kv-namespace-id"
 ```
 
-### **Usage Examples**
+### Usage Examples
 ```typescript
 // Store session data (essential for authentication)
 await env.CACHE.put(`session:${sessionId}`, sessionData, {
@@ -237,24 +237,24 @@ await env.CACHE.put(`rate_limit:${ip}`, requestTimestamps, {
 });
 ```
 
-### **Benefits**
+### Benefits
 - **Low Latency**: &lt;10ms read times
 - **Global Distribution**: Available worldwide
 - **Automatic Expiration**: TTL-based cleanup
 - **High Availability**: 99.9% uptime SLA
 
-## **Cloudflare Queues**
+## Cloudflare Queues
 
-### **What It Is**
+### What It Is
 Reliable message queue service for background job processing.
 
-### **Features Used**
+### Features Used
 - **Email Processing**: Send emails in the background
 - **Notification Queues**: Process system notifications
 - **Retry Logic**: Automatic retry with exponential backoff
 - **Dead Letter Queues**: Handle failed messages
 
-### **Configuration**
+### Configuration
 ```toml
 # wrangler.toml
 [[queues]]
@@ -266,7 +266,7 @@ binding = "NOTIFICATION_QUEUE"
 name = "notification-queue"
 ```
 
-### **Usage Examples**
+### Usage Examples
 ```typescript
 // Send a message to queue
 await env.EMAIL_QUEUE.send({
@@ -284,20 +284,20 @@ export default {
 };
 ```
 
-### **Benefits**
+### Benefits
 - **Reliable Delivery**: At-least-once delivery guarantee
 - **Automatic Retries**: Built-in retry logic
 - **Scalable**: Handles high message volumes
 - **Cost Effective**: Pay only for messages processed
 
-## **Email Service Architecture**
+## Email Service Architecture
 
-### **Overview**
+### Overview
 Our email system uses a **hybrid approach** combining **Mailjet** for email delivery with **Cloudflare Queues** for reliability and scalability.
 
-### **Architecture Strategy**
+### Architecture Strategy
 
-#### ** Account-Related Emails (Direct Mailjet)**
+####  Account-Related Emails (Direct Mailjet)
 - **Purpose**: Registration confirmation, password reset, email verification
 - **Reason**: Immediate feedback needed, low volume
 - **Implementation**: Direct API calls to Mailjet
@@ -325,7 +325,7 @@ async function sendConfirmationEmail(email: string, firstName: string, token: st
 }
 ```
 
-#### ** Transactional Emails (Queue + Mailjet Backend)**
+####  Transactional Emails (Queue + Mailjet Backend)
 - **Purpose**: Loan notifications, return reminders, overdue notices, system notifications
 - **Reason**: Background processing preferred, high volume, reliability needed
 - **Implementation**: Cloudflare Queues with Mailjet backend
@@ -352,30 +352,30 @@ async processEmailMessage(message: EmailQueueMessage, env: any) {
 }
 ```
 
-### **Why This Hybrid Approach?**
+### Why This Hybrid Approach?
 
-#### ** Direct Mailjet Benefits (Account Emails)**
+####  Direct Mailjet Benefits (Account Emails)
 - **Immediate Feedback**: User gets instant confirmation
 - **Simple Implementation**: No queue complexity
 - **Low Volume**: Account emails are infrequent
 - **Critical Path**: Registration flow shouldn't be delayed
 
-#### ** Queue + Mailjet Benefits (Transactional Emails)**
+####  Queue + Mailjet Benefits (Transactional Emails)
 - **Non-Blocking**: User experience isn't affected
 - **Reliability**: Automatic retries and dead letter queues
 - **Scalability**: Handles traffic spikes automatically
 - **Background Processing**: Emails send in background
 
-### **Email Service Comparison**
+### Email Service Comparison
 
 | Approach | Use Case | Benefits | Drawbacks |
 |----------|----------|----------|-----------|
 | **Direct Mailjet** | Account emails | Immediate feedback, simple | No retry logic, can block UI |
 | **Queue + Mailjet** | Transactional emails | Reliable, scalable, non-blocking | More complex, slight delay |
 
-### **Implementation Examples**
+### Implementation Examples
 
-#### **Account Email (Direct Mailjet)**
+#### Account Email (Direct Mailjet)
 ```typescript
 // Registration confirmation
 if (env.MAILJET_API_KEY && env.MAILJET_API_SECRET) {
@@ -383,7 +383,7 @@ if (env.MAILJET_API_KEY && env.MAILJET_API_SECRET) {
 }
 ```
 
-#### **Transactional Email (Queue + Mailjet)**
+#### Transactional Email (Queue + Mailjet)
 ```typescript
 // Loan notification
 await sendLoanNotification('borrow_notification', {
@@ -395,7 +395,7 @@ await sendLoanNotification('borrow_notification', {
 });
 ```
 
-### **Environment Variables Required**
+### Environment Variables Required
 ```bash
 # Mailjet Configuration (for both direct and queue)
 MAILJET_API_KEY=your_mailjet_api_key
@@ -409,13 +409,13 @@ FRONTEND_URL=https://your-frontend-domain.com
 VITE_API_BASE_URL=https://your-api-domain.com
 ```
 
-### **Best Practices**
+### Best Practices
 
-#### **1. Choose the Right Approach**
+#### 1. Choose the Right Approach
 - **Account emails** → Direct Mailjet
 - **Transactional emails** → Queue + Mailjet
 
-#### **2. Error Handling**
+#### 2. Error Handling
 ```typescript
 // Direct Mailjet error handling
 try {
@@ -442,13 +442,13 @@ async queue(batch: MessageBatch<EmailQueueMessage>, env: any) {
 }
 ```
 
-#### **3. Monitoring**
+#### 3. Monitoring
 - **Direct Mailjet**: Log success/failure immediately
 - **Queue + Mailjet**: Monitor queue metrics and dead letter queues
 
-### **Migration Guide**
+### Migration Guide
 
-#### **From Generic Email Service to Mailjet Backend**
+#### From Generic Email Service to Mailjet Backend
 ```typescript
 // Before (generic email service)
 const response = await fetch('https://api.email-service.com/send', {
@@ -466,18 +466,18 @@ const response = await fetch('https://api.mailjet.com/v3.1/send', {
 
 This hybrid approach provides the best of both worlds: **immediate feedback for critical account emails** and **reliable, scalable processing for transactional emails**.
 
-## **Cloudflare Durable Objects**
+## Cloudflare Durable Objects
 
-### **What It Is**
+### What It Is
 Stateful serverless objects for real-time features and distributed coordination.
 
-### **Features Used**
+### Features Used
 - **Live Counters**: Real-time statistics
 - **Session Management**: Stateful session tracking
 - **WebSocket Connections**: Real-time communication
 - **Distributed Coordination**: Multi-user features
 
-### **Configuration**
+### Configuration
 ```toml
 # wrangler.toml
 [[durable_objects.bindings]]
@@ -489,7 +489,7 @@ name = "REALTIME_SESSIONS"
 class_name = "RealtimeSessions"
 ```
 
-### **Usage Examples**
+### Usage Examples
 ```typescript
 // Get a Durable Object instance
 const counter = env.LIVE_COUNTERS.get(env.LIVE_COUNTERS.idFromName('global'));
@@ -498,31 +498,31 @@ const counter = env.LIVE_COUNTERS.get(env.LIVE_COUNTERS.idFromName('global'));
 await counter.fetch('/increment', { method: 'POST' });
 ```
 
-### **Benefits**
+### Benefits
 - **Stateful Computing**: Maintain state across requests
 - **Real-time Features**: WebSocket and live updates
 - **Global Coordination**: Distributed state management
 - **Low Latency**: Edge-based stateful computing
 
-## **Cloudflare Analytics**
+## Cloudflare Analytics
 
-### **What It Is**
+### What It Is
 Real-time analytics and monitoring for performance and security insights.
 
-### **Features Used**
+### Features Used
 - **Performance Monitoring**: Response times and throughput
 - **Security Analytics**: Threat detection and analysis
 - **Custom Events**: Application-specific metrics
 - **Real-time Dashboards**: Live monitoring
 
-### **Configuration**
+### Configuration
 ```toml
 # wrangler.toml
 [analytics_engine_datasets]
 binding = "ANALYTICS"
 ```
 
-### **Usage Examples**
+### Usage Examples
 ```typescript
 // Track custom events
 await env.ANALYTICS.writeDataPoint({
@@ -537,15 +537,15 @@ await env.ANALYTICS.writeDataPoint({
 });
 ```
 
-### **Benefits**
+### Benefits
 - **Real-time Insights**: Live monitoring and alerts
 - **Security Analytics**: Threat detection and analysis
 - **Performance Metrics**: Response times and throughput
 - **Custom Events**: Application-specific tracking
 
-## **Security Features**
+## Security Features
 
-### **Built-in Security**
+### Built-in Security
 - **DDoS Protection**: Automatic protection against attacks
 - **SSL/TLS**: Automatic HTTPS everywhere
 - **Bot Management**: Advanced bot detection
@@ -553,30 +553,30 @@ await env.ANALYTICS.writeDataPoint({
 - **Rate Limiting**: Edge-based rate limiting
 - **Security Headers**: Automatic security headers
 
-### **Application Security**
+### Application Security
 - **CSRF Protection**: Double submit cookie pattern
 - **Input Validation**: Multi-layer validation
 - **Session Security**: Secure session management
 - **Authentication**: JWT-based authentication
 - **Authorization**: Role-based access control
 
-## **Performance Benefits**
+## Performance Benefits
 
-### **Edge Computing**
+### Edge Computing
 - **Global CDN**: Content delivered from 200+ locations
 - **&lt;50ms Latency**: Ultra-fast response times
 - **Auto-scaling**: Handles traffic spikes automatically
 - **Zero Maintenance**: No server management required
 
-### **Cost Optimization**
+### Cost Optimization
 - **Pay-per-use**: Only pay for what you use
 - **No Egress Fees**: R2 eliminates data transfer costs
 - **Free Tier**: Generous free limits
 - **Predictable Pricing**: Simple, transparent pricing
 
-## **Development Workflow**
+## Development Workflow
 
-### **Local Development**
+### Local Development
 ```bash
 # Install Wrangler CLI
 npm install -g wrangler
@@ -591,7 +591,7 @@ wrangler dev
 wrangler d1 execute sjrs-lms-db --local
 ```
 
-### **Deployment**
+### Deployment
 ```bash
 # Deploy to production
 wrangler deploy
@@ -603,7 +603,7 @@ wrangler deploy
 wrangler d1 execute sjrs-lms-db --file=migration.sql
 ```
 
-### **Monitoring**
+### Monitoring
 ```bash
 # View logs
 wrangler tail
@@ -612,9 +612,9 @@ wrangler tail
 # Access via Cloudflare Dashboard
 ```
 
-## **Resources**
+## Resources
 
-### **Documentation**
+### Documentation
 - [Cloudflare Workers](https://developers.cloudflare.com/workers/)
 - [Cloudflare D1](https://developers.cloudflare.com/d1/)
 - [Cloudflare Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/)
@@ -623,12 +623,12 @@ wrangler tail
 - [Cloudflare Queues](https://developers.cloudflare.com/queues/)
 - [Cloudflare Durable Objects](https://developers.cloudflare.com/durable-objects/)
 
-### **Tools**
+### Tools
 - **Wrangler CLI**: Command-line interface for development
 - **Cloudflare Dashboard**: Web-based management interface
 - **Cloudflare Analytics**: Real-time monitoring and insights
 
-### **Best Practices**
+### Best Practices
 - **Edge Computing**: Keep functions lightweight and fast
 - **Caching**: Use KV for frequently accessed data
 - **Error Handling**: Implement proper error handling and retries

@@ -3,29 +3,29 @@ title: "Robust Architecture"
 ---
 
 
-## **Overview**
+## Overview
 
 This guide outlines the complete implementation of a robust, scalable, and maintainable library management system using Cloudflare's comprehensive product stack.
 
-## **Enhanced Architecture Stack**
+## Enhanced Architecture Stack
 
-### **Current Unified Stack:**
+### Current Unified Stack:
 ```
 Frontend (React) + Workers (Static Assets) → D1 + R2 + KV + Analytics
 ```
 
-### **Full Enhanced Stack:**
+### Full Enhanced Stack:
 ```
 Unified Workers Deployment → D1 + R2 + KV + Queues + Durable Objects + Analytics
 ```
 
-## **Implementation Roadmap**
+## Implementation Roadmap
 
 Note: For canonical Cloudflare product details and configuration, see Architecture → Cloudflare Products Guide.
 
-### **Phase 1: Core Infrastructure** (Week 1-2)
+### Phase 1: Core Infrastructure (Week 1-2)
 
-#### **1.1 Cloudflare R2 Storage**
+#### 1.1 Cloudflare R2 Storage
 **Purpose:** File uploads, book covers, documents
 
 ```bash
@@ -44,7 +44,7 @@ bucket_name = "sjrslms-assets"
 - Public URL generation
 - Category-based organization
 
-#### **1.2 Cloudflare KV for Essential Operations**
+#### 1.2 Cloudflare KV for Essential Operations
 **Purpose:** Session management (authentication), rate limiting (security)
 
 ```bash
@@ -70,14 +70,14 @@ await env.CACHE.put(`rate_limit:${ip}`, requestTimestamps, {
 });
 ```
 
-#### **1.3 Cloudflare Queues (planned)**
+#### 1.3 Cloudflare Queues (planned)
 **Purpose:** Background jobs, email notifications, data processing
 
 Status: Queues are planned but not active in the current codebase. Enable when consumers exist.
 
-### **Phase 2: Advanced Features** (Week 3-4)
+### Phase 2: Advanced Features (Week 3-4)
 
-#### **2.1 Cloudflare Durable Objects**
+#### 2.1 Cloudflare Durable Objects
 **Purpose:** Real-time features, live counters, state management
 
 - Live counters (Durable Objects - planned)
@@ -85,12 +85,12 @@ Status: Queues are planned but not active in the current codebase. Enable when c
 - WebSocket support
 - State persistence
 
-#### **2.2 Cloudflare Analytics**
+#### 2.2 Cloudflare Analytics
 **Purpose:** Monitoring, user behavior, performance insights
 
 Implementation note: Optional `ANALYTICS` binding is used where available (see `functions/lib/env.ts`, `functions/utilities/email-service.ts`).
 
-#### **2.3 Cloudflare Analytics**
+#### 2.3 Cloudflare Analytics
 **Purpose:** Monitoring, user behavior, performance insights
 
 ```bash
@@ -98,9 +98,9 @@ Implementation note: Optional `ANALYTICS` binding is used where available (see `
 wrangler analytics-engine create sjrslms-analytics
 ```
 
-### **Phase 3: Optimization** (Week 5-6)
+### Phase 3: Optimization (Week 5-6)
 
-#### **3.1 Edge Caching**
+#### 3.1 Edge Caching
 **Purpose:** Static assets, CDN optimization
 
 ```typescript
@@ -108,7 +108,7 @@ wrangler analytics-engine create sjrslms-analytics
 // API responses use in-memory caching for better performance
 ```
 
-#### **3.2 Load Balancing**
+#### 3.2 Load Balancing
 **Purpose:** High availability, geographic distribution
 
 ```typescript
@@ -117,9 +117,9 @@ const userLocation = request.headers.get('cf-ipcountry');
 const nearestRegion = getNearestRegion(userLocation);
 ```
 
-## **Enhanced Configuration**
+## Enhanced Configuration
 
-### **Updated wrangler.toml (example)**
+### Updated wrangler.toml (example)
 ```toml
 name = "sjrslms"
 main = "functions/index.ts"
@@ -179,16 +179,16 @@ CACHE_TTL = "3600"
 EMAIL_RETRY_ATTEMPTS = "3"
 ```
 
-## **Performance Benefits**
+## Performance Benefits
 
-### **Before Enhancement:**
+### Before Enhancement:
 - Single point of failure
 - No caching
 - Synchronous operations
 - Limited scalability
 - No real-time features
 
-### **After Enhancement:**
+### After Enhancement:
 - **High Availability** - Multiple Cloudflare regions
 - **Fast Performance** - Edge caching and CDN
 - **Scalability** - Auto-scaling Workers
@@ -197,11 +197,11 @@ EMAIL_RETRY_ATTEMPTS = "3"
 - **Monitoring** - Comprehensive analytics
 - **Cost Effective** - Pay-per-use model
 
-## **Cost Analysis**
+## Cost Analysis
 
-### **Monthly Costs (Detailed Breakdown):**
+### Monthly Costs (Detailed Breakdown):
 
-#### **Free Tier (Included):**
+#### Free Tier (Included):
 - **Cloudflare Workers Static Assets**: Free (included in Workers deployment)
 - **Cloudflare Workers**: Free (100,000 requests/day)
 - **Cloudflare D1**: Free (1M reads, 100K writes)
@@ -210,7 +210,7 @@ EMAIL_RETRY_ATTEMPTS = "3"
 - **Cloudflare Queues**: Free (1M messages)
 - **Cloudflare Analytics**: Free (1M data points)
 
-#### **Paid Tier (If you exceed free limits):**
+#### Paid Tier (If you exceed free limits):
 - **Workers**: $5/month (10M requests)
 - **D1 Database**: $5/month (1M reads, 100K writes)
 - **R2 Storage**: $0.015/GB stored + $0.36/GB transferred
@@ -222,9 +222,9 @@ EMAIL_RETRY_ATTEMPTS = "3"
 
 **vs Traditional Cloud: $50+/month**
 
-## **Security Enhancements**
+## Security Enhancements
 
-### **1. File Upload Security**
+### 1. File Upload Security
 ```typescript
 // Validate file types and size
 const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
@@ -235,7 +235,7 @@ if (!allowedTypes.includes(file.type) || file.size > maxSize) {
 }
 ```
 
-### **2. Rate Limiting**
+### 2. Rate Limiting
 ```typescript
 // Implement rate limiting
 const rateLimit = await env.CACHE.get(`rate:${ip}`);
@@ -244,7 +244,7 @@ if (rateLimit && parseInt(rateLimit) > 100) {
 }
 ```
 
-### **3. CORS Security**
+### 3. CORS Security
 ```typescript
 // Secure CORS configuration
 const allowedOrigins = ['https://your-api-domain.com'];
@@ -254,35 +254,35 @@ if (!allowedOrigins.includes(origin)) {
 }
 ```
 
-## **Monitoring & Analytics**
+## Monitoring & Analytics
 
-### **1. Performance Metrics**
+### 1. Performance Metrics
 - Response time tracking
 - Error rate monitoring
 - User behavior analytics
 - Resource usage optimization
 
-### **2. Business Metrics**
+### 2. Business Metrics
 - Book borrowing patterns
 - User engagement rates
 - Popular book categories
 - Peak usage times
 
-### **3. Security Monitoring**
+### 3. Security Monitoring
 - Failed login attempts
 - Suspicious activity detection
 - File upload patterns
 - API usage analytics
 
-## **Deployment Strategy**
+## Deployment Strategy
 
-### **1. Staging Environment**
+### 1. Staging Environment
 ```bash
 # Deploy to staging
 wrangler deploy --env staging
 ```
 
-### **2. Production Deployment**
+### 2. Production Deployment
 ```bash
 # Unified Workers deployment
 npm run release  # Automated versioning and deployment
@@ -290,7 +290,7 @@ npm run release  # Automated versioning and deployment
 wrangler deploy --env production
 ```
 
-### **3. Blue-Green Deployment**
+### 3. Blue-Green Deployment
 ```typescript
 // Implement blue-green deployment
 const version = request.headers.get('X-App-Version');
@@ -303,9 +303,9 @@ if (version === 'v2') {
 }
 ```
 
-## **Migration Checklist**
+## Migration Checklist
 
-### **Phase 1: Infrastructure**
+### Phase 1: Infrastructure
 - [ ] Set up R2 storage buckets
 - [ ] Configure KV namespaces
 - [ ] Create queue workers
@@ -313,44 +313,44 @@ if (version === 'v2') {
 - [ ] Test file uploads
 - [ ] Verify caching works
 
-### **Phase 2: Features**
+### Phase 2: Features
 - [ ] Implement Durable Objects
 - [ ] Set up WebSocket connections
 - [ ] Configure analytics
 - [ ] Test real-time features
 - [ ] Implement background jobs
 
-### **Phase 3: Optimization**
+### Phase 3: Optimization
 - [ ] Add edge caching
 - [ ] Implement load balancing
 - [ ] Optimize performance
 - [ ] Set up monitoring
 - [ ] Configure alerts
 
-### **Phase 4: Production**
+### Phase 4: Production
 - [ ] Security audit
 - [ ] Load testing
 - [ ] Performance optimization
 - [ ] Documentation update
 - [ ] Team training
 
-## **Success Metrics**
+## Success Metrics
 
-### **Performance Targets:**
+### Performance Targets:
 - **Response Time**: < 200ms average
 - **Uptime**: 99.9% availability
 - **Scalability**: Handle 10x traffic increase
 - **Cost**: 60% reduction vs traditional cloud solutions
 
-### **User Experience:**
+### User Experience:
 - **Real-time Updates**: Live counters and notifications
 - **Fast File Uploads**: Optimized R2 storage
 - **Seamless Caching**: KV-based performance
 - **Reliable Background Jobs**: Queue-based processing
 
-## **Additional Resources**
+## Additional Resources
 
-### **Cloudflare Documentation:**
+### Cloudflare Documentation:
 - [Workers Documentation](https://developers.cloudflare.com/workers/)
 - [D1 Database Guide](https://developers.cloudflare.com/d1/)
 - [R2 Storage API](https://developers.cloudflare.com/r2/)
@@ -358,7 +358,7 @@ if (version === 'v2') {
 - [Queues Documentation](https://developers.cloudflare.com/queues/)
 - [Durable Objects](https://developers.cloudflare.com/durable-objects/)
 
-### **Implementation Examples:**
+### Implementation Examples:
 - `functions/api/upload/index.ts`
 - `functions/email-templates/index.ts`
 - Live Counters (Durable Objects - planned)

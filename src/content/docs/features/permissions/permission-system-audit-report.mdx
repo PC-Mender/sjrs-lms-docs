@@ -34,7 +34,7 @@ The migration to database-driven permissions for superuser has been **successful
 
 ## Critical Issues (Must Fix)
 
-### 1. **Unified Permission System Still Has Hardcoded Bypass**
+### 1. Unified Permission System Still Has Hardcoded Bypass
 
 **File:** `src/utilities/permissions/unified-permission-system.ts:209`
 
@@ -51,7 +51,7 @@ if (String(userRole).toLowerCase() === 'superuser') {
 
 ---
 
-### 2. **Permission Matrix Still Hardcodes Superuser**
+### 2. Permission Matrix Still Hardcodes Superuser
 
 **File:** `src/utilities/permissions/index.ts:355-368`
 
@@ -74,7 +74,7 @@ if (superuserRole) {
 
 ---
 
-### 3. **Auth Middleware Still Has Hardcoded Bypass**
+### 3. Auth Middleware Still Has Hardcoded Bypass
 
 **File:** `functions/middleware/auth/core/index.ts:116`
 
@@ -91,7 +91,7 @@ if (_user.role === 'superuser') {
 
 ---
 
-### 4. **Role Access Hook Has Hardcoded Bypass**
+### 4. Role Access Hook Has Hardcoded Bypass
 
 **File:** `src/hooks/useRoles.ts:38`
 
@@ -108,7 +108,7 @@ if (normalizedUserRole === 'superuser') return true; // superuser can access eve
 
 ## High Priority Issues (Should Fix)
 
-### 5. **API Endpoints Use Direct Role Checks Instead of Permissions**
+### 5. API Endpoints Use Direct Role Checks Instead of Permissions
 
 **Files:**
 - `functions/api/permissions/index.ts:106` - Checks `roleName !== 'superuser'`
@@ -125,7 +125,7 @@ if (normalizedUserRole === 'superuser') return true; // superuser can access eve
 
 ---
 
-### 6. **Superuser-Only Features Use Direct Role Checks**
+### 6. Superuser-Only Features Use Direct Role Checks
 
 **Files:**
 - `functions/api/superuser/**` - All superuser endpoints check `user.role !== 'superuser'`
@@ -142,7 +142,7 @@ if (normalizedUserRole === 'superuser') return true; // superuser can access eve
 
 ## Medium Priority Issues (Consider Fixing)
 
-### 7. **UI Components Use Direct Role Checks**
+### 7. UI Components Use Direct Role Checks
 
 **Files:**
 - `src/components/layout/templates/AppLayout.tsx` - Multiple role checks for routing
@@ -156,7 +156,7 @@ if (normalizedUserRole === 'superuser') return true; // superuser can access eve
 
 ---
 
-### 8. **Status Checks Bypass for Superuser**
+### 8. Status Checks Bypass for Superuser
 
 **Files:**
 - `functions/middleware/auth/core/index.ts:57` - Superuser bypasses inactive status check
@@ -171,7 +171,7 @@ if (normalizedUserRole === 'superuser') return true; // superuser can access eve
 
 ## Low Priority / Acceptable
 
-### 9. **Dashboard Routing Based on Role**
+### 9. Dashboard Routing Based on Role
 
 **Files:**
 - Multiple files check `user.role === 'superuser'` for routing to `/dashboard`
@@ -182,7 +182,7 @@ if (normalizedUserRole === 'superuser') return true; // superuser can access eve
 
 ---
 
-### 10. **UI Display Logic**
+### 10. UI Display Logic
 
 **Files:**
 - `src/components/features/members/components/MemberModals/MemberEditModal.tsx` - Shows crown icon for superuser
@@ -196,7 +196,7 @@ if (normalizedUserRole === 'superuser') return true; // superuser can access eve
 
 ## Unnecessary Code / Dead Code
 
-### 11. **Unified Permission System Class**
+### 11. Unified Permission System Class
 
 **File:** `src/utilities/permissions/unified-permission-system.ts`
 
@@ -211,7 +211,7 @@ if (normalizedUserRole === 'superuser') return true; // superuser can access eve
 
 ---
 
-### 12. **Old Permission Checking Code**
+### 12. Old Permission Checking Code
 
 **File:** `src/utilities/permissions/index.ts:355-380`
 
@@ -223,7 +223,7 @@ if (normalizedUserRole === 'superuser') return true; // superuser can access eve
 
 ## Security Loopholes
 
-### 13. **Permission Manager Access Check**
+### 13. Permission Manager Access Check
 
 **File:** `functions/api/permissions/index.ts:106`
 
@@ -241,7 +241,7 @@ if (roleName !== 'superuser') {
 
 ---
 
-### 14. **Role Management Access Check**
+### 14. Role Management Access Check
 
 **File:** `functions/api/roles/base/role-utils.ts:72`
 

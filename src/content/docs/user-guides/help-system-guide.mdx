@@ -9,24 +9,24 @@ The SJRS LMS Help System provides streamlined, discoverable documentation integr
 
 ## Key Features
 
-### **Role-Based Content**
+### Role-Based Content
 - **Dynamic filtering** based on user role and permissions
 - **Personalized experience** showing only relevant help topics
 - **Permission-aware** content that respects user access levels
 
-### **User-Friendly Interface**
+### User-Friendly Interface
 - **Search functionality** to quickly find specific topics
 - **Category organization** for easy navigation
 - **Difficulty levels** (Beginner, Intermediate, Advanced)
 - **Estimated reading time** for each topic
 - **Tags and metadata** for better organization
 
-### **Theme Integration**
+### Theme Integration
 - **Dark/Light mode support** with automatic theme detection
 - **Consistent styling** with the main application
 - **Responsive design** for all screen sizes
 
-### **Multiple Access Points**
+### Multiple Access Points
 - **Help button** in the top navigation bar
 - **Press ?** anywhere in the app to toggle the Help drawer
 - **User menu** with dedicated help link
@@ -34,101 +34,101 @@ The SJRS LMS Help System provides streamlined, discoverable documentation integr
 
 ## How to Access Help
 
-### **Method 1: Keyboard Shortcut**
+### Method 1: Keyboard Shortcut
 1. Press **?** (Shift + /) anywhere in the app
 2. The Help drawer opens instantly
 3. Follow quick links to documentation topics
 
-### **Method 2: Help Button**
+### Method 2: Help Button
 1. Look for the **info icon** in the top navigation bar
 2. Click the help button to open the help drawer
 3. Browse categories or open topics
 
-### **Method 3: User Menu**
+### Method 3: User Menu
 1. Click on your **user avatar** in the top right
 2. Select **"Help & Documentation"** from the dropdown menu
 3. Navigate to the full help page
 
-### **Method 4: Direct URL**
+### Method 4: Direct URL
 - Navigate to `/help`
 - Access the curated help interface
 
 ## Help Categories (External Links)
 
-### **Borrowing**
+### Borrowing
 - Links to docs site: borrowing rules, order requests, limits
-### **Returns & Fines**
+### Returns & Fines
 - Links to docs site: returns, late fees, lost items
-### **Account Management**
+### Account Management
 - Links to docs site: registration, login, profile updates
-### **Payments**
+### Payments
 - Links to docs site: payment methods and fines
-### **Library Rules**
+### Library Rules
 - Links to docs site: hours, policies, facility rules
-### **Digital Resources**
+### Digital Resources
 - Links to docs site: printing, remote access
-### **Special Services**
+### Special Services
 - Links to docs site: research privileges, donations
 
-### **User Management**
+### User Management
 - **Available to**: Admin, Superuser
 - **Content**: Managing users, roles, and permissions
 - **Topics**: User creation, role assignment, security considerations
 
-### **Book Management**
+### Book Management
 - **Available to**: Librarian, Admin, Superuser
 - **Content**: Adding, editing, and managing books
 - **Topics**: Book catalog, search features, copy management
 
-### **Circulation**
+### Circulation
 - **Available to**: Librarian, Admin, Superuser, Dean
 - **Content**: Loans, returns, and borrowing management
 - **Topics**: Loan processing, overdue management, penalty system
 
-### **Analytics & Reports**
+### Analytics & Reports
 - **Available to**: Admin, Superuser, Dean
 - **Content**: System analytics and reporting
 - **Topics**: Data analysis, report generation, export functionality
 
-### **System Administration**
+### System Administration
 - **Available to**: Superuser only
 - **Content**: System settings and configuration
 - **Topics**: Database management, system configuration, advanced features
 
-### **Security & Permissions**
+### Security & Permissions
 - **Available to**: Admin, Superuser
 - **Content**: Security features and permission management
 - **Topics**: Role-based access control, security best practices, audit logging
 
-### **Notifications**
+### Notifications
 - **Available to**: Librarian, Admin, Superuser
 - **Content**: Managing system notifications
 - **Topics**: Notification settings, alert management, communication tools
 
 ## User Interface Features
 
-### **Quick Navigation**
+### Quick Navigation
 - Category cards with icons and descriptions
 - One-click links to the documentation site
 
-### **Keyboard Shortcut**
+### Keyboard Shortcut
 - Press **?** to toggle the Help drawer
 - Accessible from any non-typing context
 
-### **Content Display**
+### Content Display
 - **Two view modes**: List and Grid
 - **Difficulty indicators**: Beginner, Intermediate, Advanced
 - **Reading time estimates** for better planning
 - **Last updated dates** for content freshness
 
-### **Navigation**
+### Navigation
 - **Breadcrumb navigation** for easy back-tracking
 - **Related topics** suggestions
 - **Quick category switching**
 
 ## Technical Implementation
 
-### **Component Structure**
+### Component Structure
 ```
 src/components/help/
 ├── HelpSystem.tsx      # Main help drawer component
@@ -136,89 +136,89 @@ src/components/help/
 └── index.ts            # Export file
 ```
 
-### **Page Structure**
+### Page Structure
 ```
 src/pages/help/
 └── index.tsx           # Full help page component
 ```
 
-### **Routing Integration**
+### Routing Integration
 - Dedicated `/help` route available from all layouts
 - Links open external docs in a new tab
 - Lazy loading for optimal performance
 
-### **Theme Integration**
+### Theme Integration
 - **Automatic theme detection** from color mode context
 - **Consistent styling** with application theme
 - **Responsive design** for all screen sizes
 
 ## Responsive Design
 
-### **Desktop View**
+### Desktop View
 - **Full-width layout** with sidebar navigation
 - **Grid view** for category browsing
 - **Detailed content** with rich formatting
 
-### **Tablet View**
+### Tablet View
 - **Adaptive layout** with responsive grids
 - **Touch-friendly** navigation elements
 - **Optimized spacing** for touch interaction
 
-### **Mobile View**
+### Mobile View
 - **Stacked layout** for better readability
 - **Simplified navigation** with larger touch targets
 - **Optimized content** for smaller screens
 
 ## Role-Based Access
 
-### **Students**
+### Students
 - Borrowing, returns, account basics
 
-### **Professors**
+### Professors
 - Extended borrowing privileges, academic resources
 
-### **Librarians**
+### Librarians
 - Book and circulation management, notifications
 
-### **Admins**
+### Admins
 - Users, permissions, analytics, notifications
 
-### **Superusers**
+### Superusers
 - System administration and advanced configuration
 
 ## External Documentation
 
-### **Docs Site**
+### Docs Site
 - Full search, tags, and filters available on docs.example.com
 - In-app help provides quick entry points
 
-### **Content Organization**
+### Content Organization
 - **Hierarchical structure** with categories and subcategories
 - **Cross-referenced topics** for comprehensive learning
 - **Progressive disclosure** from basic to advanced topics
 
 ## Customization Options
 
-### **Content Management**
+### Content Management
 - **Easy content updates** through component modification
 - **Dynamic content loading** for future API integration
 - **Localization support** for multiple languages
 
-### **Styling Customization**
+### Styling Customization
 - **Theme-aware components** that adapt to application theme
 - **Consistent design language** with main application
 - **Accessible design** following WCAG guidelines
 
 ## Future Enhancements
 
-### **Planned Features**
+### Planned Features
 - **Video tutorials** integration
 - **Interactive walkthroughs** for complex processes
 - **User feedback system** for content improvement
 - **Analytics tracking** for help usage patterns
 - **Content versioning** for documentation updates
 
-### **Integration Opportunities**
+### Integration Opportunities
 - **Context-sensitive help** based on current page
 - **In-app tooltips** for quick guidance
 - **Progressive help** that adapts to user skill level
@@ -226,29 +226,29 @@ src/pages/help/
 
 ## Usage Analytics
 
-### **Help System Metrics**
+### Help System Metrics
 - Most accessed categories
 - Click-through rates to docs site
 
-### **Content Performance**
+### Content Performance
 - Content freshness tracked on docs site
 - Regular updates reflected via external links
 
 ## Maintenance and Updates
 
-### **Content Updates**
+### Content Updates
 1. **Edit help content** in the component files
 2. **Update metadata** (tags, difficulty, estimated time)
 3. **Test across different roles** to ensure proper filtering
 4. **Deploy changes** through the normal release process
 
-### **Adding New Categories**
+### Adding New Categories
 1. **Define category** in the helpCategories array
 2. **Set appropriate roles** for access control
 3. **Add category-specific content** to helpContent array
 4. **Test role-based filtering** for new category
 
-### **Adding New Content**
+### Adding New Content
 1. **Create content object** with required metadata
 2. **Add to helpContent array** with proper categorization
 3. **Set appropriate roles** for access control
@@ -256,19 +256,19 @@ src/pages/help/
 
 ## Best Practices
 
-### **Content Creation**
+### Content Creation
 - **Write for the target audience** based on role and skill level
 - **Use clear, concise language** with step-by-step instructions
 - **Include relevant examples** and screenshots where helpful
 - **Keep content up-to-date** with application changes
 
-### **User Experience**
+### User Experience
 - **Provide multiple access points** for different user preferences
 - **Ensure responsive design** for all device types
 - **Maintain consistent navigation** throughout the help system
 - **Offer search and filtering** for quick topic discovery
 
-### **Accessibility**
+### Accessibility
 - **Follow WCAG guidelines** for inclusive design
 - **Provide keyboard navigation** for all interactive elements
 - **Use semantic HTML** for screen reader compatibility
@@ -276,13 +276,13 @@ src/pages/help/
 
 ## Support and Feedback
 
-### **Getting Help with Help**
+### Getting Help with Help
 - **Contact system administrators** for technical issues
 - **Submit feedback** through the application's feedback system
 - **Report content errors** for correction and updates
 - **Suggest improvements** for better user experience
 
-### **Content Contributions**
+### Content Contributions
 - **Submit content suggestions** for new topics
 - **Report outdated information** for updates
 - **Share user feedback** for content improvements

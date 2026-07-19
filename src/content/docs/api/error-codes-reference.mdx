@@ -9,12 +9,12 @@ For plain-language, end-user explanations of the same error codes, see the [Erro
 
 ## HTTP Status Codes
 
-### **2xx Success Codes**
+### 2xx Success Codes
 - **200 OK** - Request successful
 - **201 Created** - Resource created successfully
 - **204 No Content** - Request successful, no content to return
 
-### **4xx Client Error Codes**
+### 4xx Client Error Codes
 - **400 Bad Request** - Invalid request syntax or parameters
 - **401 Unauthorized** - Authentication required or failed
 - **403 Forbidden** - Authentication successful but insufficient permissions
@@ -24,7 +24,7 @@ For plain-language, end-user explanations of the same error codes, see the [Erro
 - **422 Unprocessable Entity** - Validation errors
 - **429 Too Many Requests** - Rate limit exceeded
 
-### **5xx Server Error Codes**
+### 5xx Server Error Codes
 - **500 Internal Server Error** - Unexpected server error
 - **502 Bad Gateway** - Upstream service error
 - **503 Service Unavailable** - Service temporarily unavailable
@@ -97,9 +97,9 @@ Frontend SHOULD:
 - Show global error messages when `field` is absent
 - Keep request payloads in camelCase; submit enum values (e.g., `userType`) in lowercase
 
-### **401 Unauthorized**
+### 401 Unauthorized
 
-#### **Invalid Token**
+#### Invalid Token
 ```json
 {
   "success": false,
@@ -124,7 +124,7 @@ Frontend SHOULD:
 3. Verify token format and signature
 4. Ensure all required claims are present
 
-#### **Missing Authentication**
+#### Missing Authentication
 ```json
 {
   "success": false,
@@ -147,7 +147,7 @@ Frontend SHOULD:
 2. For POST/PUT/PATCH/DELETE, include `X-XSRF-TOKEN: <csrf_token>` header matching the `XSRF-TOKEN` cookie
 3. Ensure cookies/headers are not empty or null
 
-#### **Session Expired**
+#### Session Expired
 ```json
 {
   "success": false,
@@ -171,9 +171,9 @@ Frontend SHOULD:
 2. Use force logout endpoint if needed
 3. Ensure single device usage
 
-### **403 Forbidden**
+### 403 Forbidden
 
-#### **Insufficient Permissions**
+#### Insufficient Permissions
 ```json
 {
   "success": false,
@@ -198,7 +198,7 @@ Frontend SHOULD:
 2. Check resource-specific permissions
 3. Verify action is allowed for your role
 
-#### **Resource Access Denied**
+#### Resource Access Denied
 ```json
 {
   "success": false,
@@ -225,9 +225,9 @@ Frontend SHOULD:
 
 ## Validation Errors
 
-### **400 Bad Request**
+### 400 Bad Request
 
-#### **Missing Required Fields**
+#### Missing Required Fields
 ```json
 {
   "success": false,
@@ -253,7 +253,7 @@ Frontend SHOULD:
 2. Check field names and spelling
 3. Ensure fields are not null or empty
 
-#### **Invalid Data Types**
+#### Invalid Data Types
 ```json
 {
   "success": false,
@@ -279,7 +279,7 @@ Frontend SHOULD:
 2. Use proper format for dates (ISO 8601)
 3. Check enum values for status fields
 
-#### **Invalid Format**
+#### Invalid Format
 ```json
 {
   "success": false,
@@ -304,9 +304,9 @@ Frontend SHOULD:
 2. Validate data before sending
 3. Check format examples in documentation
 
-### **422 Unprocessable Entity**
+### 422 Unprocessable Entity
 
-#### **Business Rule Violations**
+#### Business Rule Violations
 ```json
 {
   "success": false,
@@ -333,7 +333,7 @@ Frontend SHOULD:
 3. Contact administrator for limit increase
 4. Complete required profile information
 
-#### **Data Integrity Violations**
+#### Data Integrity Violations
 ```json
 {
   "success": false,
@@ -360,9 +360,9 @@ Frontend SHOULD:
 
 ## Rate Limiting Errors
 
-### **429 Too Many Requests**
+### 429 Too Many Requests
 
-#### **Rate Limit Exceeded**
+#### Rate Limit Exceeded
 ```json
 {
   "success": false,
@@ -391,9 +391,9 @@ Frontend SHOULD:
 
 ## Resource Not Found Errors
 
-### **404 Not Found**
+### 404 Not Found
 
-#### **Resource Not Found**
+#### Resource Not Found
 ```json
 {
   "success": false,
@@ -419,7 +419,7 @@ Frontend SHOULD:
 3. Search for similar resources
 4. Contact administrator if resource should exist
 
-#### **Endpoint Not Found**
+#### Endpoint Not Found
 ```json
 {
   "success": false,
@@ -440,9 +440,9 @@ Frontend SHOULD:
 
 ## Server Errors
 
-### **500 Internal Server Error**
+### 500 Internal Server Error
 
-#### **Unexpected Server Error**
+#### Unexpected Server Error
 ```json
 {
   "success": false,
@@ -468,9 +468,9 @@ Frontend SHOULD:
 3. Contact support with error ID
 4. Verify system configuration
 
-### **503 Service Unavailable**
+### 503 Service Unavailable
 
-#### **Service Temporarily Unavailable**
+#### Service Temporarily Unavailable
 ```json
 {
   "success": false,
@@ -498,9 +498,9 @@ Frontend SHOULD:
 
 ## Troubleshooting Guide
 
-### **Common Error Patterns**
+### Common Error Patterns
 
-#### **Authentication Chain Failures**
+#### Authentication Chain Failures
 ```
 1. 401 Unauthorized → Check token validity
 2. 403 Forbidden → Check user permissions
@@ -508,7 +508,7 @@ Frontend SHOULD:
 4. 422 Validation → Check request data
 ```
 
-#### **Rate Limiting Chain**
+#### Rate Limiting Chain
 ```
 1. 429 Too Many Requests → Wait and retry
 2. Implement exponential backoff
@@ -516,9 +516,9 @@ Frontend SHOULD:
 4. Use bulk operations
 ```
 
-### **Debugging Steps**
+### Debugging Steps
 
-#### **1. Check Request Headers**
+#### 1. Check Request Headers
 ```bash
 # Login (cookie-based auth)
 curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
@@ -529,7 +529,7 @@ curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
 curl -v -b cookies.txt -X GET "https://your-api-domain.com/api/auth/me"
 ```
 
-#### **2. Validate Request Body**
+#### 2. Validate Request Body
 ```bash
 # Test with minimal valid data
 curl -X POST "https://your-api-domain.com/api/auth/register" \
@@ -543,16 +543,16 @@ curl -X POST "https://your-api-domain.com/api/auth/register" \
   }'
 ```
 
-#### **3. Check Response Headers**
+#### 3. Check Response Headers
 ```bash
 # Look for rate limiting headers
 curl -v -X GET "https://your-api-domain.com/api/books" \
   -b cookies.txt
 ```
 
-### **Error Recovery Strategies**
+### Error Recovery Strategies
 
-#### **Exponential Backoff**
+#### Exponential Backoff
 ```javascript
 const retryWithBackoff = async (apiCall, maxRetries = 3) => {
   for (let i = 0; i < maxRetries; i++) {
@@ -570,7 +570,7 @@ const retryWithBackoff = async (apiCall, maxRetries = 3) => {
 };
 ```
 
-#### **Token Refresh Strategy**
+#### Token Refresh Strategy
 ```javascript
 const apiCallWithTokenRefresh = async (apiCall) => {
   try {
@@ -589,14 +589,14 @@ const apiCallWithTokenRefresh = async (apiCall) => {
 
 ## Error Monitoring
 
-### **Error Tracking**
+### Error Tracking
 - **Error ID**: Unique identifier for each error
 - **Timestamp**: When error occurred
 - **User Context**: User ID, role, session info
 - **Request Details**: URL, method, headers, body
 - **Stack Trace**: For debugging purposes
 
-### **Error Reporting**
+### Error Reporting
 ```javascript
 // Report error to monitoring service
 const reportError = (error, context) => {
@@ -617,14 +617,14 @@ const reportError = (error, context) => {
 
 ## Best Practices
 
-### **Error Handling**
+### Error Handling
 1. **Always check response status** before processing data
 2. **Implement retry logic** for transient failures
 3. **Use exponential backoff** for rate limiting
 4. **Log errors** with sufficient context
 5. **Provide user-friendly error messages**
 
-### **Prevention**
+### Prevention
 1. **Validate data** before sending requests
 2. **Handle token expiration** gracefully
 3. **Implement proper error boundaries** in UI

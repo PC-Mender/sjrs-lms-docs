@@ -11,7 +11,7 @@ This document identifies remaining loopholes in the permission system and maps h
 
 ## CRITICAL LOOPHOLES
 
-### 1. **Frontend UI Bypass - Action Buttons Not Protected**
+### 1. Frontend UI Bypass - Action Buttons Not Protected
 
 **Problem**: Many frontend components show action buttons (Edit, Delete, Create) without checking permissions first.
 
@@ -35,7 +35,7 @@ This document identifies remaining loopholes in the permission system and maps h
 
 ---
 
-### 2. **BaseService Permission Validation Not Always Used**
+### 2. BaseService Permission Validation Not Always Used
 
 **Problem**: `BaseService` has `validatePermission()` method, but it's only called if:
 1. Service is instantiated with `setCurrentUserId()`
@@ -52,7 +52,7 @@ This document identifies remaining loopholes in the permission system and maps h
 
 ---
 
-### 3. **Missing Permission Checks in Some API Endpoints**
+### 3. Missing Permission Checks in Some API Endpoints
 
 **Problem**: Some API endpoints don't check permissions at all.
 
@@ -72,7 +72,7 @@ This document identifies remaining loopholes in the permission system and maps h
 
 ---
 
-### 4. **Inconsistent Permission Checking Patterns**
+### 4. Inconsistent Permission Checking Patterns
 
 **Problem**: Different endpoints use different patterns:
 - Some use `hasPermission()` directly
@@ -86,7 +86,7 @@ This document identifies remaining loopholes in the permission system and maps h
 
 ---
 
-### 5. **Frontend Permission Checks Are Optional**
+### 5. Frontend Permission Checks Are Optional
 
 **Problem**: Frontend permission checks (via `rbacClient.hasPermission()`) are:
 - Not enforced (can be bypassed by direct API calls)
@@ -101,7 +101,7 @@ This document identifies remaining loopholes in the permission system and maps h
 
 ## MEDIUM PRIORITY GAPS
 
-### 6. **"Import" and "Bulk Operations" Actions Not Implemented**
+### 6. "Import" and "Bulk Operations" Actions Not Implemented
 
 **Problem**: These actions exist in database but:
 - No API endpoints use them
@@ -112,7 +112,7 @@ This document identifies remaining loopholes in the permission system and maps h
 
 ---
 
-### 7. **Permission Cache Invalidation Not Complete**
+### 7. Permission Cache Invalidation Not Complete
 
 **Problem**: 
 - In-memory cache is cleared on updates 
@@ -125,7 +125,7 @@ This document identifies remaining loopholes in the permission system and maps h
 
 ---
 
-### 8. **BaseService Not Used Consistently**
+### 8. BaseService Not Used Consistently
 
 **Problem**: Many services don't extend BaseService or don't use it properly:
 - Direct API calls bypass BaseService
@@ -138,7 +138,7 @@ This document identifies remaining loopholes in the permission system and maps h
 
 ## LOW PRIORITY / FUTURE ENHANCEMENTS
 
-### 9. **No Permission Templates**
+### 9. No Permission Templates
 
 **Problem**: No way to quickly grant common permission sets.
 
@@ -146,7 +146,7 @@ This document identifies remaining loopholes in the permission system and maps h
 
 ---
 
-### 10. **No Time-Based Permissions**
+### 10. No Time-Based Permissions
 
 **Problem**: Can't grant temporary permissions.
 

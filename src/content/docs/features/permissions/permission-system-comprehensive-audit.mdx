@@ -18,7 +18,7 @@ The permission system has a solid foundation with database-driven permissions, b
 
 ## 1. Centralization Analysis
 
-### **Well Centralized**
+### Well Centralized
 
 #### Backend Core Permission Check
 - **Location**: `functions/middleware/permissions/has-permission.ts`
@@ -31,7 +31,7 @@ The permission system has a solid foundation with database-driven permissions, b
 - **Status**:  Centralized permission checking in middleware
 - **Supports**: Both permission-based (`requiredPermission`) and role-based (`allowedRoles` - deprecated)
 
-### **Partially Centralized**
+### Partially Centralized
 
 #### Frontend Permission Checking
 **Multiple paths exist:**
@@ -52,7 +52,7 @@ The permission system has a solid foundation with database-driven permissions, b
 
 ## 2. Code Quality Issues
 
-### **Critical Issues**
+### Critical Issues
 
 #### 1. Hardcoded Superuser Checks (257 instances)
 **Problem**: Many places check `role === 'superuser'` instead of using permissions.
@@ -98,7 +98,7 @@ const hasAccess = await hasPermission(env, { user, resource: 'system_logs', acti
 - **Issue**: Still exported and could be accidentally used
 - **Recommendation**: Remove or make it throw an error
 
-### **Moderate Issues**
+### Moderate Issues
 
 #### 1. Inconsistent Security Config Usage
 
@@ -180,14 +180,14 @@ BACKEND:
 
 ## 4. Database-Driven Status
 
-### **Database-Driven**
+### Database-Driven
 
 - All permissions stored in `role_permissions` table
 - No hardcoded permission grants (except superuser in migration)
 - Permission checks query database
 - Caching implemented for performance
 
-### **Not Fully Database-Driven**
+### Not Fully Database-Driven
 
 - Superuser checks are hardcoded in many places
 - Some endpoints use `allowedRoles` instead of permissions
@@ -236,14 +236,14 @@ BACKEND:
 
 ## 7. Clean Code Assessment
 
-### **Clean**
+### Clean
 
 - Core `hasPermission()` function is well-structured
 - Security middleware is clean and extensible
 - Permission-based security helpers are well-designed
 - Caching is properly implemented
 
-### **Needs Cleanup**
+### Needs Cleanup
 
 - Too many frontend permission checking utilities
 - Hardcoded role checks scattered throughout

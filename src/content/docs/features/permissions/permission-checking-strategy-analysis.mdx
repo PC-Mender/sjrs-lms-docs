@@ -51,16 +51,16 @@ The app uses **on-demand permission checking** (every request) with **aggressive
 
 ### Performance Metrics
 
-#### **First Request (Cache Miss)**
+#### First Request (Cache Miss)
 - **Database Query**: ~2-5ms
 - **Cache Write**: ~0.1ms
 - **Total**: ~2-6ms
 
-#### **Subsequent Requests (Cache Hit)**
+#### Subsequent Requests (Cache Hit)
 - **Cache Lookup**: ~0.1ms
 - **Total**: ~0.1ms
 
-#### **Cache Hit Rate (Estimated)**
+#### Cache Hit Rate (Estimated)
 - **After 1 minute**: ~80-90% hit rate
 - **After 5 minutes**: ~95-99% hit rate
 - **After cache expiry**: Back to database query
@@ -198,7 +198,7 @@ private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 ## Performance Optimization Features
 
-### 1. **Superuser Fast Path** 
+### 1. Superuser Fast Path 
 
 ```typescript
 // Superuser check happens FIRST (0ms)
@@ -209,7 +209,7 @@ if (String(roleName).toLowerCase() === 'superuser') {
 
 **Impact**: Superuser requests are **instant** (no cache, no database)
 
-### 2. **Cache-First Strategy** 
+### 2. Cache-First Strategy 
 
 ```typescript
 // Check cache BEFORE database
@@ -221,7 +221,7 @@ if (cached && Date.now() - cached.timestamp < CACHE_DURATION) {
 
 **Impact**: 95-99% of requests after initial load are **instant**
 
-### 3. **Efficient Database Queries** 
+### 3. Efficient Database Queries 
 
 ```typescript
 // Single optimized query with JOINs
@@ -238,7 +238,7 @@ LIMIT 1
 
 **Impact**: Database queries are **optimized** with indexes
 
-### 4. **Cache Invalidation on Updates** 
+### 4. Cache Invalidation on Updates 
 
 ```typescript
 // When permission is updated, cache is cleared immediately
@@ -284,27 +284,27 @@ rbacClient.clearCache(); // Frontend cache
 
 ## Why This Strategy is Optimal
 
-### 1. **Security First** 
+### 1. Security First 
 - Always checks current permissions (after cache expiry)
 - No stale permission data
 - Immediate invalidation on updates
 
-### 2. **Performance Optimized** 
+### 2. Performance Optimized 
 - 95-99% cache hit rate after initial load
 - Superuser fast path (0ms)
 - Efficient database queries
 
-### 3. **Memory Efficient** 
+### 3. Memory Efficient 
 - Only caches what's actually used
 - No pre-loading of unused permissions
 - Low memory footprint
 
-### 4. **Scalable** 
+### 4. Scalable 
 - Works with multiple worker instances
 - Each instance has its own cache
 - No shared state needed
 
-### 5. **Maintainable** 
+### 5. Maintainable 
 - Single source of truth
 - Centralized logic
 - Easy to debug and monitor
@@ -371,11 +371,11 @@ Next Request: Fresh database query
 
 ## Optimization Recommendations
 
-### Current State:  **ALREADY OPTIMIZED**
+### Current State:  ALREADY OPTIMIZED
 
 The current implementation is **already optimal**. However, here are potential enhancements:
 
-### 1. **KV Cache for Multi-Instance** (Optional)
+### 1. KV Cache for Multi-Instance (Optional)
 
 **Current**: In-memory cache (per worker instance)  
 **Enhancement**: Add KV cache for shared cache across instances
@@ -383,7 +383,7 @@ The current implementation is **already optimal**. However, here are potential e
 **Benefit**: Better cache hit rate in multi-instance deployments  
 **Trade-off**: Slight latency increase (KV read: ~1-2ms)
 
-### 2. **Batch Permission Checks** (Optional)
+### 2. Batch Permission Checks (Optional)
 
 **Current**: One check per request  
 **Enhancement**: Batch multiple checks in single query
@@ -391,7 +391,7 @@ The current implementation is **already optimal**. However, here are potential e
 **Benefit**: Fewer database queries  
 **Trade-off**: More complex code
 
-### 3. **Preload Common Permissions** (Optional)
+### 3. Preload Common Permissions (Optional)
 
 **Current**: On-demand loading  
 **Enhancement**: Preload user's most common permissions at login
@@ -405,7 +405,7 @@ The current implementation is **already optimal**. However, here are potential e
 
 ## Conclusion
 
-### **Current Strategy is OPTIMAL** 
+### Current Strategy is OPTIMAL 
 
 1. **Security**:  Always checks current permissions
 2. **Performance**:  95-99% cache hit rate, 0.1ms cached checks
@@ -413,14 +413,14 @@ The current implementation is **already optimal**. However, here are potential e
 4. **Scalability**:  Works with multiple instances
 5. **Maintainability**:  Centralized, easy to debug
 
-### **Performance Impact**
+### Performance Impact
 
 - **First Request**: ~2-5ms (acceptable)
 - **Cached Requests**: ~0.1ms (excellent)
 - **Superuser**: 0ms (perfect)
 - **Cache Hit Rate**: 95-99% (excellent)
 
-### **No Changes Needed** 
+### No Changes Needed 
 
 The current on-demand checking with multi-level caching is the **industry-standard approach** and provides the best balance of security, performance, and maintainability.
 

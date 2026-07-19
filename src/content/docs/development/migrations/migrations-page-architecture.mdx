@@ -34,7 +34,7 @@ src/components/features/migrations/
 └── index.ts            # Main feature barrel export
 ```
 
-### 1. **Page Component** (`src/pages/migrations/index.tsx`)
+### 1. Page Component (`src/pages/migrations/index.tsx`)
 - **Purpose**: Thin page wrapper that orchestrates feature components
 - **Responsibilities**: 
   - User authentication and permission checks
@@ -42,7 +42,7 @@ src/components/features/migrations/
   - Data flow coordination
   - Statistics calculation
 
-### 2. **Custom Hook** (`hooks/useMigrationData.ts`)
+### 2. Custom Hook (`hooks/useMigrationData.ts`)
 - **Purpose**: Centralized data management
 - **Responsibilities**:
   - API calls to backend
@@ -50,7 +50,7 @@ src/components/features/migrations/
   - Error handling
   - Data fetching logic
 
-### 3. **Components** (`components/`)
+### 3. Components (`components/`)
 - **MigrationProgress**: Progress bar and completion statistics
 - **MigrationHistory**: List of migrations with filtering and grouping
 - **DatabaseStatus**: Database health and feature status
@@ -58,7 +58,7 @@ src/components/features/migrations/
 - **MigrationDetailsModal**: Detailed migration information modal
 - **MigrationFilters**: Search and filter controls
 
-### 4. **Utilities** (`utils/migration.utils.ts`)
+### 4. Utilities (`utils/migration.utils.ts`)
 - **Purpose**: Helper functions for formatting and display
 - **Responsibilities**:
   - Status icon/color mapping
@@ -66,7 +66,7 @@ src/components/features/migrations/
   - Type label generation
   - Migration filtering and grouping
 
-### 5. **Types** (`types/migration.types.ts`)
+### 5. Types (`types/migration.types.ts`)
 - **Purpose**: TypeScript interfaces for type safety
 - **Defines**: Migration, MigrationStatus, MigrationDetails, MigrationFilterState
 

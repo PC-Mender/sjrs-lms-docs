@@ -7,23 +7,23 @@ This guide provides solutions to common issues you may encounter when using the 
 
 ## Quick Diagnosis
 
-### **Symptom: "Cannot connect to API"**
+### Symptom: "Cannot connect to API"
 - **Check:** Network connectivity, API URL
 - **Solution:** Verify `https://your-api-domain.com` is accessible
 
-### **Symptom: "Authentication failed"**
+### Symptom: "Authentication failed"
 - **Check:** Auth cookie present, session expired, account status
 - **Solution:** Re-authenticate (cookie-based login) and retry `GET /api/auth/me`
 
-### **Symptom: "Permission denied"**
+### Symptom: "Permission denied"
 - **Check:** User role, resource permissions
 - **Solution:** Verify user has required role/permissions
 
 ## Authentication Issues
 
-### **Issue: JWT Token Expired**
+### Issue: JWT Token Expired
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -32,12 +32,12 @@ This guide provides solutions to common issues you may encounter when using the 
 }
 ```
 
-#### **Causes**
+#### Causes
 - Token expired (24-hour lifetime)
 - User inactive for 15+ minutes
 - Multiple device login detected
 
-#### **Solutions**
+#### Solutions
 ```bash
 # 1. Re-authenticate
 curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
@@ -56,16 +56,16 @@ curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/force-logou
   }'
 ```
 
-#### **Prevention**
+#### Prevention
 ```javascript
 import { unifiedAPIClient } from '@/utilities/api/unified-api-client';
 
 await unifiedAPIClient.get('/api/auth/me');
 ```
 
-### **Issue: CSRF Token Missing/Invalid**
+### Issue: CSRF Token Missing/Invalid
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -74,7 +74,7 @@ await unifiedAPIClient.get('/api/auth/me');
 }
 ```
 
-#### **Solutions**
+#### Solutions
 ```bash
 # Bootstrap CSRF so the XSRF-TOKEN cookie exists
 curl -i -b cookies.txt "https://your-api-domain.com/api/auth/csrf"
@@ -83,7 +83,7 @@ curl -i -b cookies.txt "https://your-api-domain.com/api/auth/csrf"
 # matching the XSRF-TOKEN cookie value.
 ```
 
-#### **Prevention**
+#### Prevention
 ```javascript
 //  IMPORTANT: Always use unifiedAPIClient - it automatically handles CSRF tokens
 import { unifiedAPIClient } from '@/utilities/api/unified-api-client';
@@ -107,9 +107,9 @@ const makeRequest = async (endpoint, options = {}) => {
 
 **Note**: CSRF tokens are automatically added to all requests via the request interceptor in `src/utilities/api/unified-api-client.ts` (lines 735-743). Backend validation occurs in `functions/middleware/security/handlers/csrf-handler.ts` and is applied to all state-changing operations (POST, PUT, PATCH, DELETE) through the security middleware.
 
-### **Issue: Session Expired**
+### Issue: Session Expired
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -118,7 +118,7 @@ const makeRequest = async (endpoint, options = {}) => {
 }
 ```
 
-#### **Solutions**
+#### Solutions
 ```bash
 # Check session status
 curl -b cookies.txt "https://your-api-domain.com/api/auth/validate-session"
@@ -131,9 +131,9 @@ curl -X POST "https://your-api-domain.com/api/auth/sessions/cleanup" \
 
 ## Account Status & Email Verification Issues
 
-### **Issue: Account Inactive Error (Error 5013)**
+### Issue: Account Inactive Error (Error 5013)
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -142,14 +142,14 @@ curl -X POST "https://your-api-domain.com/api/auth/sessions/cleanup" \
 }
 ```
 
-#### **Causes**
+#### Causes
 1. **Auto-deactivation:** Account pending for 45+ days without email verification
 2. **Manual deactivation:** Admin manually deactivated the account
 3. **Email never verified:** User registered but never clicked verification link
 
-#### **Solutions Based on Account State**
+#### Solutions Based on Account State
 
-##### **Case 1: Email Already Verified**
+##### Case 1: Email Already Verified
 If you previously verified your email but account was auto-deactivated:
 
 ```bash
@@ -170,7 +170,7 @@ curl -X POST "https://your-api-domain.com/api/auth/login" \
 - You'll be prompted to complete your profile
 - After profile completion, admin will review and activate your account
 
-##### **Case 2: Email Not Verified**
+##### Case 2: Email Not Verified
 If you never verified your email:
 
 ```bash
@@ -185,14 +185,14 @@ curl -X POST "https://your-api-domain.com/api/auth/resend-confirmation" \
 # Then log in and complete your profile
 ```
 
-#### **Prevention**
+#### Prevention
 - Verify email within 45 days of registration
 - Complete profile immediately after email verification
 - Log in at least once to prevent auto-deactivation
 
-### **Issue: Email Not Confirmed (Error Code: EMAIL_NOT_CONFIRMED)**
+### Issue: Email Not Confirmed (Error Code: EMAIL_NOT_CONFIRMED)
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -201,7 +201,7 @@ curl -X POST "https://your-api-domain.com/api/auth/resend-confirmation" \
 }
 ```
 
-#### **Solutions**
+#### Solutions
 ```bash
 # 1. Check your email inbox and spam folder for verification link
 # Subject: "Verify Your Email - SJRS Library Management System"
@@ -219,9 +219,9 @@ curl -X POST "https://your-api-domain.com/api/auth/resend-confirmation" \
 # 4. After verification, log in to complete your profile
 ```
 
-### **Issue: Pending Approval (Error Code: PENDING_APPROVAL)**
+### Issue: Pending Approval (Error Code: PENDING_APPROVAL)
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -230,25 +230,25 @@ curl -X POST "https://your-api-domain.com/api/auth/resend-confirmation" \
 }
 ```
 
-#### **Explanation**
+#### Explanation
 This is **not an error** - your account is in the approval queue:
 - Email verified
 - Profile completed
 - ⏳ Waiting for admin to approve your account
 
-#### **What's Next**
+#### What's Next
 - Admin will review your profile within 24-48 hours
 - You'll receive an email when your account is approved
 - No action needed from you - just wait for approval
 
-#### **If Urgent**
+#### If Urgent
 Contact library administration:
 - Email: library@sjrslibrary.edu
 - Phone: +91-XXXX-XXXXX
 
-### **Issue: Account Suspended (Error Code: ACCOUNT_SUSPENDED)**
+### Issue: Account Suspended (Error Code: ACCOUNT_SUSPENDED)
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -257,17 +257,17 @@ Contact library administration:
 }
 ```
 
-#### **Causes**
+#### Causes
 - Policy violations (e.g., repeated overdue books)
 - Terms of service violations
 - Admin-initiated suspension
 
-#### **Solutions**
+#### Solutions
 **Contact library administration immediately:**
 - Email: library@sjrslibrary.edu
 - Include your account email and reason for contact
 
-### **Account Lifecycle Reference**
+### Account Lifecycle Reference
 
 | Account Status | Email Verified | Profile Complete | Can Login? | Next Action |
 |----------------|----------------|------------------|------------|-------------|
@@ -288,9 +288,9 @@ Contact library administration:
 
 ## � Validation Issues
 
-### **Issue: Missing Required Fields**
+### Issue: Missing Required Fields
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -303,7 +303,7 @@ Contact library administration:
 }
 ```
 
-#### **Solutions**
+#### Solutions
 ```bash
 # Ensure all required fields are included
 curl -X POST "https://your-api-domain.com/api/auth/register" \
@@ -317,16 +317,16 @@ curl -X POST "https://your-api-domain.com/api/auth/register" \
   }'
 ```
 
-#### **Required Fields Checklist**
+#### Required Fields Checklist
 - `email` - Valid email format
 - `password` - Minimum 8 characters
 - `first_name` - Non-empty string
 - `last_name` - Non-empty string
 - `user_type` - One of: student, professor, guest
 
-### **Issue: Invalid Data Types**
+### Issue: Invalid Data Types
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -340,7 +340,7 @@ curl -X POST "https://your-api-domain.com/api/auth/register" \
 }
 ```
 
-#### **Solutions**
+#### Solutions
 ```json
 //  Wrong
 {
@@ -353,15 +353,15 @@ curl -X POST "https://your-api-domain.com/api/auth/register" \
 }
 ```
 
-#### **Common Type Mismatches**
+#### Common Type Mismatches
 - `publication_year`: number (not string)
 - `isbn`: string (not number)
 - `due_date`: ISO 8601 string (not Date object)
 - `status`: string from allowed enum values
 
-### **Issue: Invalid Format**
+### Issue: Invalid Format
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -374,7 +374,7 @@ curl -X POST "https://your-api-domain.com/api/auth/register" \
 }
 ```
 
-#### **Format Requirements**
+#### Format Requirements
 ```bash
 # Email: user@domain.com
 # Phone: +1234567890
@@ -382,7 +382,7 @@ curl -X POST "https://your-api-domain.com/api/auth/register" \
 # ISBN: 978-1234567890 or 1234567890
 ```
 
-#### **Solutions**
+#### Solutions
 ```javascript
 // Validate before sending
 const validateEmail = (email) => {
@@ -397,7 +397,7 @@ const validateDate = (date) => {
 
 ## Permission Issues
 
-### ** RBAC Policy: Backend is Single Source of Truth**
+###  RBAC Policy: Backend is Single Source of Truth
 
 **The backend permissions endpoint (`/api/permissions/check`) is the single source of truth for all permission decisions.**
 
@@ -406,9 +406,9 @@ const validateDate = (date) => {
 - **Security First**: Never trust client-side permission checks alone - always validate on the backend
 - **Fail-Safe Design**: If the backend endpoint is unreachable or returns an error, the client should deny access
 
-### **Issue: Insufficient Permissions**
+### Issue: Insufficient Permissions
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -421,12 +421,12 @@ const validateDate = (date) => {
 }
 ```
 
-#### **Role Hierarchy**
+#### Role Hierarchy
 ```
 Superuser > Admin > Librarian > Student/Professor/Guest
 ```
 
-#### **Solutions**
+#### Solutions
 ```bash
 # Check user permissions (backend is authoritative)
 curl -X GET "https://your-api-domain.com/api/permissions/check?resource=books&action=create" \
@@ -436,15 +436,15 @@ curl -X GET "https://your-api-domain.com/api/permissions/check?resource=books&ac
 # Or use appropriate role for the operation
 ```
 
-#### **Common Permission Requirements**
+#### Common Permission Requirements
 - **Create Books**: Librarian+
 - **Manage Users**: Admin+
 - **System Logs**: Admin+
 - **Migrations**: Superuser only
 
-### **Issue: Resource Access Denied**
+### Issue: Resource Access Denied
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -453,7 +453,7 @@ curl -X GET "https://your-api-domain.com/api/permissions/check?resource=books&ac
 }
 ```
 
-#### **Solutions**
+#### Solutions
 ```bash
 # Check resource ownership
 curl -X GET "https://your-api-domain.com/api/books/123" \
@@ -465,9 +465,9 @@ curl -X GET "https://your-api-domain.com/api/books/123" \
 
 ## Rate Limiting Issues
 
-### **Issue: Too Many Requests**
+### Issue: Too Many Requests
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -481,13 +481,13 @@ curl -X GET "https://your-api-domain.com/api/books/123" \
 }
 ```
 
-#### **Rate Limits**
+#### Rate Limits
 - **Authentication**: 10 requests/minute
 - **Search**: 100 requests/minute
 - **CRUD Operations**: 50 requests/minute
 - **File Uploads**: 20 requests/minute
 
-#### **Solutions**
+#### Solutions
 ```javascript
 // Implement exponential backoff
 const retryWithBackoff = async (apiCall, maxRetries = 3) => {
@@ -527,9 +527,9 @@ const bulkOperation = async (items) => {
 
 ## Resource Not Found Issues
 
-### **Issue: Resource Doesn't Exist**
+### Issue: Resource Doesn't Exist
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -542,7 +542,7 @@ const bulkOperation = async (items) => {
 }
 ```
 
-#### **Solutions**
+#### Solutions
 ```bash
 # 1. Verify resource ID
 curl -X GET "https://your-api-domain.com/api/books" \
@@ -556,9 +556,9 @@ curl -X GET "https://your-api-domain.com/api/books/search?q=title" \
 # 4. Contact administrator if resource should exist
 ```
 
-### **Issue: Endpoint Not Found**
+### Issue: Endpoint Not Found
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -567,7 +567,7 @@ curl -X GET "https://your-api-domain.com/api/books/search?q=title" \
 }
 ```
 
-#### **Solutions**
+#### Solutions
 ```bash
 # 1. Check URL spelling
 # 2. Verify endpoint exists in documentation
@@ -577,9 +577,9 @@ curl -X GET "https://your-api-domain.com/api/books/search?q=title" \
 
 ## Server Errors
 
-### **Issue: Internal Server Error**
+### Issue: Internal Server Error
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -591,7 +591,7 @@ curl -X GET "https://your-api-domain.com/api/books/search?q=title" \
 }
 ```
 
-#### **Solutions**
+#### Solutions
 ```bash
 # 1. Retry request after delay
 # 2. Check system status
@@ -599,9 +599,9 @@ curl -X GET "https://your-api-domain.com/api/books/search?q=title" \
 # 4. Verify system configuration
 ```
 
-### **Issue: Service Unavailable**
+### Issue: Service Unavailable
 
-#### **Symptoms**
+#### Symptoms
 ```json
 {
   "success": false,
@@ -610,7 +610,7 @@ curl -X GET "https://your-api-domain.com/api/books/search?q=title" \
 }
 ```
 
-#### **Solutions**
+#### Solutions
 ```bash
 # 1. Wait for service to resume
 # 2. Check maintenance schedule
@@ -620,23 +620,23 @@ curl -X GET "https://your-api-domain.com/api/books/search?q=title" \
 
 ## Debugging Techniques
 
-### **1. Enable Verbose Logging**
+### 1. Enable Verbose Logging
 
-#### **cURL Verbose Mode**
+#### cURL Verbose Mode
 ```bash
 curl -v -X GET "https://your-api-domain.com/api/books" \
   -b cookies.txt
 ```
 
-#### **Check Response Headers**
+#### Check Response Headers
 ```bash
 curl -I -X GET "https://your-api-domain.com/api/books" \
   -b cookies.txt
 ```
 
-### **2. Test with Minimal Data**
+### 2. Test with Minimal Data
 
-#### **Minimal Valid Request**
+#### Minimal Valid Request
 ```bash
 # Test with only required fields
 curl -X POST "https://your-api-domain.com/api/auth/register" \
@@ -650,9 +650,9 @@ curl -X POST "https://your-api-domain.com/api/auth/register" \
   }'
 ```
 
-### **3. Check Authentication Step by Step**
+### 3. Check Authentication Step by Step
 
-#### **Authentication Flow Test**
+#### Authentication Flow Test
 ```bash
 # 1. Test health endpoint (no auth required)
 curl -X GET "https://your-api-domain.com/api/health"
@@ -674,7 +674,7 @@ curl -X GET "https://your-api-domain.com/api/books" \
 
 ## Monitoring and Prevention
 
-### **Error Tracking**
+### Error Tracking
 ```javascript
 // Implement error monitoring
 const monitorAPIErrors = (error, context) => {
@@ -695,7 +695,7 @@ const monitorAPIErrors = (error, context) => {
 };
 ```
 
-### **Health Checks**
+### Health Checks
 ```javascript
 // Regular health checks
 const checkAPIHealth = async () => {
@@ -720,7 +720,7 @@ const checkAPIHealth = async () => {
 setInterval(checkAPIHealth, 5 * 60 * 1000);
 ```
 
-### **Preventive Measures**
+### Preventive Measures
 1. **Implement retry logic** for transient failures
 2. **Use exponential backoff** for rate limiting
 3. **Validate data** before sending requests
@@ -730,13 +730,13 @@ setInterval(checkAPIHealth, 5 * 60 * 1000);
 
 ## Getting Help
 
-### **Before Contacting Support**
+### Before Contacting Support
 1. Check this troubleshooting guide
 2. Review [Error Codes Reference](/api/error-codes-reference)
 3. Test with [API Testing Collection](/api/api-testing-collection)
 4. Verify your setup with [Quick Start Guide](/api/quick-start-guide)
 
-### **Information to Provide**
+### Information to Provide
 - **Error Code**: From response body
 - **Error ID**: If provided in error details
 - **Endpoint**: URL that failed
@@ -745,7 +745,7 @@ setInterval(checkAPIHealth, 5 * 60 * 1000);
 - **Steps to Reproduce**: Exact sequence of actions
 - **Environment**: Development/production, client type
 
-### **Support Resources**
+### Support Resources
 - **[Error Codes Reference](/api/error-codes-reference)** - Detailed error information
 - **[API Testing Collection](/api/api-testing-collection)** - Test examples and procedures
 - **[Quick Start Guide](/api/quick-start-guide)** - Setup and basic usage

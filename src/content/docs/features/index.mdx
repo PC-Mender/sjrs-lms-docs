@@ -7,71 +7,71 @@ This directory contains detailed documentation for specific features and systems
 
 ## Documentation Index
 
-### **Reference Books System**
+### Reference Books System
 - **[Reference Books System Guide](./reference-books/system-guide)** - Complete guide to the reference books feature
 - **[Reference Books Database Diagram](./reference-books/database-diagram)** - Database schema and relationships for reference books
 
-### **Email Service**
+### Email Service
 - **[Email Service Documentation](./email-service/)** - Comprehensive email service architecture and implementation
 
-### **Action Logging System**
+### Action Logging System
 - **[Action Logging Documentation](./action-logging)** - Comprehensive audit trail and monitoring system
 - **[Action Logs User Guide](../user-guides/action-logs-guide)** - User guide for administrators
 
-### **Permissions System**
+### Permissions System
 - **[Permissions System Documentation](./permissions/)** - Role-based access control with Zustand optimization
 - **[Permission System Architecture](../architecture/permission-system)** - System design and database schema
 - **[Roles and Permissions Guide](../development/roles-and-permissions)** - Role management and hierarchy
 
-### **User Onboarding**
+### User Onboarding
 - **[Onboarding Status System](./onboarding-status)** - Complete workflow status reference (pending_email_confirmation, profile_incomplete, pending_approval, complete)
 - **[Registration Flow Guide](../user-guides/registration-flow)** - User registration and approval process
 
-### **Dashboard System**
+### Dashboard System
 - **[Dashboard Configuration Guide](./dashboard-config-guide)** - Unified, config-driven dashboard for all roles
 - **[Modular Dashboard System](../architecture/modular-dashboard-system)** - Historical proposal (archived)
 - **[Unified Dashboard Pilot](../development/unified-dashboard-pilot-ready)** - Pilot documentation (archived)
 
-### **Forms & Claims**
+### Forms & Claims
 - **[TADA Guide](../user-guides/tada-guide)** - Travel Allowance / Dearness Allowance claims
 - **[PAPM Guide](../user-guides/papm-guide)** - Private Account Payment Module submissions
 
-### **Personal Productivity**
+### Personal Productivity
 - **[Notes Guide](../user-guides/notes-guide)** - Personal notes with revisions, trash bin, and restore
 - **[Bookmarks Guide](../user-guides/bookmarks-guide)** - Save and organize quick links
 
-### **Community & Feedback**
+### Community & Feedback
 - **[Issue Reports Guide](../user-guides/issue-reports-guide)** - Public bug reports, upvotes, and GitHub sync
 
-### **Notifications System**
+### Notifications System
 - **[App Notifications Module](./notifications/)** - User-specific in-app notifications
 - **[Notification Types Guide](./notifications/notification-types-guide)** - Complete guide to Announcements, System Notifications, and App Notifications
 
-### **Badge System**
+### Badge System
 - **[Badge System Documentation](./badges/)** - Comprehensive gamification and achievement system
 
-### **Location Services**
+### Location Services
 - **[Location Services Documentation](./locations/)** - Global location data system (Countries, States, Cities)
 
-### **Help & Support**
+### Help & Support
 - **[Frequently Asked Questions](./faqs/)** - Comprehensive FAQs for all user roles
 - **[Notification Types Guide](./notifications/notification-types-guide)** - Guide to system notifications and announcements
 
 ## Quick Navigation
 
-### **For Library Staff**
+### For Library Staff
 - Start with [Reference Books System Guide](./reference-books/system-guide) for managing reference materials
 - Review [Email Service Documentation](./email-service/) for notification systems
 - Learn about [Notification Types](./notifications/notification-types-guide) for sending announcements and system notifications
 - Manage [Digital Resources](../user-guides/digital-resources-guide) and [Resource Types](../user-guides/digital-resources-guide#resource-types)
 
-### **For Developers**
+### For Developers
 - Begin with [Reference Books Database Diagram](./reference-books/database-diagram) for data structure
 - Reference [Email Service Documentation](./email-service/) for integration
 - Review [Dashboard Configuration Guide](./dashboard-config-guide) for the unified dashboard architecture
 - Review [Notification Types Guide](./notifications/notification-types-guide) for API endpoints and implementation details
 
-### **For System Administrators**
+### For System Administrators
 - Focus on [Email Service Documentation](./email-service/) for email configuration
 - Review [Reference Books System Guide](./reference-books/system-guide) for feature management
 - Monitor [Action Logging Documentation](./action-logging) for system audit trails
@@ -106,7 +106,7 @@ import { Notification, NotificationType } from 'src/types/notifications';
 
 ## Features Overview
 
-### **Reference Books System**
+### Reference Books System
 - **Purpose**: Manage reference materials and digital resources
 - **Key Features**:
   - Digital book management
@@ -115,12 +115,12 @@ import { Notification, NotificationType } from 'src/types/notifications';
   - Access control
 - **Technology**: Cloudflare D1 database with React frontend
 
-### **Email Service**
+### Email Service
 - **Purpose**: Send notifications and communications to users
 - **Architecture**: Direct Mailjet integration
 - **Types**: Account and transactional emails via Mailjet
 
-### **Action Logging System**
+### Action Logging System
 - **Purpose**: Comprehensive audit trail and system monitoring
 - **Key Features**:
   - Automatic action capture
@@ -129,7 +129,7 @@ import { Notification, NotificationType } from 'src/types/notifications';
   - Role-based access control
 - **Technology**: Cloudflare D1 database with comprehensive logging
 
-### **Permissions System**
+### Permissions System
 - **Purpose**: Role-based access control with performance optimization
 - **Key Features**:
   - Zustand-powered state management
@@ -139,7 +139,7 @@ import { Notification, NotificationType } from 'src/types/notifications';
   - Audit logging for security
 - **Technology**: React hooks with Zustand store, TypeScript support
 
-### **Dashboard System**
+### Dashboard System
 - **Purpose**: Single, config-driven dashboard for all user roles
 - **Key Features**:
   - Unified `/dashboard` route
@@ -149,7 +149,7 @@ import { Notification, NotificationType } from 'src/types/notifications';
   - Permission-based widget filtering
 - **Technology**: React, TypeScript, centralized config files
 
-### **Badge System**
+### Badge System
 - **Purpose**: Gamification and achievement recognition system
 - **Key Features**:
   - Automatic badge awarding based on user actions
@@ -160,7 +160,7 @@ import { Notification, NotificationType } from 'src/types/notifications';
   - Full audit logging
 - **Technology**: Cloudflare D1 database with React frontend
 
-### **Digital Resources**
+### Digital Resources
 - **Purpose**: Manage and read e-books, PDFs, and online materials
 - **Key Features**:
   - In-app PDF reader
@@ -170,7 +170,7 @@ import { Notification, NotificationType } from 'src/types/notifications';
   - Activity analytics
 - **Technology**: Cloudflare R2 storage, React PDF viewer, D1
 
-### **User Notes**
+### User Notes
 - **Purpose**: Private note-taking for users
 - **Key Features**:
   - Rich text notes
@@ -179,7 +179,7 @@ import { Notification, NotificationType } from 'src/types/notifications';
   - Dashboard widget
 - **Technology**: Cloudflare D1 with React frontend
 
-### **Issue Reports**
+### Issue Reports
 - **Purpose**: Community-driven bug reporting and feature requests
 - **Key Features**:
   - Public issue list
@@ -190,58 +190,58 @@ import { Notification, NotificationType } from 'src/types/notifications';
 
 ## Getting Started
 
-### **Reference Books System**
+### Reference Books System
 1. **Read the [System Guide](./reference-books/system-guide)** to understand the feature
 2. **Review the [Database Diagram](./reference-books/database-diagram)** for data structure
 3. **Check API documentation** for integration details
 
-### **Email Service**
+### Email Service
 1. **Review [Email Service Documentation](./email-service/)** for architecture
 2. **Configure Mailjet API** for email delivery
 
-### **Action Logging System**
+### Action Logging System
 1. **Read [Action Logging Documentation](./action-logging)** for technical details
 2. **Review [Action Logs User Guide](../user-guides/action-logs-guide)** for usage
 3. **Configure permissions** for role-based access
 
-### **Permissions System**
+### Permissions System
 1. **Read [Permissions System Documentation](./permissions/)** for comprehensive guide
 2. **Review [usePermissionsOptimized hook](./permissions/#-usepermissionsoptimized-hook)** for implementation
 3. **Check [Migration Guide](./permissions/#migration-guide)** for upgrading from original hook
 4. **Configure role-based access** for your application needs
 
-### **Badge System**
+### Badge System
 1. **Read [Badge System Documentation](./badges/)** for comprehensive guide
 2. **Review API endpoints** for badge operations
 3. **Configure automatic badge evaluators** for user actions
 4. **Set up badge management** for administrators
 
-### **Dashboard System**
+### Dashboard System
 1. **Read the [Dashboard Configuration Guide](./dashboard-config-guide)**
 2. **Review the widget registry** in the application source
 3. **Use the config editor** (superusers) to customize layouts
 
 ## Best Practices
 
-### **Reference Books Management**
+### Reference Books Management
 - **Organize by categories** for easy navigation
 - **Use consistent naming** for files and metadata
 - **Implement search functionality** for quick access
 - **Control access** based on user permissions
 
-### **Email Service**
+### Email Service
 - **Use direct Mailjet** for account-related emails
 - **Use queues** for transactional emails
 - **Implement proper error handling** for reliability
 - **Monitor delivery rates** for optimization
 
-### **Action Logging System**
+### Action Logging System
 - **Log all meaningful actions** for comprehensive audit trail
 - **Use appropriate action types** for clear categorization
 - **Implement proper error handling** for logging reliability
 - **Monitor log performance** for system optimization
 
-### **Dashboard System**
+### Dashboard System
 - **Keep configs serializable** — no JSX in config files
 - **Register widgets centrally** before using them in configs
 - **Use permission checks** to hide widgets users cannot access
@@ -249,43 +249,43 @@ import { Notification, NotificationType } from 'src/types/notifications';
 
 ## Integration Points
 
-### **User Experience & Analytics**
+### User Experience & Analytics
 - **Reading Analytics**: Comprehensive reading trends and patterns
 - **Loan Distribution**: Visual breakdown of borrowing habits
 - **Activity Metrics**: Login frequency and engagement tracking
 - **Performance**: < 2s load time with parallel data fetching
 
-### **System Notifications**
+### System Notifications
 - **Bell Dropdown**: Centralized notification hub with per-type counts
 - **Event Cards**: Rich notification content with actions
 - **Smart Filtering**: Category-based organization
 - **Permission-Aware**: Role-based notification access
 
-### **User Interface**
+### User Interface
 - **Responsive Design**: Mobile-first approach with adaptive layouts
 - **Theme Support**: Dark/light mode with consistent styling
 - **Accessibility**: WCAG 2.1 AA compliance throughout
 - **Performance**: Core Web Vitals optimization
 
-### **Reference Books Integration**
+### Reference Books Integration
 - **User Management**: Access control based on user roles
 - **Search System**: Integration with global search
 - **File Storage**: Cloudflare R2 for file management
 - **API Endpoints**: RESTful API for CRUD operations
 
-### **Email Service Integration**
+### Email Service Integration
 - **User Registration**: Confirmation emails
 - **Loan Management**: Notification emails
 - **System Alerts**: Administrative notifications
 - **Password Reset**: Security emails
 
-### **Action Logging Integration**
+### Action Logging Integration
 - **User Management**: Track all user-related activities
 - **Data Operations**: Monitor CRUD operations
 - **Authentication**: Log login/logout events
 - **Security Monitoring**: Track suspicious activities
 
-### **Library Management**
+### Library Management
 
 #### Book Operations
 - **Catalog Management**: Advanced book catalog with search and filtering

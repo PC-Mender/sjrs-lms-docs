@@ -30,23 +30,23 @@ src/pages/book-catalog/
 
 ## Architecture Principles
 
-### 1. **Separation of Concerns**
+### 1. Separation of Concerns
 - **Components**: Pure UI components with minimal logic
 - **Services**: Business logic and API communication
 - **Utils**: Reusable utility functions
 - **Types**: TypeScript interfaces and types
 
-### 2. **Modular Design**
+### 2. Modular Design
 - Each component has a single responsibility
 - Components are easily testable and maintainable
 - Clear interfaces between components
 
-### 3. **Backend Alignment**
+### 3. Backend Alignment
 - Uses existing D1 hooks (`useD1BooksQuery`)
 - Follows established API patterns
 - Integrates with existing services (`BorrowRecordService`)
 
-### 4. **State Management**
+### 4. State Management
 - Container component manages global state
 - Child components receive props and callbacks
 - Clear data flow from parent to children

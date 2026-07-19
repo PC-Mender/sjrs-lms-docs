@@ -6,18 +6,18 @@ slug: changelog
 
 > **Note:** This page highlights major updates and recent patches. For a complete list of all technical changes since inception, see the **[Full Technical Changelog](/full-changelog)**.
 
-## **Latest Updates**
+## Latest Updates
 
-### **Version 7.27.0** ⭐ **CURRENT** (July 18, 2026)
+### Version 7.27.0 ⭐ CURRENT (July 18, 2026)
 
-#### **Dashboard & User Experience**
+#### Dashboard & User Experience
 - **Composite Superuser Dashboard**: Superusers see a unified dashboard combining widgets from all roles.
 - **Gamified Empty States**: Patron dashboards now show actionable CTAs and encouragement when widgets are empty.
 - **Gamified Onboarding**: New welcome modal, first-quest banner, and first-badge celebration for students, professors, guests, and users.
 - **Dashboard Config Editor Improvements**: Better race guards, `App.useApp` integration, and fixed foreign-key reference to `library_users`.
 - **Resource Type Enhancements**: Linked resource count column, server-side pagination, search, and dedicated validation schemas.
 
-#### **Security & Stability**
+#### Security & Stability
 - **Probe Filter Middleware**: Blocks vulnerability-scanner traffic and suspicious paths.
 - **Loan Data Visibility**: Tightened to `read_all` permission only.
 - **Author Validation**: Optional author fields now accept `null` values cleanly.
@@ -25,50 +25,50 @@ slug: changelog
 
 ---
 
-### **Version 7.26.0** (July 17, 2026)
+### Version 7.26.0 (July 17, 2026)
 
-#### **Dashboard Architecture**
+#### Dashboard Architecture
 - **Config-Driven Widget Data Provisioning**: Widgets declare their own data sources and mappers.
 - **Serializable Configs**: Config files moved from `.tsx` to `.ts` with an icon registry for serialization.
 - **Widget Definitions Split**: Admin and user widget definitions separated for maintainability.
 
-#### **Notes System**
+#### Notes System
 - **Revision Restore**: Restore previous note revisions with a configurable limit.
 - **XSS Sanitizer & Draft Autosave**: Safer note content and automatic draft saving.
 
-#### **Digital Resources**
+#### Digital Resources
 - Improved file upload modal UX and error handling.
 
 ---
 
-### **Version 7.25.0 – 7.25.3** (July 15 – 17, 2026)
+### Version 7.25.0 – 7.25.3 (July 15 – 17, 2026)
 
-#### **New & Improved**
+#### New & Improved
 - **TADA Integration**: Registration number pulled from student profile into TADA forms.
 - **Global Rate Limit Banner**: Live countdown banner when API rate limits are hit.
 - **User Notes Soft Delete**: Trash bin, restore, permanent delete, and edit history.
 
-#### **Dashboard**
+#### Dashboard
 - Consolidated all role pages into a single `UnifiedDashboard` with automatic data fetching.
 - Extracted shared config fragments to eliminate role-specific duplication.
 - Added staging environment configuration and deploy scripts.
 
 ---
 
-### **Version 7.24.0** (July 14, 2026)
+### Version 7.24.0 (July 14, 2026)
 
-#### **User Notes**
+#### User Notes
 - Added personal notes feature with backend API, migrations, and frontend pages.
 
-#### **Bookmarks**
+#### Bookmarks
 - Manual refresh with loading feedback.
 - Digital library links auto-seeded into user bookmarks on activation.
 
 ---
 
-### **Version 7.23.0** (July 14, 2026)
+### Version 7.23.0 (July 14, 2026)
 
-#### **Digital Resources**
+#### Digital Resources
 - **In-App PDF Reader**: Read digital resources directly in the browser with page navigation and zoom.
 - **Read Session Tracking**: Track reading sessions and progress.
 - **Download Sources**: Manage multiple download sources per resource.
@@ -76,9 +76,9 @@ slug: changelog
 
 ---
 
-### **Version 7.22.0** (July 13, 2026)
+### Version 7.22.0 (July 13, 2026)
 
-#### **Analytics & UX**
+#### Analytics & UX
 - Refactored analytics dashboard with consolidated items, search, and tabbed views.
 - Added refresh-status button to the pending-approval page.
 - Added resend cooldown timer to email confirmation.
@@ -86,87 +86,87 @@ slug: changelog
 
 ---
 
-### **Version 7.21.0** (July 13, 2026)
+### Version 7.21.0 (July 13, 2026)
 
-#### **Librarian & Dean Dashboards**
+#### Librarian & Dean Dashboards
 - Redesigned librarian dashboard with analytics widgets and expanded stats.
 - Added Account Status and Onboarding Status widgets to the dean dashboard.
 - Switched dashboard queries from `REAL_TIME` to `FREQUENT` preset for better efficiency.
 
 ---
 
-### **Version 7.20.0 – 7.20.1** (July 12 – 13, 2026)
+### Version 7.20.0 – 7.20.1 (July 12 – 13, 2026)
 
-#### **Dashboard & Security**
+#### Dashboard & Security
 - Reworked dean dashboard to mirror admin layout.
 - Added global rate-limit countdown banner for 429 responses.
 - Permission-based access for dean admin endpoints.
 
 ---
 
-### **Version 7.19.0** (July 12, 2026)
+### Version 7.19.0 (July 12, 2026)
 
-#### **Operations**
+#### Operations
 - Version poller toast notification for new deployments.
 - New About page with project history and contributor credits.
 - Recent activity displays user name and year of study instead of raw email.
 
 ---
 
-### **Version 7.18.0** (July 12, 2026)
+### Version 7.18.0 (July 12, 2026)
 
-#### **Multi-Role Support**
+#### Multi-Role Support
 - Multiple roles displayed in profile, tables, view modals, and member cards.
 - Multi-role selection in edit forms with change detection.
 - Default illustrated male avatars for users without profile photos.
 
 ---
 
-### **Version 7.17.0 – 7.17.1** (July 11, 2026)
+### Version 7.17.0 – 7.17.1 (July 11, 2026)
 
-#### **Mobile & Forms**
+#### Mobile & Forms
 - Responsive mobile layouts for TADA & PAPM list tables.
 - TADA & PAPM forms improved with better print layout, Metro option, and signature removal.
 - Mobile header now shows notification bell next to the hamburger menu.
 
 ---
 
-### **Version 7.16.0** (July 11, 2026)
+### Version 7.16.0 (July 11, 2026)
 
-#### **TADA Forms**
+#### TADA Forms
 - Added **Travel Allowance / Dearness Allowance (TADA)** claim form with full CRUD API, validation, and print support.
 
 ---
 
-### **Version 7.15.0** (July 10, 2026)
+### Version 7.15.0 (July 10, 2026)
 
-#### **PAPM Forms**
+#### PAPM Forms
 - Replaced PAPM show page with in-modal read-only view.
 - Added print preview and watermark.
 
 ---
 
-### **Version 7.14.0** (July 10, 2026)
+### Version 7.14.0 (July 10, 2026)
 
-#### **PAPM & Affiliations**
+#### PAPM & Affiliations
 - Added **Private Account Payment Module (PAPM)** backend API, frontend forms, pages, and routing.
 - Added drawee metadata, finalize confirmation, and improved print layout.
 - Added affiliation fields and profile support.
 
 ---
 
-### **Version 7.13.0** (July 9, 2026)
+### Version 7.13.0 (July 9, 2026)
 
-#### **Affiliations & Branding**
+#### Affiliations & Branding
 - Added dioceses and congregations management with profile integration.
 - Added member count columns to affiliation tables.
 - Added seminary logo to headers, favicon, and auth pages.
 
 ---
 
-### **Version 7.12.0** (July 9, 2026)
+### Version 7.12.0 (July 9, 2026)
 
-#### **Superuser Dashboard**
+#### Superuser Dashboard
 - Integrated audit log and loading states into superuser system health.
 - Computed system health percentage from dependency metrics.
 - Added login/logout audit logging.
@@ -174,17 +174,17 @@ slug: changelog
 
 ---
 
-### **Version 7.11.0** (July 9, 2026)
+### Version 7.11.0 (July 9, 2026)
 
-#### **Migrated Users & Responsiveness**
+#### Migrated Users & Responsiveness
 - Added migrated landing page for PHP portal users.
 - Authors page and linked-items modal made mobile responsive.
 
 ---
 
-### **Version 7.10.0 – 7.10.3** (July 7 – 8, 2026)
+### Version 7.10.0 – 7.10.3 (July 7 – 8, 2026)
 
-#### **Performance & Mobile**
+#### Performance & Mobile
 - Unified table mobile responsiveness with column condensing.
 - Stale chunk dynamic import errors resolved after deployments.
 - Inline styles migrated to CSS classes across auth, layout, and public pages.
@@ -192,144 +192,144 @@ slug: changelog
 
 ---
 
-### **Version 7.9.0** (July 6, 2026)
+### Version 7.9.0 (July 6, 2026)
 
-#### **Unified Dashboard Rollout**
+#### Unified Dashboard Rollout
 - Migrated user dashboard to the unified dashboard system.
 - Added motivation widgets and visual effects to the student dashboard.
 
 ---
 
-### **Version 7.8.0** (July 6, 2026)
+### Version 7.8.0 (July 6, 2026)
 
-#### **Session Reliability**
+#### Session Reliability
 - Prevented logout calls when the user is unauthenticated.
 
 ---
 
-### **Version 7.7.0** (July 5, 2026)
+### Version 7.7.0 (July 5, 2026)
 
-#### **Catalog**
+#### Catalog
 - Unified catalog page with resource type filter and global search.
 
 ---
 
-### **Version 7.6.0** (July 5, 2026)
+### Version 7.6.0 (July 5, 2026)
 
-#### **Help & Notifications**
+#### Help & Notifications
 - Added PageHelp drawers to 7 additional pages.
 - AI-generated release notes merged into system notifications.
 
 ---
 
-### **Version 7.5.0** (July 5, 2026)
+### Version 7.5.0 (July 5, 2026)
 
-#### **Performance**
+#### Performance
 - Parallelized COUNT and SELECT queries across APIs and repositories.
 - Optimized KV operations and made request logging non-blocking.
 
 ---
 
-### **Version 7.4.0** (July 4, 2026)
+### Version 7.4.0 (July 4, 2026)
 
-#### **Dashboard Standardization**
+#### Dashboard Standardization
 - Standardized stat cards across all roles with a universal 6-card set.
 - Added grid-5 layout support for stat cards.
 - Replaced universal stats with library-resource metrics.
 
 ---
 
-### **Version 7.3.0** (July 4, 2026)
+### Version 7.3.0 (July 4, 2026)
 
-#### **Issue Reports**
+#### Issue Reports
 - Added issue reports feature with GitHub integration and image attachments.
 - Added community engagement tables, public issue list, and upvotes.
 - Scheduled GitHub issue sync job.
 
 ---
 
-### **Version 7.2.0** (July 3, 2026)
+### Version 7.2.0 (July 3, 2026)
 
-#### **Security & Auth UX**
+#### Security & Auth UX
 - Auto-refresh on expired Cloudflare challenge chunk failures.
 - Hardened OTP system with cooldown, invalidation, and plaintext rejection.
 - Added check-status links to login and registration pages.
 
 ---
 
-### **Version 7.1.0** (July 2, 2026)
+### Version 7.1.0 (July 2, 2026)
 
-#### **New Features**
+#### New Features
 - Added simplified **magazines** module with full CRUD.
 - Added `www.sjrslms.in` custom domain and cross-subdomain cookie support.
 
 ---
 
-### **Version 7.0.0** (July 2, 2026)
+### Version 7.0.0 (July 2, 2026)
 
-#### **API Hardening**
+#### API Hardening
 - Migrated all API routes to `/api/v1/` prefix and removed legacy fallback.
 - Implemented D1-based idempotency for critical POST endpoints.
 - Added `failClosed` mode for rate limiting and idempotency on auth and critical writes.
 
 ---
 
-### **Version 6.34.7** ⭐ **PREVIOUS CURRENT** (June 28, 2026)
+### Version 6.34.7 ⭐ PREVIOUS CURRENT (June 28, 2026)
 
-#### **Security + Data Integrity**
+#### Security + Data Integrity
 - **Cross-User Cache Isolation (6.34.7)**: Fixed cache keying for user-specific GET requests to prevent cross-user data leakage.
 - **CodeQL Hardening (6.34.3)**: Removed useless conditionals and defensive dead code identified by security scanning.
 - **Dependency Security Updates (6.28.0, 6.27.0, 6.26.0)**: Addressed CVEs and npm audit findings via targeted package updates.
 
-#### **Core UX and Platform Updates**
+#### Core UX and Platform Updates
 - **Inline Modal Consolidation (6.34.6, 6.34.5)**: Article and loan CRUD flows were consolidated into list-first pages with inline modals.
 - **Dynamic User Types (6.32.1, 6.32.0)**: Completed dynamic user type CRUD and moved student user type loading to API-driven data.
 - **Unified Dashboard Route Model (6.23.1)**: Standardized role dashboards behind a unified `/dashboard` route model.
 
-#### **Catalog and Reference Enhancements**
+#### Catalog and Reference Enhancements
 - **Reference Books Improvements (6.31.0, 6.29.0)**: Added tracking views, linked-items modal, advanced filters, and author-level reference counts.
 - **Author Discovery UX (6.30.0)**: Added A-Z and count filters to author lists.
 - **Storage Management Modules (6.23.0)**: Added locations, shelf-codes, and key-tags pages and routing integration.
 
-### **Version 6.4.0 – 6.18.3** (March 13 – April 4, 2026)
+### Version 6.4.0 – 6.18.3 (March 13 – April 4, 2026)
 
-#### **Feature Growth + Reliability**
+#### Feature Growth + Reliability
 - **Enhanced User Dashboard (6.4.0)**: Added analytics-focused user dashboard.
 - **Books (6.4.0)**: Added `GET /api/books/sections` endpoint for book section discovery.
 - **Security/Deps (6.14.2, 6.15.1)**: Dependency upgrades to address vulnerabilities and stability issues.
 
-### **Version 6.3.2** (March 11, 2026)
+### Version 6.3.2 (March 11, 2026)
 
-#### **Instant UX polish + Docs alignment**
+#### Instant UX polish + Docs alignment
 - **Footer Navigation**: Fixed footer links to always scroll to top, keeping deep doc sections readable.
 - **Documentation Sync**: Docs now reflect every 6.3.x change from headers overhaul to announcement guidance updates.
 
-### **Version 6.3.0 – 6.3.1** (March 11, 2026)
+### Version 6.3.0 – 6.3.1 (March 11, 2026)
 
-#### **Experience Consistency & Help Enhancements**
+#### Experience Consistency & Help Enhancements
 - **Standardized Headers**: All dashboard headers follow the plagiarism-help reference layout for consistent affordances.
 - **Plagiarism Help Drawer**: Unified drawer interaction pattern across dashboards; launches instantly with contextual copy.
 - **Internal Release (6.3.1)**: Version alignment to prep for public rollout, no additional user-facing changes.
 
-### **Version 6.2.0** (March 11, 2026)
+### Version 6.2.0 (March 11, 2026)
 
-#### **Announcement Guidance Refresh**
+#### Announcement Guidance Refresh
 - **Sidebar Clarity**: Refined copy and hierarchy so moderators see next steps and review tips at a glance.
 
-### **Version 6.1.0** (March 11, 2026)
+### Version 6.1.0 (March 11, 2026)
 
-#### **Roles & CRUD Experience**
+#### Roles & CRUD Experience
 - **Roles Modal Overhaul**: Adopted instant-close + optimistic C/U/D flow with centralized modal controller hooks.
 - **Data Integrity**: Cleared migration debt and repaired dangling foreign keys for stable rollouts.
 
-#### **Reliability Improvements**
+#### Reliability Improvements
 - **Authors & Students**: Optimistic cache handling now matches the reference implementation.
 - **Guests**: Delete confirmations fire asynchronously via centralized refresh callback.
 - **Professors**: Optimistic updates across create/update/delete with rollback safety.
 
-### **Version 6.0.0** ⭐ **MAJOR UPDATE** (March 10, 2026)
+### Version 6.0.0 ⭐ MAJOR UPDATE (March 10, 2026)
 
-#### **Instant-Close Modal Pattern** ⭐ **BREAKING CHANGE**
+#### Instant-Close Modal Pattern ⭐ BREAKING CHANGE
 The SJRS LMS now features **instant-close modal behavior** for all CRUD operations, providing immediate user feedback and improved UX responsiveness.
 
 **Key Changes:**
@@ -344,19 +344,19 @@ The SJRS LMS now features **instant-close modal behavior** for all CRUD operatio
 - Consistent behavior across all CRUD operations
 - Improved perceived performance and user satisfaction
 
-#### **Code Quality Improvements**
+#### Code Quality Improvements
 - **File Size Compliance**: Split large files to comply with 300-line limit
 - **Maintainability**: Improved code organization and readability
 
-### **Version 5.0.1** (March 9, 2026)
+### Version 5.0.1 (March 9, 2026)
 
-#### **Code Refactoring**
+#### Code Refactoring
 - **CRUD Notifications**: Centralized CRUD notifications and mutation sync
 - **Consistency**: Improved notification handling across all CRUD operations
 
-### **Version 5.0.0** ⭐ **MAJOR UPDATE** (March 9, 2026)
+### Version 5.0.0 ⭐ MAJOR UPDATE (March 9, 2026)
 
-#### **Query Centralization System** ⭐ **BREAKING CHANGE**
+#### Query Centralization System ⭐ BREAKING CHANGE
 The SJRS LMS now features a **centralized React Query configuration system** that eliminates code duplication and improves consistency across all data fetching operations.
 
 **Key Changes:**
@@ -379,43 +379,43 @@ The SJRS LMS now features a **centralized React Query configuration system** tha
 - Reduced code duplication and improved maintainability
 - Better performance with optimized preset selection
 
-### **Version 3.52.0** (March 3, 2026)
+### Version 3.52.0 (March 3, 2026)
 
-#### **User Status Enhancements**
+#### User Status Enhancements
 - **Status Handling**: Enhanced user status handling across forms and contexts
 - **Form Components**: Improved status selectors and validation for onboarding statuses
 - **Help Integration**: Simplified in-app Help linking to docs site with keyboard shortcut (press **?**)
 
-#### **Quality & Security**
+#### Quality & Security
 - **Dependencies**: Updated dependencies; known vulnerabilities reduced to 0
 - **Auth**: More robust profile loading with schema-safe fallbacks (`/api/auth/me`)
 
-### **Version 3.51.0** (March 3, 2026)
+### Version 3.51.0 (March 3, 2026)
 
-#### **Administration UI Improvements**
+#### Administration UI Improvements
 - **Onboarding Filters**: Added onboarding status filter to Students, Professors, and Members pages
 - **Account Status Precision**: Aligned account status labels and colors across management pages
 - **Guest Management UI**: Kept Account Status and Onboarding Status in a single row; added onboarding status filter
 - **Profile Data Fetching**: Fetched guest profile data for accurate UI display
 
-### **Version 3.50.3** (March 2, 2026)
+### Version 3.50.3 (March 2, 2026)
 
-#### **Code Refactoring**
+#### Code Refactoring
 - **Documentation**: Moved FAQ content to the documentation site and simplified the help system.
 
-### **Version 3.50.2** (March 2, 2026)
+### Version 3.50.2 (March 2, 2026)
 
-#### **Security Hardening**
+#### Security Hardening
 - **Auth Profile Loading**: Hardened `/api/auth/me` profile loading with schema-safe fallbacks.
 
-### **Version 3.50.1** (March 2, 2026)
+### Version 3.50.1 (March 2, 2026)
 
-#### **Code Refactoring**
+#### Code Refactoring
 - **Guest Profile Steps**: Split `guest-profile-steps` into focused step components for better maintainability.
 
-### **Version 3.50.0** ⭐ **MAJOR UPDATE** (March 2, 2026)
+### Version 3.50.0 ⭐ MAJOR UPDATE (March 2, 2026)
 
-#### **Location Services Integration** ⭐ **NEW**
+#### Location Services Integration ⭐ NEW
 The SJRS LMS now features **comprehensive location services** with country-state-city integration for accurate user profile data.
 
 **Key Features:**
@@ -425,16 +425,16 @@ The SJRS LMS now features **comprehensive location services** with country-state
 - **User Types**: Updated user type definitions and contexts to include location data.
 - **Pending Approval**: Display of location and "about" fields on the pending approval page.
 
-### **Version 3.49.1** (March 2, 2026)
+### Version 3.49.1 (March 2, 2026)
 
-#### **Bug Fixes & Improvements**
+#### Bug Fixes & Improvements
 - **Email Verification**: Fixed email verification workflow and profile completion issues.
 - **Login UX**: Improved modal dismissal behavior in login.
 - **Pending Approval**: Simplified pending approval page UX.
 
-### **Version 3.49.0** (March 2, 2026)
+### Version 3.49.0 (March 2, 2026)
 
-#### **Onboarding Status & Account Management** ⭐ **NEW**
+#### Onboarding Status & Account Management ⭐ NEW
 The SJRS LMS now features **persistent onboarding status tracking** and improved account status visibility in Administration pages.
 
 **Key Features:**
@@ -454,12 +454,12 @@ The SJRS LMS now features **persistent onboarding status tracking** and improved
 - New handlers: `functions/api/students/handlers/get-student-meta.ts`
 - Enhanced status check services with helpers and next-steps logic
 
-#### **Performance Improvements**
+#### Performance Improvements
 - **Professors Table**: Optimized table rendering and query performance
 - **Toolbar Enhancement**: Added avatar support for improved table UI
 - **Code Refactoring**: General refactoring for improved maintainability
 
-#### **Recent Patches (v3.48.22 - v3.48.15)**
+#### Recent Patches (v3.48.22 - v3.48.15)
 - Account Status Updates & Fixes
 - Profile Completion Workflow Refinements
 - Alignment of Students and Guests pages with Professor page patterns
@@ -468,7 +468,7 @@ The SJRS LMS now features **persistent onboarding status tracking** and improved
 
 ---
 
-### **Unified Cloudflare Workers Deployment** ⭐ **NEW**
+### Unified Cloudflare Workers Deployment ⭐ NEW
 The SJRS LMS has been **migrated from Cloudflare Pages to a unified Cloudflare Workers deployment** with Static Assets, providing a simplified architecture and improved performance.
 
 **Key Achievements:**
@@ -479,7 +479,7 @@ The SJRS LMS has been **migrated from Cloudflare Pages to a unified Cloudflare W
 - **Cost Optimization**: Unified billing and resource usage
 - **Easier Maintenance**: Single deployment to manage instead of two
 
-### **Routing System Refactoring** ⭐ **COMPLETED**
+### Routing System Refactoring ⭐ COMPLETED
 The SJRS LMS routing system has been **completely refactored** with a revolutionary approach that eliminates 85% of code duplication while enhancing security and performance.
 
 **Key Achievements:**
@@ -494,7 +494,7 @@ The SJRS LMS routing system has been **completely refactored** with a revolution
 - **[Routing System](/architecture/routing-system)** - Complete routing architecture overview
 - Archived routing refactor docs → [Archive](/archive/)
 
-### **API Response Standardization** ⭐ **NEW**
+### API Response Standardization ⭐ NEW
 The SJRS LMS now features a **standardized API response system** that ensures consistent response formats across all backend endpoints.
 
 **Key Features:**
@@ -510,7 +510,7 @@ The SJRS LMS now features a **standardized API response system** that ensures co
 - **[API Response Standardization](/api/api-response-standardization)** - Complete implementation guide
 - **[Functions Folder Architecture](/api/functions-folder-architecture)** - Backend architecture overview
 
-### **Dynamic Role System** ⭐ **NEW**
+### Dynamic Role System ⭐ NEW
 The SJRS LMS now features a **hybrid role management system** that combines exact role matching for routing with dynamic role inheritance for permissions.
 
 **Key Features:**
@@ -522,7 +522,7 @@ The SJRS LMS now features a **hybrid role management system** that combines exac
 - **Dynamic Permissions**: Role inheritance for feature access
 - **No Routing Loops**: Eliminated role switching issues
 
-### **Advanced Session Management** ⭐ **NEW**
+### Advanced Session Management ⭐ NEW
 The SJRS LMS features a **comprehensive session management system** with cross-tab synchronization and enhanced security features.
 
 **Key Features:**
@@ -542,7 +542,7 @@ The SJRS LMS features a **comprehensive session management system** with cross-t
 - **[Session Management](/development/session-management)** - Comprehensive session management guide
 - **[Single Session Policy](/features/multiple-device-login-detection)** - Force logout and session control
 
-### **Recent Improvements**
+### Recent Improvements
 - **Enhanced Session Management**: Industry-standard session handling with cross-tab sync
 - **Advanced Security Features**: Security hash validation and activity pattern detection
 - **Improved Error Handling**: Better error messages and user feedback

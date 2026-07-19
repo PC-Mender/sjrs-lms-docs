@@ -16,12 +16,12 @@ The registration process has been thoroughly reviewed for security loopholes, ed
 
 ## Security Strengths
 
-### 1. **Multi-Layer Validation**
+### 1. Multi-Layer Validation
 - Frontend validation (UX + immediate feedback)
 - Backend validation (security + data integrity)
 - Both layers validate independently (defense in depth)
 
-### 2. **Password Security**
+### 2. Password Security
 - Strong password policy (8+ chars, complexity requirements)
 - Frontend checks for names in password (3+ char names)
 - Backend checks for names in password (3+ char names)
@@ -29,27 +29,27 @@ The registration process has been thoroughly reviewed for security loopholes, ed
 - Blocks common passwords
 - Blocks sequential/repeated patterns
 
-### 3. **Email Security**
+### 3. Email Security
 - Disposable email blocking
 - Email enumeration prevention (generic messages)
 - Email format validation (frontend + backend)
 
-### 4. **Rate Limiting**
+### 4. Rate Limiting
 - Registration rate limiting
 - Email confirmation rate limiting
 - Email resend rate limiting (3 per hour)
 
-### 5. **CAPTCHA Protection**
+### 5. CAPTCHA Protection
 - Turnstile CAPTCHA on registration
 - Backend validates CAPTCHA token
 - Prevents bot registrations
 
-### 6. **Token Security**
+### 6. Token Security
 - Email confirmation tokens expire
 - Tokens marked as used atomically (prevents reuse)
 - Token cleanup automation (scheduled cron job)
 
-### 7. **Account Security**
+### 7. Account Security
 - Account lockout mechanism (failed login attempts)
 - Status change logging (audit trail)
 
@@ -57,7 +57,7 @@ The registration process has been thoroughly reviewed for security loopholes, ed
 
 ## Identified Loopholes & Recommendations
 
-### 1. **Password Name Validation - Partial Matches**
+### 1. Password Name Validation - Partial Matches
 
 **Issue**: Current validation only checks if the full name (3+ chars) is contained in the password. This misses:
 - Partial name matches: "John" in "Johnny123!"  (caught)
@@ -77,7 +77,7 @@ The registration process has been thoroughly reviewed for security loopholes, ed
 
 ---
 
-### 2. **Step Navigation - No Server-Side Enforcement**
+### 2. Step Navigation - No Server-Side Enforcement
 
 **Issue**: Frontend enforces step-by-step progression, but there's no server-side validation that ensures users completed all steps. However, since the backend validates all required fields anyway, this is more of a UX concern than a security issue.
 
@@ -92,7 +92,7 @@ The registration process has been thoroughly reviewed for security loopholes, ed
 
 ---
 
-### 3. **Name Capitalization Edge Cases**
+### 3. Name Capitalization Edge Cases
 
 **Issue**: Auto-capitalization handles most cases, but edge cases exist:
 - "JOHN" → "John"  (works)
@@ -111,7 +111,7 @@ The registration process has been thoroughly reviewed for security loopholes, ed
 
 ---
 
-### 4. **Password Validation - Minimum Length Check**
+### 4. Password Validation - Minimum Length Check
 
 **Issue**: Frontend checks for names with minimum 3 characters to avoid false positives. This means:
 - "Jo" in password would pass  (intentional - avoids false positives)
@@ -128,7 +128,7 @@ The registration process has been thoroughly reviewed for security loopholes, ed
 
 ---
 
-### 5. **Email Domain Validation - List Completeness**
+### 5. Email Domain Validation - List Completeness
 
 **Issue**: Disposable email list might not be exhaustive. New disposable email services appear regularly.
 
@@ -144,7 +144,7 @@ The registration process has been thoroughly reviewed for security loopholes, ed
 
 ---
 
-### 6. **Turnstile CAPTCHA - Frontend Only Loads on Step 3**
+### 6. Turnstile CAPTCHA - Frontend Only Loads on Step 3
 
 **Issue**: CAPTCHA widget only loads when `currentStep === 2`. If someone bypasses the frontend and calls the API directly, the backend still validates the CAPTCHA token.
 
@@ -159,7 +159,7 @@ The registration process has been thoroughly reviewed for security loopholes, ed
 
 ---
 
-### 7. **Status Check - Case-Sensitive Name Matching**
+### 7. Status Check - Case-Sensitive Name Matching
 
 **Issue**: Status check uses case-sensitive matching for names. This is actually a **security feature** (prevents name variations), but might be too strict for users who entered names in different cases.
 
@@ -191,7 +191,7 @@ The registration process has been thoroughly reviewed for security loopholes, ed
 
 ## Overall Assessment
 
-### Security Score: **9.5/10** ⭐⭐⭐⭐⭐
+### Security Score: 9.5/10 ⭐⭐⭐⭐⭐
 
 **Strengths**:
 - Comprehensive validation (frontend + backend)

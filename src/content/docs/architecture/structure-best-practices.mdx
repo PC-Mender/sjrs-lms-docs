@@ -9,7 +9,7 @@ title: "Structure Best Practices"
 
 ## Core Principles to Remember
 
-### 1. **Keep Features Self-Contained**
+### 1. Keep Features Self-Contained
 
  **DO:**
 - Put all feature-specific code in the feature directory
@@ -23,7 +23,7 @@ title: "Structure Best Practices"
 
 ---
 
-### 2. **Maintain Consistent Patterns**
+### 2. Maintain Consistent Patterns
 
  **DO:**
 - Follow the established module pattern (`base/`, `handlers/`, `index.ts`)
@@ -37,7 +37,7 @@ title: "Structure Best Practices"
 
 ---
 
-### 3. **Separate Shared vs. Feature-Specific Code**
+### 3. Separate Shared vs. Feature-Specific Code
 
  **DO:**
 - Put reusable components in `src/components/ui/`
@@ -56,7 +56,7 @@ title: "Structure Best Practices"
 
 ### Step-by-Step Guide
 
-#### 1. **Create Feature Structure**
+#### 1. Create Feature Structure
 
 ```
 src/components/features/[feature-name]/
@@ -89,14 +89,14 @@ functions/api/[feature-name]/
 └── index.ts
 ```
 
-#### 2. **Follow Naming Conventions**
+#### 2. Follow Naming Conventions
 
 - **Components:** PascalCase (`BookList.tsx`)
 - **Handlers:** kebab-case (`get-books.ts`)
 - **Utilities:** kebab-case (`book-utils.ts`)
 - **Types:** kebab-case (`book.types.ts`)
 
-#### 3. **Export Through Index Files**
+#### 3. Export Through Index Files
 
 Always export through `index.ts` files:
 
@@ -105,7 +105,7 @@ Always export through `index.ts` files:
 export * from './components';
 ```
 
-#### 4. **Document the Feature**
+#### 4. Document the Feature
 
 Add a `index.md` for complex features:
 
@@ -126,7 +126,7 @@ How to use the feature components.
 
 ## Common Pitfalls to Avoid
 
-### 1. **Feature Creep**
+### 1. Feature Creep
 
  **Problem:** Adding unrelated functionality to existing features
 
@@ -142,7 +142,7 @@ books/
 
 ---
 
-### 2. **Circular Dependencies**
+### 2. Circular Dependencies
 
  **Problem:** Features depending on each other
 
@@ -159,7 +159,7 @@ loans/ → imports from books/
 
 ---
 
-### 3. **Over-Sharing**
+### 3. Over-Sharing
 
  **Problem:** Putting everything in shared directories
 
@@ -177,7 +177,7 @@ src/components/ui/
 
 ---
 
-### 4. **Under-Sharing**
+### 4. Under-Sharing
 
  **Problem:** Duplicating code across features
 
@@ -194,7 +194,7 @@ loans/utils/validation.ts     #  Duplicate code
 
 ---
 
-### 5. **Inconsistent Structure**
+### 5. Inconsistent Structure
 
  **Problem:** Different features using different patterns
 

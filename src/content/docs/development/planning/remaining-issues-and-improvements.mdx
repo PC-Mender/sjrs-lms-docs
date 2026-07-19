@@ -5,7 +5,7 @@ title: "Remaining Issues And Improvements"
 
 ## Critical Issues
 
-### 1. **Order List Shows All Orders to Regular Users**
+### 1. Order List Shows All Orders to Regular Users
 **Location**: `src/pages/orders/OrderList.tsx`
 
 **Issue**: The OrderList component doesn't filter orders by current user. Regular users (students, professors, guests) should only see their own orders, while admins/librarians should see all orders.
@@ -25,7 +25,7 @@ const { data: ordersData, isLoading: loading, error, refetch } = useD1OrdersQuer
 
 ---
 
-### 2. **Wishlist Uses Inconsistent Order Flow**
+### 2. Wishlist Uses Inconsistent Order Flow
 **Location**: `src/pages/wishlist/WishlistList.tsx`
 
 **Issue**: Wishlist has its own `handlePlaceOrder` that directly calls a mutation instead of using the request cart. This creates inconsistency:
@@ -50,7 +50,7 @@ const handlePlaceOrder = async (wishlistItem: WishlistItemWithDetails) => {
 
 ---
 
-### 3. **Cart Submission Uses Raw Fetch Instead of Unified API Client**
+### 3. Cart Submission Uses Raw Fetch Instead of Unified API Client
 **Location**: `src/contexts/request-cart-context.tsx`
 
 **Issue**: The `submitAllRequests` function uses raw `fetch()` instead of the unified API client used elsewhere in the app.
@@ -75,7 +75,7 @@ const res = await fetch('/api/orders', {
 
 ## Missing Features
 
-### 4. **No Order Status Change Notifications for Users**
+### 4. No Order Status Change Notifications for Users
 **Location**: `functions/api/orders/handlers/update-order.ts`
 
 **Issue**: When an order is approved or rejected, the user who created the order doesn't receive a notification. Only admins get notified when orders are created.
@@ -93,7 +93,7 @@ const res = await fetch('/api/orders', {
 
 ---
 
-### 5. **No Link from Approved Orders to Loans**
+### 5. No Link from Approved Orders to Loans
 **Location**: `src/pages/orders/OrderShow.tsx` and `OrderList.tsx`
 
 **Issue**: When an order is approved and a loan is created, there's no visible link between the order and the loan. Users can't easily navigate from order to loan.
@@ -109,7 +109,7 @@ const res = await fetch('/api/orders', {
 
 ## Code Cleanup
 
-### 6. **Unused BookCatalogService.placeOrder Method**
+### 6. Unused BookCatalogService.placeOrder Method
 **Location**: `src/pages/book-catalog/services/book-catalog.service.ts`
 
 **Issue**: The `placeOrder` method exists but is never used. The app now uses request cart instead.
@@ -133,7 +133,7 @@ static async placeOrder(
 
 ---
 
-### 7. **Cart Persistence Edge Cases**
+### 7. Cart Persistence Edge Cases
 **Location**: `src/contexts/request-cart-context.tsx`
 
 **Issue**: Cart uses localStorage but doesn't handle:

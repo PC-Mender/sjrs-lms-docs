@@ -7,7 +7,7 @@ Get started with the SJRS LMS API in **5 minutes** with this step-by-step guide.
 
 ## Quick Start (5 Minutes)
 
-### **1. Get Your API Credentials** ⏱ 1 min
+### 1. Get Your API Credentials ⏱ 1 min
 ```bash
 # You'll need these environment variables
 JWT_SECRET=your-secure-jwt-secret-key
@@ -15,7 +15,7 @@ MAILJET_API_KEY=your_mailjet_api_key
 MAILJET_API_SECRET=your_mailjet_api_secret
 ```
 
-### **2. Test the Health Endpoint** ⏱ 1 min
+### 2. Test the Health Endpoint ⏱ 1 min
 ```bash
 # Test if the API is running
 curl -X GET "https://your-api-domain.com/api/health"
@@ -29,7 +29,7 @@ curl -X GET "https://your-api-domain.com/api/health"
 }
 ```
 
-### **3. Register a Test User** ⏱ 1 min
+### 3. Register a Test User ⏱ 1 min
 ```bash
 curl -X POST "https://your-api-domain.com/api/auth/register" \
   -H "Content-Type: application/json" \
@@ -42,7 +42,7 @@ curl -X POST "https://your-api-domain.com/api/auth/register" \
   }'
 ```
 
-### **4. Login (Cookie-Based Auth)** ⏱ 1 min
+### 4. Login (Cookie-Based Auth) ⏱ 1 min
 ```bash
 curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
   -H "Content-Type: application/json" \
@@ -54,7 +54,7 @@ curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
 
 This sets an HttpOnly auth cookie (default name: `secure_authToken`) in `cookies.txt`.
 
-### **5. Make Your First API Call** ⏱ 1 min
+### 5. Make Your First API Call ⏱ 1 min
 ```bash
 curl -b cookies.txt -X GET "https://your-api-domain.com/api/books"
 ```
@@ -63,9 +63,9 @@ curl -b cookies.txt -X GET "https://your-api-domain.com/api/books"
 
 ## Setup for Development
 
-### **Environment Setup**
+### Environment Setup
 
-#### **Option 1: Local Development**
+#### Option 1: Local Development
 ```bash
 # Clone the repository
 git clone https://github.com/your-username/sjrslms.git
@@ -82,13 +82,13 @@ cp .env.example .env
 npm run dev
 ```
 
-#### **Option 2: Remote API Only**
+#### Option 2: Remote API Only
 ```bash
 # Just set the API base URL
 export VITE_API_BASE_URL=https://your-api-domain.com
 ```
 
-### **Required Environment Variables**
+### Required Environment Variables
 ```bash
 # JWT Configuration (choose one)
 JWT_SECRET=your-secure-jwt-secret-key
@@ -110,7 +110,7 @@ DB_NAME=sjrs-lms-db
 
 ## Client Setup Examples
 
-### **JavaScript/TypeScript (Frontend)**
+### JavaScript/TypeScript (Frontend)
 ```typescript
 // api-client.ts
 class SJRSLMSAPI {
@@ -147,7 +147,7 @@ await api.bootstrapCSRF();
 const books = await api.getBooks();
 ```
 
-### **Python**
+### Python
 ```python
 import requests
 
@@ -178,7 +178,7 @@ api.bootstrap_csrf()
 books = api.get_books()
 ```
 
-### **cURL Scripts**
+### cURL Scripts
 ```bash
 #!/bin/bash
 # api-test.sh
@@ -201,7 +201,7 @@ curl -s -b cookies.txt -X GET "$BASE_URL/api/books" | jq '.'
 
 ## Testing Your Setup
 
-### **Quick Test Commands**
+### Quick Test Commands
 ```bash
 # 1. Health check
 curl -X GET "https://your-api-domain.com/api/health"
@@ -220,7 +220,7 @@ curl -i -c cookies.txt -X POST "https://your-api-domain.com/api/auth/login" \
 curl -b cookies.txt -X GET "https://your-api-domain.com/api/books"
 ```
 
-### **Expected Results**
+### Expected Results
 - **Health Check**: Returns system status
 - **Registration**: Returns 201 with user data
 - **Login**: Returns 200 and sets auth cookie
@@ -228,39 +228,39 @@ curl -b cookies.txt -X GET "https://your-api-domain.com/api/books"
 
 ## Common Issues & Solutions
 
-### **Issue: "Invalid credentials"**
+### Issue: "Invalid credentials"
 **Solution:** Check email/password spelling, ensure user exists
 
-### **Issue: "Authentication required"**
+### Issue: "Authentication required"
 **Solution:** Ensure cookies are enabled and you are sending the auth cookie (`credentials: 'include'` / `-b cookies.txt`).
 
-### **Issue: "CORS error"**
+### Issue: "CORS error"
 **Solution:** API supports CORS, check your client configuration
 
-### **Issue: "Rate limit exceeded"**
+### Issue: "Rate limit exceeded"
 **Solution:** Wait a moment and retry, implement exponential backoff
 
-### **Issue: "Service unavailable"**
+### Issue: "Service unavailable"
 **Solution:** Check system status, wait for maintenance to complete
 
 ## Next Steps
 
-### **1. Explore the API**
+### 1. Explore the API
 - Check [Complete Endpoints List](/api/endpoints)
 - Review [Detailed Examples](/api/detailed-endpoints)
 - Test with [API Testing Collection](/api/api-testing-collection)
 
-### **2. Understand Authentication**
+### 2. Understand Authentication
 - Read [Token Requirements](/api/token-requirements)
 - Use [Token Quick Reference](/api/token-quick-reference)
 - Learn about [Session Management](/development/session-management)
 
-### **3. Build Your Application**
+### 3. Build Your Application
 - Follow [API Patterns](/api/api-patterns)
 - Use [Error Codes Reference](/api/error-codes-reference)
 - Implement proper error handling
 
-### **4. Advanced Features**
+### 4. Advanced Features
 - Set up [Continuous Integration Testing](/api/api-testing-collection#continuous-integration-testing)
 - Monitor [API Performance](/api/api-testing-collection#performance-benchmarks)
 - Implement [Rate Limiting Strategies](/api/error-codes-reference#rate-limiting-errors)
@@ -277,12 +277,12 @@ curl -b cookies.txt -X GET "https://your-api-domain.com/api/books"
 
 ## Need Help?
 
-### **Documentation**
+### Documentation
 - **[API README](/index)** - Main documentation index
 - **[Error Codes](/api/error-codes-reference)** - Troubleshooting guide
 - **[Testing Collection](/api/api-testing-collection)** - Test examples
 
-### **Support**
+### Support
 - Check [Error Codes Reference](/api/error-codes-reference) for common issues
 - Review [API Testing Collection](/api/api-testing-collection) for examples
 - Use [cURL examples](/api/api-testing-collection#cURL-examples) for testing

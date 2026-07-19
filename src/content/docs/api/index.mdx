@@ -7,21 +7,21 @@ This directory contains comprehensive documentation for the SJRS LMS API, includ
 
 ## Documentation Index
 
-### ** Authentication & Tokens**
+### Authentication & Tokens
 - **[Token Requirements](./token-requirements)** - Detailed guide for API token configuration and requirements
 - **[Token Quick Reference](./token-quick-reference)** - Quick reference for token usage and configuration
 
-### ** API Architecture**
+### API Architecture
 - **[API Patterns](./api-patterns)** - Complete guide to API patterns, architecture, and migration details
 - **[API Response Standardization](./api-response-standardization)** ⭐ **NEW** - Standardized response system
 - **[Functions Folder Architecture](./functions-folder-architecture)** ⭐ **NEW** - Backend structure and patterns
 
-### ** API Endpoints**
+### API Endpoints
 - **[Complete Endpoints List](./endpoints)** ⭐ **NEW** - Comprehensive list of all API endpoints
 - **[Detailed Endpoints with Examples](./detailed-endpoints)** ⭐ **NEW** - Detailed documentation with request/response examples
 - **[Documentation Status](./documentation-status)** ⭐ **NEW** - Current status and coverage overview
 
-### ** Testing & Development**
+### Testing & Development
 - **[API Testing Collection](./api-testing-collection)** ⭐ **NEW** - Postman collection, cURL examples, and testing procedures
 - **[Quick Start Guide](./quick-start-guide)** ⭐ **NEW** - Get started in 5 minutes
 - **[Error Codes Reference](./error-codes-reference)** ⭐ **NEW** - Comprehensive error codes and troubleshooting
@@ -29,15 +29,15 @@ This directory contains comprehensive documentation for the SJRS LMS API, includ
 
 ## Quick Navigation
 
-### **For API Integration**
+### For API Integration
 - Start with [Token Requirements](./token-requirements) for setup
 - Use [Token Quick Reference](./token-quick-reference) for daily development
 
-### **For System Administrators**
+### For System
 - Focus on [Token Requirements](./token-requirements) for security configuration
 - Review authentication patterns and best practices
 
-### **For Developers**
+### For Developers
 - Start with [Quick Start Guide](./quick-start-guide) for 5-minute setup
 - Use [Token Quick Reference](./token-quick-reference) for daily development
 - Reference [Token Requirements](./token-requirements) for detailed implementation
@@ -54,17 +54,17 @@ This directory contains comprehensive documentation for the SJRS LMS API, includ
 
 ## API Overview
 
-### **Authentication Methods**
+### Authentication Methods
 - **JWT (Cookie-Based)** - Backend sets an HttpOnly auth cookie; browser sends it automatically (`credentials: 'include'`)
 - **CSRF Protection** - Double-submit cookie pattern for state-changing methods (`X-XSRF-TOKEN` header matches `XSRF-TOKEN` cookie)
 - **API Keys** - For external service integrations
 
-### **Email Service Integration**
+### Email Service Integration
 - **Mailjet API** - Direct integration for account emails
 - **Cloudflare Queues** - Background processing for transactional emails
 - **Hybrid Approach** - Optimized for different email types
 
-### **Core Endpoints**
+### Core Endpoints
 - **Authentication** - Login, registration, password reset
 - **User Management** - CRUD operations for users
 - **Library Operations** - Books, loans, returns
@@ -74,7 +74,7 @@ This directory contains comprehensive documentation for the SJRS LMS API, includ
 
 ## API Architecture
 
-### **Direct Function API Pattern**
+### Direct Function API Pattern
 The SJRS LMS uses a **direct function API pattern** optimized for Cloudflare Workers with unified deployment, providing:
 - **Better Performance** - Native Cloudflare Workers functions served from the same deployment as frontend
 - **Simpler Debugging** - Direct function calls without framework overhead
@@ -82,7 +82,7 @@ The SJRS LMS uses a **direct function API pattern** optimized for Cloudflare Wor
 - **Type Safety** - Full TypeScript support throughout
 - **Unified Deployment** - API and frontend served from single Workers deployment
 
-### **API Structure**
+### API Structure
 ```typescript
 // Standard API function pattern
 export async function resourceName(request: Request, env: any) {
@@ -111,7 +111,7 @@ export async function resourceName(request: Request, env: any) {
 }
 ```
 
-### **Standardized Routing Pattern**
+### Standardized Routing Pattern
 All APIs follow a consistent routing pattern:
 ```typescript
 const path = url.pathname.replace('/api/resourceName', '');
@@ -128,7 +128,7 @@ if (path.startsWith('/')) {
 }
 ```
 
-### **Error Handling**
+### Error Handling
 All APIs use unified error handling with CORS headers:
 ```typescript
 import { handleError } from '../../utilities/error/unified-error-handler';
@@ -147,10 +147,10 @@ try {
 
 ## Session Management API
 
-### **Force Logout Endpoint**
+### Force Logout Endpoint
 The system provides a comprehensive session management API that enforces a single session policy while giving users control over their sessions.
 
-#### **Force Logout Other Sessions**
+#### Force Logout Other Sessions
 - **Endpoint**: `POST /api/auth/force-logout-other-sessions`
 - **Purpose**: Deactivates all existing sessions for a user and creates a new session
 - **Authentication**: Requires valid email/password credentials
@@ -185,7 +185,7 @@ The system provides a comprehensive session management API that enforces a singl
 }
 ```
 
-#### **Error Responses**
+#### Error Responses
 ```typescript
 // Invalid credentials
 {
@@ -203,7 +203,7 @@ The system provides a comprehensive session management API that enforces a singl
 }
 ```
 
-#### **Integration Example**
+#### Integration Example
 ```typescript
 const forceLogoutOtherSessions = async (email: string, password: string) => {
   try {
@@ -230,14 +230,14 @@ const forceLogoutOtherSessions = async (email: string, password: string) => {
 };
 ```
 
-#### **Security Features**
+#### Security Features
 - **Credential Validation**: Requires valid email/password authentication
 - **Session Cleanup**: Deactivates all existing sessions for the user
 - **Audit Logging**: All force logout actions are logged for security
 - **New Session Creation**: Creates a fresh session after cleanup
 - **Token Generation**: Issues new JWT token for the new session
 
-#### **Session Policy**
+#### Session Policy
 - **Single Session**: Only one active session per user
 - **Activity Threshold**: 15-minute activity window for session validity
 - **User Choice**: Users can choose to force logout existing sessions
@@ -245,7 +245,7 @@ const forceLogoutOtherSessions = async (email: string, password: string) => {
 
 ## Getting Started
 
-### **1. Setup Authentication**
+### 1. Setup Authentication
 ```bash
 # Environment variables required
 ## JWT (choose single secret or rotation)
@@ -262,7 +262,7 @@ MAILJET_API_SECRET=your_mailjet_api_secret
 MAILJET_FROM_EMAIL=noreply@sjrslms.com
 ```
 
-### **2. Configure API Client**
+### 2. Configure API Client
 ```typescript
 import { unifiedAPIClient } from '@/utilities/api/unified-api-client';
 
@@ -283,7 +283,7 @@ const headers = await addCSRFToHeaders({
 await fetch(`${apiBaseUrl}/api/books`, { credentials: 'include', headers });
 ```
 
-### **3. Email Service Setup**
+### 3. Email Service Setup
 ```typescript
 // Account emails (direct Mailjet)
 await sendConfirmationEmail(user.email, user.first_name, token, env);
@@ -300,19 +300,19 @@ await sendLoanNotification('borrow_notification', {
 
 ## Security Considerations
 
-### **Token Management**
+### Token Management
 - **JWT Tokens** - 24-hour expiration with automatic refresh
 - **CSRF Tokens** - 30-minute expiration with secure generation
 - **API Keys** - Stored in environment variables, never in code
 
-### **Email Service Security**
+### Email Service Security
 - **Mailjet API** - Basic authentication with API key and secret
 - **Queue Security** - Internal Cloudflare Queues with automatic encryption
 - **Error Handling** - Graceful degradation for email failures
 
 ## API Patterns
 
-### **Standard Response Format**
+### Standard Response Format
 ```typescript
 {
   success: boolean;
@@ -322,7 +322,7 @@ await sendLoanNotification('borrow_notification', {
 }
 ```
 
-### **Error Handling**
+### Error Handling
 ```typescript
 import { unifiedAPIClient } from '@/utilities/api/unified-api-client';
 
@@ -345,7 +345,7 @@ try {
 }
 ```
 
-### **Creating New API Endpoints**
+### Creating New API Endpoints
 ```typescript
 // functions/api/new-resource.ts
 import { getAuthenticatedUser } from '../../middleware/auth';

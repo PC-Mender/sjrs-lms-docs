@@ -17,7 +17,7 @@ All changes implement industry-standard performance patterns from [docs/project-
 
 ---
 
-## 1. **Stale-While-Revalidate Pattern** 
+## 1. Stale-While-Revalidate Pattern 
 
 **File:** `src/lib/query-client.ts`
 
@@ -38,7 +38,7 @@ All changes implement industry-standard performance patterns from [docs/project-
 
 ---
 
-## 2. **Pagination UX Improvement** 
+## 2. Pagination UX Improvement 
 
 **File:** `src/hooks/useServerSideTable.ts`
 
@@ -58,7 +58,7 @@ All changes implement industry-standard performance patterns from [docs/project-
 
 ---
 
-## 3. **Core Web Vitals Monitoring (Cloudflare Web Analytics)** 
+## 3. Core Web Vitals Monitoring (Cloudflare Web Analytics) 
 
 **Updated Files:**
 - `index.html` - Added Cloudflare Web Analytics beacon script
@@ -102,7 +102,7 @@ All changes implement industry-standard performance patterns from [docs/project-
 
 ---
 
-## 4. **Skeleton Screen Components** 
+## 4. Skeleton Screen Components 
 
 **New Files:**
 - `src/components/ui/atoms/indicators/Skeleton.tsx`
@@ -140,7 +140,7 @@ import { TableSkeleton } from '@/components/ui/atoms/indicators';
 
 ---
 
-## 5. **Query Config Alignment** 
+## 5. Query Config Alignment 
 
 **File:** `src/hooks/shared/queryConfig.ts`
 
@@ -157,7 +157,7 @@ import { TableSkeleton } from '@/components/ui/atoms/indicators';
 
 ---
 
-## 6. **Performance Dashboard Widget** 
+## 6. Performance Dashboard Widget 
 
 **New Files:**
 - `src/components/dashboard/superuser/PerformanceWidget.tsx`
@@ -229,12 +229,12 @@ refetchOnWindowFocus: false, // Disable background refetch
 
 ## Next Steps (Optional Enhancements)
 
-### 1. **Replace Spinners with Skeletons** (Gradual)
+### 1. Replace Spinners with Skeletons (Gradual)
 - Identify top 10 heavy pages (dashboards, tables)
 - Replace `<Spin>` with appropriate skeleton components
 - Measure perceived performance improvement
 
-### 2. **Hover Prefetching** (Advanced)
+### 2. Hover Prefetching (Advanced)
 ```tsx
 onMouseEnter={() => {
   queryClient.prefetchQuery({
@@ -244,11 +244,11 @@ onMouseEnter={() => {
 }}
 ```
 
-### 3. **Virtualization** (For Large Lists)
+### 3. Virtualization (For Large Lists)
 - Implement `@tanstack/react-virtual` for tables >200 rows
 - Measure memory usage improvement
 
-### 4. **Bundle Size Monitoring** (CI/CD)
+### 4. Bundle Size Monitoring (CI/CD)
 ```json
 // Add to package.json
 "bundlesize": [

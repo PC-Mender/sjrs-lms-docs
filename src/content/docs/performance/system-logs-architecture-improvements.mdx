@@ -11,7 +11,7 @@ title: "System Logs Architecture Improvements"
 
 ## Issues Addressed
 
-### 1. **totalPages Bug**  →  FIXED
+### 1. totalPages Bug  →  FIXED
 **Problem**: `totalPages` was incorrectly set to `pagination.total` when calling the service  
 **Location**: `src/hooks/useSystemLogs.ts#L143`
 
@@ -47,7 +47,7 @@ const response = await systemLogService.getSystemLogs(
 
 ---
 
-### 2. **No Caching/Deduplication**  →  FIXED
+### 2. No Caching/Deduplication  →  FIXED
 **Problem**: Every tab switch and filter change triggered fresh API calls, causing unnecessary load  
 **Location**: `src/hooks/useSystemLogs.ts#L101-L163`
 
@@ -173,15 +173,15 @@ useSystemLogs({ staleTime: 0 }); // Disable cache (always fresh)
 
 ## UX Improvements
 
-### 1. **No More UI Flicker**
+### 1. No More UI Flicker
 **Before**: Blank table during pagination changes  
 **After**: Previous data visible while new page loads (via `keepPreviousData`)
 
-### 2. **Instant Tab Switches**
+### 2. Instant Tab Switches
 **Before**: Re-fetch on every tab switch  
 **After**: Cached data shown instantly (within staleTtime window)
 
-### 3. **Better Loading States**
+### 3. Better Loading States
 ```typescript
 const loading = queryResult.isLoading || queryResult.isFetching;
 
@@ -189,7 +189,7 @@ const loading = queryResult.isLoading || queryResult.isFetching;
 // isFetching: Background refetch (cached data visible)
 ```
 
-### 4. **Improved Error Feedback**
+### 4. Improved Error Feedback
 - Permission errors tagged explicitly (`PERMISSION_DENIED`)
 - 403 errors show clear "Access Denied" message with guidance
 - Custom errors take precedence over query errors
