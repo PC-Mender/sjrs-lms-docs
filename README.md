@@ -1,6 +1,5 @@
 # SJRS LMS Documentation
 
-[![Docs Quality Gates](https://github.com/PC-Mender/sjrs-lms-docs/actions/workflows/docs-quality-gates.yml/badge.svg)](https://github.com/PC-Mender/sjrs-lms-docs/actions/workflows/docs-quality-gates.yml)
 [![Release](https://github.com/PC-Mender/sjrs-lms-docs/actions/workflows/release.yml/badge.svg)](https://github.com/PC-Mender/sjrs-lms-docs/actions/workflows/release.yml)
 [![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
