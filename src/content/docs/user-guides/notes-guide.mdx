@@ -1,0 +1,81 @@
+---
+title: "Notes Guide"
+description: "How to create, edit, restore, and manage personal notes in SJRS LMS."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+The **Notes** feature lets you keep private notes tied to your account. Notes support rich content, revision history, soft delete with a trash bin, and restore from previous versions.
+
+**Route**: `/dashboard/notes`
+
+## Creating a Note
+
+1. Go to **Dashboard** → **Notes** (`/dashboard/notes`)
+2. Click **New Note**
+3. Enter a **title** (required)
+4. Add your note content
+5. Save the note
+
+Notes are private to your account. Admins and superusers cannot read your note content unless a permission is explicitly granted.
+
+## Editing a Note
+
+1. Open the note from the list
+2. Click **Edit**
+3. Update the title or content
+4. Save your changes
+
+Each save creates a new **revision**. The previous version is kept so you can restore it later.
+
+## Revision History
+
+Every note keeps a history of changes.
+
+- Click the expand icon on a note to see its revisions
+- Each revision shows the date and time it was saved
+- Click **Restore** on a revision to roll the note back to that version
+- A configurable revision limit prevents unlimited history growth
+
+## Soft Delete and Trash Bin
+
+If you delete a note, it is not removed permanently right away.
+
+1. Click **Delete** on a note
+2. The note moves to the **Trash Bin**
+3. From the trash bin you can:
+   - **Restore** the note to your active notes
+   - **Delete Permanently** to remove it forever
+
+This protects against accidental deletion.
+
+## Notes Widget on Dashboard
+
+A **Notes Widget** can appear on patron dashboards, showing a quick preview of your most recent notes and a shortcut to create a new one.
+
+## For Admins
+
+Administrative users can manage notes through the system if granted permission:
+
+- View notes list for oversight
+- Moderate content when required by policy
+- Manage trash bin cleanup
+
+## Tips
+
+- Use a clear title so notes are easy to find later
+- Keep revision history in mind when making large edits
+- Empty the trash bin periodically if you no longer need deleted notes
+
+## Related Documentation
+
+- [Bookmarks Guide](./bookmarks-guide) — Save quick links alongside your notes
+- [Dashboard Guide](../features/dashboard-config-guide) — Customize the Notes widget placement
+
+---
+
+**Last Updated:** July 19, 2026  
+**Version:** 7.27.0

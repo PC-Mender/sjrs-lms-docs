@@ -1,0 +1,92 @@
+---
+title: "Dashboard Configuration Guide"
+description: "How the unified dashboard system works and how superusers can customize role layouts."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+SJRS LMS uses a **unified, configuration-driven dashboard**. Every role — admin, librarian, dean, superuser, student, professor, guest, and user — sees the same `/dashboard` route, but the layout, widgets, stats, and quick actions are rendered from a role-specific configuration.
+
+**Route**: `/dashboard`
+
+## How It Works
+
+1. `dashboard.tsx` resolves the authenticated user's role.
+2. `UnifiedDashboard` loads the role config (e.g., `admin-config.ts`).
+3. `LayoutEngine` renders the configured header, stats grid, layout rows, and quick actions.
+4. The **widget registry** maps widget names (like `StatCard`, `NotesWidget`, `AdminAnalyticsWidget`) to actual React components.
+5. Data is fetched automatically by `useDashboardData` based on which widgets are in the config.
+
+This architecture eliminated separate dashboard pages for each role and made it easy to add or rearrange widgets.
+
+## Widgets
+
+Common dashboard widgets include:
+
+| Widget | Purpose |
+|--------|---------|
+| `StatCard` | Numeric summary cards (users, books, loans, etc.) |
+| `AccountStatusWidget` | Donut chart of active/pending/suspended/inactive users |
+| `OnboardingStatusWidget` | Radial bar chart of onboarding completion |
+| `AdminAnalyticsWidget` | Horizontal bar chart of user type distribution |
+| `PopularBooksWidget` | Most borrowed books |
+| `CurrentLoansWidget` | Loans currently checked out |
+| `OverdueItemsWidget` | Alerts for overdue loans |
+| `NotesWidget` | Quick preview of personal notes |
+| `AnnouncementsWidget` | Latest announcements |
+| `NewArrivalsWidget` | Recently added books |
+| `SystemStatusWidget` / `SuperuserSystemHealth` | System health and audit logs |
+| `FirstQuestBannerWidget` | Gamified onboarding quest for patrons |
+| `AchievementShowcaseWidget` | Badge achievements |
+
+## For Superusers: Customizing Layouts
+
+Superusers can open the **Dashboard Config Editor** to customize layouts per role.
+
+1. Go to **Dashboard** → open the **Config Editor** (available to superusers)
+2. Select a role from the editor
+3. Drag, add, remove, or reorder widgets
+4. Save the config
+5. The new layout is applied immediately for that role
+
+The editor also shows:
+
+- A preview of the layout
+- Change notes for audit trail
+- History of previous configs
+- Reset to default option
+
+## Permission Filtering
+
+Widgets and quick actions can require a permission. If the current user lacks the permission, the widget or action is hidden automatically. This keeps dashboards clean and secure.
+
+## Adding a New Widget (Developers)
+
+1. Create the widget component in `src/components/features/dashboard/widgets/`
+2. Register it in `src/components/features/dashboard/unified/registry/widget-registry.ts`
+3. Add it to one or more role configs in `src/components/features/dashboard/unified/configs/`
+4. If the widget needs data, wire it through `widget-queries.ts` and `useDashboardData`
+
+## Migration from Legacy Dashboards
+
+The old role-specific dashboard pages (`dashboard-admin.tsx`, `dashboard-librarian.tsx`, etc.) were consolidated into:
+
+- `src/pages/dashboard.tsx` — single entry point
+- `src/components/features/dashboard/unified/UnifiedDashboard.tsx` — rendering engine
+- `src/components/features/dashboard/unified/configs/*-config.ts` — per-role layouts
+
+Archived documentation about the pilot and modular proposals can be found in the [Archive](/archive/).
+
+## Related Documentation
+
+- [Routing System](../architecture/routing-system) — How `/dashboard` serves all roles
+- [Session Management](../development/session-management) — Dashboard session behavior
+- [Notes Guide](../user-guides/notes-guide) — Notes widget
+
+---
+
+**Last Updated:** July 19, 2026  
+**Version:** 7.27.0

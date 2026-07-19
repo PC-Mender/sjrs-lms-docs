@@ -1,0 +1,98 @@
+---
+title: "Issue Reports Guide"
+description: "How to report issues, upvote community feedback, and track bug resolutions."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+The **Issue Reports** system lets users report bugs, request features, and track the status of reported issues. Reports can be synced with GitHub and include image attachments.
+
+**Routes**:
+- Report a new issue: `/dashboard/issue-reports`
+- Public issue list: `/issue-reports`
+
+## Reporting an Issue
+
+1. Navigate to **Dashboard** → **Issue Reports** (`/dashboard/issue-reports`)
+2. Click **Report Issue**
+3. Fill in the form:
+   - **Title** — short summary of the issue
+   - **Description** — detailed explanation of what happened
+   - **Type** — bug, feature request, or general feedback
+   - **Attachments** — optional screenshots or files
+4. Click **Submit**
+
+Your report will be visible in the public issue list unless marked otherwise by policy.
+
+## Viewing Issues
+
+The public issue list (`/issue-reports`) shows:
+
+- Open and closed issues
+- Vote counts
+- Status labels
+- Comment counts synced from GitHub
+- Last activity
+
+You can filter, search, and sort the list to find existing reports.
+
+## Upvoting Issues
+
+If you find an issue that matches your own experience:
+
+1. Open the issue
+2. Click the **Upvote** button
+3. The vote count increases immediately thanks to optimistic updates
+
+Upvoting helps the team prioritize the most impactful fixes and features.
+
+## GitHub Integration
+
+When GitHub integration is enabled:
+
+- New reports can be created as GitHub issues
+- Comments from GitHub are synced back and shown in the comment count
+- A scheduled job keeps issue status and comments in sync
+
+## Attachments
+
+You can attach images to your report. Accepted formats and size limits are shown on the upload field. Attachments help the team reproduce bugs faster.
+
+## For Admins & Superusers
+
+Administrative users can:
+
+- View all reports
+- Update status (open, in progress, closed, etc.)
+- Sync issues with GitHub manually
+- Manage public visibility
+- Respond to reporters
+
+## Status Meanings
+
+| Status | Meaning |
+|--------|---------|
+| Open | Reported and awaiting review |
+| In Progress | A team member is working on it |
+| Closed | Resolved or declined |
+| Duplicate | Same as another reported issue |
+
+## Tips for Good Reports
+
+- Use a clear, specific title
+- Describe steps to reproduce the problem
+- Include screenshots when possible
+- Check the public list first to avoid duplicates
+
+## Related Documentation
+
+- [Notifications Guide](./notifications-guide) — Stay updated on issue status changes
+- [System Logs Guide](./system-logs-user-guide) — Technical logs for admins
+
+---
+
+**Last Updated:** July 19, 2026  
+**Version:** 7.27.0

@@ -1,0 +1,17 @@
+Found 3 broken links:
+
+File: features\notifications\system-notifications.mdx
+  Link Text: [Permission System]
+  Target: (./permissions/)
+  Resolved to: e:\GitHub\sjrs-lms-docs\src\content\docs\features\notifications\permissions
+---
+File: features\notifications\system-notifications.mdx
+  Link Text: [User Dashboard]
+  Target: (./enhanced-user-dashboard)
+  Resolved to: e:\GitHub\sjrs-lms-docs\src\content\docs\features\notifications\enhanced-user-dashboard
+---
+File: project-rules-app.mdx
+  Link Text: [BorrowLimitList.tsx]
+  Target: (../src/pages/borrow-limits/BorrowLimitList.tsx)
+  Resolved to: e:\GitHub\sjrs-lms-docs\src\content\src\pages\borrow-limits\BorrowLimitList.tsx
+---

@@ -8,7 +8,273 @@ slug: changelog
 
 ## **Latest Updates**
 
-### **Version 6.34.7** ⭐ **CURRENT** (June 28, 2026)
+### **Version 7.27.0** ⭐ **CURRENT** (July 18, 2026)
+
+#### **Dashboard & User Experience**
+- **Composite Superuser Dashboard**: Superusers see a unified dashboard combining widgets from all roles.
+- **Gamified Empty States**: Patron dashboards now show actionable CTAs and encouragement when widgets are empty.
+- **Gamified Onboarding**: New welcome modal, first-quest banner, and first-badge celebration for students, professors, guests, and users.
+- **Dashboard Config Editor Improvements**: Better race guards, `App.useApp` integration, and fixed foreign-key reference to `library_users`.
+- **Resource Type Enhancements**: Linked resource count column, server-side pagination, search, and dedicated validation schemas.
+
+#### **Security & Stability**
+- **Probe Filter Middleware**: Blocks vulnerability-scanner traffic and suspicious paths.
+- **Loan Data Visibility**: Tightened to `read_all` permission only.
+- **Author Validation**: Optional author fields now accept `null` values cleanly.
+- **Route Compatibility**: Fixed multi-segment splat routes for React Router v7.
+
+---
+
+### **Version 7.26.0** (July 17, 2026)
+
+#### **Dashboard Architecture**
+- **Config-Driven Widget Data Provisioning**: Widgets declare their own data sources and mappers.
+- **Serializable Configs**: Config files moved from `.tsx` to `.ts` with an icon registry for serialization.
+- **Widget Definitions Split**: Admin and user widget definitions separated for maintainability.
+
+#### **Notes System**
+- **Revision Restore**: Restore previous note revisions with a configurable limit.
+- **XSS Sanitizer & Draft Autosave**: Safer note content and automatic draft saving.
+
+#### **Digital Resources**
+- Improved file upload modal UX and error handling.
+
+---
+
+### **Version 7.25.0 – 7.25.3** (July 15 – 17, 2026)
+
+#### **New & Improved**
+- **TADA Integration**: Registration number pulled from student profile into TADA forms.
+- **Global Rate Limit Banner**: Live countdown banner when API rate limits are hit.
+- **User Notes Soft Delete**: Trash bin, restore, permanent delete, and edit history.
+
+#### **Dashboard**
+- Consolidated all role pages into a single `UnifiedDashboard` with automatic data fetching.
+- Extracted shared config fragments to eliminate role-specific duplication.
+- Added staging environment configuration and deploy scripts.
+
+---
+
+### **Version 7.24.0** (July 14, 2026)
+
+#### **User Notes**
+- Added personal notes feature with backend API, migrations, and frontend pages.
+
+#### **Bookmarks**
+- Manual refresh with loading feedback.
+- Digital library links auto-seeded into user bookmarks on activation.
+
+---
+
+### **Version 7.23.0** (July 14, 2026)
+
+#### **Digital Resources**
+- **In-App PDF Reader**: Read digital resources directly in the browser with page navigation and zoom.
+- **Read Session Tracking**: Track reading sessions and progress.
+- **Download Sources**: Manage multiple download sources per resource.
+- **Activity Tracking Panel**: View resource usage analytics.
+
+---
+
+### **Version 7.22.0** (July 13, 2026)
+
+#### **Analytics & UX**
+- Refactored analytics dashboard with consolidated items, search, and tabbed views.
+- Added refresh-status button to the pending-approval page.
+- Added resend cooldown timer to email confirmation.
+- Added user event timestamp columns with end-to-end propagation.
+
+---
+
+### **Version 7.21.0** (July 13, 2026)
+
+#### **Librarian & Dean Dashboards**
+- Redesigned librarian dashboard with analytics widgets and expanded stats.
+- Added Account Status and Onboarding Status widgets to the dean dashboard.
+- Switched dashboard queries from `REAL_TIME` to `FREQUENT` preset for better efficiency.
+
+---
+
+### **Version 7.20.0 – 7.20.1** (July 12 – 13, 2026)
+
+#### **Dashboard & Security**
+- Reworked dean dashboard to mirror admin layout.
+- Added global rate-limit countdown banner for 429 responses.
+- Permission-based access for dean admin endpoints.
+
+---
+
+### **Version 7.19.0** (July 12, 2026)
+
+#### **Operations**
+- Version poller toast notification for new deployments.
+- New About page with project history and contributor credits.
+- Recent activity displays user name and year of study instead of raw email.
+
+---
+
+### **Version 7.18.0** (July 12, 2026)
+
+#### **Multi-Role Support**
+- Multiple roles displayed in profile, tables, view modals, and member cards.
+- Multi-role selection in edit forms with change detection.
+- Default illustrated male avatars for users without profile photos.
+
+---
+
+### **Version 7.17.0 – 7.17.1** (July 11, 2026)
+
+#### **Mobile & Forms**
+- Responsive mobile layouts for TADA & PAPM list tables.
+- TADA & PAPM forms improved with better print layout, Metro option, and signature removal.
+- Mobile header now shows notification bell next to the hamburger menu.
+
+---
+
+### **Version 7.16.0** (July 11, 2026)
+
+#### **TADA Forms**
+- Added **Travel Allowance / Dearness Allowance (TADA)** claim form with full CRUD API, validation, and print support.
+
+---
+
+### **Version 7.15.0** (July 10, 2026)
+
+#### **PAPM Forms**
+- Replaced PAPM show page with in-modal read-only view.
+- Added print preview and watermark.
+
+---
+
+### **Version 7.14.0** (July 10, 2026)
+
+#### **PAPM & Affiliations**
+- Added **Private Account Payment Module (PAPM)** backend API, frontend forms, pages, and routing.
+- Added drawee metadata, finalize confirmation, and improved print layout.
+- Added affiliation fields and profile support.
+
+---
+
+### **Version 7.13.0** (July 9, 2026)
+
+#### **Affiliations & Branding**
+- Added dioceses and congregations management with profile integration.
+- Added member count columns to affiliation tables.
+- Added seminary logo to headers, favicon, and auth pages.
+
+---
+
+### **Version 7.12.0** (July 9, 2026)
+
+#### **Superuser Dashboard**
+- Integrated audit log and loading states into superuser system health.
+- Computed system health percentage from dependency metrics.
+- Added login/logout audit logging.
+- Responsive configuration for `OptimizedTable` components across list pages.
+
+---
+
+### **Version 7.11.0** (July 9, 2026)
+
+#### **Migrated Users & Responsiveness**
+- Added migrated landing page for PHP portal users.
+- Authors page and linked-items modal made mobile responsive.
+
+---
+
+### **Version 7.10.0 – 7.10.3** (July 7 – 8, 2026)
+
+#### **Performance & Mobile**
+- Unified table mobile responsiveness with column condensing.
+- Stale chunk dynamic import errors resolved after deployments.
+- Inline styles migrated to CSS classes across auth, layout, and public pages.
+- Session tick made adaptive and background polling paused on hidden tabs.
+
+---
+
+### **Version 7.9.0** (July 6, 2026)
+
+#### **Unified Dashboard Rollout**
+- Migrated user dashboard to the unified dashboard system.
+- Added motivation widgets and visual effects to the student dashboard.
+
+---
+
+### **Version 7.8.0** (July 6, 2026)
+
+#### **Session Reliability**
+- Prevented logout calls when the user is unauthenticated.
+
+---
+
+### **Version 7.7.0** (July 5, 2026)
+
+#### **Catalog**
+- Unified catalog page with resource type filter and global search.
+
+---
+
+### **Version 7.6.0** (July 5, 2026)
+
+#### **Help & Notifications**
+- Added PageHelp drawers to 7 additional pages.
+- AI-generated release notes merged into system notifications.
+
+---
+
+### **Version 7.5.0** (July 5, 2026)
+
+#### **Performance**
+- Parallelized COUNT and SELECT queries across APIs and repositories.
+- Optimized KV operations and made request logging non-blocking.
+
+---
+
+### **Version 7.4.0** (July 4, 2026)
+
+#### **Dashboard Standardization**
+- Standardized stat cards across all roles with a universal 6-card set.
+- Added grid-5 layout support for stat cards.
+- Replaced universal stats with library-resource metrics.
+
+---
+
+### **Version 7.3.0** (July 4, 2026)
+
+#### **Issue Reports**
+- Added issue reports feature with GitHub integration and image attachments.
+- Added community engagement tables, public issue list, and upvotes.
+- Scheduled GitHub issue sync job.
+
+---
+
+### **Version 7.2.0** (July 3, 2026)
+
+#### **Security & Auth UX**
+- Auto-refresh on expired Cloudflare challenge chunk failures.
+- Hardened OTP system with cooldown, invalidation, and plaintext rejection.
+- Added check-status links to login and registration pages.
+
+---
+
+### **Version 7.1.0** (July 2, 2026)
+
+#### **New Features**
+- Added simplified **magazines** module with full CRUD.
+- Added `www.sjrslms.in` custom domain and cross-subdomain cookie support.
+
+---
+
+### **Version 7.0.0** (July 2, 2026)
+
+#### **API Hardening**
+- Migrated all API routes to `/api/v1/` prefix and removed legacy fallback.
+- Implemented D1-based idempotency for critical POST endpoints.
+- Added `failClosed` mode for rate limiting and idempotency on auth and critical writes.
+
+---
+
+### **Version 6.34.7** ⭐ **PREVIOUS CURRENT** (June 28, 2026)
 
 #### **Security + Data Integrity**
 - **Cross-User Cache Isolation (6.34.7)**: Fixed cache keying for user-specific GET requests to prevent cross-user data leakage.
@@ -18,7 +284,7 @@ slug: changelog
 #### **Core UX and Platform Updates**
 - **Inline Modal Consolidation (6.34.6, 6.34.5)**: Article and loan CRUD flows were consolidated into list-first pages with inline modals.
 - **Dynamic User Types (6.32.1, 6.32.0)**: Completed dynamic user type CRUD and moved student user type loading to API-driven data.
-- **Unified Dashboard Route Model (6.23.1)**: Standardized role dashboards behind a unified `/dashboard/*` route model.
+- **Unified Dashboard Route Model (6.23.1)**: Standardized role dashboards behind a unified `/dashboard` route model.
 
 #### **Catalog and Reference Enhancements**
 - **Reference Books Improvements (6.31.0, 6.29.0)**: Added tracking views, linked-items modal, advanced filters, and author-level reference counts.
@@ -123,12 +389,6 @@ The SJRS LMS now features a **centralized React Query configuration system** tha
 #### **Quality & Security**
 - **Dependencies**: Updated dependencies; known vulnerabilities reduced to 0
 - **Auth**: More robust profile loading with schema-safe fallbacks (`/api/auth/me`)
-
-### **Version 3.51.1** (March 3, 2026)
-
-#### **Testing**
-- **Fixed Failing Tests**: Addressed intermittent test failures
-- **Noise Reduction**: Suppressed noisy warnings in test environment
 
 ### **Version 3.51.0** (March 3, 2026)
 

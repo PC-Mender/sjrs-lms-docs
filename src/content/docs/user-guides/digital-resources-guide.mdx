@@ -30,21 +30,38 @@ Digital Resources include e-books, online articles, PDFs, and other digital mate
 3. Click **Read Now** to open the resource in the built-in reader
 4. Or click **Download** if downloading is permitted
 
-## Reading Digital Books
+## Reading Digital Books & PDFs
 
 The built-in digital book reader supports:
 
 - **Page navigation** — flip through pages with next/previous buttons
-- **Table of contents** — jump to specific chapters
-- **Search within book** — find text within the current book
-- **Bookmarks** — save your reading position
-- **Zoom** — adjust text size for readability
+- **Zoom controls** — adjust the page scale for readability
+- **Read session tracking** — progress and reading time are recorded automatically
+- **Activity panel** — librarians and admins can view aggregate read sessions and engagement
 
 Your reading progress is tracked automatically. Return to any digital book and it will resume from where you left off.
 
-**Route for reading**: `/dashboard/digital-book-reads`
+**Route for reading**: `/dashboard/digital-resources/read/:id`
+
+## Download Sources
+
+A digital resource can have multiple download sources. Each source has a priority order so the system knows which link to prefer first.
+
+- **R2 file uploads** — files stored in Cloudflare R2
+- **External URLs** — links to third-party digital libraries
+- **Priority** — lower numbers are tried first; new external sources auto-fill the next sequential value
+
+Librarians and admins can add, edit, or remove download sources from the resource edit modal.
 
 ## Resource Types
+
+**Route**: `/dashboard/resource-types`
+
+Resource types classify digital and physical items (e.g., e-book, PDF, web link, audio book). The list now supports:
+
+- Server-side pagination and search
+- A **linked resource count** column showing how many resources use each type
+- Sorting by name or linked count
 
 | Type | Description | Access |
 |------|-------------|--------|
@@ -64,13 +81,20 @@ Your reading progress is tracked automatically. Return to any digital book and i
    - Resource type and format
    - Upload the file or provide a URL
    - Set access permissions (public, restricted, role-based)
-4. Click **Save** to publish the resource
+4. Add one or more **download sources** so patrons can access the file
+5. Click **Save** to publish the resource
 
-### Resource Types Management
+### Managing Resource Types
 
-**Route**: `/dashboard/resource-types`
+1. Go to **Dashboard** → **Resource Types** (`/dashboard/resource-types`)
+2. Create, edit, or delete resource categories
+3. Use the linked resource count column to see usage before deleting a type
 
-Manage the categories of digital resources available in the system.
+### Read Sessions & Activity
+
+- Read sessions are stored in `resource_read_sessions`
+- The activity panel shows aggregated reading activity for analytics
+- Admins can use this data to understand which resources are most popular
 
 ## API Reference
 
@@ -78,13 +102,25 @@ Manage the categories of digital resources available in the system.
 |--------|----------|-------------|
 | GET | `/api/v1/resources` | List digital resources |
 | GET | `/api/v1/resources/:id` | Get resource details |
-| POST | `/api/v1/resources` | Create a resource (admin) |
-| PUT | `/api/v1/resources/:id` | Update a resource (admin) |
-| DELETE | `/api/v1/resources/:id` | Delete a resource (admin) |
+| POST | `/api/v1/resources` | Create a resource (admin/librarian) |
+| PUT | `/api/v1/resources/:id` | Update a resource (admin/librarian) |
+| DELETE | `/api/v1/resources/:id` | Delete a resource (admin/librarian) |
+| GET | `/api/v1/resource-types` | List resource types |
+| POST | `/api/v1/resource-types` | Create a resource type |
+| PUT | `/api/v1/resource-types/:id` | Update a resource type |
+| DELETE | `/api/v1/resource-types/:id` | Delete a resource type |
 | GET | `/api/v1/digital-book-reads` | Track reading progress |
 | POST | `/api/v1/digital-book-reads` | Update reading position |
+| GET | `/api/v1/resources/:id/activity` | Resource activity stats |
+| GET | `/api/v1/resources/:id/read-sessions` | Paginated read sessions |
 
 ## Related Documentation
 
 - [Catalog Guide](./catalog-guide) — Browsing physical books
 - [Journals Guide](./journals-guide) — Academic journals and magazines
+- [Badges Guide](./badges-guide) — Achievement badges for reading and engagement
+
+---
+
+**Last Updated:** July 19, 2026  
+**Version:** 7.27.0

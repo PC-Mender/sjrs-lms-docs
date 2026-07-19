@@ -1,0 +1,75 @@
+---
+title: "TADA Guide"
+description: "How to create, submit, and manage Travel Allowance / Dearness Allowance (TADA) claim forms."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+**TADA** stands for **Travel Allowance / Dearness Allowance**. It is a claim form used to request reimbursement for official travel and related expenses.
+
+**Route**: `/dashboard/tada`
+
+## Who Can Use TADA
+
+- Students, professors, staff, and guests who have permission to create claims
+- Administrative roles (admin, dean, librarian, superuser) can review and manage submissions
+
+## Creating a TADA Claim
+
+1. Go to **Dashboard** → **TADA** (`/dashboard/tada`)
+2. Click **Create Claim**
+3. Fill in the form sections:
+   - **User Information** — name, role, registration number (auto-filled for students), and contact details
+   - **Journey Details** — date of travel, purpose, mode of transport, and Metro option if applicable
+   - **Expense Details** — fare, dearness allowance, and any other eligible expenses
+4. Review the totals
+5. Click **Save Draft** to finish later, or **Submit** to send it for processing
+
+## Viewing Your Claims
+
+The TADA list page shows all your claims with:
+
+- Claim reference and date
+- Journey summary
+- Total amount
+- Status (draft, submitted, approved, rejected, etc.)
+- Actions: view, edit (if not yet finalized), print
+
+The list is mobile-responsive and supports server-side pagination, search, and sorting.
+
+## Printing a TADA Form
+
+1. Open the claim you want to print
+2. Click the **Print** button
+3. The print layout includes:
+   - Watermark for submitted/finalized claims
+   - Clean sections for user information and journey details
+   - Totals and signature area
+
+## For Approvers
+
+Administrative users can:
+
+- Filter claims by status
+- Open a claim to review details
+- Approve or reject with comments
+- Track claim history
+
+## Important Notes
+
+- Drafts can be edited until they are submitted
+- Once submitted, the form is locked and cannot be edited
+- Claims must be accurate; incorrect details may delay approval
+
+## Related Documentation
+
+- [PAPM Guide](./papm-guide) — Private Account Payment Module
+- [Loans Guide](./loans-guide) — Library circulation
+
+---
+
+**Last Updated:** July 19, 2026  
+**Version:** 7.27.0
