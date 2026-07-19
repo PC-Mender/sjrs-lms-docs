@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.3.21](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.20...v1.3.21) (2026-07-19)
+
+### Documentation
+
+* sync v7.27.0 feature docs and fix internal links ([03498b3](https://github.com/neil-jay/sjrs-lms-docs/commit/03498b3c03cb08a834688500fedca307cebc56d0))
 ## [1.3.20](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.3.19...v1.3.20) (2026-07-05)
 
 
