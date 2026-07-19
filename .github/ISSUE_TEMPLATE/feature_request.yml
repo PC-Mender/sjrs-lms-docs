@@ -1,0 +1,32 @@
+name: Documentation Request
+description: Suggest new documentation or improvements to existing docs.
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for helping us improve the SJRS LMS documentation.
+  - type: textarea
+    id: summary
+    attributes:
+      label: What would you like to see documented?
+      description: Describe the topic, feature, or task that needs documentation.
+    validations:
+      required: true
+  - type: textarea
+    id: audience
+    attributes:
+      label: Who is the intended audience?
+      description: e.g., end users, administrators, developers, integrators.
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Links, screenshots, or references that may help.
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Checklist
+      options:
+        - label: I have searched existing issues and this is not a duplicate.
+          required: true
