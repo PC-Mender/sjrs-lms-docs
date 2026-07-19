@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" role="img" aria-labelledby="regTitle regDesc">
+  <title id="regTitle">SJRS LMS Registration Flow</title>
+  <desc id="regDesc">A visual overview of the registration process: enter personal information, choose account type, set up security, verify email, then log in.</desc>
+  <defs>
+    <linearGradient id="stepGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#f8fafc;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e2e8f0;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="activeGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#dbeafe;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#bfdbfe;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="successGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#dcfce7;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#bbf7d0;stop-opacity:1" />
+    </linearGradient>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#64748b" />
+    </marker>
+  </defs>
+  <rect width="800" height="420" fill="#ffffff" rx="12" />
+  <text x="400" y="40" text-anchor="middle" font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif" font-size="22" font-weight="700" fill="#0f172a">SJRS LMS Registration Flow</text>
+  <g transform="translate(40, 80)">
+    <rect width="130" height="120" rx="12" fill="url(#stepGrad)" stroke="#cbd5e1" stroke-width="2" />
+    <circle cx="65" cy="28" r="16" fill="#3b82f6" />
+    <text x="65" y="34" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">1</text>
+    <text x="65" y="62" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#0f172a">Personal</text>
+    <text x="65" y="80" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#0f172a">Information</text>
+    <text x="65" y="102" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#475569">Email, First &amp; Last name</text>
+  </g>
+  <line x1="170" y1="140" x2="205" y2="140" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+  <g transform="translate(220, 80)">
+    <rect width="130" height="120" rx="12" fill="url(#stepGrad)" stroke="#cbd5e1" stroke-width="2" />
+    <circle cx="65" cy="28" r="16" fill="#3b82f6" />
+    <text x="65" y="34" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">2</text>
+    <text x="65" y="62" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#0f172a">Account Type</text>
+    <text x="65" y="80" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#0f172a">Selection</text>
+    <text x="65" y="102" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#475569">Student / Professor / Guest</text>
+  </g>
+  <line x1="350" y1="140" x2="385" y2="140" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+  <g transform="translate(400, 80)">
+    <rect width="130" height="120" rx="12" fill="url(#stepGrad)" stroke="#cbd5e1" stroke-width="2" />
+    <circle cx="65" cy="28" r="16" fill="#3b82f6" />
+    <text x="65" y="34" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">3</text>
+    <text x="65" y="62" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#0f172a">Security Setup</text>
+    <text x="65" y="84" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#475569">Strong password +</text>
+    <text x="65" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#475569">CAPTCHA check</text>
+  </g>
+  <line x1="530" y1="140" x2="565" y2="140" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+  <g transform="translate(580, 80)">
+    <rect width="130" height="120" rx="12" fill="url(#activeGrad)" stroke="#60a5fa" stroke-width="2" />
+    <circle cx="65" cy="28" r="16" fill="#2563eb" />
+    <text x="65" y="34" text-anchor="middle" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#ffffff">4</text>
+    <text x="65" y="62" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#0f172a">Email Verification</text>
+    <text x="65" y="84" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#475569">Click secure link</text>
+    <text x="65" y="100" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#475569">valid for 24 hours</text>
+  </g>
+  <line x1="645" y1="200" x2="645" y2="235" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+  <g transform="translate(480, 250)">
+    <rect width="160" height="80" rx="12" fill="url(#activeGrad)" stroke="#60a5fa" stroke-width="2" />
+    <text x="80" y="32" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#0f172a">Admin Approval</text>
+    <text x="80" y="52" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#475569">Profile review &amp; role</text>
+    <text x="80" y="68" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#475569">assignment by staff</text>
+  </g>
+  <line x1="480" y1="290" x2="445" y2="290" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)" />
+  <g transform="translate(280, 250)">
+    <rect width="160" height="80" rx="12" fill="url(#successGrad)" stroke="#4ade80" stroke-width="2" />
+    <text x="80" y="32" text-anchor="middle" font-family="system-ui, sans-serif" font-size="13" font-weight="600" fill="#0f172a">Login &amp; Explore</text>
+    <text x="80" y="52" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#475569">Access dashboard, catalog</text>
+    <text x="80" y="68" text-anchor="middle" font-family="system-ui, sans-serif" font-size="11" fill="#475569">and library features</text>
+  </g>
+  <text x="400" y="400" text-anchor="middle" font-family="system-ui, sans-serif" font-size="12" fill="#64748b">You can resume an incomplete registration at any time.</text>
+</svg>
