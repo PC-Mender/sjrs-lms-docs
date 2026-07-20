@@ -13,28 +13,31 @@ hero:
 import { Card, CardGrid } from '@astrojs/starlight/components';
 
 <div class="centered-title">
-<h3>Quick Start</h3>
+<h3>Start Here</h3>
 </div>
 
 <div class="primary-card-grid">
 <CardGrid>
-  <Card title="Quick Start">
-    New to SJRS LMS? Start here.
+  <Card title="New Users">
+    For new users joining the library.
     - [Getting Started Guide](/getting-started/)
-    - [Setup Guide](/getting-started/setup)
-    - [Documentation Standards](/documentation-standards)
+    - [Registration Guide](/user-guides/registration-guide)
+    - [End-User Guides](/user-guides/)
+    - [Task Index](/user-guides/task-index)
   </Card>
   <Card title="User Guides">
-    Guides for students, staff, and admins.
-    - [End-User Guides](/user-guides/)
-    - [Features Overview](/features/)
+    Task-oriented guides for students, staff, and admins.
+    - [User Guides Overview](/user-guides/)
+    - [Registration Guide](/user-guides/registration-guide)
+    - [Loans Guide](/user-guides/loans-guide)
     - [Help System Guide](/user-guides/help-system-guide)
   </Card>
   <Card title="Developer Docs">
-    Technical implementation details.
+    Technical implementation and setup.
     - [Architecture Overview](/architecture/)
     - [API Documentation](/api/)
     - [Development Guide](/development/)
+    - [Setup Guide](/getting-started/setup)
   </Card>
 </CardGrid>
 </div>
@@ -45,29 +48,36 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 <div class="primary-card-grid">
 <CardGrid>
-  <Card title="Core Features">
-    - [Reference Books](/features/reference-books/)
-    - [Dashboard Config](/features/dashboard-config-guide)
-    - [Permissions System](/features/permissions/)
+  <Card title="Library Operations">
+    Catalog, circulation, and user management.
+    - [Book Catalog](/features/book-catalog/)
+    - [Loans](/features/loans/)
+    - [Reservations](/features/reservations/)
+    - [Members](/features/members/)
   </Card>
-  <Card title="New Modules">
+  <Card title="Forms & Personal Tools">
+    Claims, requests, and user productivity tools.
     - [TADA Forms](/user-guides/tada-guide)
     - [PAPM Forms](/user-guides/papm-guide)
     - [User Notes](/user-guides/notes-guide)
-    - [Issue Reports](/user-guides/issue-reports-guide)
+    - [Wishlist](/user-guides/wishlist-guide)
   </Card>
   <Card title="Security">
+    Authentication, sessions, and safety controls.
     - [MFA System](/features/mfa-system)
     - [Session Management](/development/session-management)
     - [Security Overview](/security/)
   </Card>
   <Card title="Digital Resources">
+    E-books, PDFs, and online materials.
     - [Digital Resources Guide](/user-guides/digital-resources-guide)
     - [PDF Reader & Sessions](/user-guides/digital-resources-guide#reading-digital-books--pdfs)
     - [Resource Types](/user-guides/digital-resources-guide#resource-types)
   </Card>
   <Card title="API & Integration">
-    - [API Endpoints](/api/)
+    Endpoints, tokens, and response standards for developers.
+    - [API Overview](/api/)
+    - [Endpoints](/api/endpoints)
     - [Token Config](/api/token-requirements)
     - [Response Standards](/api/api-response-standardization)
   </Card>
@@ -81,13 +91,13 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 <div class="primary-card-grid">
 <CardGrid>
   <Card title="Project Rules">
-    Architecture, Security, and Code Standards.
+    Architecture, security, and code standards.
     - [Docs Rules](/project-rules-docs)
     - [App Rules](/project-rules-app)
     - [Documentation Standards](/documentation-standards)
   </Card>
-  <Card title="System Status">
-    Current operational status.
+  <Card title="Status & Deployment">
+    Operational status and release workflows.
     - [Status](/status)
     - [Deployment Guide](/deployment/)
     - [Registration Troubleshooting](/deployment/registration-troubleshooting)
@@ -100,4 +110,3 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
   </Card>
 </CardGrid>
 </div>
-
