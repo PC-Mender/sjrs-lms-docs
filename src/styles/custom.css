@@ -242,6 +242,17 @@ body[data-template="splash"] .hero h1 {
   line-height: 1.5 !important;
 }
 
+/* Remove underlines from links inside homepage cards for a cleaner look */
+.card-grid .card a {
+  text-decoration: none !important;
+}
+
+/* Show underline on hover/focus for accessibility */
+.card-grid .card a:hover,
+.card-grid .card a:focus {
+  text-decoration: underline !important;
+}
+
 /* Hide theme select label text but keep icon */
 starlight-theme-select label {
   font-size: 0 !important;
