@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.4.2](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.4.1...v1.4.2) (2026-07-20)
+
+### Documentation
+
+* **homepage:** refine card headings and links for clarity ([0752771](https://github.com/neil-jay/sjrs-lms-docs/commit/07527718e2865330af466b6d4e07f4c5ff7640a0))
+* remove unnecessary bold markers from headings ([5c4026e](https://github.com/neil-jay/sjrs-lms-docs/commit/5c4026eb55e70aa36376fe05cdd650b377b0cfed))
 ## [1.4.1](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.4.0...v1.4.1) (2026-07-19)
 
 ### Bug Fixes
