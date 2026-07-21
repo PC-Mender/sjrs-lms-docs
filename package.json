@@ -1,7 +1,7 @@
 {
   "name": "sjrslms-docs",
   "type": "module",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "Official documentation site for the SJRS Library Management System",
   "repository": {
     "type": "git",
