@@ -1,6 +1,6 @@
 ---
 title: "Catalog Guide"
-description: "How to browse, search, filter, and reserve books from the SJRS LMS catalog."
+description: "How to browse, search, filter, request, reserve, and wishlist books from the SJRS LMS catalog."
 lifecycle: Active
 ---
 
@@ -8,7 +8,7 @@ import { Aside } from '@astrojs/starlight/components';
 
 ## Overview
 
-The Catalog is your starting point for finding books in the library. It displays all books in a card-grid layout with search, filtering, and sorting capabilities. From the catalog, you can view book details, reserve books, add to wishlist, and check availability.
+The Catalog is your starting point for finding books in the library. It displays all books in a card-grid layout with search, filtering, and sorting capabilities. From the catalog, you can view book details, add available books to your request cart, reserve unavailable books, add books to your wishlist, and check availability.
 
 **Route**: `/dashboard/catalog`
 
@@ -55,7 +55,7 @@ The catalog header displays a **quota tag** showing how many borrow slots you ha
 - **Green tag**: `X slots left (Y/Z)` — you can place more requests
 - **Red tag**: `Quota full (Y/Z)` — you've reached your limit
 
-Your quota is determined by your role's borrow limits. Active loans and pending requests both count toward your quota.
+Your quota is determined by your current borrowing limits. Active loans, overdue loans, and pending borrow requests all count toward your quota.
 
 <Aside type="tip" title="Quota Tooltip">
 Hover over the quota tag for a detailed breakdown of your used and available slots, including items in your request cart.
@@ -70,15 +70,25 @@ Hover over the quota tag for a detailed breakdown of your used and available slo
    - Total copies and available copies
    - Description (if available)
 3. From the modal, you can:
-   - **Reserve** the book (if copies are unavailable)
+   - **Add to Request Cart** for available or limited-availability books
+   - **Reserve This Book** if copies are unavailable
    - **Add to Wishlist** (to track for later)
-   - **Borrow** the book (if copies are available)
+   - **View Orders** if you already have a pending request for that book
+
+## Requesting a Book from the Catalog
+
+1. Find a book that shows **Available** or **Limited**
+2. Click the book card to open details
+3. Click **Add to Request Cart**
+4. Open the **Request Cart** drawer
+5. Click **Submit** to create the borrow request
+6. Track the request in **Orders**; after approval, the resulting loan appears in **Loans**
 
 ## Reserving from the Catalog
 
 1. Find a book in the catalog
 2. Click the book card to open details
-3. Click **Reserve**
+3. Click **Reserve This Book**
 4. If you already have an active loan for this book, you'll see: "You already borrowed this book. Return it before placing a reservation."
 5. The reservation appears in your Reservations page with status "Pending"
 
