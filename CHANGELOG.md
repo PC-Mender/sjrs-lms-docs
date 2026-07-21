@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.4.3](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.4.2...v1.4.3) (2026-07-21)
+
+### Documentation
+
+* **user-guides:** update documentation for request cart workflow and borrow request tracking ([e5a9432](https://github.com/neil-jay/sjrs-lms-docs/commit/e5a9432b3e8f1883b4bc1624785902bd1b943731))
 ## [1.4.2](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.4.1...v1.4.2) (2026-07-20)
 
 ### Documentation
