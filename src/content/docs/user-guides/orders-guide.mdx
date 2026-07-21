@@ -8,7 +8,7 @@ import { Aside } from '@astrojs/starlight/components';
 
 ## Overview
 
-Orders represent book purchase requests. Users can place orders for books they want the library to acquire. Staff can review, approve, reject, and fulfill these orders. The order priority policy determines which orders get processed first.
+Orders track borrow requests submitted through the **Request Cart**. Users add available books from the catalog to the cart, submit those requests, and then use **Orders** to track staff review. Staff can approve or reject requests, and an approved request creates the loan.
 
 **Route**: `/dashboard/orders`
 
@@ -16,34 +16,29 @@ Orders represent book purchase requests. Users can place orders for books they w
 
 | Status | Description |
 |--------|-------------|
-| Pending | Order submitted, awaiting review |
-| Approved | Staff approved the purchase |
-| Rejected | Staff rejected the order |
-| Ordered | Book has been ordered from the supplier |
-| Received | Book has arrived and is being processed |
-| Completed | Book is catalogued and available |
-| Cancelled | Order was cancelled |
+| Pending | Borrow request submitted and awaiting review |
+| Approved | Staff approved the request |
+| Rejected | Staff rejected the request |
+| Completed | Request workflow finished |
+| Cancelled | Request was cancelled |
 
 ## For Students & Regular Users
 
-### Placing an Order
+### Creating a Borrow Request
 
-1. Navigate to **Dashboard** → **Orders** (`/dashboard/orders`)
-2. Click **Create Order**
-3. Fill in the book details:
-   - **Title** — the book you want
-   - **Author** — if known
-   - **ISBN** — if available
-   - **Publication** — if known
-   - **Notes** — any additional context
-4. Click **Submit** to place the order
+1. Go to **Dashboard** → **Catalog** (`/dashboard/catalog`)
+2. Open an available book
+3. Click **Add to Request Cart**
+4. Open the **Request Cart**
+5. Click **Submit**
+6. Go to **Dashboard** → **Orders** (`/dashboard/orders`) to track the request
 
 ### Tracking Your Orders
 
 1. Go to **Dashboard** → **Orders**
 2. View the status of all your orders in the table
-3. Use the **status filter** to see only pending or completed orders
-4. Use the **search bar** to find orders by title
+3. Use the **status filter** to focus on pending, approved, rejected, cancelled, or completed requests
+4. Use the **search bar** to find requests by title, author, or order number
 
 ### Cancelling an Order
 
@@ -63,7 +58,7 @@ Orders represent book purchase requests. Users can place orders for books they w
 
 1. Find an order with status "Pending"
 2. Click **Approve**
-3. The order moves to "Approved" status
+3. The request is approved and the loan is created
 
 ### Rejecting an Order
 
@@ -71,12 +66,6 @@ Orders represent book purchase requests. Users can place orders for books they w
 2. Click **Reject**
 3. Provide a reason if prompted
 4. The order moves to "Rejected" status
-
-### Fulfilling an Order
-
-Once a book has been ordered and received:
-1. Update the order status to **Ordered** → **Received** → **Completed**
-2. The book is then catalogued and made available in the system
 
 ## Order Priority Policy
 
@@ -99,6 +88,8 @@ See [Order Priority Policy](/features/orders/order-priority-policy) for configur
 
 ## Related Documentation
 
-- [Catalog Guide](/user-guides/catalog-guide) — Browsing existing books
+- [Catalog Guide](/user-guides/catalog-guide) — Browsing and requesting available books
+- [Loans Guide](/user-guides/loans-guide) — Managing approved and active loans
+- [Reservations Guide](/user-guides/reservations-guide) — Reserving unavailable books
 - [Wishlist Guide](/user-guides/wishlist-guide) — Tracking books you want
 - [Order Priority Policy](/features/orders/order-priority-policy) — Priority configuration
