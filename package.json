@@ -20,6 +20,10 @@
     "preview": "astro preview",
     "astro": "astro",
     "lint": "astro check",
+    "feedback:dev": "wrangler dev --config feedback/wrangler.toml",
+    "feedback:deploy": "wrangler deploy --config feedback/wrangler.toml",
+    "feedback:check": "wrangler deploy --dry-run --config feedback/wrangler.toml",
+    "feedback:migrate": "wrangler d1 migrations apply FEEDBACK_DB --config feedback/wrangler.toml",
     "check:lifecycle": "node scripts/check-doc-lifecycle.js",
     "release": "commit-and-tag-version"
   },
@@ -42,6 +46,8 @@
     "esbuild": "0.28.1"
   },
   "devDependencies": {
-    "commit-and-tag-version": "13.0.0"
+    "@cloudflare/workers-types": "^4.20250725.0",
+    "commit-and-tag-version": "13.0.0",
+    "wrangler": "^4.27.0"
   }
 }

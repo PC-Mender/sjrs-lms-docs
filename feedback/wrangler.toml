@@ -1,0 +1,22 @@
+name = "sjrs-docs-feedback"
+main = "src/index.ts"
+compatibility_date = "2026-07-25"
+workers_dev = true
+
+[[d1_databases]]
+binding = "FEEDBACK_DB"
+database_name = "sjrs-docs-feedback"
+database_id = "d40de22b-a50c-4915-af5e-2c45b68c3756"
+preview_database_id = "00000000-0000-0000-0000-000000000000"
+migrations_dir = "migrations"
+
+[vars]
+ALLOWED_ORIGIN = "https://docs.sjrslms.in"
+
+# Set securely with:
+# npx wrangler secret put HASH_SECRET --config feedback/wrangler.toml
+
+# Optional custom domain example:
+# [[routes]]
+# pattern = "feedback.docs.sjrslms.in"
+# custom_domain = true

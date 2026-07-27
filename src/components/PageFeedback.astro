@@ -1,0 +1,404 @@
+---
+interface Props {
+  pagePath?: string;
+  pageTitle?: string;
+  editUrl?: string;
+  reportIssueUrl: string;
+}
+
+const {
+  pagePath = '/',
+  pageTitle = 'Documentation Page',
+  editUrl,
+  reportIssueUrl,
+} = Astro.props;
+
+const feedbackApiBaseUrl = import.meta.env.PUBLIC_DOCS_FEEDBACK_API_BASE_URL?.trim() ?? '';
+---
+
+<div
+  class="page-feedback"
+  aria-label="Page feedback"
+  data-page-feedback
+  data-page-path={pagePath}
+  data-page-title={pageTitle}
+  data-api-base={feedbackApiBaseUrl}
+>
+  <div class="page-feedback__row">
+    <div class="page-feedback__heading">
+      <span class="page-feedback__prompt">Was this page helpful?</span>
+      <p class="page-feedback__status" data-feedback-status aria-live="polite"></p>
+    </div>
+    <div class="page-feedback__actions">
+      <button
+        class="page-feedback__button"
+        type="button"
+        data-vote-button="up"
+        disabled
+        aria-label="Give a thumbs up"
+      >
+        <span class="page-feedback__emoji" aria-hidden="true">👍</span>
+        <span class="page-feedback__count" data-feedback-count="up">0</span>
+      </button>
+      <button
+        class="page-feedback__button"
+        type="button"
+        data-vote-button="down"
+        disabled
+        aria-label="Give a thumbs down"
+      >
+        <span class="page-feedback__emoji" aria-hidden="true">👎</span>
+        <span class="page-feedback__count" data-feedback-count="down">0</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="page-feedback__form" data-downvote-form hidden>
+    <label class="page-feedback__label" for={`feedback-note-${pagePath.replace(/[^a-z0-9]+/gi, '-')}`}>
+      What was missing or unclear?
+    </label>
+    <textarea
+      class="page-feedback__textarea"
+      id={`feedback-note-${pagePath.replace(/[^a-z0-9]+/gi, '-')}`}
+      rows="3"
+      maxlength="500"
+      data-feedback-comment
+      placeholder="Optional note"
+    ></textarea>
+    <div class="page-feedback__form-actions">
+      <button class="page-feedback__button page-feedback__button--primary" type="button" data-save-downvote disabled>
+        Save
+      </button>
+      <button class="page-feedback__button" type="button" data-cancel-downvote>
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <div class="page-feedback__row page-feedback__links">
+    {editUrl ? <a href={editUrl} target="_blank" rel="noreferrer">Edit this page</a> : null}
+    <a href={reportIssueUrl} target="_blank" rel="noreferrer">Report an issue</a>
+  </div>
+</div>
+
+<style>
+  .page-feedback {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--sl-color-hairline);
+    display: grid;
+    gap: 0.9rem;
+  }
+
+  .page-feedback__row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+  }
+
+  .page-feedback__heading {
+    display: grid;
+    gap: 0.25rem;
+  }
+
+  .page-feedback__prompt {
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-gray-2);
+  }
+
+  .page-feedback__status {
+    margin: 0;
+    min-height: 1.25rem;
+    font-size: var(--sl-text-xs);
+    color: var(--sl-color-text);
+  }
+
+  .page-feedback__actions,
+  .page-feedback__form-actions {
+    display: inline-flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .page-feedback__button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: 999px;
+    border: 1px solid var(--sl-color-hairline);
+    background: var(--sl-color-bg);
+    color: var(--sl-color-text);
+    font-size: var(--sl-text-sm);
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+  }
+
+  .page-feedback__button:hover:not(:disabled),
+  .page-feedback__button:focus-visible:not(:disabled) {
+    background: var(--sl-color-gray-6);
+    text-decoration: none;
+  }
+
+  .page-feedback__button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  .page-feedback__button.is-selected {
+    border-color: var(--sl-color-accent);
+    background: color-mix(in srgb, var(--sl-color-accent) 12%, var(--sl-color-bg));
+  }
+
+  .page-feedback__button--primary {
+    border-color: var(--sl-color-accent);
+    background: var(--sl-color-accent);
+    color: var(--sl-color-black);
+  }
+
+  .page-feedback__emoji {
+    font-size: 1rem;
+    line-height: 1;
+  }
+
+  .page-feedback__count {
+    min-width: 1ch;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .page-feedback__form {
+    display: grid;
+    gap: 0.55rem;
+    padding: 0.85rem;
+    border-radius: 0.9rem;
+    border: 1px solid var(--sl-color-hairline);
+    background: color-mix(in srgb, var(--sl-color-gray-7) 65%, transparent);
+  }
+
+  .page-feedback__label {
+    font-size: var(--sl-text-sm);
+    color: var(--sl-color-text);
+  }
+
+  .page-feedback__textarea {
+    width: 100%;
+    resize: vertical;
+    border-radius: 0.75rem;
+    border: 1px solid var(--sl-color-hairline);
+    padding: 0.75rem;
+    background: var(--sl-color-bg);
+    color: var(--sl-color-text);
+    font: inherit;
+  }
+
+  .page-feedback__links {
+    font-size: var(--sl-text-sm);
+  }
+
+  .page-feedback__links a {
+    color: var(--sl-color-accent);
+    text-decoration: none;
+  }
+
+  .page-feedback__links a:hover,
+  .page-feedback__links a:focus-visible {
+    text-decoration: underline;
+  }
+</style>
+
+<script is:inline>
+  const feedbackRoots = document.querySelectorAll('[data-page-feedback]');
+
+  for (const root of feedbackRoots) {
+    if (!(root instanceof HTMLElement) || root.dataset.initialized === 'true') {
+      continue;
+    }
+
+    root.dataset.initialized = 'true';
+
+    const apiBase = (root.dataset.apiBase || '').replace(/\/$/, '');
+    const pagePath = root.dataset.pagePath || '/';
+    const pageTitle = root.dataset.pageTitle || 'Documentation Page';
+
+    const statusEl = root.querySelector('[data-feedback-status]');
+    const upCountEl = root.querySelector('[data-feedback-count="up"]');
+    const downCountEl = root.querySelector('[data-feedback-count="down"]');
+    const upButton = root.querySelector('[data-vote-button="up"]');
+    const downButton = root.querySelector('[data-vote-button="down"]');
+    const form = root.querySelector('[data-downvote-form]');
+    const commentEl = root.querySelector('[data-feedback-comment]');
+    const saveDownvoteButton = root.querySelector('[data-save-downvote]');
+    const cancelDownvoteButton = root.querySelector('[data-cancel-downvote]');
+
+    if (
+      !(statusEl instanceof HTMLElement) ||
+      !(upCountEl instanceof HTMLElement) ||
+      !(downCountEl instanceof HTMLElement) ||
+      !(upButton instanceof HTMLButtonElement) ||
+      !(downButton instanceof HTMLButtonElement) ||
+      !(form instanceof HTMLElement) ||
+      !(commentEl instanceof HTMLTextAreaElement) ||
+      !(saveDownvoteButton instanceof HTMLButtonElement) ||
+      !(cancelDownvoteButton instanceof HTMLButtonElement)
+    ) {
+      continue;
+    }
+
+    let isBusy = false;
+    let isSubmitted = false;
+
+    const setMessage = (message) => {
+      statusEl.textContent = message;
+    };
+
+    const setCounts = (upCount, downCount) => {
+      upCountEl.textContent = String(upCount);
+      downCountEl.textContent = String(downCount);
+    };
+
+    const setButtonsDisabled = (disabled) => {
+      upButton.disabled = disabled;
+      downButton.disabled = disabled;
+      saveDownvoteButton.disabled = disabled;
+      commentEl.disabled = disabled;
+    };
+
+    const setSelectedVote = (vote) => {
+      upButton.classList.toggle('is-selected', vote === 'up');
+      downButton.classList.toggle('is-selected', vote === 'down');
+    };
+
+    const closeForm = () => {
+      form.hidden = true;
+      commentEl.value = '';
+      if (!isSubmitted) {
+        saveDownvoteButton.disabled = true;
+      }
+    };
+
+    const openForm = () => {
+      form.hidden = false;
+      saveDownvoteButton.disabled = isBusy;
+      commentEl.focus();
+    };
+
+    const applySummary = (summary, message) => {
+      setCounts(summary.upCount, summary.downCount);
+      setSelectedVote(summary.userVote);
+
+      if (summary.userVote) {
+        isSubmitted = true;
+        setButtonsDisabled(true);
+        closeForm();
+        setMessage(message || 'Thanks for your feedback.');
+      } else {
+        isSubmitted = false;
+        setButtonsDisabled(false);
+        setMessage(message || '');
+      }
+    };
+
+    const requestJson = async (path, options = {}) => {
+      const response = await fetch(`${apiBase}${path}`, {
+        credentials: 'include',
+        ...options,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(options.headers || {}),
+        },
+      });
+
+      const payload = await response.json().catch(() => null);
+      if (!response.ok) {
+        throw new Error(payload?.error || 'Request failed');
+      }
+
+      return payload;
+    };
+
+    const submitVote = async (vote, comment = null) => {
+      if (isBusy || isSubmitted) {
+        return;
+      }
+
+      isBusy = true;
+      setButtonsDisabled(true);
+      setMessage('Saving feedback...');
+
+      try {
+        const result = await requestJson('/api/v1/feedback/vote', {
+          method: 'POST',
+          body: JSON.stringify({
+            pagePath,
+            pageTitle,
+            vote,
+            comment,
+          }),
+        });
+
+        applySummary(result, result.message || 'Thanks for your feedback.');
+      } catch (error) {
+        setButtonsDisabled(false);
+        saveDownvoteButton.disabled = commentEl.value.trim().length === 0;
+        setMessage(error instanceof Error ? error.message : 'Could not save feedback.');
+      } finally {
+        isBusy = false;
+      }
+    };
+
+    const loadSummary = async () => {
+      if (!apiBase) {
+        setMessage('Feedback is temporarily unavailable.');
+        return;
+      }
+
+      setMessage('Loading feedback...');
+
+      try {
+        const summary = await requestJson(`/api/v1/feedback/summary?page=${encodeURIComponent(pagePath)}`, {
+          method: 'GET',
+          headers: {},
+        });
+        applySummary(summary, summary.userVote ? 'Feedback already received.' : '');
+      } catch (error) {
+        setMessage(error instanceof Error ? error.message : 'Could not load feedback.');
+      }
+    };
+
+    upButton.addEventListener('click', () => {
+      closeForm();
+      submitVote('up');
+    });
+
+    downButton.addEventListener('click', () => {
+      if (isBusy || isSubmitted) {
+        return;
+      }
+
+      setMessage('');
+      openForm();
+    });
+
+    commentEl.addEventListener('input', () => {
+      saveDownvoteButton.disabled = isBusy;
+    });
+
+    saveDownvoteButton.addEventListener('click', () => {
+      submitVote('down', commentEl.value.trim() || null);
+    });
+
+    cancelDownvoteButton.addEventListener('click', () => {
+      closeForm();
+      setMessage('');
+      if (!isSubmitted && !isBusy) {
+        setButtonsDisabled(false);
+      }
+    });
+
+    void loadSummary();
+  }
+</script>
