@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.5.2](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.5.1...v1.5.2) (2026-07-27)
+
+### Bug Fixes
+
+* lychee link check on built HTML and feedback widget UI ([8da509a](https://github.com/PC-Mender/sjrs-lms-docs/commit/8da509a40270d977629ca8bfa99f6e47e7d0e609))
 ## [1.5.1](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.5.0...v1.5.1) (2026-07-27)
 
 ### Bug Fixes
