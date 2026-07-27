@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.5.0](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.4.3...v1.5.0) (2026-07-27)
+
+### Features
+
+* **feedback:** add page feedback widget and Cloudflare Worker backend ([b374587](https://github.com/neil-jay/sjrs-lms-docs/commit/b374587c74f16e5965576225aa67394be9876710))
+
+### Documentation
+
+* document feedback worker setup and npm scripts ([346915c](https://github.com/neil-jay/sjrs-lms-docs/commit/346915ce724ed04e795eee2e56bb7c51cc33d374))
 ## [1.4.3](https://github.com/neil-jay/sjrs-lms-docs/compare/v1.4.2...v1.4.3) (2026-07-21)
 
 ### Documentation
