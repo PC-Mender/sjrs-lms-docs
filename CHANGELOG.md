@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.5.5](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.5.4...v1.5.5) (2026-07-27)
+
+### Bug Fixes
+
+* **deps:** upgrade vulnerable packages to secure versions ([5a0ed0f](https://github.com/PC-Mender/sjrs-lms-docs/commit/5a0ed0f273d8cdc7166c39a5317fac3491e98262)), references [#46](https://github.com/PC-Mender/sjrs-lms-docs/issues/46) [#43](https://github.com/PC-Mender/sjrs-lms-docs/issues/43) [#48](https://github.com/PC-Mender/sjrs-lms-docs/issues/48) [#42](https://github.com/PC-Mender/sjrs-lms-docs/issues/42) [#49](https://github.com/PC-Mender/sjrs-lms-docs/issues/49) [#44](https://github.com/PC-Mender/sjrs-lms-docs/issues/44) [#50](https://github.com/PC-Mender/sjrs-lms-docs/issues/50) [#45](https://github.com/PC-Mender/sjrs-lms-docs/issues/45)
 ## [1.5.4](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.5.3...v1.5.4) (2026-07-27)
 
 ### Bug Fixes
