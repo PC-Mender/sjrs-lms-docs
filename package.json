@@ -12,7 +12,7 @@
     "url": "https://github.com/PC-Mender/sjrs-lms-docs/issues"
   },
   "license": "ISC",
-  "author": "",
+  "author": "SJRS LMS Contributors",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
