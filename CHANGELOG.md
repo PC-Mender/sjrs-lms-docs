@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.0](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.5.5...v1.6.0) (2026-07-27)
+
+### Features
+
+* **security:** add security headers for static docs site and feedback worker ([35a5bd9](https://github.com/PC-Mender/sjrs-lms-docs/commit/35a5bd9bc815e6758fe0404d85700fd9718812e5))
+
+### Bug Fixes
+
+* correct GitHub org from PC-Mender to PC-Mender in all URL references ([1e24767](https://github.com/PC-Mender/sjrs-lms-docs/commit/1e24767048eb1657440ac0cb39604c9ac8ae5d1f))
+* **deployment:** configure custom domain, 404 handling, and SEO for docs site ([18816bc](https://github.com/PC-Mender/sjrs-lms-docs/commit/18816bc210044e58cd7c73bfc18f74ad6ec0b6d8))
 ## [1.5.5](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.5.4...v1.5.5) (2026-07-27)
 
 ### Bug Fixes
