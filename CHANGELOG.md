@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.5.4](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.5.3...v1.5.4) (2026-07-27)
+
+### Bug Fixes
+
+* **feedback:** remove card styling on vote buttons and add optimistic UI ([9cca8b3](https://github.com/PC-Mender/sjrs-lms-docs/commit/9cca8b361950227d25590a3ec8845a6d82992b2d))
 ## [1.5.3](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.5.2...v1.5.3) (2026-07-27)
 ## [1.5.2](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.5.1...v1.5.2) (2026-07-27)
 
