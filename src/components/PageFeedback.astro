@@ -127,15 +127,15 @@ const feedbackApiBaseUrl = import.meta.env.PUBLIC_DOCS_FEEDBACK_API_BASE_URL?.tr
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
-    padding: 0.45rem 0.7rem;
-    border-radius: 999px;
-    border: 1px solid var(--sl-color-hairline);
-    background: var(--sl-color-bg);
+    padding: 0.35rem 0.5rem;
+    border-radius: 0.4rem;
+    border: none;
+    background: transparent;
     color: var(--sl-color-text);
     font-size: var(--sl-text-sm);
     text-decoration: none;
     cursor: pointer;
-    transition: background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+    transition: background-color 0.15s ease, opacity 0.15s ease;
   }
 
   .page-feedback__button:hover:not(:disabled),
@@ -150,12 +150,11 @@ const feedbackApiBaseUrl = import.meta.env.PUBLIC_DOCS_FEEDBACK_API_BASE_URL?.tr
   }
 
   .page-feedback__button.is-selected {
-    border-color: var(--sl-color-accent);
     background: color-mix(in srgb, var(--sl-color-accent) 12%, var(--sl-color-bg));
   }
 
   .page-feedback__button--primary {
-    border-color: var(--sl-color-accent);
+    border: 1px solid var(--sl-color-accent);
     background: var(--sl-color-accent);
     color: var(--sl-color-black);
   }
@@ -254,12 +253,17 @@ const feedbackApiBaseUrl = import.meta.env.PUBLIC_DOCS_FEEDBACK_API_BASE_URL?.tr
 
     let isBusy = false;
     let isSubmitted = false;
+    let currentUpCount = 0;
+    let currentDownCount = 0;
+    let currentVote = null;
 
     const setMessage = (message) => {
       statusEl.textContent = message;
     };
 
     const setCounts = (upCount, downCount) => {
+      currentUpCount = upCount;
+      currentDownCount = downCount;
       upCountEl.textContent = String(upCount);
       downCountEl.textContent = String(downCount);
     };
@@ -293,6 +297,7 @@ const feedbackApiBaseUrl = import.meta.env.PUBLIC_DOCS_FEEDBACK_API_BASE_URL?.tr
     const applySummary = (summary, message) => {
       setCounts(summary.upCount, summary.downCount);
       setSelectedVote(summary.userVote);
+      currentVote = summary.userVote;
 
       if (summary.userVote) {
         isSubmitted = true;
@@ -329,9 +334,29 @@ const feedbackApiBaseUrl = import.meta.env.PUBLIC_DOCS_FEEDBACK_API_BASE_URL?.tr
         return;
       }
 
+      const prevUpCount = currentUpCount;
+      const prevDownCount = currentDownCount;
+      const prevVote = currentVote;
+
+      if (currentVote === vote) {
+        return;
+      }
+      if (currentVote === 'up') {
+        setCounts(currentUpCount - 1, currentDownCount);
+      } else if (currentVote === 'down') {
+        setCounts(currentUpCount, currentDownCount - 1);
+      }
+      if (vote === 'up') {
+        setCounts(currentUpCount + 1, currentDownCount);
+      } else if (vote === 'down') {
+        setCounts(currentUpCount, currentDownCount + 1);
+      }
+      setSelectedVote(vote);
+      currentVote = vote;
+      setMessage('Saving feedback...');
+
       isBusy = true;
       setButtonsDisabled(true);
-      setMessage('Saving feedback...');
 
       try {
         const result = await requestJson('/api/v1/feedback/vote', {
@@ -349,6 +374,9 @@ const feedbackApiBaseUrl = import.meta.env.PUBLIC_DOCS_FEEDBACK_API_BASE_URL?.tr
           setTimeout(() => { if (isSubmitted) setMessage(''); }, 3000);
         }
       } catch (error) {
+        setCounts(prevUpCount, prevDownCount);
+        setSelectedVote(prevVote);
+        currentVote = prevVote;
         setButtonsDisabled(false);
         saveDownvoteButton.disabled = commentEl.value.trim().length === 0;
         setMessage(error instanceof Error ? error.message : 'Could not save feedback.');
