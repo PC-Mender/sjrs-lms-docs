@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.1](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.6.0...v1.6.1) (2026-07-27)
+
+### Bug Fixes
+
+* **docs:** correct 404 page to document docs site instead of React app ([d46e3eb](https://github.com/PC-Mender/sjrs-lms-docs/commit/d46e3eb93c919b39c25b9ac14cffaab3b4f3d1e0))
+* **security:** replace unsafe-inline in script-src with SHA256 hashes ([aeb1e54](https://github.com/PC-Mender/sjrs-lms-docs/commit/aeb1e5466c4b2c6ec12e6f1daba0abba54dc74e8))
 ## [1.6.0](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.5.5...v1.6.0) (2026-07-27)
 
 ### Features
