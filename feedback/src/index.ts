@@ -155,11 +155,22 @@ function buildCorsHeaders(origin: string | null, env: Env): Headers {
   return headers;
 }
 
+function applySecurityHeaders(headers: Headers): void {
+  headers.set('X-Frame-Options', 'DENY');
+  headers.set('X-Content-Type-Options', 'nosniff');
+  headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()');
+  headers.set('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  headers.set('Cross-Origin-Resource-Policy', 'cross-origin');
+  headers.set('Content-Security-Policy', "default-src 'none'; frame-ancestors 'none'; base-uri 'none'; form-action 'none'");
+}
+
 function buildEmptyResponse(status: number, origin: string | null, env: Env, visitorId: string | null): Response {
   const headers = buildCorsHeaders(origin, env);
   if (visitorId) {
     setVisitorCookie(headers, visitorId);
   }
+  applySecurityHeaders(headers);
 
   return new Response(null, { status, headers });
 }
@@ -178,6 +189,8 @@ function jsonResponse(
   if (visitorId) {
     setVisitorCookie(headers, visitorId);
   }
+
+  applySecurityHeaders(headers);
 
   if (extraHeaders) {
     for (const [key, value] of Object.entries(extraHeaders)) {
