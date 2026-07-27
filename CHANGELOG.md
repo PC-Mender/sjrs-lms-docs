@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.5.1](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.5.0...v1.5.1) (2026-07-27)
+
+### Bug Fixes
+
+* **deploy:** add root wrangler.toml for static assets deployment ([c9d6bc1](https://github.com/PC-Mender/sjrs-lms-docs/commit/c9d6bc193b6e0177b53bef1c4b79633d80be85bc))
 ## [1.5.0](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.4.3...v1.5.0) (2026-07-27)
 
 ### Features
