@@ -21,7 +21,7 @@ function walkDir(dir) {
 
 function extractInlineScripts(htmlFile) {
   const html = readFileSync(htmlFile, 'utf-8');
-  const scriptRegex = /<script(?:\s[^>]*)?>([\s\S]*?)<\/script>/gi;
+  const scriptRegex = /<script(?:\s[^>]*)?>([\s\S]*?)<\/script(?:\s[^>]*)?>/gi;
   let match;
   while ((match = scriptRegex.exec(html)) !== null) {
     const attrs = match[0].slice(0, match[0].indexOf('>') + 1);
