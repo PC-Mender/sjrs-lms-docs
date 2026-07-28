@@ -190,8 +190,8 @@ These standards are enforced through tooling where possible; deviations must be 
 - **Industry Standard - CSRF Protection**: State-changing operations (POST/PUT/PATCH/DELETE) must be CSRF-protected; GET endpoints must be side-effect free.
   - **Cookie-Based Auth**: CSRF protection is critical when authentication uses cookies (session cookies or JWTs stored in HttpOnly cookies) because browsers automatically send cookies with requests, making them vulnerable to cross-site attacks
   - **Header-Only Token Auth**: CSRF protection is generally not required when using purely header-based tokens (e.g., Authorization: Bearer &lt;token&gt;) because browsers do not automatically attach custom headers to cross-site requests.
-  - **This Application**: Uses JWTs in HttpOnly cookies, so CSRF protection is required and implemented via double-submit cookie pattern
-  - **Implementation**: Enforce double-submit token (`X-XSRF-TOKEN` header matches `XSRF-TOKEN` cookie); enforce allowed `Origin/Referer` (defense-in-depth)
+  - **This Application**: Uses JWTs in HttpOnly cookies, so CSRF protection is required and implemented via **signed** double-submit cookie pattern
+  - **Implementation**: Server issues HMAC-signed token (`nonce.expiry.signature` via `CSRF_SECRET` or `JWT_SECRET` fallback); enforce `X-XSRF-TOKEN` header matches `XSRF-TOKEN` cookie; verify HMAC signature server-side; enforce allowed `Origin/Referer` (defense-in-depth); client-side token generation is prohibited (tokens must be server-issued)
   - Only allow CSRF relaxations in development with explicit flags (`ALLOW_CSRF_DEV_FALLBACK=true`)
 - **Industry Standard - Audit Logging**: Log all security-sensitive actions for compliance and debugging.  
   Audit logs must include actor, action, target, timestamp, and request ID.
@@ -202,12 +202,17 @@ These standards are enforced through tooling where possible; deviations must be 
   - Redact sensitive fields in structured logs and audit logs.
 - **Industry Standard - Cookie & Session Security**: For cookie-based auth:
   - Auth cookies must be `HttpOnly`, `Secure`, and set an explicit `SameSite` policy.
-  - Keep cookie `Domain/Path` tightly scoped; avoid overly-broad domain sharing.
+  - Production and staging cookies must be host-only (no `Domain` attribute). `COOKIE_DOMAIN` must not be set in production or staging unless cross-subdomain authentication is a documented hard requirement.
+  - All sensitive cookies (auth token, CSRF token, MFA device ID, MFA trusted device) must use the `__Host-` cookie prefix, which enforces `Secure`, `Path=/`, and no `Domain` attribute at the browser level.
   - Auth cookies must have explicit expiration and rotation policies.
 - **Industry Standard - CORS Safety**:
   - CORS configuration must be explicit and environment-specific; defaults must be deny-by-default.
   - Never use wildcard origins with credentials.
   - Allow credentials only for explicitly allowed origins.
+  - Localhost and non-HTTPS origins must NEVER appear in production or staging allowlists.
+  - Localhost origins are permitted only in local development via `.dev.vars` (not `wrangler.toml`).
+  - `getAllowedOrigins()` applies defense-in-depth filtering: strips localhost and `http://` origins in non-development environments even if present in `ALLOWED_ORIGINS`.
+  - `DEFAULT_CORS_CONFIG.allowedOrigins` must be production-safe (no localhost) as it is the fallback when `ALLOWED_ORIGINS` is missing.
 - **Industry Standard - Rate Limiting & Abuse Prevention**:
   - Rate limit all auth/OTP/password-reset endpoints and other expensive endpoints.
   - Rate-limited responses must return 429 and include retry guidance where appropriate.
@@ -253,6 +258,12 @@ These standards are enforced through tooling where possible; deviations must be 
 - **Industry Standard - Determinism**: Tests must be deterministic (no reliance on real time, random seeds, or external network calls without mocking).
 - **Industry Standard - Coverage Focus**: Coverage is a tool, not a goal. Prioritize coverage for authorization paths, input validation, business rules, and error handling.
 - **Industry Standard - Test Data Hygiene**: Avoid using production data in tests; use minimal fixtures and factory helpers.
+- **Project Policy - E2E Testing**: End-to-end browser tests (Playwright) cover critical user flows that unit/integration tests cannot verify: real browser rendering, SPA routing, auth guard redirects, lazy chunk loading, and multi-step auth flows.
+  - E2E tests live in `e2e/` and run locally via `npm run test:e2e` (against staging) or `npm run test:e2e:local` (against local server). Not run in CI.
+  - **No secrets in GitHub**: Test credentials are never stored as GitHub Actions secrets — secrets live only in Cloudflare Workers. Provide credentials via shell env vars at runtime.
+  - Unauthenticated tests (routing, auth redirects, registration, MFA) run without credentials. Authenticated tests (tagged `@authenticated`) require `E2E_TEST_USER_EMAIL` and `E2E_TEST_USER_PASSWORD` env vars.
+  - E2E tests use a single worker (`workers: 1`) to avoid session conflicts on shared staging.
+  - Full registration submission and real MFA OTP verification are intentionally excluded from E2E — they create real user records and require TOTP provisioning. Test these manually or with a disposable-email harness.
 
 # Pull Requests & Code Review
 
@@ -281,6 +292,58 @@ These standards are enforced through tooling where possible; deviations must be 
 
 - **Industry Standard - Usability**: Keep user flows simple, discoverable, and consistent; avoid unnecessary steps for common tasks.
 - **Industry Standard - Responsiveness**: Ensure features respond quickly to user actions and adapt correctly across screen sizes and input methods.
+  - **CSS-First Responsive Design**: Layout **styling** — dimensions, spacing, alignment, positioning, display, typography, and grid/flex properties — must be handled by CSS (media queries, flexbox, CSS grid), never by JavaScript.
+    - Ant Design's `Row`/`Col` with responsive `xs/sm/md/lg/xl` props is the standard grid system. Use `gutter={[h, v]}` array form for both horizontal and vertical spacing.
+    - Do NOT use JavaScript (`Grid.useBreakpoint()` or `window.innerWidth`) for layout styling. Layout styling must be implemented with CSS media queries.
+    - **Preference hierarchy for breakpoint detection**:
+      1. **CSS media queries** — always preferred for layout styling.
+      2. **`Grid.useBreakpoint()`** — for behavioral decisions in React components. Uses `window.matchMedia()`, so it evaluates the same breakpoint definitions as CSS media queries.
+      3. **`window.innerWidth`** — last resort only, outside React or where `Grid.useBreakpoint()` is unavailable (e.g., utility functions, event handlers). Use strict `<` comparison (e.g., `< 768`) to align with Ant Design's `md: ≥ 768px`.
+    - For **behavioral** decisions only, use Ant Design's `Grid.useBreakpoint()` hook:
+      ```ts
+      const breakpoints = Grid.useBreakpoint();
+      const isMobile = !breakpoints.md;
+      ```
+      This hook uses `window.matchMedia()`, so it evaluates the same breakpoint definitions as CSS media queries. It still triggers React re-renders and therefore must not be used for layout styling. When comparing breakpoints manually (e.g., with `window.innerWidth`), use strict `<` comparisons (`< 768`) so behavior aligns with Ant Design's `md` breakpoint (≥ 768px = tablet/desktop, < 768px = mobile).
+    - **Behavioral vs Layout — what counts as "behavioral"**:
+      - ✅ **Behavioral** (JS `Grid.useBreakpoint()` is acceptable): choosing which component to render (Drawer vs Modal), conditional rendering of entire component trees (show/hide a hero panel), enabling touch vs mouse interaction handlers, infinite scroll vs pagination, lazy-loading a desktop-only widget.
+      - ❌ **Layout** (CSS only — never use JS breakpoints): `width`, `height`, `padding`, `margin`, `gap`, `fontSize`, `flexDirection`, `justifyContent`, `alignItems`, `gridTemplateColumns`, `display`.
+      - **Anti-pattern**: `const isMobile = !breakpoints.md; <Card style={{ padding: isMobile ? 12 : 24 }} />` — this uses a behavioral hook for layout styling. Use a CSS class with `@media (max-width: 767.98px)` instead.
+    - **Deprecated**: The local `ResponsiveContainer`, `ResponsiveGrid`, `ResponsiveFlex`, and `useResponsive` utilities (formerly in `src/components/layout/responsive/ResponsiveContainer.tsx`) have been deleted as dead code. Use `Grid.useBreakpoint()` or CSS media queries instead. (Note: Recharts' `ResponsiveContainer` is a separate, unrelated component and remains in use.)
+  - **Spacing Tokens**: Use consistent spacing values across the app:
+    - `12px` — compact spacing (dashboard card gutters, tight layouts)
+    - `16px` — default spacing (form fields, card padding)
+    - `24px` — spacious padding (page content, section separation)
+    - All margins, padding, gaps, gutters, and layout spacing must use the approved spacing scale: 4, 8, 12, 16, 24, 32, 48. Do not use off-scale values such as `20px`, `18px`, `10px`. Exceptions: matching a third-party component's internal spacing (e.g., Ant Design defaults), or a documented design exception with justification.
+  - **Typography Scale**: Font sizes must use the approved typography scale, aligned with Ant Design's font spec (base 14px, pentatonic scale):
+    - `12px` — captions, fine print, footer text
+    - `14px` — body text, buttons, labels (Ant Design default base size)
+    - `16px` — subtitles, form inputs, emphasized body
+    - `20px` — small headings, emphasized UI elements
+    - `24px` — page headings
+    - `28px` — large headings (mobile)
+    - `32px` — display headings
+    - `38px` — hero/display titles (desktop)
+    - Do not use off-scale font sizes such as `13px`, `15px`, `17px`, `22px`. Use the nearest approved size rather than introducing intermediate values. Exceptions: matching a third-party component's internal font size (e.g., Ant Design Typography defaults), or a documented design exception with justification.
+    - Font weights: use `400` (regular), `500` (medium), `600` (semibold) only, per Ant Design's font weight spec. Avoid arbitrary font weights (e.g., `450`, `550`, `700`) unless required by a third-party component or variable font implementation.
+  - **Container Alignment**: When using Ant Design `Row` with `gutter`, the parent container must have horizontal padding ≥ `gutter/2` to absorb the Row's negative margins. Never put `overflowX: hidden` on an ancestor that would clip Row's negative margins — use a separate wrapper div for overflow control.
+  - **No Overflow Hacks**: Avoid using `overflow-x: hidden` as a fix for layout issues. It masks the symptom (horizontal scroll) while leaving the broken layout in place, can cause content to be silently clipped (data loss), and breaks `position: sticky` in descendants. Resolve the underlying sizing or spacing problem instead (e.g., add `max-width: 100%` to oversized elements, `min-width: 0` to flex children, or `box-sizing: border-box` to elements with padding/borders). If clipping is genuinely needed for decorative purposes, prefer `overflow-x: clip` over `hidden` — it clips without breaking sticky positioning.
+  - **Responsive Breakpoints** (aligned with Ant Design):
+    - `xs`: < 576px (mobile portrait)
+    - `sm`: ≥ 576px (mobile landscape)
+    - `md`: ≥ 768px (tablet)
+    - `lg`: ≥ 992px (desktop)
+    - `xl`: ≥ 1200px (large desktop)
+    - `xxl`: ≥ 1600px (extra large)
+    - Do not introduce custom breakpoint values (e.g., `700px`, `850px`, `1100px`). Use only the Ant Design breakpoint system above. Custom breakpoints fragment the responsive grid, create maintenance burden, and mismatch `Grid.useBreakpoint()` results. If a documented design requirement demands a different boundary, justify it in a comment and ensure it does not conflict with existing Ant Design breakpoint ranges.
+    - **Media Query Strategy (Desktop-First)**: Write base CSS styles for desktop, then override for smaller screens using `@media (max-width: (N - 0.02)px)`. The `.02px` subtraction avoids boundary overlap and is the convention used by Bootstrap 5 and Ant Design to handle fractional-pixel viewports and Safari rounding bugs (e.g., `@media (max-width: 767.98px)` targets screens below `md`). This ensures the boundary value (768px) matches Ant Design's `md: ≥ 768px` definition. Each stylesheet must consistently use either desktop-first (`max-width`) or mobile-first (`min-width`). This project standard is desktop-first. Do not mix strategies within the same stylesheet.
+  - **Shared Design Tokens (CSS Custom Properties)**: Shared design values (card heights, sidebar widths, header heights, banner offsets, theme colors, etc.) should use CSS custom properties (e.g., `--card-height`, `--banner-offset`, `--mobile-color`) instead of duplicated literal values. This ensures a single source of truth — change the variable, all consumers update.
+  - **Fixed Card Heights**: Use CSS custom properties (`--card-height`) with `@media (max-width: 767.98px) { height: auto }` override, not inline `height` values, so cards can grow naturally on mobile.
+  - **Fluid Widths**: Avoid fixed pixel widths for layout containers. Fixed widths cause scroll bars on narrow devices and wasted space on wide screens (per MDN). Prefer `width: 100%`, `max-width`, flexbox, CSS grid, or responsive Ant Design `Row`/`Col` columns. Use `max-width` with a pixel cap (e.g., `max-width: 600px; width: 100%`) when a container needs an upper bound but should shrink on smaller screens.
+  - **Flexbox Minimum Width**: Flex items that are expected to shrink (especially those containing text, tables, or code) should specify `min-width: 0` so content can shrink instead of forcing horizontal overflow. By default, flex items have `min-width: auto` (per CSS Flexbox spec § 4.5), which prevents shrinking below the content's minimum size — the most common cause of mysterious horizontal scrolling in flexbox layouts. Likewise, CSS Grid items may require `min-width: 0` or `minmax(0, 1fr)` track sizing to prevent overflow, since `1fr` resolves to `minmax(auto, 1fr)` by default.
+  - **Responsive Images & Media**: Images and media (`img`, `picture`, `video`, `canvas`, `svg`) must scale within their containers and never overflow on smaller viewports. The global rule `img, video, canvas, svg { max-width: 100%; height: auto; }` is in `src/index.css`. Avoid hard-coded pixel dimensions in CSS that override intrinsic image responsiveness. Always include `width` and `height` attributes on `<img>` tags so the browser can reserve space and prevent layout shift (CLS) before the image loads. Prefer CSS `aspect-ratio` where appropriate to reserve layout space for responsive media, especially when the intrinsic dimensions are unknown (e.g., lazy-loaded images, embeds). Use `srcset` and `sizes` attributes for serving appropriately sized images to different devices.
+  - **CSS Viewport Functions**: Prefer CSS functions like `clamp()`, `min()`, and `max()` for fluid typography and spacing instead of JavaScript calculations or fixed media query steps. For example, `font-size: clamp(14px, 2vw, 24px)` scales smoothly between min and max without needing multiple `@media` breakpoints. Use `svh`/`dvh` instead of `vh` for full-height mobile layouts — `vh` does not account for dynamic mobile browser chrome (toolbars that appear/disappear), because `svh` and `dvh` account for the dynamic browser UI on mobile devices. These units are now widely supported across modern browsers and should be preferred over `vh` for full-height mobile layouts.
+  - **No Inline Layout Styles**: Avoid inline `style` attributes for layout properties (dimensions, spacing, positioning, display, flex/grid). Inline styles cannot express `@media` queries or pseudo-classes, encouraging JavaScript-driven layout decisions instead of CSS. Use CSS classes in `src/index.css` or the project's styling solution for responsive layout rules. Trivial one-off values (e.g., `background: transparent`, `padding: 0`) are acceptable inline, but anything that needs responsive behavior must be a CSS class.
 - **Industry Standard - Operational Simplicity**: Prefer simple, well-understood designs over complex optimizations unless measurable evidence justifies the added complexity.
 - **Industry Standard - Explicit State Flow**: Critical application behavior must not depend on hidden global state.
   - Configuration, permissions, and environment-dependent logic should be explicit and traceable through function inputs, dependency injection, or well-defined configuration modules.
@@ -530,7 +593,7 @@ These standards are enforced through tooling where possible; deviations must be 
   - Use a dedicated `isRefreshing` state (no full-page spinners)
   - Show refresh feedback where it improves UX without becoming noisy
   - With `staleTime: 0`, `refetch()` should request fresh server data subject to network and platform behavior
-  - Reference implementation: `src/pages/borrow-limits/list.tsx`
+  - Reference implementation: `src/pages/borrow-limits/BorrowLimitList.tsx`
 - **Industry Standard - Server Pagination Required**:
   - All data-heavy list endpoints must be paginated
   - Never return unbounded datasets
