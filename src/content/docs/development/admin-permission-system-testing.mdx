@@ -18,11 +18,11 @@ This document outlines how to test the admin permission system to ensure it prop
 - **File**: `src/hooks/usePermissions.ts`
 - **Change**: Replaced hardcoded permissions with database API calls
 - **Before**: Used static `ROLE_PERMISSIONS` object
-- **After**: Calls `/api/permissions/check` endpoint to get real permissions
+- **After**: Calls `/api/v1/permissions/check` endpoint to get real permissions
 
 ### 3. New Permission Check API
 - **File**: `functions/api/permissions/handlers/check-permissions.ts`
-- **Endpoint**: `GET /api/permissions/check`
+- **Endpoint**: `GET /api/v1/permissions/check`
 - **Purpose**: Check user permissions against database
 
 ### 4. Admin Dashboard Warning
@@ -176,7 +176,7 @@ curl "https://your-domain.com/api/permissions/check?role=Admin&resources=all"
 - **Solution**: 
   - Clear browser cache
   - Check backend permission cache
-  - Use `/api/permission_cache_clear` endpoint
+  - Use `/api/v1/permission_cache_clear` endpoint
 
 #### 3. API Permission Check Fails
 - **Cause**: Database permission tables not set up

@@ -24,7 +24,7 @@ This document provides a comprehensive review of the registration process, ident
 ## Security Issues
 
 ### Implemented Fixes (2025-11-10)
-- Hardened `/api/auth/check-email` to prevent email enumeration while adding IP-based rate limiting (`functions/api/auth/check-email.ts`, `functions/middleware/kv-utils/config/kv-configs.ts`).
+- Hardened `/api/v1/auth/check-email` to prevent email enumeration while adding IP-based rate limiting (`functions/api/auth/check-email.ts`, `functions/middleware/kv-utils/config/kv-configs.ts`).
 - Added multidimensional registration rate limiting by IP, by email, and by composite identifiers with consistent error codes (`functions/api/auth/registration.ts`).
 - Centralized email normalization to a shared utility for consistent handling across the stack (`functions/middleware/security/utils/pii.ts`, consumers updated).
 - Enforced fail-closed Turnstile verification in all environments (`functions/middleware/security/turnstile-validation.ts`).
@@ -34,7 +34,7 @@ This document provides a comprehensive review of the registration process, ident
 
 **Location:** `functions/api/auth/check-email.ts`
 
-**Issue:** The `/api/auth/check-email` endpoint reveals whether an email address is registered in the system, enabling attackers to enumerate valid user emails.
+**Issue:** The `/api/v1/auth/check-email` endpoint reveals whether an email address is registered in the system, enabling attackers to enumerate valid user emails.
 
 ```78:89:functions/api/auth/check-email.ts
     // Return availability status

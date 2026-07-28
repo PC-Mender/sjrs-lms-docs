@@ -14,23 +14,23 @@ This is the unified reference for roles and permissions, aligned with the latest
 ## Backend APIs (functions/)
 
 - Roles API: `functions/api/roles/index.ts`
-  - GET `/api/roles` – list roles
-  - PUT `/api/roles/:id` – update role
-  - DELETE `/api/roles/:id` – delete role
+  - GET `/api/v1/roles` – list roles
+  - PUT `/api/v1/roles/:id` – update role
+  - DELETE `/api/v1/roles/:id` – delete role
 
 - Permissions API: `functions/api/permissions/index.ts`
-  - POST `/api/permissions/*` – unified permissions operations
+  - POST `/api/v1/permissions/*` – unified permissions operations
   - Legacy routes mapped internally (see Legacy Compatibility)
 
 ## Legacy Compatibility
 
-These legacy endpoints are supported and internally routed to `/api/permissions`:
+These legacy endpoints are supported and internally routed to `/api/v1/permissions`:
 
-- `POST /api/role_permissions`
-- `POST /api/permission_resources`
-- `POST /api/permission_actions`
-- `POST /api/permission_audit_log`
-- `POST /api/update_role_permission`
+- `POST /api/v1/role_permissions`
+- `POST /api/v1/permission_resources`
+- `POST /api/v1/permission_actions`
+- `POST /api/v1/permission_audit_log`
+- `POST /api/v1/update_role_permission`
 
 ## Dynamic Role System (Database-Driven)
 
@@ -63,9 +63,9 @@ Level 0: Guest
 
 ## RBAC Policy: Backend is Single Source of Truth
 
-**The backend permissions endpoint (`/api/permissions/check`) is the single source of truth for all permission decisions.**
+**The backend permissions endpoint (`/api/v1/permissions/check`) is the single source of truth for all permission decisions.**
 
-- **Backend Authority**: All permission checks must ultimately be validated by the backend `/api/permissions/check` endpoint
+- **Backend Authority**: All permission checks must ultimately be validated by the backend `/api/v1/permissions/check` endpoint
 - **Client Fallbacks**: Client-side permission checks are for UI optimization only and **deny by default** when backend validation is unavailable
 - **Security First**: Never trust client-side permission checks alone - always validate on the backend
 - **Fail-Safe Design**: If the backend endpoint is unreachable or returns an error, the client should deny access
