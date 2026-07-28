@@ -204,7 +204,7 @@ In Cloudflare Workers environment variables, ensure:
 1. Reads version from `package.json`
 2. Extracts changelog information
 3. Gets commit information (type, hash, time)
-4. Sends POST request to `/api/notifications/events/ingest`
+4. Sends POST request to `/api/v1/notifications/events/ingest`
 5. Creates entry in `notification_events` table
 
 **Notification Data Includes**:
@@ -304,7 +304,7 @@ CREATE TABLE notification_events (
 
 1. **Creation** (`scripts/notify-deployment.js`)
    - Script runs after deployment
-   - Sends POST to `/api/notifications/events/ingest`
+   - Sends POST to `/api/v1/notifications/events/ingest`
    - Includes `release` payload for `release:pipeline` source
 
 2. **Processing** (`functions/api/notifications/handlers/ingest-notification-event.ts`)
@@ -314,7 +314,7 @@ CREATE TABLE notification_events (
    - Stores in database
 
 3. **Display** (`src/pages/dashboard/notification-center.tsx`)
-   - Fetches from `/api/notifications/events`
+   - Fetches from `/api/v1/notifications/events`
    - Filters by category: `'deployment'`
    - Shows version, commit type, changelog sections
 

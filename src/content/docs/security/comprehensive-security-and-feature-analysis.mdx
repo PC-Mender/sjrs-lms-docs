@@ -111,7 +111,7 @@ This report provides a comprehensive analysis of the SJRS Library Management Sys
   - User-specific data (loans, orders): 1 minute browser cache, 2 minutes CDN cache
   - Real-time data (notifications): 30 seconds browser cache, 1 minute CDN cache
 - **Impact:** 60-80% reduction in database queries, 60-80% faster response times for cached content
-- **Updated Endpoints:** `/api/books`, `/api/roles`, `/api/journals`, `/api/loans`, `/api/orders`, `/api/reference-categories`, `/api/reference-sections`
+- **Updated Endpoints:** `/api/v1/books`, `/api/v1/roles`, `/api/v1/journals`, `/api/v1/loans`, `/api/v1/orders`, `/api/v1/reference-categories`, `/api/v1/reference-sections`
 
 #### 2. KV Caching Layer  IMPLEMENTED
 - **Location:** `functions/lib/cloudflare-optimizations.ts`
@@ -405,23 +405,23 @@ export function validateFileContent(file: File): Promise<{ valid: boolean; error
 - **Status:**  **IMPLEMENTED** - Comprehensive reporting system with multiple report types
 - **Location:** `functions/api/reports/`, `src/pages/reports/`
 - **Report Types:**
-  -  **Loan Reports** (`/api/reports/loans`)
+  -  **Loan Reports** (`/api/v1/reports/loans`)
     - Total, active, returned, overdue, renewed loans
     - Most borrowed books analytics
     - Loan trends (daily breakdown)
     - User type breakdown
     - Average loan duration calculations
-  -  **User Activity Reports** (`/api/reports/users`)
+  -  **User Activity Reports** (`/api/v1/reports/users`)
     - Most active users
     - User borrowing patterns
     - User type activity breakdown
-  -  **Financial Reports** (`/api/reports/financial`)
+  -  **Financial Reports** (`/api/v1/reports/financial`)
     - Penalty statistics (total, paid, pending)
     - Total revenue from penalties
     - Outstanding penalty amounts
     - Average penalty amounts
     - Payment trends
-  -  **Popularity Reports** (`/api/reports/popularity`)
+  -  **Popularity Reports** (`/api/v1/reports/popularity`)
     - Most popular books (by loans)
     - Most viewed books
     - Book popularity trends
@@ -431,10 +431,10 @@ export function validateFileContent(file: File): Promise<{ valid: boolean; error
   -  Permission-based access (`reports:read`)
   -  Performance tracking
 - **API Endpoints:**
-  - `GET /api/reports/loans` - Loan statistics and analytics
-  - `GET /api/reports/users` - User activity analytics
-  - `GET /api/reports/financial` - Financial/penalty analytics
-  - `GET /api/reports/popularity` - Book popularity analytics
+  - `GET /api/v1/reports/loans` - Loan statistics and analytics
+  - `GET /api/v1/reports/users` - User activity analytics
+  - `GET /api/v1/reports/financial` - Financial/penalty analytics
+  - `GET /api/v1/reports/popularity` - Book popularity analytics
 - **Frontend:**
   - Reports page accessible via `/dashboard/reports`
   - Visual charts and statistics
