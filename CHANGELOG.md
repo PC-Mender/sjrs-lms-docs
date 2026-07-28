@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.5](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.6.4...v1.6.5) (2026-07-28)
+
+### Bug Fixes
+
+* add wasm-unsafe-eval to CSP script-src for Pagefind WASM ([b424d94](https://github.com/PC-Mender/sjrs-lms-docs/commit/b424d94539290c81ad0616f06010b6a02b12540f))
 ## [1.6.4](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.6.3...v1.6.4) (2026-07-28)
 
 ### CI
