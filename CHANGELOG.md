@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.4](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.6.3...v1.6.4) (2026-07-28)
+
+### CI
+
+* add CSP hash validation to quality gates ([5f10bf0](https://github.com/PC-Mender/sjrs-lms-docs/commit/5f10bf0324972eb7fcd4af8df2cdc625c3b95dfa))
 ## [1.6.3](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.6.2...v1.6.3) (2026-07-28)
 
 ### Documentation
