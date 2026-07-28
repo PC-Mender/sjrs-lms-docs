@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.3](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.6.2...v1.6.3) (2026-07-28)
+
+### Documentation
+
+* **api:** update API docs with v1 prefix and Zod validation patterns ([5e1c59f](https://github.com/PC-Mender/sjrs-lms-docs/commit/5e1c59fcfa8e4ae62410d2b82c4aea1da25aa350))
+* **architecture:** sync architecture docs with current app state ([84b6267](https://github.com/PC-Mender/sjrs-lms-docs/commit/84b6267b4503f562c03f2f474cb3f581a0efc642))
+* **development:** update development docs with API v1 prefix ([6e570b6](https://github.com/PC-Mender/sjrs-lms-docs/commit/6e570b60849778313da1c99b635678b72a39bdf2))
+* **features:** update feature docs with API v1 prefix ([e649fde](https://github.com/PC-Mender/sjrs-lms-docs/commit/e649fdecf281ebff668170e9e24267ac27104f06))
+* **project-rules:** sync project-rules-app with latest project-rules.md ([23a999a](https://github.com/PC-Mender/sjrs-lms-docs/commit/23a999a77b7744ccd82fa99a8c20df3e3d272dd3))
+* **security:** update security and deployment docs with API v1 prefix ([ee91157](https://github.com/PC-Mender/sjrs-lms-docs/commit/ee91157b037c5d0e733c0d8b582238672c92a888))
 ## [1.6.2](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.6.1...v1.6.2) (2026-07-28)
 
 ### Bug Fixes
