@@ -21,6 +21,7 @@ const MAX_PAGE_TITLE_LENGTH = 200;
 const MAX_COMMENT_LENGTH = 500;
 const SUMMARY_RATE_LIMIT = { limit: 180, windowMs: 5 * 60 * 1000, prefix: 'summary' };
 const VOTE_RATE_LIMIT = { limit: 20, windowMs: 15 * 60 * 1000, prefix: 'vote' };
+const MAX_RATE_LIMIT_WINDOW_MS = Math.max(SUMMARY_RATE_LIMIT.windowMs, VOTE_RATE_LIMIT.windowMs);
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
@@ -95,6 +96,10 @@ export default {
         { 'Cache-Control': 'no-store' },
       );
     }
+  },
+
+  async scheduled(_event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
+    ctx.waitUntil(cleanupExpiredRateLimits(env));
   },
 };
 
@@ -397,26 +402,36 @@ async function enforceRateLimit(
   const threshold = now - config.windowMs;
   const rateKey = `${config.prefix}:${ipHash}`;
 
-  await env.FEEDBACK_DB.prepare(
-    `DELETE FROM docs_feedback_rate_limits
-     WHERE rate_key = ? AND created_at < ?`,
-  ).bind(rateKey, threshold).run();
+  // Atomic check-and-insert in a single D1 batch (single transaction):
+  // 1. DELETE expired entries (housekeeping)
+  // 2. INSERT only if current count is below the limit
+  // The INSERT...SELECT subquery is evaluated atomically within the
+  // statement, and batch() wraps both in one transaction — eliminating
+  // the TOCTOU race between checking the count and inserting.
+  const results = await env.FEEDBACK_DB.batch([
+    env.FEEDBACK_DB.prepare(
+      `DELETE FROM docs_feedback_rate_limits
+       WHERE rate_key = ? AND created_at < ?`,
+    ).bind(rateKey, threshold),
+    env.FEEDBACK_DB.prepare(
+      `INSERT INTO docs_feedback_rate_limits (rate_key, created_at)
+       SELECT ?, ?
+       WHERE (SELECT COUNT(*) FROM docs_feedback_rate_limits
+              WHERE rate_key = ? AND created_at >= ?) < ?`,
+    ).bind(rateKey, now, rateKey, threshold, config.limit),
+  ]);
 
-  const current = await env.FEEDBACK_DB.prepare(
-    `SELECT COUNT(*) AS request_count
-     FROM docs_feedback_rate_limits
-     WHERE rate_key = ? AND created_at >= ?`,
-  ).bind(rateKey, threshold).first<{ request_count: number }>();
-
-  const requestCount = Number(current?.request_count ?? 0);
-  if (requestCount >= config.limit) {
+  // If 0 rows were inserted, the rate limit was exceeded
+  if ((results[1]?.meta?.changes ?? 0) === 0) {
     throw new HttpError(429, 'Too many requests');
   }
+}
 
+async function cleanupExpiredRateLimits(env: Env): Promise<void> {
+  const threshold = Date.now() - MAX_RATE_LIMIT_WINDOW_MS;
   await env.FEEDBACK_DB.prepare(
-    `INSERT INTO docs_feedback_rate_limits (rate_key, created_at)
-     VALUES (?, ?)`,
-  ).bind(rateKey, now).run();
+    `DELETE FROM docs_feedback_rate_limits WHERE created_at < ?`,
+  ).bind(threshold).run();
 }
 
 async function hashValue(secret: string, value: string): Promise<string> {
