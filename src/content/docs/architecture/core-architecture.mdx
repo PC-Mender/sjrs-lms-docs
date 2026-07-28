@@ -84,27 +84,32 @@ functions/
 src/
 ├── App.tsx                  # Main application component
 ├── index.tsx                # Application entry point
-├── index.css                # Global styles
+├── index.css                # Global styles (responsive CSS classes, design tokens)
 ├── components/              # Reusable UI components
-│   ├── layout.tsx          # Main layout wrapper
-│   ├── auth-guard.tsx      # Authentication protection
-│   ├── session-management.tsx # Session handling
-│   └── security-alert.tsx  # Security notifications
+│   ├── auth/               # Auth guards, login forms, MFA
+│   ├── layout/             # Layout wrappers, header, footer
+│   ├── features/           # Feature-specific UI components
+│   └── ui/                 # Shared UI primitives
 ├── pages/                   # Route components (SPA routing)
+│   ├── dashboard.tsx       # Unified dashboard (role dispatcher → lazy-loads role views)
 │   ├── login.tsx           # Authentication
-│   ├── dashboard-*.tsx     # Role-specific dashboards
-│   ├── profile.tsx         # User profile
-│   └── [feature]/          # Feature-specific pages
-├── services/                # API service layer
-├── hooks/                   # Custom React hooks
-├── contexts/                # React context providers
-├── utilities/               # Helper functions
-├── constants/               # Application constants
+│   ├── [feature]/          # Feature-specific pages (e.g., roles/, borrow-limits/)
+│   └── ...                  # Other page components
+├── router/                  # Routing system
+│   ├── AppRouter.tsx       # Main router with AuthGuard
+│   ├── route-definitions.ts # Route groups, dynamic generation
+│   ├── components/         # DashboardSubRouter, error boundaries, loaders
+│   ├── config/             # Feature route definitions
+│   └── utils/              # Route component loader, lazy loading
+├── hooks/                   # Custom React hooks (d1 data hooks, auth, permissions)
+├── contexts/                # React context providers (auth, theme)
+├── utilities/               # Helper functions (query, crud, roles, etc.)
+├── constants/               # Application constants, configs
 ├── types/                   # TypeScript definitions
-└── middleware/              # Client-side middleware
+└── services/                # API service layer
 ```
 
-**Note**: The frontend is a **Single Page Application (SPA)**. All routing is handled client-side by React Router, meaning the server serves a single `index.html` file and React Router manages all navigation and page rendering on the client side.
+**Note**: The frontend is a **Single Page Application (SPA)**. All routing is handled client-side by React Router, meaning the server serves a single `index.html` file and React Router manages all navigation and page rendering on the client side. The canonical dashboard entry point is `/dashboard` for all roles — role-specific rendering is handled by the Dashboard page via `ROLE_COMPONENT_MAP` which lazy-loads the appropriate role view (e.g., `dashboard-admin.tsx`, `dashboard-librarian.tsx`). Legacy role-prefixed paths (`/dashboard-superuser`, `/dashboard-admin`, etc.) redirect to `/dashboard`.
 
 ### Database (`sql/`)
 ```
@@ -119,9 +124,10 @@ sql/
 ### 1. Authentication System
 - **Multi-factor authentication (MFA)**
 - **Session management** with automatic timeout
-- **Role-based access control (RBAC)**
-- **JWT-based authentication**
-- **CSRF protection**
+- **Role-based access control (RBAC)** with granular permissions
+- **JWT-based authentication** (HttpOnly cookies with `__Host-` prefix)
+- **CSRF protection** via signed double-submit cookie pattern
+- **Input validation** via Zod schemas on all backend endpoints
 
 ### 2. Permission System
 - **Granular permissions** per resource/action
@@ -156,6 +162,9 @@ The SJRS LMS uses a **direct function API pattern** optimized for Cloudflare Wor
 - **Consistent Patterns** - Standardized routing and error handling across all endpoints
 - **Type Safety** - Full TypeScript support throughout the API layer
 
+### URI Versioning
+All API routes use the `/api/v1/` prefix. The main request pipeline (`functions/index.ts`) normalizes `/api/v1/<resource>` to `/api/<resource>` before route matching, so handlers only strip `/api/<resource>`. Legacy `/api/<resource>` paths (without `v1/`) are rejected with HTTP 400. Frontend calls use `/api/v1/` paths exclusively, and the `createCrudHooks` factory automatically prepends `v1/` to the resource parameter.
+
 ### API Structure
 ```typescript
 // Standard API function pattern
@@ -166,21 +175,17 @@ export async function resourceName(request: Request, env: any) {
   // Authentication middleware
   const user = await getAuthenticatedUser(request, env);
   if (!user) {
-    const response = new Response(JSON.stringify({ error: 'Unauthorized' }), {
-      status: 401,
-      headers: { 'Content-Type': 'application/json' }
-    });
-    return addCORSHeaders(response, request.headers.get('Origin'));
+    return createErrorResponse('Unauthorized', 'AUTH_REQUIRED', 401);
   }
   
   // Route handling with consistent patterns
   if (request.method === 'GET' && (path === '' || path === '/')) {
-    // Handle GET /api/resourceName
+    // Handle GET /api/v1/resourceName
   } else if (request.method === 'POST' && (path === '' || path === '/')) {
-    // Handle POST /api/resourceName
+    // Handle POST /api/v1/resourceName
   } else if (path.startsWith('/')) {
     const id = path.substring(1);
-    // Handle /api/resourceName/:id
+    // Handle /api/v1/resourceName/:id
   }
 }
 ```
@@ -190,26 +195,27 @@ All APIs follow a consistent routing pattern:
 ```typescript
 const path = url.pathname.replace('/api/resourceName', '');
 
-// Root endpoint: /api/resourceName
+// Root endpoint: /api/v1/resourceName
 if (path === '' || path === '/') {
   // Handle collection operations (GET, POST)
 }
 
-// Specific resource: /api/resourceName/:id
+// Specific resource: /api/v1/resourceName/:id
 if (path.startsWith('/')) {
   const id = path.substring(1);
   // Handle individual resource operations (GET, PUT, DELETE)
 }
 ```
 
+All API responses must use standardized JSON envelopes from `functions/utilities/response-builder.ts` (`createSuccessResponse()`, `createPaginatedResponse()`, `createCreatedResponse()`, `createUpdatedResponse()`, `createDeletedResponse()`, `createErrorResponse()`). Never use raw `new Response(JSON.stringify({ ... }))`.
+
 ### Legacy Permissions Compatibility
-Legacy permission endpoints are preserved for backward compatibility and internally routed to the unified `/api/permissions` service.
+Legacy permission endpoints are preserved for backward compatibility and internally routed to the unified `/api/v1/permissions` service.
 
 ### Error Handling & CORS
 All APIs use unified error handling with automatic CORS headers:
 ```typescript
 import { handleError } from '../../utilities/error/unified-error-handler';
-import { addCORSHeaders } from '../../middleware/cors';
 
 try {
   // API logic
@@ -217,7 +223,7 @@ try {
   return await handleError(error, {
     operation: 'api_operation',
     component: 'APIComponent',
-    context: { endpoint: '/api/resourceName' }
+    context: { endpoint: '/api/v1/resourceName' }
   });
 }
 ```
@@ -225,6 +231,9 @@ try {
 ### Main Router
 The main router (`functions/index.ts`) directs requests to appropriate API functions:
 ```typescript
+// Normalize /api/v1/<resource> → /api/<resource> before matching
+// Reject legacy /api/<resource> (without v1/) with HTTP 400
+
 // Direct function calls (no .fetch() needed)
 if (path.startsWith('/api/books')) {
   return await books(request, env);
@@ -243,13 +252,13 @@ npm run dev                 # Start development server
 npm run build              # Build for production
 npm run preview            # Preview production build
 
-# Refactoring (completed)
-npm run migrate-error-handling
-npm run migrate-hooks
-npm run migrate-components
+# Quality
+npm run quality-gates       # Run all quality gates (lint, test, build)
 
 # Testing
-npm run test:app-functionality
+npm run test               # Run unit tests (Vitest)
+npm run test:e2e           # Run E2E tests (Playwright, against staging)
+npm run test:e2e:local     # Run E2E tests against local server
 ```
 
 ### Environment Configuration

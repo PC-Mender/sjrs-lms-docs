@@ -7,7 +7,7 @@ title: "Routing System"
 
 The AppRouter has been completely refactored to address critical issues while maintaining the existing architecture and adding enterprise-grade features.
 
-## Current Route Model (June 2026)
+## Current Route Model
 
 - The canonical dashboard entry point is `/dashboard/*` for all roles.
 - Role-specific dashboard paths are no longer canonical and are maintained only as compatibility redirects:
@@ -17,6 +17,10 @@ The AppRouter has been completely refactored to address critical issues while ma
   - `/dashboard-dean/*`
   - `/dashboard-user/*`
 - Role-specific UI is rendered inside the unified dashboard route using role-aware dashboard components.
+- The Dashboard page (`src/pages/dashboard.tsx`) uses `ROLE_COMPONENT_MAP` to lazy-load the appropriate role view (e.g., `dashboard-admin.tsx`, `dashboard-librarian.tsx`, `dashboard-user.tsx`).
+- Feature sub-routes under `/dashboard/*` are dynamically generated from `feature-routes.ts` via `generateDashboardRoutes()` and matched by `DashboardSubRouter`.
+- `DashboardSubRouter` deduplicates routes by path, preferring role-specific variants over generic ones for the same path (e.g., `/dashboard/loans` has both a generic user view and an admin view).
+- All API routes use the `/api/v1/` prefix (see [API Versioning](/architecture/api-versioning)).
 
 ## Fixed Critical Issues
 
@@ -173,17 +177,43 @@ The refactored AppRouter is now:
 - **Monitoring Ready**: Comprehensive logging
 - **Error Resilient**: Robust error handling
 
-## Next Steps
+## Current Implementation Details
 
-1. **Connect to App.tsx**: Replace the minimal routing with this complete implementation
-2. **Test All Routes**: Verify each dashboard and feature route
-3. **Monitor Performance**: Check loading times and error rates
-4. **Security Audit**: Verify access controls and logging
-5. **Documentation**: Update user guides and developer docs
+### AppRouter (`src/router/AppRouter.tsx`)
+- Public routes wrapped in `PublicLayoutWrapper`
+- Auth routes (login, register, MFA, password reset, etc.) with minimal footer
+- Single `/dashboard` route wrapped in `AuthGuard` + `Layout`
+  - Index route renders `Dashboard` (role dispatcher)
+  - `/dashboard/my-badges` renders `MyBadgesPage`
+  - `/dashboard/*` renders `DashboardSubRouter` for feature sub-routes
+- Standalone protected routes: `/mfa-settings`, `/notification-preferences`, `/reference-books`, `/select-role`
+- Diagnostics route (development only)
+- 404 fallback with smart redirect logic
+
+### Route Definitions (`src/router/route-definitions.ts`)
+- `ROUTE_GROUPS`: Static groups for auth, dashboard, public, diagnostics
+- `generateDashboardRoutes()`: Dynamically generates all feature routes under `/dashboard/` prefix from `FEATURE_ROUTE_SETS`
+- `canAccessRoute()`: Role-based access control check
+- `getDocumentTitle()`: Resolves page titles from route paths
+
+### Feature Routes (`src/router/config/feature-routes.ts`)
+- Defines all feature routes organized by category: books, book copies, authors, members, user management, system admin, and additional routes
+- Each route specifies `path`, `title`, `component`, and optionally `requiredPermission` or `roles`
+- Routes with `roles` are role-specific variants (deduplicated by `DashboardSubRouter`)
+
+### DashboardSubRouter (`src/router/components/DashboardSubRouter.tsx`)
+- Matches `/dashboard/*` sub-paths to feature route components
+- Filters routes by role access (`canAccessRoute`)
+- Deduplicates by path, preferring role-specific over generic variants
+- Enforces `requiredPermission` checks via `usePermissions().hasPermission()`
+- Wrapped in `RouteErrorBoundary` with `Suspense` for lazy-loaded components
+
+### RoleBasedRedirect (`src/components/auth/guards/RoleBasedRedirect.tsx`)
+- Always redirects to `/dashboard` (previously redirected to role-specific paths)
+- Kept for backward compatibility
 
 ---
 
-**Status**:  **PRODUCTION READY**  
-**Quality Score**: 9.5/10  
+**Status**: **PRODUCTION READY**  
 **Security Level**: Enterprise Grade  
 **Performance**: Optimized

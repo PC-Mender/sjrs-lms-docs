@@ -285,9 +285,9 @@ View permission statistics:
 
 ### 0. RBAC Policy: Backend is Single Source of Truth
 
-**The backend permissions endpoint (`/api/permissions/check`) is the single source of truth for all permission decisions.**
+**The backend permissions endpoint (`/api/v1/permissions/check`) is the single source of truth for all permission decisions.**
 
-- **Backend Authority**: All permission checks must ultimately be validated by the backend `/api/permissions/check` endpoint
+- **Backend Authority**: All permission checks must ultimately be validated by the backend `/api/v1/permissions/check` endpoint
 - **Client Fallbacks**: Client-side permission checks are for UI optimization only and **deny by default** when backend validation is unavailable
 - **Security First**: Never trust client-side permission checks alone - always validate on the backend
 - **Fail-Safe Design**: If the backend endpoint is unreachable or returns an error, the client should deny access
