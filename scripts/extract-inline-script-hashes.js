@@ -48,7 +48,7 @@ let headers = readFileSync(headersFile, 'utf-8');
 const hashList = sortedHashes.join(' ');
 headers = headers.replace(
   /script-src '[^']*'(\s*'[^']*')*\s*;/,
-  `script-src 'self' ${hashList};`
+  `script-src 'self' 'wasm-unsafe-eval' ${hashList};`
 );
 writeFileSync(headersFile, headers, 'utf-8');
 console.log(`Updated ${headersFile} with ${sortedHashes.length} script-src hashes`);
