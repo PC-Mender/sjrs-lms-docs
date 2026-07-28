@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.7](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.6.6...v1.6.7) (2026-07-28)
+
+### Bug Fixes
+
+* switch script-src to unsafe-inline to handle Cloudflare dynamic injection ([795fb73](https://github.com/PC-Mender/sjrs-lms-docs/commit/795fb73384664877f057ede1d7832ea262ff1916))
 ## [1.6.6](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.6.5...v1.6.6) (2026-07-28)
 
 ### Bug Fixes
