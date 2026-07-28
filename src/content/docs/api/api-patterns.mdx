@@ -45,11 +45,12 @@ import { AUTHOR_CREATE_SCHEMA } from '../../middleware/validation/schemas';
 
 export async function authors(request: Request, env: Environment): Promise<Response> {
   const url = new URL(request.url);
+  // After v1 normalization, path is /api/authors (v1 prefix stripped by pipeline)
   const path = url.pathname.replace('/api/authors', '');
   const origin = request.headers.get('Origin');
 
   try {
-    // 1. Security Middleware (Auth & Validation)
+    // 1. Security Middleware (Auth, Zod Validation & Sanitization)
     const securityResult = await securityMiddleware(request, env, {
       ...SECURITY_CONFIGS.API,
       validationSchema: request.method === 'POST' ? AUTHOR_CREATE_SCHEMA : undefined
@@ -111,17 +112,17 @@ export async function handleCreateAuthor(
 
 ### Standardized Routing Pattern
 
-All APIs follow a consistent routing pattern:
+All APIs follow a consistent routing pattern. The main request pipeline (`functions/index.ts`) normalizes `/api/v1/<resource>` to `/api/<resource>` before route matching, so handlers strip `/api/<resource>`:
 
 ```typescript
 const path = url.pathname.replace('/api/resource-name', '');
 
-// Root endpoint: /api/resource-name
+// Root endpoint: /api/v1/resource-name
 if (path === '' || path === '/') {
   // Handle collection operations (GET, POST)
 }
 
-// Specific resource: /api/resource-name/:id
+// Specific resource: /api/v1/resource-name/:id
 if (path.startsWith('/')) {
   const id = path.substring(1);
   // Handle individual resource operations (GET, PUT, DELETE)
@@ -130,7 +131,7 @@ if (path.startsWith('/')) {
 
 ### Main Router Pattern
 
-The main router (`functions/index.ts`) directs requests to appropriate API functions:
+The main router (`functions/index.ts`) directs requests to appropriate API functions. It first normalizes `/api/v1/<resource>` to `/api/<resource>`, then routes:
 
 ```typescript
 // functions/index.ts
@@ -144,9 +145,17 @@ import { handleReceiptsRequest } from './api/receipts/index';
 export default {
   async fetch(request: Request, env: any): Promise<Response> {
     const url = new URL(request.url);
-    const path = url.pathname;
+    let path = url.pathname;
     
     try {
+      // Normalize /api/v1/<resource> → /api/<resource>
+      path = path.replace(/^\/api\/v1\//, '/api/');
+      
+      // Reject legacy /api/<resource> without v1/ prefix
+      if (path.startsWith('/api/') && !url.pathname.startsWith('/api/v1/')) {
+        return createErrorResponse('API version prefix required', 'VERSION_REQUIRED', 400);
+      }
+      
       // Route to appropriate API function
       if (path.startsWith('/api/books')) {
         return await books(request, env);
@@ -187,7 +196,7 @@ try {
   return await handleError(error, {
     operation: 'api_operation',
     component: 'APIComponent',
-    context: { endpoint: '/api/resource-name' }
+    context: { endpoint: '/api/v1/resource-name' }
   });
 }
 ```
@@ -282,32 +291,32 @@ if (path.startsWith('/api/books')) {
 ## API Endpoints
 
 ### Core APIs
-- **Authentication**: `/api/auth` - Login, registration, session management
-- **Users**: `/api/users` - User management and profiles
-- **Books**: `/api/books` - Book catalog and management
-- **Loans**: `/api/loans` - Borrowing and return operations
-- **Permissions**: `/api/permissions` - Role-based access control (legacy endpoints supported)
-- **Payments**: `/api/payments` - Create, list, verify, user payments
-- **Receipts**: `/api/receipts` - Create, get, download receipts
+- **Authentication**: `/api/v1/auth` - Login, registration, session management
+- **Users**: `/api/v1/users` - User management and profiles
+- **Books**: `/api/v1/books` - Book catalog and management
+- **Loans**: `/api/v1/loans` - Borrowing and return operations
+- **Permissions**: `/api/v1/permissions` - Role-based access control (legacy endpoints supported)
+- **Payments**: `/api/v1/payments` - Create, list, verify, user payments
+- **Receipts**: `/api/v1/receipts` - Create, get, download receipts
 
 ### Supporting APIs
-- **Authors**: `/api/authors` - Author management
-- **Book Copies**: `/api/book-copies` - Physical copy tracking
-- **Reviews**: `/api/book-reviews` - Book review system
-- **Borrow Limits**: `/api/borrow-limits` - Borrowing restrictions
-- **Notifications**: `/api/notifications` - User notifications
-- **Orders**: `/api/orders` - Order management
-- **Penalties**: `/api/penalties` - Overdue and violation tracking
-- **Publications**: `/api/publications` - Publication management
-- **Roles**: `/api/roles` - Role management
-- **Students**: `/api/students` - Student-specific operations
-- **Upload**: `/api/upload` - File upload handling
-- **Wishlist**: `/api/wishlist` - Wishlist management
+- **Authors**: `/api/v1/authors` - Author management
+- **Book Copies**: `/api/v1/book-copies` - Physical copy tracking
+- **Reviews**: `/api/v1/book-reviews` - Book review system
+- **Borrow Limits**: `/api/v1/borrow-limits` - Borrowing restrictions
+- **Notifications**: `/api/v1/notifications` - User notifications
+- **Orders**: `/api/v1/orders` - Order management
+- **Penalties**: `/api/v1/penalties` - Overdue and violation tracking
+- **Publications**: `/api/v1/publications` - Publication management
+- **Roles**: `/api/v1/roles` - Role management
+- **Students**: `/api/v1/students` - Student-specific operations
+- **Upload**: `/api/v1/upload` - File upload handling
+- **Wishlist**: `/api/v1/wishlist` - Wishlist management
 
 ### Orders API: Borrow Request Rules
 
 - Purpose: Users create borrow requests (orders) for books that are fully Available.
-- Create request (POST /api/orders):
+- Create request (POST /api/v1/orders):
   - Request body: `{ book_id: number, order_type?: 'request' }` (order_type defaults to 'request').
   - Server validations:
     - Book exists.
@@ -316,7 +325,7 @@ if (path.startsWith('/api/books')) {
     - Borrow limit enforcement: `active loans + pending orders + 1 <= borrow_limits.max_books` for the user’s `user_type`.
   - On success: creates an order with `status='pending'` and derived `title/author/isbn`.
 
-- Approve request (PUT /api/orders/:id with `{ status: 'approved' }`):
+- Approve request (PUT /api/v1/orders/:id with `{ status: 'approved' }`):
   - Atomically claims one available copy for the book.
   - Creates a loan for the user and claimed copy; due date uses `borrow_limits.max_days` (fallback 14).
   - Updates order to `completed` and sets `approved_by/approved_at`.
@@ -368,5 +377,5 @@ if (path.startsWith('/api/books')) {
 ---
 
 **Last Updated:** November 2025  
-**Version:** 2.3.0  
+**Version:** 7.27.0  
 **Status:** Complete Migration
