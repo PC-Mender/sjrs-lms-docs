@@ -22,3 +22,6 @@ ALLOWED_ORIGIN = "https://docs.sjrslms.in"
 [[routes]]
 pattern = "feedback.docs.sjrslms.in"
 custom_domain = true
+
+[triggers]
+crons = ["0 * * * *"]
