@@ -64,15 +64,15 @@ console.log(`CSP script-src: ${cspHashes.size} hashes`);
 
 if (missing.length > 0) {
   console.error(`\nFAIL: ${missing.length} inline script hash(es) missing from CSP:`);
-  for (const h of missing) console.error(`  sha256-${h}`);
+  for (const h of missing) console.error(`  ${h}`);
 }
 
 if (extra.length > 0) {
-  console.error(`\nFAIL: ${extra.length} CSP hash(es) not found in any built HTML:`);
-  for (const h of extra) console.error(`  sha256-${h}`);
+  console.warn(`\nWARN: ${extra.length} CSP hash(es) not found in built HTML (likely externally injected, e.g. Cloudflare):`);
+  for (const h of extra) console.warn(`  ${h}`);
 }
 
-if (missing.length > 0 || extra.length > 0) {
+if (missing.length > 0) {
   console.error('\nCSP hashes are out of sync with inline scripts.');
   console.error('Run `npm run build` to regenerate, then redeploy.');
   process.exit(1);

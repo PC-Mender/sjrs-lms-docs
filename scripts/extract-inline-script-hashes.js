@@ -36,15 +36,36 @@ function extractInlineScripts(htmlFile) {
 
 walkDir(distDir);
 
-const sortedHashes = [...hashes].sort();
-console.log(`Found ${scriptCount} inline scripts across ${sortedHashes.length} unique hashes`);
+const sortedHtmlHashes = [...hashes].sort();
+console.log(`Found ${scriptCount} inline scripts across ${sortedHtmlHashes.length} unique hashes`);
 
-if (sortedHashes.length === 0) {
+if (sortedHtmlHashes.length === 0) {
   console.error('No inline scripts found — refusing to write empty script-src');
   process.exit(1);
 }
 
 let headers = readFileSync(headersFile, 'utf-8');
+
+// Preserve externally-injected script hashes (e.g. Cloudflare challenge platform)
+// that are already in the CSP but not present in the built HTML.
+const cspMatch = headers.match(/script-src\s+([^;]+);/);
+const existingCspHashes = new Set();
+if (cspMatch) {
+  for (const token of cspMatch[1].trim().split(/\s+/)) {
+    if (token.startsWith("'sha256-") && token.endsWith("'")) {
+      existingCspHashes.add(token);
+    }
+  }
+}
+
+const allHashes = new Set([...hashes, ...existingCspHashes]);
+const sortedHashes = [...allHashes].sort();
+const externalCount = sortedHashes.length - sortedHtmlHashes.length;
+
+if (externalCount > 0) {
+  console.log(`Preserving ${externalCount} external hash(es) from existing CSP`);
+}
+
 const hashList = sortedHashes.join(' ');
 headers = headers.replace(
   /script-src '[^']*'(\s*'[^']*')*\s*;/,
