@@ -52,7 +52,7 @@ calculateDerivedMetrics();
 ### Component Structure
 
 ```
-src/pages/dashboard-user.tsx          # Main dashboard page
+src/pages/dashboard-user.tsx          # User dashboard view (lazy-loaded via ROLE_COMPONENT_MAP)
 src/hooks/dashboard/useEnhancedUserDashboard.ts  # Data fetching
 src/components/features/dashboard/     # Visual components
 ├── charts/                           # Data visualization
@@ -67,10 +67,10 @@ src/components/features/dashboard/     # Visual components
 
 The dashboard aggregates data from multiple API endpoints:
 
-- **Loans API**: `/api/loans` - User's borrowing history
-- **Sessions API**: `/api/auth/sessions` - Login activity
-- **Session History**: `/api/auth/sessions/history` - Historical engagement
-- **Book Sections**: `/api/book-sections` - Content categorization
+- **Loans API**: `/api/v1/loans` - User's borrowing history
+- **Sessions API**: `/api/v1/auth/sessions` - Login activity
+- **Session History**: `/api/v1/auth/sessions/history` - Historical engagement
+- **Book Sections**: `/api/v1/book-sections` - Content categorization
 
 ### Performance Optimizations
 

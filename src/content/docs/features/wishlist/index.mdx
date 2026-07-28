@@ -64,7 +64,7 @@ The wishlist system integration with the Order system is partially complete:
 
 ## API Endpoints
 
-### GET `/api/wishlist`
+### GET `/api/v1/wishlist`
 - **Query Parameters:**
   - `page`, `limit` - Pagination
   - `search` - Search term
@@ -73,14 +73,14 @@ The wishlist system integration with the Order system is partially complete:
   - `user_id` - Filter by specific user (Admin only)
 - **Note**: Does not currently use `addOptimizedCacheHeaders`.
 
-### POST `/api/wishlist`
+### POST `/api/v1/wishlist`
 - **Body:** `book_id` (required), `priority`, `notes`, `title`, `author`, `isbn`
 - **Priority Handling**: Maps strings ('low', 'normal', 'high') to database integers (1, 3, 5).
 
-### PUT `/api/wishlist/:id`
+### PUT `/api/v1/wishlist/:id`
 - Updates status, priority, or notes.
 
-### DELETE `/api/wishlist/:id`
+### DELETE `/api/v1/wishlist/:id`
 - Deletes the specified wishlist item.
 
 ## Database Schema

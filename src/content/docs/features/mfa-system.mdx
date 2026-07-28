@@ -144,17 +144,17 @@ The MFA system uses the following tables:
 
 ### API Endpoints
 
-- `POST /api/auth/mfa/setup` - Initialize MFA setup (returns QR code)
-- `POST /api/auth/mfa/verify` - Verify and enable MFA
-- `GET /api/auth/mfa/status` - Get MFA status (includes recent activity logs)
-- `POST /api/auth/mfa/disable` - Disable MFA (requires password & email OTP)
-- `POST /api/auth/mfa/challenge/verify` - Verify MFA code during login (supports TOTP & Backup Codes)
-- `POST /api/auth/mfa/backup-codes/regenerate` - Generate new backup codes (requires password)
+- `POST /api/v1/auth/mfa/setup` - Initialize MFA setup (returns QR code)
+- `POST /api/v1/auth/mfa/verify` - Verify and enable MFA
+- `GET /api/v1/auth/mfa/status` - Get MFA status (includes recent activity logs)
+- `POST /api/v1/auth/mfa/disable` - Disable MFA (requires password & email OTP)
+- `POST /api/v1/auth/mfa/challenge/verify` - Verify MFA code during login (supports TOTP & Backup Codes)
+- `POST /api/v1/auth/mfa/backup-codes/regenerate` - Generate new backup codes (requires password)
 
 ### Security Considerations
 
 1. **Enforcement**
-   - The login endpoint (`/api/auth/login`) checks `user_mfa_settings`.
+   - The login endpoint (`/api/v1/auth/login`) checks `user_mfa_settings`.
    - If enabled, it returns `401 Unauthorized` with `code: AUTH_MFA_REQUIRED` and a temporary `mfaChallengeToken`.
    - No session is created until the challenge is verified.
 

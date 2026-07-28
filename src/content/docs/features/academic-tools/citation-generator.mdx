@@ -9,15 +9,15 @@ title: "Citation Generator"
 - Validates inputs and enforces source-type specific requirements
 
 ## Endpoints
-- GET `/api/citations` — Supported formats and source types
+- GET `/api/v1/citations` — Supported formats and source types
   - Implementation: `functions/api/citations/handlers/get-citation-formats.ts:7`
-- POST `/api/citations` — Generate citation
+- POST `/api/v1/citations` — Generate citation
   - Implementation: `functions/api/citations/handlers/generate-citation.ts:9`
-- GET `/api/citations/history` — List saved citations
+- GET `/api/v1/citations/history` — List saved citations
   - Implementation: `functions/api/citations/handlers/get-citation-history.ts:7`
-- POST `/api/citations/save` — Save citation
+- POST `/api/v1/citations/save` — Save citation
   - Implementation: `functions/api/citations/handlers/save-citation.ts:7`
-- DELETE `/api/citations/:id` — Delete saved citation
+- DELETE `/api/v1/citations/:id` — Delete saved citation
   - Implementation: `functions/api/citations/handlers/delete-citation.ts:7`
 
 ## Permissions

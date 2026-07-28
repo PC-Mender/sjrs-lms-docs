@@ -29,12 +29,12 @@ The reservation system allows users to reserve books that are currently unavaila
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
-| `POST` | `/api/reservations` | Create a new reservation |
-| `GET` | `/api/reservations` | List reservations (with filters) |
-| `GET` | `/api/reservations/:id` | Get reservation details |
-| `POST` | `/api/reservations/:id/claim` | Claim a ready reservation (converts to loan) |
-| `PUT` | `/api/reservations/:id/cancel` | Cancel a reservation |
-| `DELETE` | `/api/reservations/:id` | Delete a reservation (same as cancel) |
+| `POST` | `/api/v1/reservations` | Create a new reservation |
+| `GET` | `/api/v1/reservations` | List reservations (with filters) |
+| `GET` | `/api/v1/reservations/:id` | Get reservation details |
+| `POST` | `/api/v1/reservations/:id/claim` | Claim a ready reservation (converts to loan) |
+| `PUT` | `/api/v1/reservations/:id/cancel` | Cancel a reservation |
+| `DELETE` | `/api/v1/reservations/:id` | Delete a reservation (same as cancel) |
 
 ## Workflow
 

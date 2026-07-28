@@ -9,13 +9,13 @@ title: "Plagiarism Checker"
 - Saves results to database for user history and later review
 
 ## Endpoints
-- POST `/api/plagiarism` — Run a plagiarism check
+- POST `/api/v1/plagiarism` — Run a plagiarism check
   - Implementation: `functions/api/plagiarism/handlers/check-plagiarism.ts:7`
-- GET `/api/plagiarism/history` — List user plagiarism checks
+- GET `/api/v1/plagiarism/history` — List user plagiarism checks
   - Implementation: `functions/api/plagiarism/handlers/get-plagiarism-history.ts:7`
-- GET `/api/plagiarism/:id` — Get a specific check result
+- GET `/api/v1/plagiarism/:id` — Get a specific check result
   - Implementation: `functions/api/plagiarism/handlers/get-plagiarism-results.ts:7`
-- DELETE `/api/plagiarism/:id` — Delete a check result
+- DELETE `/api/v1/plagiarism/:id` — Delete a check result
   - Implementation: `functions/api/plagiarism/handlers/delete-plagiarism-result.ts:7`
 
 ## Permissions
