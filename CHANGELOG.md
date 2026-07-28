@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.2](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.6.1...v1.6.2) (2026-07-28)
+
+### Bug Fixes
+
+* remove duplicate social links and as-any cast in SocialIcons ([409e1e4](https://github.com/PC-Mender/sjrs-lms-docs/commit/409e1e4aeaed7999c099f01b833ef560ec4e2e05))
+* resolve CodeQL bad-tag-filter alert in inline script hash extractor ([ace0b53](https://github.com/PC-Mender/sjrs-lms-docs/commit/ace0b53d4928574cb5d42d2a5d73ac052c096ef2))
+* **security:** eliminate TOCTOU race condition in feedback rate limiter ([f46a682](https://github.com/PC-Mender/sjrs-lms-docs/commit/f46a682a03f7efa9d01361388be2e3b2a58e9bf3))
+
+### Styling
+
+* remove unnecessary !important declarations and empty media query blocks ([f15ca6b](https://github.com/PC-Mender/sjrs-lms-docs/commit/f15ca6bf67bc5ec28deeb249954727b490cd4c21))
+
+### CI
+
+* type-check feedback worker in CI and IDE ([f43803e](https://github.com/PC-Mender/sjrs-lms-docs/commit/f43803ec25d3795e94d1d35d2b94f11204585d59))
 ## [1.6.1](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.6.0...v1.6.1) (2026-07-27)
 
 ### Bug Fixes
