@@ -23,6 +23,8 @@
     "feedback:dev": "wrangler dev --config feedback/wrangler.toml",
     "feedback:deploy": "wrangler deploy --config feedback/wrangler.toml",
     "feedback:check": "wrangler deploy --dry-run --config feedback/wrangler.toml",
+    "feedback:typecheck": "tsc --noEmit -p feedback/tsconfig.json",
+    "typecheck": "astro check && tsc --noEmit -p feedback/tsconfig.json",
     "feedback:migrate": "wrangler d1 migrations apply FEEDBACK_DB --config feedback/wrangler.toml",
     "check:lifecycle": "node scripts/check-doc-lifecycle.js",
     "release": "commit-and-tag-version"
