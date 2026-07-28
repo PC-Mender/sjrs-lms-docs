@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.6.6](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.6.5...v1.6.6) (2026-07-28)
+
+### Bug Fixes
+
+* handle Cloudflare-injected script hash and prevent stale CSP cache ([e15dfc7](https://github.com/PC-Mender/sjrs-lms-docs/commit/e15dfc7d2e8179ac401196c9bff12b45e600ef25))
 ## [1.6.5](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.6.4...v1.6.5) (2026-07-28)
 
 ### Bug Fixes
