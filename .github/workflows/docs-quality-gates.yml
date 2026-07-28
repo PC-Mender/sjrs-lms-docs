@@ -36,6 +36,9 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Validate CSP hashes
+        run: npm run validate:csp
+
       - name: Validate lifecycle metadata
         run: npm run check:lifecycle
 

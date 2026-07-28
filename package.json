@@ -27,6 +27,7 @@
     "typecheck": "astro check && tsc --noEmit -p feedback/tsconfig.json",
     "feedback:migrate": "wrangler d1 migrations apply FEEDBACK_DB --config feedback/wrangler.toml",
     "check:lifecycle": "node scripts/check-doc-lifecycle.js",
+    "validate:csp": "node scripts/validate-csp-hashes.js",
     "release": "commit-and-tag-version"
   },
   "dependencies": {
