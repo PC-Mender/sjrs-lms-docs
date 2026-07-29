@@ -2,10 +2,9 @@
 title: "Version And Release Management"
 ---
 
-
 ## Overview
 
-This document explains how version management, GitHub releases, and notifications work together in the deployment workflow.
+This document explains how version management, GitHub releases, and notifications work together in the SJRS LMS release workflow. The app uses a custom `version-prepare.js` script for versioning, GitHub Actions CI for automated releases, and optional notification scripts for deployment alerts.
 
 ---
 
@@ -13,29 +12,77 @@ This document explains how version management, GitHub releases, and notification
 
 ### Step-by-Step Process
 
+There are two paths to a release:
+
+#### Path 1: Local Release (Developer-Initiated)
+
 ```
-1. Developer runs: npm run version:prepare
+1. Developer commits changes using conventional commit format
    ↓
-2. Script analyzes commits and determines version bump type
+2. Developer runs: npm run version:prepare
    ↓
-3. Version bumped in package.json
+3. Script analyzes commits since last tag, determines version bump type
    ↓
-4. CHANGELOG.md updated
+4. Version bumped in package.json
    ↓
-5. Changes committed with proper commit type
+5. CHANGELOG.md updated (all relevant commits grouped by section)
    ↓
-6. Git tag created (vX.Y.Z)
+6. Version changes committed: chore(release): bump version to X.Y.Z [skip ci]
    ↓
-7. Pushed to GitHub
+7. Git tag created (vX.Y.Z)
    ↓
-8. GitHub Actions triggers automatically
+8. Quality gates run locally (fail fast before push)
    ↓
-9. Quality gates → Build → Deploy
+9. Commits and tag pushed to GitHub
    ↓
-10. GitHub Release created (with categorized commits)
+10. GitHub Actions CI triggers on branch push
    ↓
-11. Notification saved to notification_events table
+11. CI: quality-gates → build → test-frontend (4 shards) → release → github-release
+   ↓
+12. GitHub Release created (changelog extracted from CHANGELOG.md)
+   ↓
+13. Developer deploys manually: npm run deploy:production
+   ↓
+14. (Optional) Developer sends notification: npm run notify-deployment
 ```
+
+#### Path 2: CI-Initiated Release (Automatic on push to main)
+
+```
+1. Developer pushes commits to main branch
+   ↓
+2. GitHub Actions CI triggers automatically
+   ↓
+3. CI runs: quality-gates → build → test-frontend (4 shards)
+   ↓
+4. release job: runs version-prepare.js (with --skip.tag --skip.commit)
+   ↓
+5. If version changed: commits + creates tag + pushes
+   ↓
+6. github-release job: creates GitHub Release from CHANGELOG.md
+```
+
+:::note
+Deployment to Cloudflare Workers is **manual** — there is no automatic deploy step in CI. Use `npm run deploy:production` (or `npm run deploy:staging`) after the release is created.
+:::
+
+### CI Workflow Structure
+
+The CI workflow (`.github/workflows/ci.yml`) has these jobs:
+
+| Job | Description | Runs on |
+|-----|-------------|---------|
+| `quality-gates` | Type check (strict), backend tests, quality gates, security audit, route security manifest | All pushes/PRs |
+| `build` | Production build (tsc + Vite), bundle size validation | All pushes/PRs |
+| `test-frontend` | Frontend tests (4 shards) | All pushes/PRs |
+| `release` | Version bump, tag, changelog | `main` branch or `workflow_dispatch` only; skips bot commits and `chore(release):` commits |
+| `github-release` | Create GitHub Release from CHANGELOG.md | Only if `release` job created a new tag |
+
+A separate `security.yml` workflow runs Gitleaks secret scanning and SBOM + license checks on `main` branch pushes.
+
+:::note
+The `release` job uses Node 22 and sets `HUSKY: 0` to skip git hooks during CI. Concurrency groups prevent overlapping runs for the same branch.
+:::
 
 ---
 
@@ -45,33 +92,46 @@ This document explains how version management, GitHub releases, and notification
 
 **Three places where version must match:**
 
-1. **package.json** - `"version": "3.40.0"`
-2. **Git Tag** - `v3.40.0`
-3. **GitHub Release** - Release `3.40.0`
+1. **package.json** - `"version": "8.2.2"`
+2. **Git Tag** - `v8.2.2`
+3. **GitHub Release** - Release `v8.2.2`
 
-### Version Verification
+### Version Verification in CI
 
-The workflow includes automatic version verification:
+The CI `release` job compares the previous git tag with the new version from `package.json` after running `version-prepare.js`. If the version changed, it commits, creates a tag, and pushes. If unchanged (no conventional commits since last release), it skips the release.
 
 ```yaml
-# In GitHub Actions workflow
-- name: Verify version consistency
+# In ci.yml — release job
+- name: Run version prepare
   run: |
-    TAG_VERSION="v3.40.0"
-    PACKAGE_VERSION="3.40.0"
-    
-    if [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
-      echo " WARNING: Version mismatch!"
-      exit 1
+    npm run release -- --skip.tag --skip.commit
+    new_version=$(node -p "require('./package.json').version")
+
+- name: Check if version changed
+  run: |
+    current_version_num=$(echo "$current_version" | sed 's/^v//')
+    if [ "$current_version_num" != "$new_version" ] && [ -n "$new_version" ]; then
+      echo "version_changed=true"
     else
-      echo " Version consistency verified"
+      echo "version_changed=false"
     fi
 ```
 
-**If versions don't match:**
-- GitHub Actions will fail
-- Deployment will be blocked
-- You'll need to fix the version mismatch
+The `version-prepare.js` script also checks locally whether a tag already exists before creating one:
+
+```javascript
+// In version-prepare.js
+function verifyVersionConsistency(newVersion) {
+  const existingTag = `v${newVersion}`;
+  try {
+    execSync(`git rev-parse ${existingTag}`, { stdio: 'ignore' });
+    console.warn(`Tag ${existingTag} already exists. Skipping tag creation.`);
+    return false;
+  } catch {
+    return true; // Tag doesn't exist, good to go
+  }
+}
+```
 
 ---
 
@@ -79,28 +139,54 @@ The workflow includes automatic version verification:
 
 ### How Commit Types Are Analyzed
 
-The workflow analyzes commits to determine version bump type:
+The `version-prepare.js` script analyzes all commits since the last tag to determine the version bump type. It picks the **highest-priority** bump type across all relevant commits.
 
-#### Commit Type Detection
+#### Version Bump Rules
 
 ```bash
 # From commit messages:
-feat: add new feature        → Minor version bump (1.0.0 → 1.1.0)
-fix: resolve bug            → Patch version bump (1.0.0 → 1.0.1)
-BREAKING CHANGE: major      → Major version bump (1.0.0 → 2.0.0)
-chore: update deps          → Patch version bump (1.0.0 → 1.0.1)
+feat: add new feature        → Minor bump (8.2.2 → 8.3.0)
+fix: resolve bug            → Patch bump (8.2.2 → 8.2.3)
+BREAKING CHANGE: major      → Major bump (8.2.2 → 9.0.0)
+breaking: major change      → Major bump (8.2.2 → 9.0.0)
+
+# Also treated as patch bumps:
+perf: optimize query        → Patch bump (8.2.2 → 8.2.3)
+refactor: cleanup code      → Patch bump (8.2.2 → 8.2.3)
+docs: update readme         → Patch bump (8.2.2 → 8.2.3)
+style: format code          → Patch bump (8.2.2 → 8.2.3)
+test: add unit tests        → Patch bump (8.2.2 → 8.2.3)
+ci: update workflow         → Patch bump (8.2.2 → 8.2.3)
+build: update deps          → Patch bump (8.2.2 → 8.2.3)
+revert: rollback change     → Patch bump (8.2.2 → 8.2.3)
+chore: update config        → Patch bump (8.2.2 → 8.2.3)
 ```
 
-#### File-Based Analysis
+:::note
+Commits with `bump version` or `[skip ci]` in the message are **skipped** during analysis. If no conventional commit is found since the last tag, the script exits without creating a release.
+:::
 
-If no commit message is available, the script analyzes changed files:
+#### Changelog Section Grouping
+
+Commits are grouped into changelog sections by the `classifyCommit()` function in `version-prepare.js`:
+
+| Commit Prefix | Changelog Section | Emoji |
+|---------------|-------------------|-------|
+| `feat:`, `add:` | Added | ✅ |
+| `fix:`, `bug:` | Fixed | 🐛 |
+| `breaking:` / `BREAKING CHANGE:` | Changed | 💥 |
+| `chore:`, `refactor:`, `docs:`, `style:`, `test:`, `ci:`, `build:`, `perf:` | Technical | 🔧 |
+
+#### File-Based Analysis (auto-version.js only)
+
+The `auto-version.js` script can infer commit type from changed file paths when no commit message is available:
 
 ```javascript
 // From file paths:
-src/components/...          → feat (minor version)
-functions/api/...          → feat (minor version)
-docs/...                   → docs (patch version)
-scripts/...                 → chore (patch version)
+src/components/...          → ui scope → feat (minor version)
+functions/api/...          → api scope → feat (minor version)
+docs/...                   → docs scope → docs (patch version)
+scripts/...                 → config scope → chore (patch version)
 ```
 
 ---
@@ -109,75 +195,120 @@ scripts/...                 → chore (patch version)
 
 ### Automatic Release Creation
 
-When a tag is pushed, GitHub Actions automatically:
+The `github-release` job in CI runs **only if the `release` job created a new tag**. It:
 
-1. **Analyzes commits** since last release
-2. **Categorizes commits** by type:
-   -  Breaking Changes
-   -  Features
-   -  Bug Fixes
-   -  Documentation
-   -  Other Changes
-3. **Creates GitHub Release** with formatted notes
-4. **Includes deployment info**:
-   - Deployment URL
-   - Deployment status
-   - Commit SHA
+1. **Extracts release notes** from `CHANGELOG.md` by finding the section matching the new version
+2. **Creates or updates a GitHub Release** using `gh release create` / `gh release edit`
+3. Uses the tag (e.g., `v8.2.2`) as the release title
+
+:::note
+The release notes come directly from `CHANGELOG.md` — no deployment URL, status, or commit SHA is included. The `CHANGELOG.md` is updated by `version-prepare.js` which groups all relevant commits into sections (Added, Fixed, Changed, Technical).
+:::
 
 ### Release Notes Format
 
+The notes are extracted by an `awk` script that finds the matching version section in `CHANGELOG.md`:
+
 ```markdown
-## Release v3.40.0
+## [8.2.2] - 2026-07-29
 
-### Features
-- Add new analytics dashboard (a1b2c3d)
-- Improve user authentication flow (e4f5g6h)
+### Added
+- ✅ New analytics dashboard
 
-### Bug Fixes
-- Fix login redirect issue (i7j8k9l)
-- Resolve notification display bug (m1n2o3p)
+### Fixed
+- 🐛 Login redirect issue
 
-### Documentation
-- Update API documentation (q4r5s6t)
-
----
-**Deployed to**: https://your-api-domain.com
-**Deployment Status**:  Success
+### Technical
+- 🔧 Refactored API middleware
 ```
+
+If the changelog section is empty or not found, the release notes default to: `See CHANGELOG.md for details.`
 
 ---
 
 ## Notifications to Database
 
-### How Notifications Are Saved
+### Overview
 
-**Flow:**
+Notifications are **not sent automatically by CI**. There are two scripts that can send deployment notifications:
+
+1. **`notify-deployment.js`** (`npm run notify-deployment`) — Standalone script, run manually after deployment. Reads version from `package.json`, extracts changelog info, and sends a detailed notification.
+
+2. **`auto-version.js`** (`npm run auto-version`) — All-in-one script that bumps version, updates changelog, runs quality gates, commits, pushes, and sends notification. Sends both success and failure notifications.
+
+:::note
+Neither script is called from GitHub Actions CI. They must be run manually (or wired into a custom workflow). If the notification token is not configured, both scripts gracefully skip the notification.
+:::
+
+### Notification Flow
+
 ```
-GitHub Actions → Notification Payload → Ingest Endpoint → notification_events table
+Script (manual) → Notification Payload → Ingest Endpoint → notification_events table
 ```
 
-### Notification Payload Structure
+### Notification Payload Structure (notify-deployment.js)
 
 ```json
 {
   "source": "release:pipeline",
-  "title": "Deployment completed successfully",
-  "message": "Deployment to production completed successfully.\n\nVersion: 3.40.0\nCommit: a1b2c3d",
+  "title": "New analytics dashboard",
+  "message": "Deployment to production completed successfully.\n\n**Version:** v8.2.2\n**Commit Type:** ✨ Feature\n**Commit:** a1b2c3d\n**Changes:**\n\n**Added:**\n- New analytics dashboard",
   "category": "deployment",
-  "severity": "info",
   "status": "active",
-  "tags": ["deployment", "production", "success"],
-  "version": "3.40.0",
+  "tags": ["deployment", "production", "success", "feat"],
+  "version": "8.2.2",
+  "release": {
+    "version": "8.2.2",
+    "environment": "production",
+    "status": "success",
+    "summary": "New analytics dashboard",
+    "deployedBy": "developer",
+    "deploymentUrl": "https://sjrslms.in",
+    "commitType": "feat",
+    "commitHash": "a1b2c3d",
+    "deployedAt": "2026-07-29T..."
+  },
   "metadata": {
-    "deployment": {
-      "version": "3.40.0",
-      "environment": "production",
-      "status": "success",
-      "deploymentUrl": "https://your-api-domain.com",
-      "commitSha": "a1b2c3d...",
-      "githubRunId": "123456789",
-      "githubRunUrl": "https://github.com/.../actions/runs/123456789"
-    }
+    "pipelineStatus": "success",
+    "pipelineStage": "completed",
+    "githubRunId": "123456789",
+    "githubRunUrl": "https://github.com/PC-Mender/sjrslms/actions/runs/123456789",
+    "changelog": { "date": "2026-07-29", "sections": { ... } },
+    "commit": { "hash": "a1b2c3d", "subject": "feat: add analytics", ... }
+  }
+}
+```
+
+### Notification Payload Structure (auto-version.js)
+
+The `auto-version.js` script uses a slightly different payload structure:
+
+```json
+{
+  "source": "release:pipeline",
+  "title": "Added – New analytics dashboard",
+  "message": "Deployment to production completed successfully.\n\nChanges:\n- ✅ New analytics dashboard",
+  "category": "deployment",
+  "tags": ["deployment", "production", "success"],
+  "version": "8.2.2",
+  "release": {
+    "version": "8.2.2",
+    "environment": "production",
+    "status": "success",
+    "summary": "New analytics dashboard",
+    "deployedBy": "developer",
+    "deploymentUrl": "https://sjrslms.in",
+    "changelogUrl": "https://github.com/PC-Mender/sjrslms/releases/tag/v8.2.2",
+    "commits": [{ "id": "a1b2c3d...", "message": "feat: add analytics", ... }]
+  },
+  "metadata": {
+    "commitMessage": "feat: add analytics dashboard",
+    "commitType": "feat",
+    "qualityGatesStatus": "passed",
+    "pipelineStatus": "success",
+    "pipelineStage": "completed",
+    "releaseNotesUrl": "https://github.com/PC-Mender/sjrslms/releases/tag/v8.2.2",
+    "changelogEntry": { "heading": "Added", "emoji": "✅", "cleanMessage": "New analytics dashboard", ... }
   }
 }
 ```
@@ -186,18 +317,18 @@ GitHub Actions → Notification Payload → Ingest Endpoint → notification_eve
 
 The notification is saved to the `notification_events` table with:
 
-- **title**: Deployment status
-- **message**: Detailed deployment info
+- **title**: Summary of changes (from changelog or commit subject)
+- **message**: Detailed deployment info with version, commit type, changelog sections
 - **category**: `deployment`
-- **severity**: `info` (success) or `warning` (failed)
-- **version**: Version number (e.g., "3.40.0")
-- **metadata**: Full deployment details (JSON)
-- **tags**: `["deployment", "production", "success"]`
+- **version**: Version number (e.g., "8.2.2")
+- **release**: Object with version, environment, status, deployer, URL, commit info
+- **metadata**: Full pipeline details including changelog and commit info (JSON)
+- **tags**: `["deployment", "production", "success", "<commitType>"]`
 - **status**: `active`
 
 ### Verification
 
-After deployment, you can verify the notification was saved:
+After sending a notification, you can verify it was saved:
 
 ```sql
 SELECT * FROM notification_events 
@@ -209,32 +340,62 @@ LIMIT 1;
 Or check via API:
 
 ```bash
-GET /api/notifications/events?category=deployment&limit=1
+GET /api/v1/notifications/events?category=deployment&limit=1
 ```
 
 ---
 
 ## Configuration
 
-### Required GitHub Secrets
+### Notification Token
 
-For notifications to work, configure:
+For notifications to work, set one of these environment variables (checked in order):
 
 ```bash
 NOTIFICATION_INGEST_TOKEN_RELEASE=your_token_here
 # OR
 NOTIFICATION_INGEST_TOKEN=your_token_here
+# OR
+RELEASE_NOTIFICATION_TOKEN=your_token_here
+# OR
+NOTIFICATION_EVENTS_TOKEN=your_token_here
 ```
 
-**Where to set:**
-- GitHub → Repository → Settings → Secrets and variables → Actions
+If running locally, set these in `.env`. If running in CI, set in GitHub → Repository → Settings → Secrets and variables → Actions.
+
+:::note
+If no token is configured, both `notify-deployment.js` and `auto-version.js` will skip the notification gracefully — the deployment/release is not affected.
+:::
 
 ### Ingest Endpoint
 
-Default endpoint (can be overridden):
+The notification endpoint defaults to:
+- **`notify-deployment.js`**: `https://sjrslms.in/api/v1/notifications/events/ingest`
+- **`auto-version.js`**: `https://sjrslms.in/api/v1/notifications/events/ingest`
+
+Can be overridden via environment variables (checked in order):
+
 ```bash
-NOTIFICATION_INGEST_ENDPOINT=https://your-api-domain.com/api/notifications/events/ingest
+NOTIFICATION_INGEST_ENDPOINT=https://sjrslms.in/api/v1/notifications/events/ingest
+# OR
+RELEASE_NOTIFICATION_ENDPOINT=...
+# OR
+NOTIFICATION_EVENTS_ENDPOINT=...
 ```
+
+The `auto-version.js` script also supports base-URL env vars (`NOTIFICATION_INGEST_BASE_URL`, `API_BASE_URL`, `VITE_API_BASE_URL`, `FRONTEND_URL`) and automatically appends `/api/v1/notifications/events/ingest`.
+
+### Versioning Tooling
+
+The sjrslms app uses a **custom `version-prepare.js`** script (not `standard-version`). Key differences:
+
+- Custom commit classification logic (not driven by `.versionrc`)
+- Groups commits into 4 sections: Added, Fixed, Changed, Technical
+- Supports `--skip.tag`, `--skip.commit` flags (used by CI)
+- Runs quality gates locally before pushing (in local mode)
+- Creates `[skip ci]` commits to prevent CI from re-triggering
+
+The `.versionrc` file exists but is used by the `commit-and-tag-version` package (for the docs site release workflow), not by the sjrslms app's versioning.
 
 ---
 
@@ -242,22 +403,28 @@ NOTIFICATION_INGEST_ENDPOINT=https://your-api-domain.com/api/notifications/event
 
 ### Before Running `npm run version:prepare`
 
-- [ ] All changes committed
-- [ ] Commit messages follow conventional commits format
+- [ ] All changes committed using conventional commit format (`feat:`, `fix:`, `chore:`, etc.)
 - [ ] No uncommitted changes (or they'll be included in version bump)
+- [ ] On `main` branch (release flow is designed around main)
 
 ### After Version Preparation
 
 - [ ] Version in `package.json` matches git tag
-- [ ] Git tag exists: `git tag | grep v3.40.0`
+- [ ] Git tag exists: `git tag | grep v8.2.2`
 - [ ] Tag pushed to GitHub: Check GitHub tags page
+- [ ] Quality gates passed locally
 
-### After Deployment
+### After CI Release (Path 2)
 
+- [ ] GitHub Actions CI completed successfully
 - [ ] GitHub Release created: Check releases page
 - [ ] Release version matches package.json version
+
+### After Manual Deployment
+
+- [ ] Deployed successfully: `npm run deploy:production`
+- [ ] (Optional) Notification sent: `npm run notify-deployment`
 - [ ] Notification saved to database: Check notification_events table
-- [ ] Deployment successful: Check GitHub Actions logs
 
 ---
 
@@ -276,26 +443,35 @@ node -p "require('./package.json').version"
 git tag | tail -5
 
 # If mismatch, fix package.json and recreate tag
-npm version 3.40.0 --no-git-tag-version
-git tag -d v3.40.0
-git tag v3.40.0
-git push origin v3.40.0 --force
+npm version 8.2.2 --no-git-tag-version
+git tag -d v8.2.2
+git tag v8.2.2
+git push origin v8.2.2 --force
 ```
+
+### No Version Bump on CI
+
+**Issue**: CI `release` job runs but doesn't create a new version
+
+**Check**:
+1. Were there conventional commits (`feat:`, `fix:`, etc.) since the last tag?
+2. Were all commits `chore(release):` or `[skip ci]` (these are skipped)?
+3. Check CI logs for "Version unchanged" message
 
 ### Notification Not Saved
 
 **Issue**: Notification not appearing in database
 
 **Check**:
-1. Token configured in GitHub Secrets?
+1. Token configured? (`NOTIFICATION_INGEST_TOKEN_RELEASE` or `NOTIFICATION_INGEST_TOKEN`)
 2. Ingest endpoint accessible?
-3. Check GitHub Actions logs for notification step
-4. Verify HTTP status code (should be 201)
+3. Script output shows "skipping database notification" (token not set)
+4. Verify HTTP status code (should be 200 or 201)
 
 **Debug**:
 ```bash
 # Check notification endpoint
-curl -X POST https://your-api-domain.com/api/notifications/events/ingest \
+curl -X POST https://sjrslms.in/api/v1/notifications/events/ingest \
   -H "Content-Type: application/json" \
   -H "x-notification-ingest-token: YOUR_TOKEN" \
   -d '{"source":"release:pipeline","title":"Test","message":"Test","category":"deployment"}'
@@ -307,9 +483,10 @@ curl -X POST https://your-api-domain.com/api/notifications/events/ingest \
 
 **Check**:
 1. Tag was pushed? `git ls-remote --tags origin`
-2. GitHub Actions workflow completed successfully?
-3. Check workflow logs for release job
-4. Verify tag format: `v3.40.0` (not `3.40.0`)
+2. GitHub Actions `release` job completed successfully?
+3. Check workflow logs for `github-release` job
+4. Verify tag format: `v8.2.2` (not `8.2.2`)
+5. The `github-release` job only runs if the `release` job outputs `released=true`
 
 ---
 
@@ -317,10 +494,10 @@ curl -X POST https://your-api-domain.com/api/notifications/events/ingest \
 
 - **[Deployment Quick Reference](/deployment/quick-reference)** - Quick reference guide
 - **[Deployment Flow Explained](/deployment/deployment-flow-explained)** - How deployment works
-- **[Deployment Flow Explained](/deployment/deployment-flow-explained)** - Deployment flow details
+- **[Deployment and Notification Process](/deployment/deployment-and-notification-process)** - Detailed notification system docs
 
 ---
 
-**Last Updated**: January 2025  
+**Last Updated**: July 2026
 **Status**: Active
 

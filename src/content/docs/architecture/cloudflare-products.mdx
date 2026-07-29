@@ -144,21 +144,8 @@ database_id = "your-d1-database-id"
 ```
 
 ### Database Schema
-```sql
--- Core tables
-CREATE TABLE library_users (
-  id TEXT PRIMARY KEY,
-  email TEXT UNIQUE NOT NULL,
-  first_name TEXT NOT NULL,
-  last_name TEXT NOT NULL,
-  user_type TEXT NOT NULL,
-  status TEXT DEFAULT 'active',
-  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
-);
 
--- Additional tables for books, loans, etc.
-```
+The database contains tables for users, books, loans, reservations, and more. See `sql/d1-schema.sql` in the application repository for the full schema.
 
 ### Benefits
 - **Edge Database**: Runs at the edge for low latency

@@ -14,41 +14,51 @@ The system is built on a **Serverless Architecture** using the Cloudflare stack:
 * **Backend**: Cloudflare Workers (Edge Compute)
 * **Database**: Cloudflare D1 (SQLite at the Edge)
 * **Storage**: Cloudflare R2 (Object Storage)
+* **Caching**: Cloudflare KV (Key-Value store for sessions and caching)
+* **AI**: Cloudflare Workers AI (release notes generation)
+* **Analytics**: Cloudflare Analytics Engine (production monitoring)
 * **Auth**: Custom JWT-based authentication with HttpOnly cookies
 
 ## Development Setup
 
 ### Prerequisites
-* Node.js (Latest LTS)
-* npm or pnpm
+* Node.js (v22 or higher)
+* npm
 * Wrangler CLI (`npm install -g wrangler`)
 
 ### 1. Clone & Install
 ```bash
-git clone https://github.com/your-org/sjrs-lms.git
-cd sjrs-lms
+git clone https://github.com/PC-Mender/sjrslms.git
+cd sjrslms
 npm install
 ```
 
 ### 2. Environment Configuration
 Copy the example environment file:
 ```bash
-cp .env.example .env
+cp env.example .env
 ```
-Update the variables with your local or staging credentials.
+Update the variables with your local or staging credentials. See `env.example` for the full list of variables.
 
-### 3. Database Setup (Local)
-Initialize the local D1 database:
+### 3. Database Setup (Remote-first)
+Apply the consolidated D1 schema to the remote database:
 ```bash
-npm run db:migrate:local
-npm run db:seed:local
+wrangler d1 execute your-database-name --file=sql/d1-schema.sql
 ```
+The `sql/d1-schema.sql` file is a consolidated schema containing all current tables, indexes, and triggers. For new environments, this is the only file needed for initial setup.
+
+:::tip
+To run the Workers API locally:
+1. Copy `.dev.vars.example` to `.dev.vars` and set `JWT_SECRET` and other secrets.
+2. Run `npm run dev:api` (starts on :8787).
+3. Set `VITE_API_BASE_URL=http://localhost:8787` in your `.env`.
+:::
 
 ### 4. Run Development Server
 ```bash
 npm run dev
 ```
-The frontend will be available at `http://localhost:5173` (or similar).
+The frontend will be available at `http://localhost:3000`.
 
 ## Project Structure
 
@@ -56,11 +66,16 @@ The frontend will be available at `http://localhost:5173` (or similar).
 * `/functions`: Backend Cloudflare Workers API
 * `/sql`: Database schema and migrations
 * `/shared`: Shared types and utilities
+* `/scripts`: Build, versioning, and utility scripts
+* `/e2e`: End-to-end tests (Playwright)
+* `/public`: Static assets (logo, service worker)
 
 ## Testing
 
 * **Unit Tests**: `npm run test`
-* **Integration Tests**: `npm run test:integration`
+* **Watch Mode**: `npm run test:watch`
+* **Coverage**: `npm run test:coverage`
+* **E2E Tests**: `npm run test:e2e`
 
 ## Technical Documentation
 
@@ -69,6 +84,3 @@ For deep dives into specific modules, refer to the **Development** section in th
 * [Database Schema](/database/index)
 * [Security Architecture](/security/index)
 
-## Quick Setup Resources
-
-* **[Setup Guide](/getting-started/setup)**: Detailed installation and configuration instructions for development environments.

@@ -1,19 +1,152 @@
 ---
 title: Glossary & Terminology
+description: Definitions of common terms, roles, and concepts used in SJRS LMS.
 ---
 
-This document defines common terms and roles used within the SJRS Library Management System.
+This document defines common terms, roles, and concepts used within the SJRS Library Management System.
 
 ## Roles
 
-- **End User**: A standard user (Student or Professor) who borrows books.
-- **Librarian**: A staff member who manages day-to-day library operations (loans, returns).
-- **Administrator**: A user with elevated privileges to manage users and system settings.
-- **Superuser**: The highest level of access, capable of full system configuration and role management.
+Roles are hierarchical — each role inherits the permissions of all roles below it. The hierarchy is database-driven, with the following default levels:
 
-## System Terms
+- **Superuser** (Level 6): Full system access and control. Can manage all roles, permissions, and system settings. The only role that can assign administrative roles.
+- **Admin** (Level 5): Administrative access to all features except role management. Can manage users, institution settings, and system configuration.
+- **Librarian** (Level 4): Library management and book operations. Manages day-to-day library operations including loans, returns, catalog, and reservations.
+- **Dean** (Level 3): Administrative oversight and management. Has access to analytics, reports, and member management.
+- **Professor** (Level 2): Faculty member with extended borrowing privileges (default limit: 10 books). Can access academic tools, plagiarism checker, and citation generator.
+- **Student** (Level 1): Standard student access with borrowing limits (default limit: 5 books, varies by year of study). Can borrow books, place reservations, write reviews, and use academic tools.
+- **Guest** (Level 0): Limited guest access for temporary users. Has restricted borrowing privileges.
 
-- **D1**: Cloudflare's serverless SQLite database.
-- **R2**: Cloudflare's object storage (for book covers, PDFs).
-- **Worker**: Serverless function that handles API requests.
-- **JWT**: JSON Web Token, used for secure authentication.
+### User Types
+
+User types are distinct from roles and determine borrowing limits and profile fields:
+
+- **Student**: Academic student with year-based borrowing limits. Requires year of study during registration.
+- **Professor**: Academic faculty member. Requires department/stream during registration.
+- **Guest**: Temporary library user with limited access.
+
+## Authentication & Security
+
+- **JWT (JSON Web Token)**: Token used for secure, stateless authentication. Issued on login and validated on every API request.
+- **MFA (Multi-Factor Authentication)**: Optional second-layer security requiring a verification code in addition to password. Supports TOTP (authenticator apps), SMS, email, and WebAuthn factors.
+- **WebAuthn**: Passwordless authentication standard using platform biometrics or hardware security keys. Registered as an MFA factor or standalone credential.
+- **Turnstile**: Cloudflare's bot protection service used on registration, login, and password reset forms to prevent automated attacks.
+- **CSRF (Cross-Site Request Forgery) Token**: Signed token (nonce.expiry.signature format) required on all mutating API requests (POST, PUT, DELETE) to prevent cross-site forgery attacks.
+- **Session**: Authenticated user session tracked via JWT. Sessions can be revoked on logout or by administrators.
+- **Trusted Device**: A device that has been remembered for MFA bypass, reducing friction for repeat logins from known devices.
+- **Onboarding Status**: Tracks a user's registration progress through stages: `pending_email_confirmation` → `profile_incomplete` → `pending_approval` → `active`.
+
+## Library Operations (Transactions)
+
+- **Loan (Borrow Record)**: A record of a user borrowing a book copy. Tracks borrow date, due date, return date, renewal count, and status. Statuses: `borrowed`, `overdue`, `returned`, `pending`, `approved`, `rejected`, `cancelled`.
+- **Borrow Limit**: Maximum number of books a user can borrow simultaneously, determined by user type. Defaults: Student = 5, Professor = 10, Guest = limited. Configurable per user type via Borrow Limits settings.
+- **Renewal**: Extending the due date of an active loan. Users request renewals; librarians/admins can approve or reject. The server calculates the new due date based on `loan_period_days` to prevent manipulation.
+- **Return**: Marking a borrowed book as returned. Updates the loan status to `returned` and records the return timestamp.
+- **Overdue**: A loan that has passed its due date without being returned. Overdue loans trigger penalty calculations and notification alerts.
+- **Penalty**: Fine calculated for overdue books based on the number of days overdue and a configurable penalty rate. Tracked per loan and visible to both users and administrators.
+- **Reservation**: A user's request to reserve a book that is currently unavailable (borrowed by someone else). Reservations have statuses: `pending`, `fulfilled`, `cancelled`, `expired`.
+- **Order**: A request to procure a book that is not in the library catalog. Users submit orders; librarians/admins approve or reject them. Order status triggers notifications to the requester.
+- **Wishlist**: A user-curated list of desired books. Users can create, edit, and manage multiple wishlist items. Distinct from orders (procurement requests) and reservations (hold requests for existing books).
+- **Book Copy**: A physical instance of a book. A single book title can have multiple copies, each with a unique copy ID, condition, and status (available, borrowed, lost, damaged, etc.).
+- **Borrow History**: A historical record of all loans for a user, including returned and cancelled loans. Used for analytics and reporting.
+
+## Catalog & Resources
+
+- **Catalog**: The browsable collection of all library materials (books, journals, magazines, digital resources). Filterable by section, resource type, subcategory, and availability.
+- **Book**: A title in the library catalog. Has metadata including title, subtitle, author(s), ISBN, publisher, publication year, section, subcategory, and resource type.
+- **Author**: Creator of a book. An author can be linked to multiple books, and a book can have multiple authors.
+- **Publication**: Publisher entity linked to books and journals. Used for catalog organization and filtering.
+- **Section**: Top-level classification for library resources (e.g., Books, Journals, Magazines, Reference Books).
+- **Subcategory**: Sub-classification within a section (e.g., within Books: Fiction, Science, History). Used for catalog browsing and filtering.
+- **Resource Type**: Classification of resource format within a subcategory (e.g., Physical Book, E-Book, Audio Book).
+- **Reference Book**: A special category of books that cannot be borrowed (in-library use only). Has its own sections and categories.
+- **Journal**: Academic periodical in the catalog. Has journal sections and individual articles. Journals are not borrowable.
+- **Journal Article**: Individual article within a journal. Searchable and browsable through the articles catalog.
+- **Magazine**: Periodical publication in the catalog. Managed separately from journals.
+- **Book Review**: User-submitted review and rating for a book. Reviews are moderated by librarians/admins before publishing. Has statuses: `pending`, `approved`, `rejected`.
+- **Book View**: Analytics event recorded when a user views a book's details page. Used for popularity tracking and recommendations.
+- **Book Search**: Analytics event recorded when a user searches the catalog. Used for search analytics and optimization.
+- **Location**: Physical storage location within the library. Books are assigned to locations for inventory management.
+- **Shelf Code**: Specific shelf identifier within a location. Used for physical organization and retrieval.
+- **Key Tag**: Physical key tag identifier for book copies. Used for physical inventory tracking.
+
+## Digital Resources
+
+- **Digital Resource**: Electronic resource stored in R2 (e.g., PDFs, e-books, audio files). Users can read digital resources online through the built-in reader.
+- **Resource Reader**: In-browser reader for digital resources. Supports PDF viewing and text-based resources without requiring download.
+- **Digital Book Read**: Analytics event recorded when a user reads a digital book. Used for digital resource usage tracking.
+
+## Academic Tools
+
+- **Plagiarism Checker**: Built-in tool that checks submitted text for plagiarism. Returns a similarity percentage, risk level (low/medium/high/critical), and matched sources. Supports sensitivity levels: `low`, `standard`, `high`, `strict`.
+- **Citation Generator**: Tool that generates citations in standard formats (APA, MLA, Chicago, etc.) from book metadata or manual input.
+- **Notes**: Personal notes that users can attach to books or resources. Private to each user.
+- **Bookmarks**: Saved bookmarks for books or catalog items. Allows users to quickly revisit items without searching.
+- **Academic Reports**: Reports aggregating library usage data by academic year and semester. Includes borrowing statistics, popular books, and user activity.
+- **Reports**: General reporting dashboard with circulation stats, inventory reports, and user activity summaries.
+
+## Notifications & Communication
+
+- **Notification**: In-app or email notification sent to users. Types include loan notifications (borrow, renewal, return reminder, overdue), order status updates, and system announcements.
+- **Announcement**: Broadcast message from administrators to all users or specific roles. Published through the announcements system.
+- **Notification Preferences**: User-configurable settings controlling which notification types they receive and via which channels (in-app, email).
+- **System Notifications**: Administrative notifications sent by the system or administrators. Managed through the notification center.
+- **App Notifications Log**: Audit log of all in-app notifications delivered. Superuser-only feature for troubleshooting and monitoring.
+- **Mailjet**: Transactional email service used for sending authentication emails, loan notifications, and system communications.
+
+## Gamification
+
+- **Badge**: Achievement award given to users for milestones (e.g., "First Book Borrowed", "Top Reviewer"). Has a catalog of available badges, each with icon, color, and level.
+- **Badge Catalog**: The full set of badges available in the system. Administrators can assign badges to users.
+- **User Badge**: A badge earned or assigned to a specific user. Tracks award date, reason, and expiration. Can be revoked by administrators.
+
+## Dashboard & Analytics
+
+- **Dashboard**: The unified landing page for all authenticated users. A single `/dashboard` route renders role-specific widgets based on the user's role. Each role sees a customized view with relevant stats, quick actions, and widgets.
+- **Dashboard Config**: Database-driven, per-role configuration that defines which widgets appear on each role's dashboard. Superusers and admins can customize layouts, stats, and quick actions for any role.
+- **Widget**: Individual dashboard component (e.g., StatCard, QuickActions, recent activity feed). Widgets are defined in a registry and configured per role via dashboard configs.
+- **Analytics**: Dashboard section with visualizations of library usage data, including book views, searches, digital reads, and circulation trends.
+- **System Logs**: Audit trail of system events and user actions. Includes action logs (CRUD operations) and security event logs. Accessible to admins and superusers.
+- **Action Log**: Database record of a specific user action (create, update, delete) on a resource. Used for audit trails and accountability.
+- **Permission Audit Log**: Specialized log tracking changes to roles and permissions, including who made the change and what was modified.
+
+## Permissions & Access Control
+
+- **Permission**: Granular access right for a specific resource and action (e.g., `books:read`, `users:update`). Permissions are database-driven and assigned to roles.
+- **Role Hierarchy**: The ordered ranking of roles from Superuser (6) down to Guest (0). Higher roles inherit all permissions of lower roles.
+- **Assignable Roles**: The subset of roles that a given user can assign to others. Only superusers can assign administrative roles (admin, librarian, dean).
+- **Administrative Roles**: Roles with management capabilities — Superuser, Admin, Librarian, and Dean. These roles have access to the admin dashboard and management features.
+
+## Forms
+
+- **PAPM (Personal Allowance Plan Management)**: Administrative form for tracking personal allowance claims. Includes claimant name, affiliation, drawees, amount, period, and grand total. Users submit forms; admins can manage all submissions.
+- **TADA (Travel and Daily Allowance)**: Administrative form for tracking travel allowance and dearness allowance claims. Includes journey details, local conveyance, travel allowance, dearness allowance, and net amount. Users submit forms; admins can manage all submissions.
+
+## System & Infrastructure
+
+- **D1**: Cloudflare's serverless SQLite database. The primary data store for all application data including users, books, loans, and configurations.
+- **R2**: Cloudflare's object storage service. Stores book covers, digital resource files (PDFs, e-books), and user avatars.
+- **KV (Cloudflare KV)**: Cloudflare's key-value store. Used for caching and session management to improve API response times.
+- **Worker**: Cloudflare Workers serverless function that handles all API requests. The backend runs entirely on the Workers runtime.
+- **Wrangler**: Cloudflare's CLI tool for developing, testing, and deploying Workers. Used for local development (`wrangler dev`) and deployment.
+- **Migration**: Database schema change applied to D1. Migrations are versioned SQL files executed in order. Managed through the in-app migrations dashboard or Wrangler.
+- **Zod**: TypeScript-first schema validation library used for all API request validation. Schemas define expected input shapes and the validation engine auto-detects and applies them.
+- **Sanitization**: Post-validation security step that strips potentially dangerous content (SQL injection, XSS) from user input. Applied in security middleware after Zod validation passes.
+- **Rate Limiting**: API protection mechanism that limits request frequency per user/IP. Different profiles apply to different endpoint types (public, authenticated, session validation).
+- **Impersonation**: Feature allowing superusers to temporarily log in as another user for debugging or support purposes. All actions during impersonation are logged.
+
+## User Management
+
+- **Profile**: User's personal information page. Includes name, email, phone, avatar, and role-specific fields (year of study for students, department for professors).
+- **Profile Completion**: Required step after initial registration where users fill in role-specific profile details. Users with incomplete profiles are redirected to the completion flow.
+- **User Status**: Account state: `active`, `inactive`, `pending`, `suspended`, `banned`, `pending_email_confirmation`, `profile_incomplete`, `pending_approval`, `complete`.
+- **Auto-Suspension**: Automated account suspension triggered by excessive overdue books or failed login attempts. Configurable by administrators.
+- **Institution Settings**: Admin-configurable settings including library name, contact info, semester dates, and UPI payment configuration.
+- **Affiliation**: Organizational affiliation (e.g., diocese, congregation) linked to user profiles. Used for institutional reporting and user organization.
+- **User Types Management**: Admin feature for creating and managing custom user types beyond the default Student/Professor/Guest types. The database is the single source of truth for valid user types.
+
+## Payments
+
+- **Order Priority Policy**: Superuser-configurable rules that determine the priority order for processing book procurement orders. Defines which orders get fulfilled first based on criteria like user role, request date, or book category.
+- **UPI Payments**: Payment integration for processing fines, fees, or purchases through UPI (Unified Payments Interface). Configured through institution settings.
+- **Receipt**: Generated receipt for payments processed through the system. Includes transaction details, amount, and timestamp.

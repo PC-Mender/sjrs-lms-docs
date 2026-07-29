@@ -22,8 +22,8 @@ This document reviews 13 identified security loopholes in the authentication and
 **Status**:  **CONFIRMED FIXED**
 
 **Evidence**:
-- `functions/api/auth/registration.ts:71` - Email is normalized before rate limiting
-- `functions/api/auth/registration.ts:101` - Rate limit uses `normalizedEmail`
+- `functions/api/auth/registration.ts` - Email is normalized before rate limiting
+- `functions/api/auth/registration.ts` - Rate limit uses `normalizedEmail`
 
 **Action**: None required.
 
@@ -34,7 +34,7 @@ This document reviews 13 identified security loopholes in the authentication and
 **Status**:  **CONFIRMED FIXED**
 
 **Evidence**:
-- `functions/api/auth/registration.ts:166-186` - UserType is canonicalized and validated
+- `functions/api/auth/registration.ts` - UserType is canonicalized and validated
 - Only allows: `Student`, `Professor`, `Guest`
 
 **Action**: None required.
@@ -46,7 +46,7 @@ This document reviews 13 identified security loopholes in the authentication and
 **Status**:  **CONFIRMED FIXED**
 
 **Evidence**:
-- `functions/middleware/security/turnstile-validation.ts:36-48` - Fail-closed in production, fail-open only in development
+- `functions/middleware/security/turnstile-validation.ts` - Fail-closed in production, fail-open only in development
 - Uses centralized logger
 
 **Action**: None required.
@@ -58,7 +58,7 @@ This document reviews 13 identified security loopholes in the authentication and
 **Status**:  **FIXED**
 
 **Previous Issue**: 
-- `functions/middleware/auth/password/hashing.ts:46` - Fallback to a weaker SHA-256-based hashing method if PBKDF2 fails
+- `functions/middleware/auth/password/hashing.ts` - Fallback to a weaker SHA-256-based hashing method if PBKDF2 fails
 
 **Fix Applied**:
 - Removed fallback to weaker hashing
@@ -103,9 +103,9 @@ This document reviews 13 identified security loopholes in the authentication and
 **Status**:  **FIXED**
 
 **Fixes Applied**:
-1. Email is normalized before storage (`functions/api/auth/registration.ts:190`)
-2. Database unique constraint error handling added (`functions/middleware/auth/users/creation.ts:57-75`)
-3. Race condition handling in registration handler (`functions/api/auth/registration.ts:201-221`)
+1. Email is normalized before storage (`functions/api/auth/registration.ts`)
+2. Database unique constraint error handling added (`functions/middleware/auth/users/creation.ts`)
+3. Race condition handling in registration handler (`functions/api/auth/registration.ts`)
 4. Migration created for unique index (`sql/migrations/add-case-insensitive-email-unique-index.sql`)
 
 **Note**: SQLite doesn't support functional indexes directly, but the application layer:
@@ -122,7 +122,7 @@ This document reviews 13 identified security loopholes in the authentication and
 **Status**:  **CONFIRMED FIXED**
 
 **Evidence**:
-- `functions/api/auth/registration.ts:154-163` - Returns generic success message even if email exists
+- `functions/api/auth/registration.ts` - Returns generic success message even if email exists
 - Prevents account enumeration
 
 **Action**: None required.
@@ -134,7 +134,7 @@ This document reviews 13 identified security loopholes in the authentication and
 **Status**:  **FIXED**
 
 **Previous Issue**:
-- `functions/api/auth/session-management.ts:228` - `console.warn` used
+- `functions/api/auth/session-management.ts` - `console.warn` used
 
 **Fix Applied**:
 - Replaced `console.warn` with `createLogger(env).warn()`
@@ -149,7 +149,7 @@ This document reviews 13 identified security loopholes in the authentication and
 **Status**:  **FIXED**
 
 **Fixes Applied**:
-1. Added `isProduction(env)` and `isDevelopment(env)` helpers in `functions/lib/env.ts:60-74`
+1. Added `isProduction(env)` and `isDevelopment(env)` helpers in `functions/lib/env.ts`
 2. Updated `functions/middleware/security/turnstile-validation.ts` to use `isDevelopment(env)`
 3. Updated `functions/utilities/logging/logger.ts` to use standardized helpers
 
@@ -162,7 +162,7 @@ This document reviews 13 identified security loopholes in the authentication and
 **Status**:  **FIXED**
 
 **Fixes Applied**:
-- Updated rate limiting to use composite key: `${normalizedEmail}:${remoteip}` (`functions/api/auth/registration.ts:104`)
+- Updated rate limiting to use composite key: `${normalizedEmail}:${remoteip}` (`functions/api/auth/registration.ts`)
 - Prevents bypass via IP rotation or email variants
 - IP address extracted once and reused for both CAPTCHA and rate limiting
 
@@ -175,8 +175,8 @@ This document reviews 13 identified security loopholes in the authentication and
 **Status**:  **FIXED**
 
 **Fixes Applied**:
-1. Added unique constraint error detection in `createUser()` (`functions/middleware/auth/users/creation.ts:57-75`)
-2. Added race condition handling in registration handler (`functions/api/auth/registration.ts:201-221`)
+1. Added unique constraint error detection in `createUser()` (`functions/middleware/auth/users/creation.ts`)
+2. Added race condition handling in registration handler (`functions/api/auth/registration.ts`)
 3. Returns generic success message on constraint violation to prevent enumeration
 4. Created migration for unique index (`sql/migrations/add-case-insensitive-email-unique-index.sql`)
 
@@ -189,7 +189,7 @@ This document reviews 13 identified security loopholes in the authentication and
 **Status**:  **ALREADY APPLIED**
 
 **Evidence**:
-- `functions/api/auth/registration.ts:87` - `validateEmailDomain()` is called
+- `functions/api/auth/registration.ts` - `validateEmailDomain()` is called
 - Blocks disposable email domains
 
 **Action**: None required.

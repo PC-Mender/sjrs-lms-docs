@@ -5,12 +5,12 @@ title: "Setup"
 
 ## Prerequisites
 
-- Node.js (v18 or higher)
-- npm or yarn
+- Node.js (v22 or higher)
+- npm
 - Cloudflare account
-- Wrangler CLI
+- Wrangler CLI (`npm install -g wrangler`)
 
-**Note**: This is a **Single Page Application (SPA)** built with React. All routing is handled client-side by React Router.
+**Note**: This is a **Single Page Application (SPA)** built with React, deployed as a unified Cloudflare Workers app with Static Assets. All routing is handled client-side by React Router.
 
 ## Quick Start
 
@@ -23,53 +23,86 @@ npm install
 
 ### 2. Cloudflare Configuration
 
-**Important**: Never commit your real `wrangler.toml` file to version control!
+The `wrangler.toml` file is committed to the repository and contains non-sensitive configuration (routes, D1 bindings, assets config). **Secrets are managed separately** via the Cloudflare Dashboard or `wrangler secret put`.
 
-1. Copy `wrangler.toml.example` to `wrangler.toml`
-2. Update with your actual Cloudflare credentials:
+1. Open `wrangler.toml` and update the `account_id` and `database_id` with your actual Cloudflare values
+2. Configure secrets via Wrangler CLI:
 
-```toml
-account_id = "your-actual-cloudflare-account-id"
-database_id = "your-actual-database-id"
-# JWT (choose single secret or rotation)
-# Single secret
-JWT_SECRET = "your-actual-jwt-secret"
-# Rotation-ready (recommended)
-# JWT_KEYS_JSON = "{\"key-2025-01\":\"REPLACE_WITH_SECRET_1\",\"key-2025-07\":\"REPLACE_WITH_SECRET_2\"}"
-# JWT_DEFAULT_KID = "key-2025-01"
-# JWT_ISS = "your-jwt-issuer"
-# JWT_AUD = "https://your-api-domain.com"
+```bash
+wrangler secret put JWT_SECRET
+wrangler secret put JWT_ISS
+wrangler secret put JWT_AUD
+wrangler secret put MAILJET_API_KEY
+wrangler secret put MAILJET_API_SECRET
+wrangler secret put TURNSTILE_SECRET_KEY
+# Optional: dedicated CSRF secret (falls back to JWT_SECRET if not set)
+wrangler secret put CSRF_SECRET
 ```
 
 ### 3. Environment Variables
 
-Create a `.env` file in the root directory:
+Copy the example environment file and update with your values:
 
-```env
-VITE_API_BASE_URL=https://your-worker.workers.dev
-NODE_ENV=development
+```bash
+cp env.example .env
 ```
 
-Remote-first API: the frontend points to the remote Worker even during local development. No local API server is required. The project now uses a unified Cloudflare Workers deployment with Static Assets.
+Key variables (see `env.example` for the full list):
 
-### 4. Database Setup (Remote-first)
+```env
+VITE_API_BASE_URL=http://localhost:8787
+NODE_ENV=development
+FRONTEND_URL=http://localhost:3000
+```
+
+:::tip
+**Option A (recommended)**: Run the Workers API locally with `npm run dev:api` (starts wrangler dev on :8787), then set `VITE_API_BASE_URL=http://localhost:8787`.
+
+For Option A, you also need local Cloudflare Workers secrets. Copy the example file and set at least `JWT_SECRET`:
+
+```bash
+cp .dev.vars.example .dev.vars
+```
+
+Edit `.dev.vars` and set `JWT_SECRET` to a development secret (at least 32 characters). See `.dev.vars.example` for the full list of local dev variables.
+
+**Option B**: Use a deployed staging API — set `VITE_API_BASE_URL=https://your-staging-domain.com`. No local backend needed.
+:::
+
+### 4. Cloudflare Resources
+
+Create the required Cloudflare resources and update `wrangler.toml` with the returned IDs:
+
+```bash
+# D1 database
+wrangler d1 create your-database-name
+# Update database_id in wrangler.toml with the returned ID
+
+# R2 bucket for file uploads
+wrangler r2 bucket create your-assets-bucket
+wrangler r2 bucket create your-assets-bucket-dev  # preview/dev bucket
+
+# KV namespace for caching
+wrangler kv namespace create CACHE
+# Update the id in wrangler.toml [[kv_namespaces]] with the returned ID
+```
+
+### 5. Database Setup (Remote-first)
 
 Remote-first policy: use the remote D1 database even during local development.
 
+The `sql/d1-schema.sql` file is a consolidated schema that includes all applied migrations. Use it for initial setup:
+
 ```bash
-# Create D1 database (remote)
-wrangler d1 create your-database-name
-
-# Apply schema (remote)
+# Apply the consolidated schema (remote)
 wrangler d1 execute your-database-name --file=sql/d1-schema.sql
-
-# Seed basic permissions (remote)
-wrangler d1 execute your-database-name --file=sql/setup/basic-permissions.sql
 ```
+
+Check `sql/migrations/README.md` for any pending migrations that haven't been integrated into the main schema yet. Apply those individually if needed.
 
 Optional: If you explicitly need a local preview, you may append `--local` to the execute commands.
 
-### 5. Start Development
+### 6. Start Development
 
 ```bash
 npm run dev
@@ -79,25 +112,22 @@ Visit `http://localhost:3000` to see your application!
 
 ## Deployment
 
-### Unified Workers Deployment
-The project now uses a single Cloudflare Workers deployment with Static Assets for both frontend and backend.
+For detailed deployment instructions, see the **Deployment** section in the sidebar:
+- [Unified Workers Deployment](/deployment/unified-workers-deployment)
+- [Version & Release Management](/deployment/version-and-release-management)
+- [Quick Reference](/deployment/quick-reference)
 
-### Automatic Deployment with Versioning
-```bash
-npm run release
-```
-This command:
-- Automatically determines version bump based on commit messages
-- Updates CHANGELOG.md
-- Builds the project
-- Deploys to Cloudflare Workers
-- Creates git tags
+Quick commands for reference:
 
-### Manual Deployment
 ```bash
-npm run build
-wrangler deploy
+# Deploy to production
+npm run deploy:production
+
+# Deploy to staging
+npm run deploy:staging
 ```
+
+Both commands build the project (`tsc + vite build`) and then run `wrangler deploy`.
 
 ## Security Best Practices
 
@@ -109,12 +139,17 @@ wrangler deploy
 
 ## Files to Never Commit
 
-- `wrangler.toml` (contains real credentials)
 - `.env*` files
+- `.dev.vars` (local Cloudflare secrets)
 - `node_modules/`
 - Build artifacts (`dist/`, `build/`)
 - Log files
 - IDE-specific files
+- `.wrangler/` (local Wrangler cache)
+
+:::note
+`wrangler.toml` **is** committed to the repository — it contains only non-sensitive configuration. Secrets are managed via Cloudflare Dashboard or `wrangler secret put`.
+:::
 
 ## Troubleshooting
 

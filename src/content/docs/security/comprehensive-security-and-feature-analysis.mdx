@@ -145,7 +145,7 @@ This report provides a comprehensive analysis of the SJRS Library Management Sys
 ### 3. Permission System Bypass Risks
 
 #### 3.1 `allowIf` Bypass Mechanism  DOCUMENTED BUT RISKY
-- **Location:** `functions/middleware/permissions/assert-permission.ts:60-71`
+- **Location:** `functions/middleware/permissions/assert-permission.ts`
 - **Issue:** `allowIf` callback can bypass all permission checks
 - **Current State:** Well-documented with warnings, but still risky if misused
 - **Risk:** Developers could accidentally use `allowIf: () => true` to bypass security
@@ -188,7 +188,7 @@ if (allowIf) {
 ### 4. Input Validation Gaps
 
 #### 4.1 File Upload Validation  BASIC ONLY
-- **Location:** `functions/api/upload/base/upload-utils.ts:65-78`
+- **Location:** `functions/api/upload/base/upload-utils.ts`
 - **Current:** Validates file size (10MB) and MIME type
 - **Missing:**
   - File content validation (magic bytes check)
@@ -238,7 +238,7 @@ export function validateFileContent(file: File): Promise<{ valid: boolean; error
 ### 5. Session Management Issues
 
 #### 5.1 Session Optional Authentication  DESIGN DECISION
-- **Location:** `functions/middleware/auth/core/index.ts:61-100`
+- **Location:** `functions/middleware/auth/core/index.ts`
 - **Issue:** Sessions are optional - if no session exists but token is valid, authentication succeeds
 - **Risk:** Token-only authentication without session tracking
 - **Impact:** Reduced ability to track active sessions and enforce session limits
