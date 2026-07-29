@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [1.8.2](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.8.1...v1.8.2) (2026-07-29)
+
+### CI
+
+* hardcode PC-Mender as git author to prevent old username in commits ([a2feeb5](https://github.com/PC-Mender/sjrs-lms-docs/commit/a2feeb50fb6d700cd5f41f50a9510e107bd3b97a))
 ## [1.8.1](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.8.0...v1.8.1) (2026-07-29)
 ## 1.8.0 (2026-07-29)
 
