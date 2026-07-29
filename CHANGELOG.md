@@ -2,6 +2,116 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## 1.8.0 (2026-07-29)
+
+### Features
+
+* **assets:** add favicon and web app manifest ([d55f211](https://github.com/PC-Mender/sjrs-lms-docs/commit/d55f211303d1a05ac1eb19d6b6dff29340c5f889))
+* Begin with standard versioning ([fe66eab](https://github.com/PC-Mender/sjrs-lms-docs/commit/fe66eab88681312daeb486a6c49a4af222df509e))
+* **docs:** add comprehensive user registration documentation ([587cb08](https://github.com/PC-Mender/sjrs-lms-docs/commit/587cb083c0e4466ff456aedbe83d47f88c5c7d95))
+* **docs:** add comprehensive v6.x documentation for enhanced user dashboard and system notifications ([7449265](https://github.com/PC-Mender/sjrs-lms-docs/commit/744926515d8448544f911b5bbb0f84f0d2052914))
+* **feedback:** add page feedback widget and Cloudflare Worker backend ([a65420d](https://github.com/PC-Mender/sjrs-lms-docs/commit/a65420df689d4bbcc67178ee49ba99e96f62655a))
+* **security:** add security headers for static docs site and feedback worker ([f2ee6d1](https://github.com/PC-Mender/sjrs-lms-docs/commit/f2ee6d1f9812a81811cb377a14522e450e19259e))
+
+### Bug Fixes
+
+* add wasm-unsafe-eval to CSP script-src for Pagefind WASM ([ff6a878](https://github.com/PC-Mender/sjrs-lms-docs/commit/ff6a878024b334b83cc6bdf501cdce2c5eb6cd68))
+* Broken links fixed ([4d90d1c](https://github.com/PC-Mender/sjrs-lms-docs/commit/4d90d1cf18c7f1eea32e37caad95df07000b288e))
+* **deploy:** add root wrangler.toml for static assets deployment ([6e2f4c5](https://github.com/PC-Mender/sjrs-lms-docs/commit/6e2f4c5caa045effb53aa03fdc13001073286ae5))
+* **deployment:** configure custom domain, 404 handling, and SEO for docs site ([f359615](https://github.com/PC-Mender/sjrs-lms-docs/commit/f359615c14df3d833d5d64476fd6cd0ed6826bde))
+* **deps:** resolve remaining npm audit alerts ([001871e](https://github.com/PC-Mender/sjrs-lms-docs/commit/001871ee8e9c0549e5f22209d741090cb1265952))
+* **deps:** resolve Vite security vulnerabilities (CVE-2025-XXXX) ([1cbb6d1](https://github.com/PC-Mender/sjrs-lms-docs/commit/1cbb6d16390603bf2b0b1cdc8a8b1381600a4e30))
+* **deps:** upgrade vulnerable packages to secure versions ([c648271](https://github.com/PC-Mender/sjrs-lms-docs/commit/c648271a21d07521117f26c8a5f0f1524d80f7d4)), references [#46](https://github.com/PC-Mender/sjrs-lms-docs/issues/46) [#43](https://github.com/PC-Mender/sjrs-lms-docs/issues/43) [#48](https://github.com/PC-Mender/sjrs-lms-docs/issues/48) [#42](https://github.com/PC-Mender/sjrs-lms-docs/issues/42) [#49](https://github.com/PC-Mender/sjrs-lms-docs/issues/49) [#44](https://github.com/PC-Mender/sjrs-lms-docs/issues/44) [#50](https://github.com/PC-Mender/sjrs-lms-docs/issues/50) [#45](https://github.com/PC-Mender/sjrs-lms-docs/issues/45)
+* **deps:** upgrade vulnerable transitive deps ([1947a3b](https://github.com/PC-Mender/sjrs-lms-docs/commit/1947a3ba8ddc528554d1b07b71ff543e9601eade))
+* **docs:** add getting-started glossary and repair links ([020b107](https://github.com/PC-Mender/sjrs-lms-docs/commit/020b107ce71549cd7fc9886976a84a40cdffa79c))
+* **docs:** correct 404 page to document docs site instead of React app ([158cfb8](https://github.com/PC-Mender/sjrs-lms-docs/commit/158cfb825c1998f4d3db31b5ee2d25fa1f5b1dc4))
+* **docs:** move setup guide to developers section ([e90c2df](https://github.com/PC-Mender/sjrs-lms-docs/commit/e90c2df2e4ea45a77e34fabec9010896a37a4214))
+* **docs:** normalize internal links and add glossary redirects ([71f5db6](https://github.com/PC-Mender/sjrs-lms-docs/commit/71f5db6118a79392cfdf79a308e724f985a9dd84))
+* **docs:** remove duplicate account types section in registration guide ([3e65d3f](https://github.com/PC-Mender/sjrs-lms-docs/commit/3e65d3f0c38af3d83c5b6e7c0274d73f684ffbfc))
+* **docs:** remove duplicate email confirmation section in registration guide ([675bc7a](https://github.com/PC-Mender/sjrs-lms-docs/commit/675bc7a0965d84f7cbffdbee22e57e6bd5945890))
+* **docs:** remove duplicate H1 heading in registration guide ([be850a7](https://github.com/PC-Mender/sjrs-lms-docs/commit/be850a748a9adfa87f7ea141b3529ba1355a8e31))
+* **docs:** remove setup guide from getting started quick resources ([740e91e](https://github.com/PC-Mender/sjrs-lms-docs/commit/740e91e73c84477153b891f08f42c5f19bf55776))
+* **docs:** resolve broken internal links across docs site ([9e4d470](https://github.com/PC-Mender/sjrs-lms-docs/commit/9e4d4708b69687579025758782ad0a0fc4d3aba0))
+* expose version_changed output for release job ([0970f56](https://github.com/PC-Mender/sjrs-lms-docs/commit/0970f5654983f8cc73e4cbc9a61df64832ee7a43))
+* **feedback:** remove card styling on vote buttons and add optimistic UI ([2a76ec0](https://github.com/PC-Mender/sjrs-lms-docs/commit/2a76ec00f7cee1b65207f576cd46f3904fe6521d))
+* handle Cloudflare-injected script hash and prevent stale CSP cache ([0300005](https://github.com/PC-Mender/sjrs-lms-docs/commit/030000531373ba4dc1bb74aec1c9884e1f8c8249))
+* lychee link check on built HTML and feedback widget UI ([70a6c2e](https://github.com/PC-Mender/sjrs-lms-docs/commit/70a6c2e4ff6a5e09a68fc0407c7e5226e695ddfe))
+* remove broken link to non-existent professors module ([10631e4](https://github.com/PC-Mender/sjrs-lms-docs/commit/10631e4763b997a61e762083906c1569c37e3a60))
+* remove duplicate social links and as-any cast in SocialIcons ([4cd57f6](https://github.com/PC-Mender/sjrs-lms-docs/commit/4cd57f6ddc297e5840cadd67cde0da7f52844ca7))
+* replace node:fs with Vite JSON import in CustomFooter for Cloudflare Workers compatibility ([b7afd97](https://github.com/PC-Mender/sjrs-lms-docs/commit/b7afd97595784f4ea7ce90b0bc10dcf397836c35))
+* resolve CodeQL bad-tag-filter alert in inline script hash extractor ([1870d88](https://github.com/PC-Mender/sjrs-lms-docs/commit/1870d8806244f1f6e1a6a50008f4c03382b2ec03))
+* **security:** eliminate TOCTOU race condition in feedback rate limiter ([7bd9221](https://github.com/PC-Mender/sjrs-lms-docs/commit/7bd92219357979fde5dae51f8ad984e5a115b5e7))
+* **security:** replace unsafe-inline in script-src with SHA256 hashes ([76876ee](https://github.com/PC-Mender/sjrs-lms-docs/commit/76876ee5f00ce48a8986417d20365c147a52a66f))
+* switch script-src to unsafe-inline to handle Cloudflare dynamic injection ([bba9258](https://github.com/PC-Mender/sjrs-lms-docs/commit/bba9258ebad8a15122ca5623c333b2726f6be1ae))
+
+### Documentation
+
+* add 17 comprehensive user guides for all app features ([f85010d](https://github.com/PC-Mender/sjrs-lms-docs/commit/f85010d7cf317f75e3ab3eb9de69a7847c742fba))
+* add complete historical changelog from v1.0.0 ([a5c3f3e](https://github.com/PC-Mender/sjrs-lms-docs/commit/a5c3f3e626ac5ceb464d1035b8459cb7a40a67a2))
+* add comprehensive fixes applied summary ([e50cf1f](https://github.com/PC-Mender/sjrs-lms-docs/commit/e50cf1f57760960b35975d2af03719a20ab7e30d))
+* add comprehensive instant-close modal migration guide for developers ([2ba89b2](https://github.com/PC-Mender/sjrs-lms-docs/commit/2ba89b20b709405415f943218d5abb14cfe1bf65))
+* add data fetching guide, loans refactoring summary, and update query migration details ([0e7c9be](https://github.com/PC-Mender/sjrs-lms-docs/commit/0e7c9be5fbc18ff7ee4cb16248091411a12c1d1f))
+* add dependency update summary ([a2738c5](https://github.com/PC-Mender/sjrs-lms-docs/commit/a2738c5319122bf11b106dcedbb3c795c355dc31))
+* add faqs content ([5b0c604](https://github.com/PC-Mender/sjrs-lms-docs/commit/5b0c604bf7c7aae28c2867e4ea4890f67578f961))
+* add missing index pages for documentation sections ([8179cc9](https://github.com/PC-Mender/sjrs-lms-docs/commit/8179cc90140809fc768ae6422b4ca42372acea10))
+* add missing v5.0.0 and v5.0.1 release information to changelog ([67f9f0c](https://github.com/PC-Mender/sjrs-lms-docs/commit/67f9f0c7b38ebc26330dde7c3e3983822b1ff65f))
+* Add security policy for vulnerability reporting ([ea5cea9](https://github.com/PC-Mender/sjrs-lms-docs/commit/ea5cea93f1fd38be6581c140e12b82023d6c6e35))
+* add v6.0.0 release documentation and instant-close modal pattern guide ([f692094](https://github.com/PC-Mender/sjrs-lms-docs/commit/f69209433e38d871f2c5734d9b495840edbc04d5))
+* align auth, CSRF, and superuser testing ([83617ea](https://github.com/PC-Mender/sjrs-lms-docs/commit/83617ea34b04488ce3d38785fa59e691d07a6c34))
+* align onboarding workflow and help system\n\n- Update Account Management to new onboarding statuses\n- Simplify Help System Guide with keyboard shortcut and external links\n- Update changelog for 3.52.0, 3.51.x\n- Add onboarding-status reference and status data dictionary\n- Minor doc index adjustments ([1d2b04c](https://github.com/PC-Mender/sjrs-lms-docs/commit/1d2b04ca291cb5c767acda9ce878f94b3f3ad9ec))
+* **api:** update API docs with v1 prefix and Zod validation patterns ([7fde674](https://github.com/PC-Mender/sjrs-lms-docs/commit/7fde674cfc29710105e3848a0be77f7f372c7844))
+* **architecture:** sync architecture docs with current app state ([b29f105](https://github.com/PC-Mender/sjrs-lms-docs/commit/b29f105f3690fd38d46cfb78b1dea2faf6edcb40))
+* **development:** update development docs with API v1 prefix ([100b1e0](https://github.com/PC-Mender/sjrs-lms-docs/commit/100b1e0b816b31dcc573daaa6a692c4d1f31ef9b))
+* document feedback worker setup and npm scripts ([af2ba38](https://github.com/PC-Mender/sjrs-lms-docs/commit/af2ba38d10ed262092b8449f7b86f60a80e06ec2))
+* **features:** update feature docs with API v1 prefix ([3e8d6b3](https://github.com/PC-Mender/sjrs-lms-docs/commit/3e8d6b34fa8d7ffacbae1abeb1af55497e569b85))
+* fix capitalized titles and redundant h1 headings ([38f3b2f](https://github.com/PC-Mender/sjrs-lms-docs/commit/38f3b2ff1bdb9d6c727f17ac38bebc33da8a33ca))
+* fix duplicate content on badges page, add reservations overview, update homepage and footer text ([89484ad](https://github.com/PC-Mender/sjrs-lms-docs/commit/89484ad73c3a59efdb50ef7bafed80d533e807c3))
+* **homepage:** refine card headings and links for clarity ([47da032](https://github.com/PC-Mender/sjrs-lms-docs/commit/47da0325ee0694d2700a27349ec501a7d5d492e6))
+* include guest end-user guidance ([6127eab](https://github.com/PC-Mender/sjrs-lms-docs/commit/6127eab5f2e346c3d89a8058f0734cd699667ffb))
+* migrate content to mdx ([4c752e5](https://github.com/PC-Mender/sjrs-lms-docs/commit/4c752e544c7e460ae9b369cf637700817b4e0f52))
+* **project-rules:** sync project-rules-app with latest project-rules.md ([2fc3ac7](https://github.com/PC-Mender/sjrs-lms-docs/commit/2fc3ac7696598b7278de25bf25971c1478814ad8))
+* reduce emoji usage ([d717304](https://github.com/PC-Mender/sjrs-lms-docs/commit/d717304f2ca706aa10c8074e25b67dceb573b3d3))
+* **release:** document 6.3.x rollout and bump CI node ([2e27f77](https://github.com/PC-Mender/sjrs-lms-docs/commit/2e27f77bb26c6a5045c17d7de8ebf967c2ea1264))
+* remove hyphens from sidebar headings ([caf16de](https://github.com/PC-Mender/sjrs-lms-docs/commit/caf16de1714af292346fa15bb1778bd4a6c715f0))
+* remove internal architectural info and replace sensitive values with placeholders ([cd97f8e](https://github.com/PC-Mender/sjrs-lms-docs/commit/cd97f8e3743aee45ac4e11aa5e715dca4e540229))
+* remove temporary audit and documentation files ([28229b4](https://github.com/PC-Mender/sjrs-lms-docs/commit/28229b499adf81ad78e5f920cca44c0924bebff9))
+* remove unnecessary bold markers from headings ([88c12e6](https://github.com/PC-Mender/sjrs-lms-docs/commit/88c12e6ac6fdd2b3c0c3efc1eb63b4a6c480adf1))
+* sanitize base URLs and secrets ([22be046](https://github.com/PC-Mender/sjrs-lms-docs/commit/22be046b03c0676f3d520f72cc09a2b1b84507c7))
+* **security:** update security and deployment docs with API v1 prefix ([85fd40a](https://github.com/PC-Mender/sjrs-lms-docs/commit/85fd40ad4a02ae79cdb5c05eb1182d9b4f47b8df))
+* sync docs site with app v6.19.1 ([df9808c](https://github.com/PC-Mender/sjrs-lms-docs/commit/df9808c9732ef0677ee36e9c7de77e52b33c9d1d))
+* sync v7.27.0 feature docs and fix internal links ([5d3d6b4](https://github.com/PC-Mender/sjrs-lms-docs/commit/5d3d6b4ce64b197b52c0ff168258768830ba7750))
+* update API docs for v4.0.0 and clarify wishlist priority ([0c22198](https://github.com/PC-Mender/sjrs-lms-docs/commit/0c221981c2854ecb8151ca26c2b2a90a09f21eb2))
+* update changelog and full-changelog to v8.2.2 ([503fb27](https://github.com/PC-Mender/sjrs-lms-docs/commit/503fb27b83c1f2a99359115e2a7507f10922744b))
+* update changelog for v3.50.3, add full changelog, and fix internal links ([a94a011](https://github.com/PC-Mender/sjrs-lms-docs/commit/a94a011b8a4004d4ab32423efcdc60ab29fdda25))
+* update content ([0c3b36a](https://github.com/PC-Mender/sjrs-lms-docs/commit/0c3b36a3b68a8b4d020d546785db9238929827f1))
+* update documentation for v3.49.0 release ([c0040e5](https://github.com/PC-Mender/sjrs-lms-docs/commit/c0040e56a5d418b63cbce65b086223b2b580b1ef))
+* update email trigger matrix and related docs ([bf8c881](https://github.com/PC-Mender/sjrs-lms-docs/commit/bf8c881ace001064df0889aa6ce07524c2dd9e43))
+* update feature documentation for v4.0.1/v4.0.2 changes ([c4df031](https://github.com/PC-Mender/sjrs-lms-docs/commit/c4df0316ad3f6fba172acfd71712b1c295dbf738))
+* update GitHub repository references from PC-Mender to PC-Mender ([5173c9a](https://github.com/PC-Mender/sjrs-lms-docs/commit/5173c9a55e24e3b78bd839b4ffe765f9e7a4f77c))
+* update project rules documentation formatting ([9354e73](https://github.com/PC-Mender/sjrs-lms-docs/commit/9354e7383a48c38a6a106e6db8914813457a8382))
+* update routing, changelog, auth flow, and project rules for June 2026 ([56f5ee4](https://github.com/PC-Mender/sjrs-lms-docs/commit/56f5ee4bfc860f0ec07065407e108451f8405499))
+* update to auth workflow ([ea97b5d](https://github.com/PC-Mender/sjrs-lms-docs/commit/ea97b5d57d1919165675f085bb4855e249861325))
+* **user-guides:** add registration and first-login flow illustrations ([1b65158](https://github.com/PC-Mender/sjrs-lms-docs/commit/1b65158517d42803cbcfb5949c5f6a5040f44a32))
+* **user-guides:** update documentation for request cart workflow and borrow request tracking ([993fd64](https://github.com/PC-Mender/sjrs-lms-docs/commit/993fd64a4eefcb8a171cb6aa30e55541a759b119))
+
+### Styling
+
+* remove unnecessary !important declarations and empty media query blocks ([f3707a4](https://github.com/PC-Mender/sjrs-lms-docs/commit/f3707a49bacc8fd4b1492e0d93f99e4e9dcf5484))
+* update version label format in footer ([91451be](https://github.com/PC-Mender/sjrs-lms-docs/commit/91451be3b2da4cc7f052639a4065198fbc571383))
+
+### Performance Improvements
+
+* add version visibility in footer ([6ef1674](https://github.com/PC-Mender/sjrs-lms-docs/commit/6ef1674cea68eb21a207881803b22f7bd568d230))
+* improvements to doc functionality & updated docs ([a99cef3](https://github.com/PC-Mender/sjrs-lms-docs/commit/a99cef3fd70cbde8b9dc7b6f50fc82ecd97c52c6))
+
+### Build System
+
+* remove unused packages, update starlight, replace deprecated standard-version ([4df61bf](https://github.com/PC-Mender/sjrs-lms-docs/commit/4df61bf35b680ff74aa15b3384723844d0a924a8))
+
+### CI
+
+* add CSP hash validation to quality gates ([53b5f6c](https://github.com/PC-Mender/sjrs-lms-docs/commit/53b5f6c6eafe876dd0ec4b331bd0e12b6b8224bc))
+* type-check feedback worker in CI and IDE ([9ab90ad](https://github.com/PC-Mender/sjrs-lms-docs/commit/9ab90adc52c7b3f134c1858775304360e67dd91e))
 ## [1.7.1](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.7.0...v1.7.1) (2026-07-29)
 ## 1.7.0 (2026-07-29)
 
