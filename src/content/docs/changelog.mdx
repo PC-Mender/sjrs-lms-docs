@@ -8,7 +8,143 @@ slug: changelog
 
 ## Latest Updates
 
-### Version 7.27.0 ⭐ CURRENT (July 18, 2026)
+### Version 8.2.2 ⭐ CURRENT (July 28, 2026)
+
+#### Security & Dependencies
+- **Dependabot Fixes**: Upgraded `brace-expansion` (CVE-2026-14257) and `react-router` (GHSA-qwww-vcr4-c8h2) to patched versions.
+
+---
+
+### Version 8.2.1 (July 28, 2026)
+
+#### Bug Fixes & Quality
+- **Order Visibility**: Non-managers now see only their own orders.
+- **Audit Logging**: Backend audit logging now fires at all security denial points.
+- **Book Requests**: Enforced order visibility, blocked user cancellation, and prevented duplicate requests.
+- **PostLogin Prefetch**: Replaced invalid React hook call with `queryClient.prefetchQuery`.
+- **E2E Test Suite**: Added Playwright E2E tests for authentication, SPA routing, registration, MFA, and more.
+- **CI Build Verification**: Added production build verification to CI pipeline.
+
+---
+
+### Version 8.2.0 (July 26, 2026)
+
+#### Session Management
+- **Refresh Token Expiry**: Added token expiry tracking, activity heartbeat, and session-expired flag.
+- **Idle Timeout Increase**: Session idle timeout increased from 15 to 30 minutes.
+- **Concurrent Refresh Dedup**: Shared in-flight refresh promise so concurrent 401s trigger only one refresh.
+- **Session Expired UX**: Improved alert UX and cleanup on session expiry.
+
+#### Permissions & Security
+- **Issue Reports Permission**: New `issue_reports` permission resource with migration and DELETE policy.
+- **Route Policy Matching**: Fixed `:id` sub-route matching and added missing policies for `role_permissions` and `bulk_update` endpoints.
+- **Optimistic Role Updates**: Role changes now reflect instantly on student and professor pages.
+
+---
+
+### Version 8.1.1 (July 24, 2026)
+
+#### Security Fixes
+- **MFA Bypass Prevention**: Login now checks all MFA factor types (TOTP, SMS, WebAuthn) — previously only checked email/totp verification.
+- **Password-Reset Token Reuse**: Atomic token claim before side-effects prevents concurrent reuse.
+- **Anti-Enumeration**: Unified `check-email` rate-limit responses to prevent enumeration side channel.
+- **Production Logging**: Disabled production console logging; inverted `LOG_CONSOLE` default gate.
+- **Structured Logger**: Replaced 67 raw `console.*` calls across 22 files with structured Logger utility.
+
+---
+
+### Version 8.1.0 (July 24, 2026)
+
+#### UX Improvements
+- **Loans Table**: Shows user type with year of study instead of raw email.
+- **Orders Table**: Displays book base code, shelf location, and key tag info.
+
+#### Bug Fixes
+- **Profile Completion**: Added `PROFILE_COMPLETION` validation schema for complete-profile and resubmit-profile endpoints.
+- **Dashboard Permission**: Removed bogus `dashboard:read` permission and fixed switch-role body parsing.
+
+---
+
+### Version 8.0.2 (July 23, 2026)
+
+#### Bug Fixes
+- **Dark Mode Default**: Default theme changed to dark mode instead of system.
+- **Suspended Account**: Added specific error handling for suspended accounts in login callback.
+- **Security Context**: Replaced direct Request property assignment with `WeakMap` (Cloudflare Workers Request objects are not extensible).
+- **Route Security Manifest**: Replaced scattered security configs with centralized `route-policies.ts` containing 304 explicit policies across 5 domains.
+
+---
+
+### Version 8.0.0 ⭐ MAJOR UPDATE (July 22, 2026)
+
+#### ⚠️ Breaking Change
+- **`__Host-` Cookie Prefix**: Session cookies now use the `__Host-` prefix on the canonical apex domain. **All existing sessions are invalidated** — users will need to log in again after upgrade.
+
+#### New Features
+- **Shelf Codes Import**: Imported 98 shelf codes from `unit-standard.htm` with optional section ID.
+- **Superuser Analytics**: Expanded superuser statistics with user distribution analytics (active, pending, suspended, inactive, new registrations).
+
+#### Security Fixes
+- Resolved `sharp`/`miniflare` and `brace-expansion` vulnerabilities.
+- Adopted host-only cookies with `__Host-` prefix and canonical apex domain.
+- Enforced `no-store` on all authenticated API responses.
+- Enforced signed CSRF validation on the refresh endpoint.
+
+#### Bug Fixes
+- Fixed MemberList pagination using incorrect total count.
+- Fixed infinite re-render loop (React error #185) on delete across multiple pages.
+- Fixed auth token manager to prefer active session role over JWT claim.
+
+---
+
+### Version 7.29.0 (July 21, 2026)
+
+#### Security Hardening
+- **Session Token Hashing**: All session tokens now hashed with SHA-256 at rest. Existing sessions invalidated.
+- **JWT Validation**: Enforced mandatory JWT issuer and audience validation in production.
+- **CSRF Improvements**: Added reactive CSRF 403 auto-retry and deduplication of concurrent fetches in unified API client.
+- **Localhost Removal**: Stripped localhost from production allowlists with defense-in-depth filtering.
+- **Password Reset**: Removed internal delivery data from password-reset response.
+
+---
+
+### Version 7.28.0 (July 21, 2026)
+
+#### New Features
+- **Password Strength Validation**: Backend password endpoints now enforce complexity rules and personal info checks.
+- **Homepage Redesign**: Replaced feature cards with popular books preview.
+
+#### Security Fixes
+- **CSRF Token Signing**: Signed CSRF tokens with HMAC to prevent subdomain cookie injection.
+- **Email Confirmation Tokens**: Stored as SHA-256 hash at rest.
+- **Upload Hardening**: Added magic bytes validation, safe content-type, and path traversal protection for avatar and issue-report handlers.
+- **Privilege Escalation**: Blocked `superuser_id` body parameter in impersonation stop; gated security-sensitive fields on `users:update` permission.
+- **Session Revocation**: Revoke sessions after admin and self-service password changes.
+- **Fail-Closed**: Account status check errors now fail-closed for all HTTP methods.
+
+---
+
+### Version 7.27.2 (July 20, 2026)
+
+#### Security & Stability
+- **Regex Injection**: Escaped regex metacharacters and blocked prototype pollution keys.
+- **Notes Page**: Decoded HTML entities and fixed draft loading.
+- **SAST Tooling**: Added `eslint-plugin-security` and property-based fuzz tests for sanitizers and CORS.
+
+---
+
+### Version 7.27.1 (July 19, 2026)
+
+#### Technical
+- Fixed React hook import and timer ref types.
+- Added bundle visualizer, size-limit, and fixed license check for NOASSERTION packages.
+- Stabilized flaky badge and notification tests.
+- Migrated location API to `countries-states-cities-service`.
+- Sharded frontend tests into 4 parallel jobs.
+
+---
+
+### Version 7.27.0 (July 18, 2026)
 
 #### Dashboard & User Experience
 - **Composite Superuser Dashboard**: Superusers see a unified dashboard combining widgets from all roles.

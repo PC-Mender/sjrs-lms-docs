@@ -10,6 +10,506 @@ slug: full-changelog
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [8.2.2] - 2026-07-28
+
+### Fixed
+- 🐛 upgrade brace-expansion and react-router to fix Dependabot alerts
+## [8.2.1] - 2026-07-28
+
+### Fixed
+- 🐛 enforce order visibility, block user cancellation, and prevent duplicate book requests
+- 🐛 make backend audit logging functional for all denial points
+- 🐛 replace invalid React hook call in PostLoginDataPrefetcher with queryClient.prefetchQuery
+- 🐛 replace stale PC-Mender URLs with PC-Mender in changelog and set package author
+
+### Technical
+- 🔧 add Playwright E2E test suite for critical user flows
+- 🔧 add production build verification to CI pipeline
+## [8.2.0] - 2026-07-26
+
+### Added
+- ✅ add refresh token expiry, activity heartbeat, and session expired flag
+- ✅ increase session idle timeout from 15 to 30 minutes
+- ✅ add issue_reports permission resource with migration and DELETE policy
+
+### Fixed
+- 🐛 resolve npm audit vulnerabilities blocking quality gates
+- 🐛 session expired alert UX and session management cleanup
+- 🐛 deduplicate concurrent refresh calls and logout dispatch
+- 🐛 route policy matching for :id sub-routes and optimistic role updates
+- 🐛 add missing policies for role_permissions and bulk_update endpoints
+
+### Technical
+- 🔧 add shared in-flight refresh promise so concurrent 401s trigger only one refresh
+- 🔧 add optimistic updates for d1-students and d1-professors query caches
+- 🔧 merge registration number into user type column and remove redundant columns
+## [8.1.1] - 2026-07-24
+
+### Fixed
+- 🐛 prevent MFA bypass at login for SMS and WebAuthn users
+- 🐛 prevent password-reset token reuse via atomic claim before side-effects
+- 🐛 disable production console logging and invert LOG_CONSOLE default gate
+- 🐛 unify check-email rate-limit responses to prevent enumeration side channel
+- 🐛 replace all raw console statements with structured logger utility
+
+### Technical
+- 🔧 replace 67 no-console lint warnings across 22 files with structured Logger
+- 🔧 add no-console ESLint rule to prevent raw console.* outside logging infrastructure
+- 🔧 add 7 regression tests for password-reset token reuse and MFA bypass
+## [8.1.0] - 2026-07-24
+
+### Added
+- ✅ show user type with year of study instead of email in loans table
+- ✅ display book base code, shelf location, and key tag info in orders table
+
+### Fixed
+- 🐛 add PROFILE_COMPLETION validation schema for complete-profile and resubmit-profile
+- 🐛 remove bogus dashboard:read permission and fix switch-role body parsing
+## [8.0.2] - 2026-07-23
+
+### Fixed
+- 🐛 default theme to dark mode instead of system
+- 🐛 handle suspended account error code in login callback
+- 🐛 use WeakMap for security context instead of Request property assignment
+- 🐛 replace scattered security configs with centralized route security manifest
+
+### Technical
+- 🔧 create route-policies.ts with 304 explicit policies across 5 domains
+## [8.0.0] - 2026-07-22
+
+### ⚠️ Breaking Change
+- 💥 Session cookies now use the `__Host-` prefix on the canonical apex domain. All existing sessions are invalidated.
+
+### Added
+- ✅ Import 98 shelf codes from unit-standard.htm with optional section ID
+- ✅ Expand superuser statistics with user distribution analytics
+
+### Security Fixes
+- 🐛 Resolved sharp/miniflare and brace-expansion vulnerabilities
+- 🐛 Adopted host-only cookies with `__Host-` prefix and canonical apex domain
+- 🐛 Enforced no-store on all authenticated API responses
+- 🐛 Enforced signed CSRF validation on the refresh endpoint
+
+### Bug Fixes
+- 🐛 Fixed MemberList Pagination using incorrect total count
+- 🐛 Fixed infinite re-render loop (React error #185) on delete across multiple pages
+- 🐛 Fixed auth token manager to prefer active session role over JWT claim
+## [7.29.0] - 2026-07-21
+
+### Added
+- ✅ add session token hashing migration and schema
+
+### Fixed
+- 🐛 enforce mandatory JWT issuer and audience validation
+- 🐛 hash session tokens at rest in all runtime code paths
+- 🐛 remove localhost from production allowlists and add defense-in-depth filtering
+- 🐛 remove internal delivery data from password-reset response
+- 🐛 add reactive CSRF 403 auto-retry and keepalive support in unified API client
+
+### Technical
+- 🔧 make JWT_ISS and JWT_AUD required in production via assertEnv() fail-closed
+- 🔧 hash tokens with SHA-256 before all DB lookups, inserts, updates, revocations
+- 🔧 drop all existing sessions and invalidate outstanding tokens (forces re-authentication)
+## [7.28.0] - 2026-07-21
+
+### Added
+- ✅ add password strength and personal info validation to backend password endpoints
+- ✅ replace homepage feature cards with popular books preview
+
+### Fixed
+- 🐛 sign CSRF tokens with HMAC to prevent subdomain cookie injection
+- 🐛 store email confirmation tokens as SHA-256 hash at rest
+- 🐛 harden upload module against path traversal and MIME spoofing
+- 🐛 remove privilege escalation via superuser_id body parameter in impersonation stop
+- 🐛 gate security-sensitive fields on users:update permission in self-profile updates
+- 🐛 revoke sessions after admin and self-service password changes
+- 🐛 fail-closed on account status check errors for all HTTP methods
+- 🐛 prefer JWT_KEYS_JSON over JWT_SECRET for token signing
+
+### Technical
+- 🔧 extract shared magic-bytes utility from duplicated implementations
+- 🔧 add signed double-submit cookie pattern (nonce.expiry.signature)
+- 🔧 remove allowIf parameter from assertPermission and enforceMutatingPermission
+## [7.27.2] - 2026-07-20
+
+### Fixed
+- 🐛 escape regex metacharacters and block prototype pollution keys
+- 🐛 decode HTML entities and fix draft loading in notes page
+
+### Technical
+- 🔧 add eslint-plugin-security and SAST tooling
+- 🔧 add fast-check property-based fuzz tests for sanitizers and CORS
+## [7.27.1] - 2026-07-19
+
+### Fixed
+- 🐛 use ReturnType for timer refs and fix React hook import
+
+### Technical
+- 🔧 add bundle visualizer, size-limit, and fix license check for NOASSERTION packages
+- 🔧 stabilize flaky badge and notification tests
+- 🔧 migrate location API to countries-states-cities-service
+- 🔧 shard frontend tests into 4 parallel jobs
+## [7.27.0] - 2026-07-18
+
+### Added
+- ✅ add linked resource count column with table sorting and fix SQL sort order
+- ✅ gamify empty states with actionable CTAs in patron widgets
+- ✅ gamified welcome modal, first quest banner, and badge celebration
+- ✅ add server-side pagination, search, and multi-query optimistic mutations
+- ✅ composite superuser dashboard with all role widgets
+
+### Fixed
+- 🐛 use only read_all permission for loan data visibility
+- 🐛 split multi-segment splat route for React Router v7 compatibility
+- 🐛 allow null values for optional author fields
+
+### Technical
+- 🔧 unify stats grid rendering by merging grid-5 into generic path
+- 🔧 replace inline styles with CSS classes in modal forms and help content
+## [7.26.0] - 2026-07-17
+
+### Added
+- ✅ add revision restore, revision limit, dashboard widget, and test coverage
+
+### Fixed
+- 🐛 improve file upload modal UX and error handling
+- 🐛 improve config manager UX with App.useApp and race guard
+- 🐛 fix dashboard_configs FK from users to library_users
+- 🐛 note title validation, XSS sanitizer, draft autosave, revision restore
+
+### Technical
+- 🔧 split widget-definitions.ts into admin and user definition files
+- 🔧 implement config-driven widget data provisioning
+- 🔧 make configs serializable with icon registry
+## [7.25.3] - 2026-07-17
+
+### Fixed
+- 🐛 fix update button, HTML entities, and table layout
+- 🐛 handle null/undefined dates in formatRelativeTime and parseDateInput
+- 🐛 show account-level updated_at in student, professor, and guest view modals
+
+### Technical
+- 🔧 add staging environment configuration and deploy scripts
+- 🔧 extract config manager state into hook and implement visual editor
+- 🔧 extract shared config fragments to eliminate role config duplication
+- 🔧 consolidate role pages into UnifiedDashboard with auto data fetch
+## [7.25.2] - 2026-07-16
+
+### Fixed
+- 🐛 include GitHub comments in issue report table comment count
+- 🐛 note card expand/collapse isolation, theme-aware styling, and revision caching
+
+### Technical
+- 🔧 extract GitHub API config and headers into shared helper
+- 🔧 add github_comment_count column to issue_reports table (migration)
+## [7.25.1] - 2026-07-15
+
+### Fixed
+- 🐛 display registration number from student profile in TADA form
+
+### Technical
+- 🔧 centralize rate limit UI into global banner with focus management
+## [7.25.0] - 2026-07-15
+
+### Added
+- ✅ add probe filter middleware to block vulnerability scanner traffic
+- ✅ add soft delete, trash bin, restore, permanent delete, and edit history
+
+### Fixed
+- 🐛 send approval/rejection email on status change to active/inactive
+- 🐛 make notes page responsive and fix restore mutation issues
+- 🐛 wrap RequestCartDrawer in ErrorBoundary and always mount DeferredProviders
+
+### Technical
+- 🔧 add probe-filter middleware with suspicious extension and path pattern denylists
+- 🔧 add migration for deleted_at column and user_note_revisions table
+## [7.24.0] - 2026-07-14
+
+### Added
+- ✅ add manual refresh with loading feedback
+- ✅ add user notes feature with backend API, migrations, and frontend
+- ✅ seed digital library links into user bookmarks on activation
+
+### Fixed
+- 🐛 make optional schema fields nullable and skip tags sanitization
+- 🐛 remove default horizontal scroll and clean up dead book-catalog code
+
+### Technical
+- 🔧 extract notes and reviews sections from BookDetailsModal
+- 🔧 add 14 curated digital library links seeded into each user's bookmarks
+## [7.23.0] - 2026-07-14
+
+### Added
+- ✅ add in-app PDF reader for digital resources with read session tracking
+- ✅ add resource activity tracking panel
+- ✅ add resource download sources and read sessions
+
+### Technical
+- 🔧 extract hooks and components from digital resource files to meet 300-line limit
+- 🔧 add DigitalResourceReader component with page navigation, zoom controls
+- 🔧 add resource_download_sources and resource_read_sessions tables
+## [7.22.0] - 2026-07-13
+
+### Added
+- ✅ add refresh status button to pending approval page
+- ✅ refactor analytics dashboard with consolidated items, search, and tabbed views
+- ✅ add resend cooldown timer to email confirmation page
+- ✅ add user event timestamp columns with end-to-end propagation
+
+### Fixed
+- 🐛 move hooks before early return in AccountSuspended to resolve React error #310
+- 🐛 prevent double profile submission and fix admin table cache invalidation
+- 🐛 migrate professor profile schema from stream to department and specialization
+- 🐛 stop leaking raw API error messages in registration email check
+
+### Technical
+- 🔧 add email_verified_at, status_changed_at, onboarding_status_changed_at columns
+## [7.21.0] - 2026-07-13
+
+### Added
+- ✅ redesign librarian dashboard with analytics widgets and expanded stats
+- ✅ add Account Status and Onboarding Status widgets to Dean dashboard
+
+### Fixed
+- 🐛 skip role selection modal on login, always go to dashboard
+- 🐛 increase API usage limit threshold from 2000 to 5000
+
+### Technical
+- 🔧 switch dashboard queries from REAL_TIME to FREQUENT preset
+- 🔧 add AccountStatusWidget and OnboardingStatusWidget with chart visualizations
+## [7.20.1] - 2026-07-13
+
+### Fixed
+- 🐛 optimize librarian popular books query and restore loans indexes
+- 🐛 correct non-existent table references and add missing tables
+
+### Technical
+- 🔧 add migration to recreate 9 loans indexes
+## [7.20.0] - 2026-07-13
+
+### Added
+- ✅ rework dean dashboard to mirror admin layout
+- ✅ add global rate limit countdown banner for 429 responses
+
+### Technical
+- 🔧 use permission-based access for dean admin endpoints
+## [7.19.0] - 2026-07-12
+
+### Added
+- ✅ add version poller toast notification for new deployments
+- ✅ add About page with project history and contributor credits
+- ✅ show user name and year of study instead of email in recent activity
+
+### Fixed
+- 🐛 eliminate duplicate audit log entries via handler opt-out pattern
+
+### Technical
+- 🔧 polls /version.json on mount, route change, tab visibility regain, and every 3 minutes
+## [7.18.0] - 2026-07-12
+
+### Added
+- ✅ show multiple roles in profile and gate switch-role menu
+- ✅ add multi-role selection in edit forms with change detection
+- ✅ display multiple roles in tables, view modals, and member cards
+- ✅ add default illustrated male avatars for users without profile photos
+
+### Fixed
+- 🐛 allow single-character first/last names in validation
+- 🐛 add double-submission protection to auth form buttons
+## [7.17.1] - 2026-07-11
+
+### Fixed
+- 🐛 reduce mobile auth card spacing and constrain Turnstile widget
+- 🐛 show notification bell in mobile header next to hamburger menu
+## [7.17.0] - 2026-07-11
+
+### Added
+- ✅ add responsive mobile layout for TADA & PAPM list tables
+
+### Fixed
+- 🐛 improve TADA & PAPM forms — print layout, remove signature, add Metro option
+
+### Technical
+- 🔧 use Grid.useBreakpoint() for mobile detection in both list pages
+- 🔧 migrate PAPM and TADA list pages to React Query for faster data loading
+- 🔧 decompose 704-line TadaForm.tsx into 5 focused modules under 300 lines
+## [7.16.0] - 2026-07-11
+
+### Added
+- ✅ add Travel Allowance / Dearness Allowance claim form
+
+### Fixed
+- 🐛 make System Health Card show accurate warning cause
+- 🐛 fix admin dashboard layout spacing and widget structure
+
+### Technical
+- 🔧 replace 5 parallel API calls with single aggregate query for user stats
+- 🔧 full-stack TADA form implementation with CRUD API, Zod validation
+## [7.15.0] - 2026-07-10
+
+### Added
+- ✅ replace PAPM show page with in-modal view, add print preview and watermark
+
+### Fixed
+- 🐛 resolve frozen countdown in timeout warning modal
+- 🐛 allow drafts without drawees and improve save UX
+## [7.14.0] - 2026-07-10
+
+### Added
+- ✅ add PAPM backend API and database migration
+- ✅ add PAPM frontend forms, pages, and routing
+- ✅ add drawee metadata, finalize confirmation, and improve print layout
+- ✅ add affiliation fields and profile support
+
+### Fixed
+- 🐛 enforce submitted form lock, add validation, debounce, and accessibility improvements
+- 🐛 pin production API origin and fix dev cookie proxy
+## [7.13.0] - 2026-07-09
+
+### Added
+- ✅ add dioceses and congregations management with profile integration
+- ✅ add member count column to dioceses and congregations tables
+- ✅ add seminary logo to headers, favicon, and auth pages
+
+### Technical
+- 🔧 add API handlers for dioceses and congregations (CRUD with pagination, search, sorting)
+- 🔧 update 12 packages to latest compatible versions
+## [7.12.0] - 2026-07-09
+
+### Added
+- ✅ integrate audit log and loading states into superuser system health
+- ✅ compute system health percentage from dependency metrics
+- ✅ add login and logout audit logging
+- ✅ add responsive configuration to OptimizedTable components
+
+### Fixed
+- 🐛 unify superuser dashboard spacing and remove quickActions from admin/librarian
+- 🐛 align header avatar with other header icons for all roles
+
+### Technical
+- 🔧 add responsive prop to OptimizedTable across 37 list pages
+## [7.11.0] - 2026-07-09
+
+### Added
+- ✅ add migrated landing page for PHP portal users
+
+### Fixed
+- 🐛 make authors page and linked items modal mobile responsive
+
+### Technical
+- 🔧 add responsive CSS for unified table toolbar and migrated page
+- 🔧 make help page responsive and add role display
+## [7.10.3] - 2026-07-07
+
+### Fixed
+- 🐛 make UnifiedTable mobile responsive with column condensing
+- 🐛 fix book reviews page showing other users' reviews instead of own
+## [7.10.2] - 2026-07-07
+
+### Fixed
+- 🐛 resolve stale chunk dynamic import errors after deployments
+- 🐛 improve mobile responsiveness across modals, tables, and public header
+
+### Technical
+- 🔧 migrate remaining inline styles to CSS and fix viewport (100vh → 100dvh)
+- 🔧 detect CF Workers SPA HTML fallback for missing .js/.css assets
+- 🔧 cap modal/drawer widths on mobile via CSS media queries
+## [7.10.1] - 2026-07-07
+
+### Technical
+- 🔧 remove unused isSystemTheme from AppLayout
+## [7.10.0] - 2026-07-07
+
+### Technical
+- 🔧 replace non-null assertion with explicit boolean check
+## [7.9.0] - 2026-07-06
+
+### Technical
+- 🔧 migrate to unified dashboard system
+## [7.8.0] - 2026-07-06
+
+### Fixed
+- 🐛 prevent logout call when user is unauthenticated
+## [7.7.0] - 2026-07-05
+
+### Added
+- ✅ unify catalog page with resource type filter and global search
+## [7.6.1] - 2026-07-05
+
+### Technical
+- 🔧 improve system-logs page tests with better permission mocking
+## [7.6.0] - 2026-07-05
+
+### Added
+- ✅ add PageHelp drawers to 7 pages
+## [7.5.0] - 2026-07-05
+
+### Fixed
+- 🐛 prefix unused user param with underscore in handleGetBookCopy
+## [7.4.0] - 2026-07-04
+
+### Fixed
+- 🐛 replace non-null assertion with nullish-coalescing fallback
+## [7.3.0] - 2026-07-04
+
+### Fixed
+- 🐛 remove unused imports and variables in issue-reports
+## [7.2.0] - 2026-07-03
+
+### Added
+- ✅ auto-refresh on expired Cloudflare challenge chunk failures
+## [7.1.0] - 2026-07-02
+
+### Fixed
+- 🐛 fix user type dropdown, show labels in table, prevent infinite refetch loop
+## [7.0.0] - 2026-07-02
+
+### Technical
+- 🔧 replace exact coverage list with durable policy guidance
+## [6.40.1] - 2026-07-01
+
+### Fixed
+- 🐛 remove duplicate titles and fix spacing in resource/audit components
+## [6.40.0] - 2026-07-01
+
+### Added
+- ✅ add avatar display to public layout and home page components
+## [6.39.2] - 2026-07-01
+
+### Fixed
+- 🐛 remove code scanning dependency from gitleaks
+## [6.39.1] - 2026-07-01
+
+### Fixed
+- 🐛 gitleaks binary, non-blocking licenses, sarif v4
+## [6.39.0] - 2026-07-01
+
+### Fixed
+- 🐛 add cron jobs for rate_limits and action_logs cleanup to prevent D1 bloat
+## [6.38.0] - 2026-06-30
+
+### Technical
+- 🔧 remove redundant Card wrapper from BookReviewViewModal
+## [6.37.0] - 2026-06-30
+
+### Fixed
+- 🐛 fix test timeouts and remove coverage threshold enforcement
+## [6.36.0] - 2026-06-30
+
+### Technical
+- 🔧 add document title formatting tests
+## [6.35.0] - 2026-06-29
+
+### Fixed
+- 🐛 restore setLoading config in edit mutation
+## [6.34.9] - 2026-06-29
+
+### Technical
+- 🔧 complete Zod migration, retire custom validation engine
+## [6.34.8] - 2026-06-29
+
+### Fixed
+- 🐛 harden request ID correlation, rate limiting headers, and error handling
 ## [6.34.7] - 2026-06-28
 
 ### Fixed
