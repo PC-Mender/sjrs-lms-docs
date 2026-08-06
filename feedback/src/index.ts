@@ -306,42 +306,27 @@ async function saveVote(
   const ipHash = await hashValue(env.HASH_SECRET, request.headers.get('CF-Connecting-IP') || 'unknown');
   const userAgentHash = await hashValue(env.HASH_SECRET, request.headers.get('User-Agent') || 'unknown');
 
-  const existingVote = await env.FEEDBACK_DB.prepare(
-    `SELECT id, vote
-     FROM docs_feedback_votes
-     WHERE page_path = ? AND visitor_hash = ?`,
-  ).bind(payload.pagePath, visitorHash).first<{ id: number; vote: VoteValue } | null>();
+  await env.FEEDBACK_DB.prepare(
+    `INSERT INTO docs_feedback_votes (
+       page_path, page_title, vote, comment, visitor_hash, ip_hash, user_agent_hash
+     ) VALUES (?, ?, ?, ?, ?, ?, ?)
+     ON CONFLICT(page_path, visitor_hash) DO UPDATE SET
+       page_title = excluded.page_title,
+       vote = excluded.vote,
+       comment = excluded.comment,
+       ip_hash = excluded.ip_hash,
+       user_agent_hash = excluded.user_agent_hash,
+       updated_at = CURRENT_TIMESTAMP`,
+  ).bind(
+    payload.pagePath,
+    payload.pageTitle,
+    payload.vote,
+    payload.comment,
+    visitorHash,
+    ipHash,
+    userAgentHash,
+  ).run();
 
-  if (!existingVote) {
-    await env.FEEDBACK_DB.prepare(
-      `INSERT INTO docs_feedback_votes (
-        page_path, page_title, vote, comment, visitor_hash, ip_hash, user_agent_hash
-      ) VALUES (?, ?, ?, ?, ?, ?, ?)`,
-    ).bind(
-      payload.pagePath,
-      payload.pageTitle,
-      payload.vote,
-      payload.comment,
-      visitorHash,
-      ipHash,
-      userAgentHash,
-    ).run();
-  } else {
-    await env.FEEDBACK_DB.prepare(
-      `UPDATE docs_feedback_votes
-       SET page_title = ?, vote = ?, comment = ?, ip_hash = ?, user_agent_hash = ?, updated_at = CURRENT_TIMESTAMP
-       WHERE id = ?`,
-    ).bind(
-      payload.pageTitle,
-      payload.vote,
-      payload.comment,
-      ipHash,
-      userAgentHash,
-      existingVote.id,
-    ).run();
-  }
-
-  await refreshSummary(env, payload.pagePath);
   return getSummary(env, visitorId, payload.pagePath);
 }
 
@@ -372,8 +357,10 @@ async function getSummary(env: Env, visitorId: string, pagePath: string): Promis
 
   const [summaryRow, voteRow] = await Promise.all([
     env.FEEDBACK_DB.prepare(
-      `SELECT up_count, down_count
-       FROM docs_feedback_summary
+      `SELECT
+         COALESCE(SUM(CASE WHEN vote = 'up' THEN 1 ELSE 0 END), 0) AS up_count,
+         COALESCE(SUM(CASE WHEN vote = 'down' THEN 1 ELSE 0 END), 0) AS down_count
+       FROM docs_feedback_votes
        WHERE page_path = ?`,
     ).bind(pagePath).first<{ up_count: number; down_count: number } | null>(),
     env.FEEDBACK_DB.prepare(

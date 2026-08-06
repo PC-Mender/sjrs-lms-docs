@@ -3,15 +3,11 @@ title: "User Registration Guide"
 description: "Complete step-by-step guide for registering a new account in SJRS LMS"
 ---
 
-This comprehensive guide walks you through the complete registration process for creating a new account in the SJRS Library Management System.
-
-![SJRS LMS Registration Flow diagram showing the six steps from personal information to login](/images/registration-flow.svg)
+This guide walks you through the full account creation process for the SJRS Library Management System.
 
 ## Overview
 
-The registration process is designed to be secure, user-friendly, and efficient. It consists of three main steps followed by email verification.
-
-### Registration Flow
+Creating an account involves a short registration form, email verification, profile completion, and (for most users) a brief review by library staff before the account is fully active.
 
 ```mermaid
 graph TD
@@ -19,342 +15,294 @@ graph TD
     B --> C[Step 2: Account Type Selection]
     C --> D[Step 3: Security Setup]
     D --> E[Email Verification]
-    E --> F[Account Created]
-    F --> G[Login to Dashboard]
+    E --> F[Profile Completion]
+    F --> G[Pending Approval]
+    G --> H[Account Active]
+    H --> I[Login to Dashboard]
 ```
+
+---
 
 ## Step-by-Step Registration Process
 
+**Start here**: [https://sjrslms.in/register](https://sjrslms.in/register) — all three steps below run on this single page (Step 1, then Step 2, then Step 3).
+
 ### 📍 Step 1: Personal Information
 
-**Location**: `/register` (first step)
-
 **Required Information**:
-- **Email Address**: Valid email for account verification and communication
-- **First Name**: Legal first name (automatically capitalized)
-- **Last Name**: Legal last name (automatically capitalized)
+- **Email Address**: A valid, permanent email address you can access. Used for verification and all future communication.
+- **First Name**: Legal first name (automatically capitalized).
+- **Last Name**: Legal last name (automatically capitalized).
 
 #### Features
-- **Real-time Email Validation**: Checks email availability as you type
-- **Auto-capitalization**: Names automatically formatted properly
-- **Duplicate Detection**: Prevents registration with existing email
-- **Pending Registration Handling**: Shows hints for incomplete registrations
+- **Auto-formatting**: Names are capitalized correctly on input and blur, including support for spaces, hyphens, and apostrophes.
+- **Email format check**: Validates email structure before you proceed.
+- **Resume hint**: If you started registration on this device previously and enter the same email, a banner appears with one-tap shortcuts to Email Confirmation or Resend Confirmation (only your email is remembered; other form entries are not preserved for security).
+- **Progress indicator**: A visual step tracker at the top of the form shows your current position.
 
 #### Validation Rules
-```typescript
-// Email validation
-- Must be valid email format
-- Cannot be already registered
-- Rate limited for abuse prevention
-
-// Name validation
-- Required field
-- Auto-capitalized on input
-- Supports hyphens and apostrophes
-```
+- **Email**
+  - Valid format only (e.g., `name@example.edu`).
+  - Temporary or disposable email services are blocked. Use a permanent address you control.
+  - For your security, the system does not reveal on-screen whether an email is already registered. For any valid email address, it proceeds and sends an email containing next steps appropriate to your account status.
+- **Names (First & Last)**
+  - Required fields. Max 50 characters each.
+  - Supports spaces, hyphens, and apostrophes (e.g., `O'Neil`, `Smith-Jones`).
 
 #### User Experience
-- **Responsive Design**: Optimized for mobile and desktop
-- **Instant Feedback**: Real-time validation messages
-- **Error Recovery**: Clear error messages with solutions
-- **Progress Tracking**: Visual step indicator
+- Fully responsive layout: desktop, tablet, and mobile work smoothly. Desktop users see a rotating inspirational panel alongside the form.
+- Mobile-friendly: correctly-sized tap targets, appropriate keyboard types for each field, and standard browser auto-complete hints for email, name, and password.
+- Inline validation messages appear without reloading; step indicator always shows current and upcoming steps.
+
+---
 
 ### 🎯 Step 2: Account Type Selection
 
-**Location**: `/register` (second step)
+Your institution configures the account types shown to match its community of library users (students by program/year, faculty, visiting researchers, guests, etc.). Choose the option that best describes you — it determines which fields appear in Profile Completion below and sets your default borrowing limits and dashboard layout.
 
-**Available Account Types**:
+- Common categories: **Student** (may be further split by program or year), **Professor / Faculty**, or **Guest / Visitor**.
+- Can be changed later: contact library administration if your status changes.
 
-#### 👨‍🎓 Student Account
-- **Purpose**: For students enrolled in academic programs
-- **Features**: Book borrowing, reservations, digital resources access
-- **Access**: Student dashboard and library services
+> Note: Exact labels on your page may differ from the examples above (e.g., "Philosophy – Year 2" instead of generic "Student"). Pick whichever option best matches your current relationship with the institution.
 
-#### 👨‍🏫 Professor Account  
-- **Purpose**: For faculty members and instructors
-- **Features**: Course management, research tools, extended borrowing
-- **Access**: Faculty dashboard and administrative functions
-
-#### 👤 Guest Account
-- **Purpose**: For visitors and temporary users
-- **Features**: Limited access, on-site resources
-- **Access**: Guest dashboard with basic functionality
-
-#### Selection Guidelines
-- **Choose Accurately**: Account type affects permissions and features
-- **Can Be Changed**: Contact administration to modify account type later
-- **Role-Based Access**: Different dashboards and features per type
+---
 
 ### 🔒 Step 3: Security Setup
 
-**Location**: `/register` (third step)
-
-**Security Features**:
+**Required Information**:
+- **Password**: Meets all rules listed below.
+- **Confirm Password**: Entered a second time to catch typos.
 
 #### Password Requirements
+
 ```
-✅ Minimum 8 characters
-✅ Maximum 128 characters  
-✅ At least one uppercase letter (A-Z)
-✅ At least one lowercase letter (a-z)
-✅ At least one number (0-9)
-✅ At least one special character (!@#$%^&* etc.)
-❌ Cannot contain your name
-❌ Cannot be common passwords
-❌ Cannot use sequential patterns
+✅  8–128 characters
+✅  At least one uppercase letter, one lowercase letter, one number, one special character
+❌  Cannot contain first name, last name, or email username — even with substitutions (0→o, 3→e, 4→a)
+❌  Cannot be a known weak or common password
+❌  Cannot use sequential or repeating characters (1234, abcd, qwer, aaaa, 1111)
 ```
 
-#### Password Strength Indicators
-- **Visual Feedback**: Real-time strength assessment
-- **Requirement Checklist**: Shows which criteria are met
-- **Security Tips**: Helpful guidance for strong passwords
+> 💡 **Tip**: Hover or tap the (?) icon next to the Password label for an in-form reference of these rules.
+
+#### Password Tips
+- **Use a passphrase**: Three or four random words combined with a number and symbol (e.g., `CorrectHorse5Battery!`) are stronger and more memorable than a short random string.
+- **Add length**: A 12–16 character passphrase is significantly stronger than an 8-character password even when both satisfy the minimum rules.
+- **Avoid personal info**: Don't use names, email username, birthday, phone number, student ID, or institution name.
 
 #### Additional Security
-- **Cloudflare Turnstile**: Bot protection and abuse prevention
-- **Rate Limiting**: Prevents brute force attacks
-- **Secure Transmission**: HTTPS encryption for all data
+- **CAPTCHA / Bot Protection**: A Cloudflare Turnstile challenge must be completed. If CAPTCHA is temporarily unavailable, registration cannot proceed — please try again later or contact the administrator.
+- All data sent over HTTPS; registration and related actions are rate-protected against abuse.
 
-### 📧 Email Verification
+---
 
-**Location**: `/email-confirmation`
+## 📧 Email Verification
 
-#### Verification Process
-1. **Confirmation Email**: Sent immediately after registration
-2. **Secure Link**: Unique, time-limited verification URL
-3. **One-Click Verification**: Click link to confirm email
-4. **Account Activation**: Account becomes fully functional
+**Go here after submitting the form**: [https://sjrslms.in/email-confirmation](https://sjrslms.in/email-confirmation) — you're redirected here automatically, and can also navigate to it directly.
 
-#### Email Features
-- **Professional Design**: Clear, branded email template
-- **Expiration**: Links expire after 24 hours for security
-- **Resend Option**: Request new confirmation if needed
-- **Status Tracking**: Real-time verification status
+### Process
 
-#### Troubleshooting
-- **Email Not Received**: Check spam folder, resend confirmation
-- **Link Expired**: Request new confirmation email
-- **Wrong Email**: Contact support for email correction
+1. A confirmation email is sent immediately after you submit the form.
+2. Open the email and click the single-use verification link (works on any device).
+3. Your email is marked verified → next, you log in and complete your profile.
 
-## Special Registration Features
+### Details
 
-### 🔄 Smart Registration Recovery
+- **Expires in 24 hours**: Request a new one if needed ([see Troubleshooting](#troubleshooting)).
+- **Single-use only**: Clicking a used link shows a friendly "already verified" message — just log in at [https://sjrslms.in/login](https://sjrslms.in/login).
+- **Resend button**: Available on this page with a 30-second cooldown between requests.
+- **No link in the URL? You're still in the right place**: If you land here without clicking the verification link from your email (e.g. you refreshed the page after registering, or bookmarked this address), the page still shows what to do next: a "Check Your Email" summary with the Next Steps, a "Wrong email?" shortcut to re-enter your email, and the Resend Email and Go to Login buttons.
 
-#### Pending Registration Handling
-- **Session Persistence**: Registration data saved in secure storage
-- **Email Memory**: System remembers your email between sessions
-- **Resume Capability**: Continue registration where you left off
-- **Cross-Tab Sync**: Registration state synchronized across browser tabs
+---
 
-#### Error Recovery
-- **Form Data Preservation**: Information saved during errors
-- **Automatic Retry**: Smart retry mechanisms for temporary issues
-- **Graceful Degradation**: Works even with some service disruptions
+## After Registration: Onboarding
 
-### 📱 Mobile Optimization
+Once your email is verified, the system guides you through two final stages before your dashboard is unlocked.
 
-#### Responsive Design
-- **Touch-Friendly**: Large tap targets for mobile devices
-- **Adaptive Layout**: Optimized for all screen sizes
-- **Mobile Navigation**: Swipe gestures and mobile-specific controls
-- **Performance**: Fast loading on mobile networks
+### 1. Complete Your Profile
 
-#### Mobile Features
-- **Keyboard Optimization**: Proper keyboard types for each field
-- **Auto-complete**: Mobile-friendly auto-complete suggestions
-- **Zoom Support**: Proper zoom functionality without breaking layout
+**Location**: [https://sjrslms.in/profile-completion](https://sjrslms.in/profile-completion) — appears automatically after your first post-verification login.
 
-### 🛡️ Security Features
+The exact fields depend on your chosen account type, with a step-by-step guided form and Next / Previous navigation plus a progress indicator.
 
-#### Advanced Protection
-- **Bot Detection**: Cloudflare Turnstile integration
-- **Rate Limiting**: Multiple rate limits for abuse prevention
-- **Input Sanitization**: All inputs properly sanitized
-- **Secure Storage**: Sensitive data stored securely
+- **Students**: Registration Number (student ID), Year of Study, Phone Number
+- **Faculty / Professors**: Stream / Department / Specialization, Phone Number
+- **Guests / Visitors**: Phone Number, About / Institution / Purpose, City, State, Country
 
-#### Privacy Protection
-- **Data Minimization**: Only collect necessary information
-- **Secure Transmission**: All data encrypted in transit
-- **Privacy Compliance**: GDPR and data protection standards
-- **User Control**: Control over your data and account
+> If you log out before finishing, you'll be automatically returned here on your next login. Dashboard access is unavailable until this step is submitted.
 
-## After Registration
+### 2. Pending Admin Approval
 
-### 🎉 Successful Registration
+**Location**: [https://sjrslms.in/pending-approval](https://sjrslms.in/pending-approval)
 
-#### What Happens Next
-1. **Confirmation Email**: Check your inbox for verification
-2. **Email Verification**: Click the confirmation link
-3. **Account Activation**: Your account is now active
-4. **Login**: Use your credentials to access the system
-5. **Dashboard**: Explore your personalized dashboard
+After profile submission, your account enters a **Pending Approval** state — normal and required for most institutions.
 
-![First Time Login Journey: verify email, complete profile, admin approval, start using the library](/images/first-time-login.svg)
+What this page shows:
+- A clear "under review" message
+- A summary of the key details you submitted, for confirmation
+- A **Refresh Status** button to check for approval
+- A **Logout** button
 
-#### First Login
-- **Welcome Tour**: Guided introduction to the system
-- **Profile Setup**: Complete your profile information
-- **Preferences**: Configure your account preferences
-- **Explore**: Discover available features and resources
+When approved: a success banner appears, and after a few seconds you're redirected to your dashboard. If corrections are required, you'll receive a rejection notice with instructions to resubmit.
 
-###  Troubleshooting Common Issues
+### 3. Account Active
 
-#### Registration Problems
+You can now sign in any time to browse the catalog, place holds, make reservations, check out materials (subject to your account type's limits), and use all other features available to your user type.
 
-**Email Already Registered**
+---
+
+## Troubleshooting
+
+### Registration Problems
+
+**Email Already Registered / No Visible Error on Submit**
 ```
-Solution: 
-1. Try to login with existing account
-2. Use password reset if needed
-3. Contact support if you believe this is an error
+For your security, the system does not reveal whether an email is already registered.
+Instead, an appropriate email is always sent:
+
+1. Check inbox (and spam/junk folder) for that email.
+2. If the email was already registered, you'll receive a "welcome back" / password-reset style message.
+3. If nothing arrives, wait briefly then use the Resend Confirmation page
+   (see link under Email Verification above).
+4. Contact support if you believe there is an error.
 ```
 
 **Password Not Accepted**
 ```
-Solution:
-1. Check all password requirements
-2. Use password strength indicator
-3. Avoid common patterns and personal information
-4. Include mix of character types
+1. Review the password requirements in Step 3 above.
+2. Reference the in-form ? icon next to the Password label.
+3. Common character substitutions of your name or email username are detected.
+4. Try a longer passphrase (12+ characters with mixed types).
 ```
+
+**CAPTCHA / Human Verification Problem**
+```
+1. Complete the Turnstile challenge in Step 3 — a checkmark should appear.
+2. If it expires, the challenge resets automatically; complete it again.
+3. If CAPTCHA appears unavailable on screen, refresh the page.
+4. If still unavailable, registration cannot proceed — try again later or contact the administrator.
+```
+
+**Temporary / Disposable Email Blocked**
+```
+1. Use a permanent, personal email address you control long-term.
+2. School or work email addresses are preferred where applicable.
+3. Contact support if you have a valid reason for an unusual domain and believe
+   it was rejected in error.
+```
+
+### Email Verification Problems
 
 **Verification Email Not Received**
 ```
-Solution:
-1. Check spam/junk folder
-2. Add noreply@yourdomain.com to contacts
-3. Request resend of confirmation email
-4. Verify email address is correct
+1. Allow up to 5–10 minutes (delivery depends on your provider).
+2. Check Spam / Junk / Clutter folders.
+3. Use Resend Email on the Email Confirmation page (30-second cooldown).
+4. If you entered the wrong email, correct it via the Resend Confirmation page
+   (see the Email Verification section link above).
+5. Add the library sender domain to your email contacts / safe senders list.
 ```
 
-**Confirmation Link Expired**
+**Confirmation Link Expired ("Invalid or expired confirmation token")**
 ```
-Solution:
-1. Visit /resend-confirmation
-2. Enter your email address
-3. Request new confirmation email
-4. Click new link within 24 hours
+Request a new verification email from the Resend Confirmation page (see Email
+Verification section above), then click the new link within 24 hours.
 ```
 
-#### Technical Issues
-
-**Page Not Loading**
+**Confirmation Link Already Used ("Email already confirmed")**
 ```
-Solution:
-1. Check internet connection
-2. Try different browser
-3. Clear browser cache and cookies
-4. Disable browser extensions
+Expected — your email was already verified. Simply log in. If you haven't completed
+Profile Completion yet, you'll be prompted for that next.
 ```
 
-**Form Not Submitting**
-```
-Solution:
-1. Check all required fields
-2. Fix any validation errors
-3. Ensure JavaScript is enabled
-4. Try refreshing the page
-```
+### Profile & Approval Problems
 
-## Security Best Practices
-
-### 🔐 Password Security
-
-#### Creating Strong Passwords
+**Stuck on Profile Completion Page / Can't Access Dashboard**
 ```
-✅ Use passphrases: "CorrectHorseBatteryStaple"
-✅ Mix character types: "MyL1brary@2024!"
-✅ Avoid personal information: Don't use names, birthdays
-✅ Unique passwords: Different password for each service
-✅ Regular updates: Change passwords periodically
+1. Fill every required field in the form.
+2. Use Next / Previous to navigate — all steps must be completed.
+3. Submit the final step to advance to Pending Approval.
+4. Contact support if a required field cannot be filled (e.g., you don't know
+   your registration number).
 ```
 
-#### Password Management
-- **Password Manager**: Use a reputable password manager
-- **Two-Factor Authentication**: Enable when available
-- **Security Questions**: Choose memorable, secure questions
-- **Backup Methods**: Keep secure backup of passwords
-
-### 🛡️ Account Security
-
-#### Protection Measures
-- **Secure Email**: Use a secure email account
-- **Public Wi-Fi**: Avoid registration on public networks
-- **Device Security**: Use secure, updated devices
-- **Browser Security**: Keep browser updated and secure
-
-#### Monitoring Your Account
-- **Login Alerts**: Monitor for unusual login attempts
-- **Account Activity**: Review your account activity regularly
-- **Update Information**: Keep contact information current
-- **Report Issues**: Report suspicious activity immediately
-
-## Support and Help
-
-### 📞 Getting Help
-
-#### Registration Support
-- **Email Support**: support@yourdomain.com
-- **Phone Support**: +1-XXX-XXX-XXXX
-- **Live Chat**: Available on website during business hours
-- **Help Desk**: In-person support at library locations
-
-#### Self-Service Resources
-- **FAQ Section**: Common questions and answers
-- **Video Tutorials**: Step-by-step video guides
-- **Knowledge Base**: Comprehensive documentation
-- **Community Forum**: User community support
-
-### 📚 Additional Resources
-
-#### User Guides
-- **Getting Started Guide**: Introduction to the system
-- **Dashboard Guide**: Using your personalized dashboard
-- **Library Services Guide**: Using library features
-- **Technical Requirements**: System requirements and compatibility
-
-#### Training Materials
-- **Video Tutorials**: Comprehensive video library
-- **Interactive Tours**: Guided system tours
-- **Printable Guides**: PDF documentation
-- **Workshop Schedule**: In-person training sessions
-
-## Frequently Asked Questions
-
-### 🤔 Registration Questions
-
-**Q: Can I change my account type after registration?**
-A: Yes, contact the library administration to request an account type change.
-
-**Q: What if I forget my password?**
-A: Use the "Forgot Password" link on the login page to reset your password.
-
-**Q: Can I register with a temporary email address?**
-A: No, you must use a permanent, accessible email address for account verification.
-
-**Q: Is my personal information secure?**
-A: Yes, all data is encrypted and protected according to industry standards.
-
-**Q: How long does email verification take?**
-A: Usually immediate, but can take up to 10 minutes depending on your email provider.
-
-**Q: Can I register multiple accounts?**
-A: No, each person should have only one account. Multiple accounts may be suspended.
-
-### 🔧 Technical Questions
-
-**Q: What browsers are supported?**
-A: Modern browsers including Chrome, Firefox, Safari, and Edge.
-
-**Q: Do I need JavaScript enabled?**
-A: Yes, JavaScript is required for the registration process.
-
-**Q: Can I register on mobile devices?**
-A: Yes, the registration process is fully optimized for mobile devices.
-
-**Q: What if my confirmation link expires?**
-A: Visit the resend confirmation page to request a new verification email.
+**Status Still "Pending Approval" After Some Time**
+```
+1. Click Refresh Status on the Pending Approval page.
+2. Allow the processing time communicated by your institution.
+3. If you received a rejection email, follow its instructions and resubmit.
+4. Contact the library help desk if the delay is unexpected.
+```
 
 ---
 
-**Last Updated**: v6.6.2 (2026-03-14)  
-**Support**: support@yourdomain.com | **Help Desk**: +1-XXX-XXX-XXXX
+## Security Best Practices
+
+### Password Security
+
+```
+✅  Use a passphrase (3–4 unrelated words). Longer is always stronger.
+      Example: "Purple!Coffee8Plays$Guitar42"
+✅  Include uppercase, lowercase, number, and special character types.
+✅  Use a different password for every online service.
+❌  Never reuse your SJRS LMS password on any other site.
+❌  Avoid names, birthdays, student IDs, institution names, or common
+     keyboard patterns (qwerty, asdf, 1234).
+```
+
+- **Use a password manager** to generate, store, and auto-fill strong unique passwords.
+- **Enable 2FA** from your profile settings once your account is approved.
+- Library staff will **never** ask you for your password via email, chat, or phone.
+
+### Account Security
+
+- Choose an email provider you trust, and protect it with its own strong password and 2FA.
+- Avoid registering on public Wi-Fi when possible; if you must use one, confirm HTTPS (padlock icon) and consider a trusted VPN.
+- Keep your operating system and browser updated.
+- Periodically review your account activity page after login. Report anything unfamiliar to the library help desk.
+
+---
+
+## Support
+
+- **Email / Help Desk**: Use your institution's published support address (see the library website or the Help link inside the app after login). In-person help is also available at the library help desk during service hours.
+- **Self-service**: Most common issues are resolved without contacting staff — use the Login, Resend Confirmation, and Reset Password pages linked earlier in this guide.
+- **Other guides**: See the rest of the User Guides (top navigation) for borrowing, reservations, penalties, profile settings, the dashboard, and library services.
+
+---
+
+## FAQ
+
+**Q: Can I change my account type after registration?**
+A: Yes — contact library administration if your status changes.
+
+**Q: What if I forget my password?**
+A: Use the **"Forgot Password"** link on the Login page.
+
+**Q: Can I register with a temporary or disposable email?**
+A: No. A permanent, accessible email is required for verification, password recovery, and notifications. Known temporary email providers are blocked automatically.
+
+**Q: Is my personal information secure?**
+A: Yes. All data is encrypted in transit, stored securely, and handled per the institution's privacy policy and applicable regulations.
+
+**Q: How long does email verification take?**
+A: The email is sent instantly. Delivery varies by provider — usually under a minute, but allow up to 5–10 minutes and check spam/junk.
+
+**Q: Can I register multiple accounts?**
+A: No — each person should have one account. Duplicate accounts may be suspended. If your status changes, request an account type update.
+
+**Q: Why do I see "Pending Approval" after finishing my profile?**
+A: Most accounts require a short staff review before activation. Check back any time by clicking **Refresh Status**.
+
+**Q: What browsers are supported?**
+A: Latest Chrome, Firefox, Safari, and Edge. Keep your browser up to date.
+
+**Q: Is JavaScript required?**
+A: Yes — form validation, CAPTCHA, and step navigation all require it.
+
+**Q: What if my confirmation link expires? / The Resend button is disabled.**
+A: Request a new link from the Resend Confirmation page. The Resend button applies a 30-second cooldown between requests to prevent abuse; it re-enables automatically.
+
+---
+
+**Last Updated**: August 6, 2026
