@@ -60,11 +60,6 @@ export default defineConfig({
           items: [{ autogenerate: { directory: 'user-guides' } }],
         },
         {
-          label: 'Features',
-          collapsed: true,
-          items: [{ autogenerate: { directory: 'features' } }],
-        },
-        {
           label: 'Architecture',
           collapsed: true,
           items: [{ autogenerate: { directory: 'architecture' } }],
