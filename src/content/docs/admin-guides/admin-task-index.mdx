@@ -1,0 +1,126 @@
+---
+title: "Admin Task Index"
+description: "Quick task-oriented answers for librarians, admins, and superusers."
+---
+
+Find quick step-by-step instructions for common library staff, admin, and superuser operations.
+
+## Book Management
+
+### How do I add a new book to the catalog?
+1. Go to **Dashboard** → **Books** (`/dashboard/books`).
+2. Click **Create Book**.
+3. Enter the book details (title, author, ISBN, publisher, category, cover image, etc.).
+4. Add **book copies** (copy number, location, shelf code, price) in the Copies section.
+5. Click **Save** to create the record.
+
+### How do I bulk-import books from a spreadsheet?
+1. Go to **Dashboard** → **Books** (`/dashboard/books`).
+2. Click the **Import / Bulk Upload** action.
+3. Download the **CSV Template** if you don't already have it.
+4. Fill in the template with one book per row, then upload the file.
+5. The system validates each row. Review any errors or flagged duplicates, then confirm the import.
+
+### How do I restore a "Lost" or "Damaged" copy?
+If a copy was previously marked Lost or Damaged and has been found or repaired:
+1. Open the **Book Details** page for the title.
+2. Scroll to the **Copies** section.
+3. Find the specific copy (by **Copy Number**) currently marked `lost` or `damaged`.
+4. Click the **Edit** button for that copy.
+5. Change the **Status** dropdown back to **Available**.
+6. Save your changes. The copy returns to circulation immediately.
+
+### How do I weed (remove) books from the catalog?
+1. Go to **Dashboard** → **Books** (`/dashboard/books`).
+2. Use the checkboxes to select the book(s) you wish to remove, or open a single book's detail page.
+3. Click the **Delete / Trash** action.
+4. **Confirm** the action in the dialog.
+    *   *Note: Books with active loans, active reservations, or linked penalty records cannot be deleted until those are resolved first. Consider marking copies as "Withdrawn" if you want to keep the historical record.*
+
+### How do I manage reference books?
+1. Go to **Dashboard** → **Reference Books** (`/dashboard/reference-books`).
+2. Click **Add Reference Book**.
+3. Enter the title, author, call number, reference category, and section.
+4. Set the status to **Available** or **In Use** and save.
+5. Use **Reference Categories** (`/dashboard/reference-categories`) and **Reference Sections** (`/dashboard/reference-sections`) to organize your collection.
+
+## Circulation (Loans & Returns)
+
+### How do I check out a book to a user?
+1. Go to **Dashboard** → **Loans** (`/dashboard/loans`).
+2. Click **Create Loan**.
+3. Select the **User** (search by name, email, or member ID) and the specific **Book Copy** from the dropdowns.
+4. Set the **Due Date** (defaults to your institution's standard borrow period).
+5. Click **Create Loan** to finalize.
+
+### How do I return a book?
+1. Go to **Dashboard** → **Loans** (`/dashboard/loans`).
+2. Find the loan with status "Active" or "Overdue".
+3. Click the **Return** button (rollback-arrow icon).
+4. Confirm in the dialog. The copy is marked as returned and becomes available again.
+
+### How do users renew their own loans?
+End users can request a renewal from their dashboard:
+1. Go to **Dashboard** → **Loans** (`/dashboard/loans`).
+2. Find an active loan near or within its renewal window.
+3. Click the **Renew** button (circular-arrow icon).
+4. The renewal request is routed to library staff for review. Once approved, the due date is extended.
+
+## Acquisitions & Resources
+
+### How do I manage patron book orders?
+Library staff use this to approve or decline end-user requests:
+1. Go to **Dashboard** → **Orders** (`/dashboard/orders`).
+2. Review the list of pending requests.
+3. Click on any order to see its full details.
+4. **Approve** or **Reject** the request, adding an optional note explaining the decision.
+
+### How do I upload or create a digital resource?
+1. Go to **Dashboard** → **Digital Resources** (`/dashboard/digital-resources`).
+2. Click **Create Resource**.
+3. Select the **Resource Type** (e-book, PDF document, web link, audiobook, video, etc.).
+4. Upload the file or provide the URL, then add a title, description, cover image, and category tags.
+5. Click **Save**.
+
+## System & Configuration
+
+### How do I configure Institution Settings?
+1. Go to **Dashboard** → **Institution Settings** (`/dashboard/institution-settings`).
+2. Select the tab you want to configure:
+    *   **Academic Year**: Set the active academic year and which month the year starts.
+    *   **Semester Dates**: Define start and end dates for each semester (used for due-date calculations, reports, and borrow limits).
+    *   **UPI Payments**: UPI ID, payee name, and merchant code used for penalty payments.
+3. Click **Save** on the tab after making changes.
+    *   *See [Institution Settings Guide](/admin-guides/institution-settings-guide) for full details.*
+
+### How do I view system activity logs?
+1. Go to **Dashboard** → **System Logs** (`/dashboard/system-logs`).
+2. Use the filters to narrow results by **Action Type**, **Affected Area**, **Date Range**, or **User**.
+3. Click **Export** to download the filtered list as CSV.
+    *   *See [System Logs Guide](/admin-guides/system-logs-user-guide) and [Action Logs Guide](/admin-guides/action-logs-guide) for full details.*
+
+### How do I add or manage library users (members)?
+1. Go to **Dashboard** → **Members** (`/dashboard/members`).
+2. Click **Add User**.
+3. Fill in the user's name, email, account type (role), and other required fields.
+4. The new user receives an email with next steps to set their password and verify their account.
+5. To change an existing user's role, find the user in the list, click **Edit**, select the new **Role** from the dropdown, and save.
+
+### How do I manage guest accounts?
+1. Go to **Dashboard** → **Guests** (`/dashboard/guests`).
+2. **View**: Check the list for names, emails, assigned roles, and statuses.
+3. **Add Guest**: Click **Create Guest**, enter their details, set access duration if applicable, and save.
+4. **Edit Guest**: Click the **Edit** icon, update details, and save.
+5. **Delete Guest**: Click the **Delete** icon and confirm.
+
+### How do I send a system-wide announcement?
+1. Go to **Dashboard** → **Announcements** (`/dashboard/announcements`).
+2. Click **New Announcement**.
+3. Enter the **Title** and **Message** body.
+4. Select the target audience (e.g. "All Users", "Students only", "Faculty").
+5. Choose delivery: **In-App**, **Email**, or both.
+6. Click **Send**.
+
+---
+
+**Last Updated**: August 7, 2026

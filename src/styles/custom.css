@@ -272,6 +272,34 @@ starlight-theme-select label svg {
 
 /* removed custom floating header button in favor of built-in social icons */
 
+/* Remove underlines from in-content links globally (guides + index pages).
+   Underlines return on hover / focus-visible for accessibility and to signal links. */
+:where(.main-content a),
+:where(.sl-markdown-content a),
+:where([data-pagefind-body] a) {
+  text-decoration: none;
+}
+
+:where(.main-content a:hover),
+:where(.main-content a:focus-visible),
+:where(.sl-markdown-content a:hover),
+:where(.sl-markdown-content a:focus-visible),
+:where([data-pagefind-body] a:hover),
+:where([data-pagefind-body] a:focus-visible) {
+  text-decoration: underline;
+}
+
+/* Keep homepage card-grid links consistent with the global rule above
+   (this used to be the only rule; leave it as an explicit guardrail). */
+.card-grid .card a {
+  text-decoration: none;
+}
+
+.card-grid .card a:hover,
+.card-grid .card a:focus-visible {
+  text-decoration: underline;
+}
+
 /* Show labels next to social icons on desktop and add spacing */
 @media (min-width: 50rem) {
   .right-group .social-icons {

@@ -2,120 +2,139 @@
 title: "Registration Flow"
 ---
 
+import { Aside } from '@astrojs/starlight/components';
 
-This guide explains the complete registration workflow for SJRS LMS, including account creation, email confirmation, admin approval, and how roles are assigned.
-
-![SJRS LMS Registration Flow diagram showing the six steps from personal information to login](/images/registration-flow.svg)
-
-## Overview
-
-- New accounts start with `status = "pending"`, `email_verified = false`, and `onboarding_status = "pending_email_confirmation"`.
-- After email confirmation, accounts remain `pending` until a superuser/admin approves them.
-- `role_id` is assigned using the `user_type_role_mapping` table; if no mapping exists, `role_id` stays `NULL` until admin assignment.
-- Users can check their status via OTP-based public endpoints.
-
-## Step 1: Register
-
-**Endpoint:** `POST /api/auth/register` (public)
-
-**Request Body:**
-```json
-{
-  "email": "newuser@example.com",
-  "password": "REPLACE_WITH_YOUR_PASSWORD",
-  "firstName": "Jane",
-  "lastName": "Smith",
-  "userType": "Student",
-  "phone": "+1234567890",
-  "stream": "CSE",
-  "turnstileToken": "<optional-captcha-token>"
-}
-```
-
-**Response:**
-```json
-{
-  "success": true,
-  "message": "Registration received. If this email is associated with an account, you will receive further instructions shortly.",
-  "data": { "pending": true }
-}
-```
-
-Notes:
-- The response is enumeration-safe and does not reveal account existence.
-- Accounts are created with `status = "pending"` and `email_verified = false`.
-- `role_id` is determined by `user_type_role_mapping`; if no mapping, `role_id = NULL`.
-
-## Step 2: Confirm Email
-
-**Endpoint:** `POST /api/auth/confirm-email` (public, from email link)
-
-After confirmation, `email_verified = true`, but the account remains `pending` until admin approval.
-
-## Step 3: Check Status (Optional)
-
-Public OTP-based status check endpoints:
-- `POST /api/auth/check-status/send-otp` – sends OTP to the registered email.
-- `POST /api/auth/check-status/verify` – verifies OTP and returns workflow status.
-
-Workflow statuses:
-- `pending_email_confirmation` – email not yet verified.
-- `profile_incomplete` – email verified, but profile details are not completed yet.
-- `pending_approval` – email verified and profile completed, awaiting admin approval.
-- `complete` – onboarding finished, account fully activated.
-- `active` / `inactive` / `suspended` – terminal account states.
-
->  **Detailed Reference**: See [Onboarding Status System](/features/onboarding-status) for complete workflow documentation, admin management, and troubleshooting.
-
-Note:
-- The canonical persisted onboarding field is `onboarding_status`.
-- Some responses also include `workflowStatus` / `workflow_status` for compatibility.
-
-## Step 4: Admin Approval
-
-Admins approve and assign/override roles using the user management endpoint:
-- `PUT /api/users/:id` – set `status = "active"` and optionally set/override `role_id`.
-
-Recommended process:
-- Approve after verifying profile completeness and institutional eligibility.
-- Assign appropriate `role_id` based on `user_type` or override as needed.
-
-## View Current Profile
-
-**Endpoint:** `GET /api/auth/me` (authenticated)
-
-Returns user details including `role`, `status`, `email_verified`, and `workflowStatus`.
-
-Example response:
-```json
-{
-  "success": true,
-  "message": "Profile retrieved successfully",
-  "user": {
-    "id": 123,
-    "email": "user@example.com",
-    "first_name": "John",
-    "last_name": "Doe",
-    "role": "Student",
-    "status": "pending",
-    "user_type": "Student",
-    "phone": "+1234567890",
-    "stream": "CSE",
-    "email_verified": false,
-    "onboarding_status": "pending_email_confirmation",
-    "workflowStatus": "pending_email_confirmation"
-  }
-}
-```
-
-## Security & UX Considerations
-
-- Registration is rate-limited and uses CAPTCHA when enabled.
-- Responses are standardized and enumeration-safe.
-- Pending users cannot access privileged features until admin approval.
-- Superusers have full access to manage roles and approvals.
+This guide walks through the complete account creation experience from the user's perspective, showing each stage from filling out the registration form to getting full dashboard access. It is intended as a plain-language overview for end users, librarians, and support staff. For technical API details, see the Development and API sections of the documentation.
 
 ---
 
-**Last Updated:** January 2025  
-**Version:** 1.0.0
+## Flow Summary
+
+```mermaid
+graph TD
+    A[Start at Register page] --> B[Step 1: Name + Email]
+    B --> C[Step 2: Choose Account Type]
+    C --> D[Step 3: Set Password]
+    D --> E[Submit form]
+    E --> F[Check Your Email: click verification link]
+    F --> G[First login: Complete Profile]
+    G --> H[Pending Approval]
+    H --> I[Staff reviews and approves]
+    I --> J[Account is Active]
+    J --> K[Dashboard access unlocked]
+```
+
+---
+
+## Stage 1: Registration Form
+
+**Where**: `/register`
+
+The registration page is a single multi-step form with three short steps. All three steps are completed on the same page.
+
+**Step 1 – Personal Information**
+- First name and last name (automatically formatted with correct capitalization)
+- Email address (a permanent address you can access; temporary or disposable email services are not accepted)
+
+**Step 2 – Account Type**
+- Choose the option that best describes your relationship with the institution (examples: Student by program year, Professor / Faculty, Guest / Visitor)
+- This selection determines which fields appear later in Profile Completion, your default borrowing limits, and which dashboard layout you see
+
+**Step 3 – Security Setup**
+- Create a password and confirm it. Passwords must be 8–128 characters and include at least one uppercase letter, one lowercase letter, one number, and one special character. Common keyboard patterns and character substitutions of your name or email username are blocked.
+- Complete the human verification step on-screen before submitting.
+
+<Aside type="note" title="Privacy Note">
+For your privacy, the registration page does not reveal whether an email is already registered. Whether the address is new or already exists in the system, an appropriate email is always sent containing the correct next steps.
+</Aside>
+
+---
+
+## Stage 2: Email Verification
+
+**Where**: `/email-confirmation`
+
+Immediately after you submit the registration form, a verification email is sent.
+
+**What to do next**:
+1. Open the email (check your Spam or Junk folder if it does not arrive within a few minutes)
+2. Click the **single-use verification link** inside the email. The link expires 24 hours after being sent.
+3. Your email address is now marked verified.
+
+If the link expired or you need a new message, use the **Resend Email** button on the Email Confirmation page. It has a short cooldown between requests to prevent abuse.
+
+---
+
+## Stage 3: First Login and Profile Completion
+
+**Where**: After logging in, you are directed to `/profile-completion` automatically.
+
+Once your email is verified, you sign in and complete a short profile form before the dashboard is unlocked. The exact fields shown depend on the account type you chose during registration:
+
+- **Students** – student registration number, year of study, phone number, and stream/department
+- **Professors / Faculty** – department or specialization, phone number
+- **Guests / Visitors** – phone number, institution or organization, city/state/country, and a short statement about the purpose of your visit
+
+You can leave and come back later — if you sign out before finishing, you are returned to Profile Completion automatically on your next login. Dashboard access is unavailable until you submit this step.
+
+---
+
+## Stage 4: Pending Approval
+
+**Where**: `/pending-approval`
+
+After profile submission, your account enters a review period. This is normal for most institutions and protects against unauthorized accounts.
+
+While waiting:
+- The page shows a friendly "under review" message and a summary of the information you submitted, for your confirmation
+- Use the **Refresh Status** button anytime to check whether a decision has been made
+- You can also sign out and return later
+
+When a staff member approves the account, a success banner appears and you are redirected to your dashboard after a brief countdown. If additional information is required, you receive a notice with instructions.
+
+---
+
+## Stage 5: Account is Active
+
+Once approved:
+- Dashboard access is unlocked
+- You can browse the catalog, place borrow requests, manage reservations, and use every feature available to your account type
+- A welcome notification appears in your notification center
+
+**Tip**: From the dashboard, we recommend new users:
+1. Visit **My Profile** to add a profile picture and confirm your details
+2. Open **Settings** → **Security & MFA Settings** to enable Multi-Factor Authentication for account safety
+3. Review **Notification Preferences** so you receive due-date reminders and reservation-ready alerts
+
+---
+
+## Checking Your Account Status Anytime
+
+If you are unsure which stage you are at:
+- Sign in at `/login` — you are directed to the correct stage automatically
+- Or visit `/check-status` for a public status-check flow using your email and a one-time passcode
+
+---
+
+## Troubleshooting the Flow
+
+| Problem | What to do |
+|---------|-----------|
+| Verification email never arrives | Wait 5–10 minutes, then check the Spam or Junk folder. Use **Resend Email** on the Email Confirmation page. Confirm you entered the correct email address during registration. |
+| Link says "already verified" | Normal when you clicked the link more than once. Simply sign in at `/login`. If Profile Completion is pending, it prompts you next. |
+| Link says "expired or invalid" | Request a new verification email from the Resend Confirmation page and then click the new link within 24 hours. |
+| Stuck on Pending Approval for longer than expected | Click **Refresh Status** on the Pending Approval page. If the delay is unusual for your institution, contact the library help desk or the administrator. |
+| Cannot log in after approval | Reset your password using the **Forgot Password** link on the login page, or try signing in again with the correct email capitalization. |
+| Says "wrong email or password" but you are sure | Use **Forgot Password** on the login page to set a new password. Remember passwords are case-sensitive. |
+
+---
+
+## Related Documentation
+
+- [Registration Guide](/user-guides/registration-guide) — Full step-by-step instructions with detailed validation rules and troubleshooting
+- [Profile Guide](/user-guides/profile-guide) — Managing your profile information after activation
+- [Settings Guide](/user-guides/settings-guide) — Notification preferences, MFA setup, and personalization options
+
+---
+
+**Last Updated**: August 7, 2026

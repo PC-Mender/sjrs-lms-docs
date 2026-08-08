@@ -1,0 +1,99 @@
+---
+title: "Circulation Administration"
+description: "Order approvals, check-out/check-in, returns, renewals, overdue handling, reservation claims, and penalty waivers for librarians and admins."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+Circulation administration covers everything staff do to manage the flow of books and payments after a patron submits a request or a loan is active.
+
+Primary routes used by this work:
+- **Orders**: `/dashboard/orders` — Borrow requests (order management)
+- **Loans**: `/dashboard/loans` — Active & historical loans, check-outs, returns, renewals
+- **Reservations**: `/dashboard/reservations` — Queue and ready-to-claim management
+- **Penalties**: `/dashboard/penalties` — Late-return penalties, waivers, and payments
+
+## Orders Management
+
+### Approving or Rejecting Borrow Requests
+
+1. Go to **Dashboard** → **Orders** (`/dashboard/orders`).
+2. Use the **Status** filter to show only **Pending** orders.
+3. Open any order to review:
+   - User summary (name, role, current borrow limits, active loan count)
+   - List of requested books and copies
+   - Request date and any comments
+4. Click **Approve** if the request complies with borrow limits and availability. Or click **Reject** and provide a reason (displayed to the user).
+5. Once approved, an order moves through its workflow to generate loans.
+
+<Aside type="tip" title="Order priority policy">
+The order in which requests are taken from pending is controlled by **Order Priority Policy** at `/dashboard/order-priority-policy`. Adjust that page to change how requests are ranked when multiple users compete for copies.
+</Aside>
+
+## Loans Management
+
+### Checking Out (Create Loan)
+
+1. Go to **Dashboard** → **Loans** (`/dashboard/loans`).
+2. Click **Create Loan**.
+3. Pick the **User** (search by name, email, or registration number).
+4. Pick the specific **Book Copy** (copy number, location, shelf code).
+5. Verify or adjust the **Due Date** (defaults to role-based borrow period).
+6. Click **Create Loan**.
+
+### Returning a Loan
+
+1. In the **Loans** table, find the active loan.
+2. Click **Return**.
+3. Confirm the return. Any overdue penalty is generated automatically at this point (see Penalties Management below).
+
+### Managing Renewals
+
+Patrons can request renewals from their Loans page if the renewal window is open. Librarians, admins, and superusers can force-renew or cancel renewal requests:
+
+1. Filter the Loans table for loans with pending renewal requests.
+2. Open the loan, review the user's limit balance, penalties, and holds on the copy.
+3. Click **Approve Renewal** to extend the due date, or **Reject Renewal** and provide a reason.
+
+## Reservations Management
+
+### Ready-to-Claim Workflow
+
+When a reservation's wait position reaches 1 and a copy becomes available, the reservation becomes **Ready** and the user is notified. Staff can see the current queue from `/dashboard/reservations`.
+
+Use the status filter to:
+- **Ready** → remind user to claim or wait for automatic claim window
+- **Pending** → monitor queue lengths
+
+### Managing Expired Claims
+
+Ready reservations that go unclaimed past their expiration date become **Expired**. The system automatically advances the next person in the queue. From the reservations page, staff can:
+- Cancel pending reservations on behalf of a user
+- Extend the ready window if needed (configuration-dependent)
+
+## Penalties Management
+
+Penalties are auto-generated on return for overdue loans. Librarians/admins can:
+
+1. Go to **Dashboard** → **Penalties** (`/dashboard/penalties`).
+2. View a penalty's details: associated loan, user, amount, days overdue, payment history.
+3. **Waive** a penalty (cancels it; no payment required). Provide a reason when prompted for audit.
+4. **Mark as Paid** if the user paid outside the UPI flow (e.g. cash at help desk).
+
+<Aside type="note" title="UPI payment settings">
+Penalty payments use UPI configuration from **Institution Settings → UPI Payments** (`/dashboard/institution-settings?tab=upi-payments`). Enable this before patrons can pay penalties online.
+</Aside>
+
+## Related Documentation
+
+- **[Loans Guide (user-facing)](../user-guides/loans-guide)** — What patrons see and do for their own loans.
+- **[Orders Guide (user-facing)](../user-guides/orders-guide)** — Patron view of borrow request statuses.
+- **[Penalties Guide (user-facing)](../user-guides/penalties-guide)** — Patron view and payment flow.
+
+
+---
+
+**Last Updated**: August 7, 2026

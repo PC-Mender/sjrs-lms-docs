@@ -8,7 +8,7 @@ import { Aside } from '@astrojs/starlight/components';
 
 ## Overview
 
-The Settings page is your central hub for managing account preferences, notification settings, security options, and more. All roles access settings from the same unified route.
+The Settings page is your central hub for personalizing your library experience. It is organized into five tabs: General, Academic, Display, Data Tables, and Accessibility. Security options (password change, MFA, sessions) and notification preferences are managed on dedicated pages linked from the General tab.
 
 **Route**: `/dashboard/settings`
 
@@ -18,46 +18,104 @@ The Settings page is your central hub for managing account preferences, notifica
 2. Select **Settings** from the dropdown menu
 3. Or navigate directly to `/dashboard/settings`
 
-## Settings Sections
+## Settings Tabs
 
-### General Settings
+### General
 
-- **Display name** — how your name appears to other users
-- **Profile picture** — upload or change your avatar
-- **Language preference** — interface language (if multilingual is enabled)
-- **Timezone** — affects date/time display throughout the app
+The General tab covers basic appearance preferences and links to security and notification configuration pages.
 
-### Notification Preferences
+**Theme Mode**
+- Choose between **Light**, **Dark**, or **System Default** (matches your operating system setting)
+- Changes apply immediately to the interface
+
+**Language**
+- Select your preferred interface language
+- Options: English, Spanish, French
+
+**Linked Pages**
+- **Notification Preferences** → opens `/dashboard/notification-preferences`
+- **Security & MFA Settings** → opens `/dashboard/mfa-settings`
+
+### Academic
+
+Personalize how academic data is displayed and defaults are applied.
+
+<Aside type="note">
+Available options depend on your role. Students see additional defaults for their program year if configured by the institution.
+</Aside>
+
+Common Academic settings include:
+- Preferred academic year default for filters
+- Default semester selection for reports and catalog views
+- Department/stream filtering defaults
+
+### Display
+
+Tune visual preferences for the application layout.
+
+- **Density** — choose between Comfortable, Default, or Compact row spacing
+- **Animation level** — reduce motion effects if preferred
+- **Sidebar behavior** — pin the navigation sidebar open or let it collapse automatically
+- **Font size scaling** — scale the base font size up or down
+
+### Data Tables
+
+Customize how lists and data tables appear throughout the system.
+
+- **Default page size** — set how many rows appear per page (10, 20, 50, or 100)
+- **Column density** — tight or relaxed spacing in tables
+- **Sticky headers** — keep table headers visible while scrolling
+- **Row hover highlighting** — enable or disable hover effects
+- **Quick actions column** — show or hide the inline actions button column
+
+### Accessibility
+
+Configure interface options to suit your needs.
+
+- **Reduced motion** — disables non-essential animations and transitions
+- **High contrast** — applies enhanced contrast mode
+- **Focus ring style** — thicken or color-adjust keyboard focus indicators
+- **Screen reader hints** — expose additional ARIA labels for assistive technology
+- **Font size boost** — small, medium, or large text scaling
+
+---
+
+## Notification Preferences
 
 **Route**: `/dashboard/notification-preferences`
 
-1. Toggle which notification types you receive:
+Reached via the General tab link or directly from the profile avatar dropdown.
+
+1. Toggle which notification types you want to receive:
    - Due date reminders
    - Overdue alerts
    - Reservation-ready notifications
    - Badge awards
    - Penalty notifications
    - Announcements
-2. Choose delivery channels:
+2. Choose delivery channels for each type:
    - **In-app** — notifications appear in the notification center
    - **Email** — notifications sent to your registered email
-3. Click **Save** to update preferences
+3. Click **Save** to update your preferences
 
-### Security Settings
+---
 
-#### Change Password
-
-1. Go to **Settings** → **Security** tab
-2. Enter your **current password**
-3. Enter your **new password** (minimum 8 characters)
-4. Confirm the new password
-5. Click **Change Password**
-
-#### Multi-Factor Authentication (MFA)
+## Security & MFA Settings
 
 **Route**: `/dashboard/mfa-settings`
 
-1. Go to **Settings** → **Security** → **Two-Factor Authentication**
+Reached via the General tab link or directly from the profile avatar dropdown under "Security."
+
+### Change Password
+
+1. Enter your **current password**
+2. Enter your **new password** (8–128 characters, must include uppercase, lowercase, number, and special character)
+3. Confirm the new password
+4. Click **Change Password**
+
+### Multi-Factor Authentication (MFA)
+
+1. Go to the **Two-Factor Authentication** section
 2. Click **Enable Two-Factor Authentication**
 3. Choose your method:
    - **Authenticator App** — scan QR code with Google Authenticator or Authy
@@ -67,38 +125,24 @@ The Settings page is your central hub for managing account preferences, notifica
 5. Use a backup code if you lose access to your primary MFA method
 
 <Aside type="danger" title="Backup Codes">
-Store your backup codes securely. If you lose access to your MFA device and don't have backup codes, you'll need to contact a superuser to reset MFA.
+Store your backup codes securely. If you lose access to your MFA device and don't have backup codes, you'll need to contact library administration to reset MFA.
 </Aside>
 
-#### Session Management
+### Session Management
 
-1. Go to **Settings** → **Security** → **Active Sessions**
+1. Scroll to the **Active Sessions** section
 2. View all devices currently logged into your account
-3. See device name, IP address, location, and last active time
-4. Click **Revoke** to end any session you don't recognize
+3. See device name, approximate location, and last active time
+4. Click **Revoke** to end any session you do not recognize
 
-### Privacy Settings
-
-- **Profile visibility** — control who can see your profile information
-- **Activity status** — show/hide your online status
-- **Reading history** — enable/disable tracking of your reading activity
-
-## API Reference
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/user/profile` | Get current user profile |
-| PUT | `/api/v1/user/profile` | Update profile settings |
-| GET | `/api/v1/user/preferences` | Get notification preferences |
-| PUT | `/api/v1/user/preferences` | Update notification preferences |
-| POST | `/api/v1/auth/change-password` | Change password |
-| GET | `/api/v1/auth/sessions` | List active sessions |
-| DELETE | `/api/v1/auth/sessions/:id` | Revoke a session |
-| POST | `/api/v1/auth/mfa/enroll` | Enable MFA |
-| POST | `/api/v1/auth/mfa/disable` | Disable MFA |
+---
 
 ## Related Documentation
 
 - [Profile Guide](/user-guides/profile-guide) — Managing your profile information
 - [Notifications Guide](/user-guides/notifications-guide) — Understanding notification types
-- [MFA System](/features/mfa-system) — Technical MFA implementation
+- [Registration Guide](/user-guides/registration-guide) — Password rules and account security
+
+---
+
+**Last Updated**: August 7, 2026

@@ -1,10 +1,9 @@
 ---
 title: "Task Index"
-description: "A task-oriented guide to help you quickly find instructions for common operations."
+description: "Quick answers for common end-user tasks."
 ---
 
-
-Find quick answers and step-by-step guides for common tasks in the SJRS Library Management System.
+Find quick answers and step-by-step guides for common patron-facing tasks.
 
 ## Account & Security
 
@@ -15,282 +14,185 @@ If you have forgotten your password or need to change it:
 3. Enter your registered **email address**.
 4. Check your email for a **password reset link**.
 5. Click the link and enter your new password.
-    *   *Note: Passwords must be at least 8 characters long.*
+    *   *Note: Passwords must be 8–128 characters and include at least one uppercase letter, one lowercase letter, one number, and one special character (e.g. `Library2024!`).*
 
 ### How do I troubleshoot login issues?
 If you cannot log in:
 1. **Check Credentials**: Ensure your email and password are correct.
-2. **Session Limit**: You may have too many active sessions. The system limits concurrent sessions for security. Try logging out from other devices.
-3. **Account Lockout**: After 5 failed attempts, your account may be temporarily locked. Wait 30 minutes and try again.
-4. **Browser Issues**: Clear your browser cache or try a different browser.
-5. **Contact Support**: If the issue persists, contact a Librarian or Admin.
+2. **Session Limit**: You may have too many active sessions. Try logging out from other devices first.
+3. **Account Lockout**: After repeated failed attempts, your account may be temporarily locked. Wait and try again, or follow the password-reset link above.
+4. **Email Verification**: If your account is new, check your inbox for the email verification link — accounts must be verified before first login.
+5. **Pending Approval**: Some account types require review before activation. You'll see a status page after verifying your email.
+6. **Browser Issues**: Clear your browser cache or try a different browser.
+7. **Contact Support**: If the issue persists, contact library help desk staff.
 
-### How do I view my login history?
-1. Open your **Profile Menu** (top right).
+### How do I view my login history and active sessions?
+1. Open your **Profile Menu** (top right, click your avatar).
 2. Select **"Session Details"**.
-3. Review **Session History** for device, IP address, location, and start/end times.
+3. Review your **Session History** for device, approximate location, and start/end times.
+4. To end any session immediately, click **"Revoke"** next to it.
+    *   *See [Settings Guide](/user-guides/settings-guide) for full details on session management.*
 
-### How do I secure my account with MFA?
+### How do I secure my account with two-factor authentication (2FA)?
 1. Open your **Profile Menu** (top right).
-2. Select **"Two-Factor Authentication"**.
+2. Select **"Two-Factor Authentication"** — or navigate directly to `/dashboard/mfa-settings`.
 3. Click **"Enable Two-Factor Authentication"**.
-4. Choose your method:
-    *   **Authenticator App**: Scan the QR code with Google Authenticator or Authy.
-    *   **Email**: Verify your email address for OTPs.
-    *   **Passkey**: Register your device (FaceID, TouchID) for passwordless login.
-5. Save your **Backup Codes** in a safe place.
-
-### How do I manage my active sessions?
-If you suspect unauthorized access or forgot to logout:
-1. Open your **Profile Menu** (top right).
-2. Select **"Session Details"**.
-3. Review the list of devices logged into your account.
-4. Click **"Revoke"** next to any session you want to end immediately.
+4. Choose your preferred method:
+    *   **Authenticator App**: Scan the QR code with Google Authenticator, Authy, or a compatible TOTP app.
+    *   **Email OTP**: Receive one-time codes via your registered email address.
+    *   **Passkey**: Register your device (Face ID, Touch ID, Windows Hello, or a hardware security key) for passwordless login.
+5. Save your **Backup Codes** in a safe place — use one if you ever lose access to your primary method.
+    *   *See [Settings Guide](/user-guides/settings-guide) for full details.*
 
 ---
 
 ## Account & Profile
 
 ### How do I switch between my roles?
-If you have multiple roles (e.g., Student and Library Assistant):
+If you hold multiple roles:
 1. Click your **Profile Avatar** in the top right.
 2. Select **"Switch Role"**.
-3. Choose the role you want to use. The dashboard will update automatically.
+3. Choose the role you want to use. Your dashboard and available menus update automatically.
 
-### How do I change my notification settings?
-1. Go to **Dashboard** → **Settings** → **Notification Preferences** (`/dashboard/notification-preferences`).
-2. Toggle the switches for **Email** and **In-App** notifications.
-3. Customize alerts for **Loans**, **Orders**, and **System** updates.
-4. Click **"Save Preferences"**.
-    *   *See [Settings Guide](/user-guides/settings-guide) for full details.*
+### How do I change my notification preferences?
+1. Open your **Profile Menu** → **Settings** (`/dashboard/settings`).
+2. On the **General** tab, click the **"Notification Preferences"** shortcut — or go directly to `/dashboard/notification-preferences`.
+3. Toggle the switches for each type of alert (due-date reminders, overdue notices, reservation-ready updates, badge awards, penalties, announcements, etc.).
+4. Choose your delivery channels for each alert type: **In-App**, **Email**, or both.
+5. Click **"Save Preferences"**.
+    *   *See [Settings Guide](/user-guides/settings-guide) and [Notifications Guide](/user-guides/notifications-guide) for full details.*
 
-### How do I update my profile?
-1. Go to **Dashboard** → **Profile** (`/dashboard/profile`).
+### How do I update my profile information?
+1. Open your **Profile Menu** → **"My Profile"** (`/dashboard/profile`).
 2. Click **Edit Profile**.
-3. Update your details (Phone, Date of Birth, etc.).
+3. Update the editable fields displayed (name, phone, stream, affiliation, etc.).
 4. Click **Save**.
-    *   *Note: Email and Role cannot be changed — contact a superuser.*
+    *   *Note: Email address, role, and any locked student identifier fields are managed by library staff. Contact the help desk if those need updating.*
     *   *See [Profile Guide](/user-guides/profile-guide) for full details.*
 
-### How do I pay a fine?
+### How do I view and pay a fine?
 1. Go to **Dashboard** → **Penalties** (`/dashboard/penalties`).
-2. Find the penalty with status "Pending".
+2. Find the penalty with a "Pending" status.
 3. Click **Pay**.
-4. Complete the payment via **UPI**.
+4. Complete the payment using the **UPI** flow shown on screen.
     *   *See [Penalties Guide](/user-guides/penalties-guide) for full details.*
 
-## My Library (End Users)
+---
 
-### How do I borrow a book?
+## My Library
+
+### How do I find and request a physical book?
 1. Go to **Dashboard** → **Catalog** (`/dashboard/catalog`).
-2. Search or filter to find the book.
-3. Click the book card to open details.
+2. Use the search bar or filters (category, author, availability, etc.) to find the book you want.
+3. Click the book card to open its details page.
 4. If the book is available, click **Add to Request Cart**.
-5. Open the **Request Cart** and click **Submit**.
-6. Track the request in **Dashboard** → **Orders** (`/dashboard/orders`).
-7. After staff approval, the loan appears in **Dashboard** → **Loans** (`/dashboard/loans`).
-    *   *See [Catalog Guide](/user-guides/catalog-guide) and [Loans Guide](/user-guides/loans-guide) for full details.*
+5. Open the **Request Cart** and click **Submit** to send your request.
+6. Track progress in **Dashboard** → **Orders** (`/dashboard/orders`).
+7. Once the request is approved and processed, the loan appears in **Dashboard** → **Loans** (`/dashboard/loans`) and the book is ready for pickup or use.
+    *   *See [Catalog Guide](/user-guides/catalog-guide), [Orders Guide](/user-guides/orders-guide), and [Loans Guide](/user-guides/loans-guide) for full details.*
 
-### How do I reserve a book that's unavailable?
+### How do I reserve a book that's currently checked out?
 1. Go to **Dashboard** → **Catalog** (`/dashboard/catalog`).
-2. Find the book (filter by Availability: "Unavailable").
-3. Click the book card and click **Reserve This Book**.
-4. Or go to **Dashboard** → **Reservations** (`/dashboard/reservations`), click **Create Reservation**, and select a book.
-5. You'll join the queue — check the **Position in Queue** column.
+2. Find the book (you can filter by Availability: "Unavailable / On Loan").
+3. Click the book card, then click **Reserve This Book**.
+4. Alternatively, go to **Dashboard** → **Reservations** (`/dashboard/reservations`), click **Create Reservation**, and select the book.
+5. You'll join the wait queue — check the **Position in Queue** column to see when it's likely to become your turn.
     *   *See [Reservations Guide](/user-guides/reservations-guide) for full details.*
 
-### How do I read a digital book?
+### How do I read a digital book or resource?
 1. Go to **Dashboard** → **Digital Resources** (`/dashboard/digital-resources`).
-2. Click a resource to open the detail page.
-3. Click **Read Now** to open the built-in reader.
-4. Your progress is saved automatically — resume from where you left off.
+2. Click any resource card to open its detail page.
+3. Click **Read Now** to launch the built-in reader.
+4. Your reading progress is saved automatically — you can resume from where you left off on any device.
     *   *See [Digital Resources Guide](/user-guides/digital-resources-guide) for full details.*
 
-## Academic & Community
+### How do I save books I'm interested in to my Wishlist?
+1. Go to **Dashboard** → **Wishlist** (`/dashboard/wishlist`).
+2. Click **Create Wishlist Item**, search for and select the book, add any personal notes, and save.
+3. Or from the **Catalog** detail page, use the **Add to Wishlist** action.
+4. From your wishlist you can quickly move items to the Request Cart, edit notes, or remove them.
+    *   *See [Wishlist Guide](/user-guides/wishlist-guide) for full details.*
+
+---
+
+## Academic Tools & Community
 
 ### How do I generate a citation?
 1. Go to **Dashboard** → **Citation Generator** (`/dashboard/citation-generator`).
-2. Select the **source type** (book, journal article, etc.).
-3. Search for the resource or enter details manually.
-4. Choose the **citation style** (APA, MLA, Chicago, Harvard, IEEE).
-5. Click **Copy** to copy the generated citation.
-    *   *See [Citation Generator Guide](/user-guides/citation-generator-guide) for full details.*
+2. Select the **source type** (book, journal article, website, chapter, etc.).
+3. Search for the resource by title/ISBN/DOI, or enter the details manually.
+4. Choose the **citation style** (APA, MLA, Chicago, Harvard, IEEE, and others are available).
+5. Click **Copy** to copy the formatted citation, or export the full bibliography.
+    *   *See [Citation Generator Guide](/user-guides/citation-generator-guide) and [Academic Tools](/user-guides/academic-tools) for full details.*
 
-### How do I check for plagiarism?
+### How do I check a document for plagiarism?
 1. Go to **Dashboard** → **Plagiarism Checker** (`/dashboard/plagiarism-checker`).
-2. Paste text or upload a file (.txt, .docx, .pdf).
+2. Paste text directly or upload a file (.txt, .docx, .pdf).
 3. Click **Check for Plagiarism**.
-4. Review the **originality score** and **matched sources**.
-    *   *See [Plagiarism Checker Guide](/user-guides/plagiarism-checker-guide) for full details.*
+4. Review the **originality score**, highlighted matched passages, and the list of matched sources.
+    *   *See [Plagiarism Checker Guide](/user-guides/plagiarism-checker-guide) and [Academic Tools](/user-guides/academic-tools) for full details.*
 
 ### How do I write a book review?
 1. Go to **Dashboard** → **Book Reviews** (`/dashboard/book-reviews`).
 2. Click **Create Review**.
-3. Select the book, provide a **rating** (1–5 stars), and write your review.
-4. Click **Submit**.
+3. Select the book, provide a **rating** (1–5 stars), and write your review text.
+4. Click **Submit**. Reviews are visible to other library users immediately or after review (depending on your institution's configuration).
     *   *See [Book Reviews Guide](/user-guides/book-reviews-guide) for full details.*
 
-### How do I manage bookmarks?
+### How do I manage my bookmarks?
 1. Go to **Dashboard** → **Bookmarks** (`/dashboard/bookmarks`).
-2. **Add**: Click **Create Bookmark**, enter the title/URL, and save.
-3. **Edit**: Click the edit icon to update.
-4. **Delete**: Click the trash icon and confirm.
+2. **Add**: Click **Create Bookmark**, enter a title and URL, apply any tags, and save.
+3. **Edit**: Click the edit icon on any bookmark to update its details.
+4. **Delete**: Click the trash icon and confirm. You can also bulk-select bookmarks for import or batch operations.
     *   *See [Bookmarks Guide](/user-guides/bookmarks-guide) for full details.*
 
-### How do I view my badges?
-1. Go to **Dashboard** → **Badges** (`/dashboard/badges`).
-2. Switch to the **My Badges** tab to see earned badges.
-3. Switch to **Badge Catalog** to see all available badges and their criteria.
+### How do I keep private reading notes?
+1. Go to **Dashboard** → **Notes** (`/dashboard/notes`).
+2. Click **New Note**, give it a title, pick the related book or resource (optional), and start writing.
+3. Notes auto-save as you type. Use the search bar or tag filters to find them later.
+    *   *See [Notes Guide](/user-guides/notes-guide) for full details.*
+
+### How do I see my earned badges and what's available?
+1. Go to **Dashboard** → **My Badges** (`/dashboard/my-badges`).
+2. The **Badge Catalog** tab shows every badge in the system and its criteria.
+3. The **My Badges** tab shows only the badges you have already earned.
     *   *See [Badges Guide](/user-guides/badges-guide) for full details.*
 
-### How do I browse journal articles?
+### How do I browse journal articles and magazines?
 1. Go to **Dashboard** → **Journal Articles** (`/dashboard/articles`).
 2. Use the search bar to find articles by title, author, or keyword.
 3. Filter by journal, section, or publication date.
-4. Click an article to view title, authors, abstract, and full text (if available).
+4. Click an article to view the title, authors, abstract, and full text (when access is available).
+5. For journals and magazines catalog pages, use **Journals** (`/dashboard/journals`) and **Magazines** (`/dashboard/magazines`) respectively.
     *   *See [Journals & Magazines Guide](/user-guides/journals-guide) for full details.*
 
-## Book Management (Librarians/Admins)
+### How do I submit a PAPM or TADA form?
+If your institution uses these modules:
+- **PAPM**: Go to **Dashboard** → **PAPM Form** (`/dashboard/papm`), click **New Form**, fill in the required fields, and submit for approval. Track status from the same page.
+- **TADA**: Go to **Dashboard** → **TADA Form** (`/dashboard/tada`), enter the activity/travel details, attach supporting documents, and submit.
+    *   *See [PAPM Guide](/user-guides/papm-guide) and [TADA Guide](/user-guides/tada-guide) for full details.*
 
-### How do I add a new book?
-1. Go to **Dashboard** → **Books** (`/dashboard/books`).
-2. Click **Create Book**.
-3. Enter the book details (Title, Author, ISBN, etc.).
-4. Click **Save** to create the book record.
-    *   *Requires `books:create` permission (librarian, admin, superuser).*
+### How do I access Academic Reports?
+1. Go to **Dashboard** → **Academic Reports** (`/dashboard/academic-reports`).
+2. Select the report type you need (reading progress, circulation summary, etc.).
+3. Apply filters (date range, category, year level) and click **Generate Report**.
+4. Download the report as CSV or PDF if required.
+    *   *See [Academic Tools](/user-guides/academic-tools) for related resources.*
 
-### How do I bulk import books?
-To add multiple books at once using a CSV file:
-1. Navigate to **"Book Management"**.
-2. Click the **"Import"** or **"Bulk Upload"** button.
-3. Download the **CSV Template** if needed.
-4. Upload your filled CSV file.
-5. The system will process the file and report any errors or duplicates.
-
-### How do I "restore" a lost book?
-If a book copy was previously marked as "Lost" or "Damaged" but has been found or repaired:
-1. Go to the **Book Details** page for the specific book.
-2. Locate the **"Copies"** section.
-3. Find the specific copy (by Copy Number) marked as `lost` or `damaged`.
-4. Click the **"Edit"** icon/button for that copy.
-5. Change the **Status** dropdown back to **`available`**.
-6. Save your changes. The book is now back in circulation.
-
-### How do I weed (delete) books?
-To remove books from the catalog permanently (weeding):
-1. Go to the **"Books"** management page.
-2. Select the book(s) you wish to remove.
-3. Click the **"Delete"** or **"Trash"** icon.
-4. **Confirm** the action.
-    *   *Note: Books with active loans cannot be deleted until the loans are closed.*
-
----
-
-## Circulation (Loans & Returns)
-
-### How do I check out a book to a student?
-1. Go to **Dashboard** → **Loans** (`/dashboard/loans`).
-2. Click **Create Loan**.
-3. Select the **User** and **Book Copy** from the dropdowns.
-4. Set the **Due Date**.
-5. Click **Create Loan**.
-    *   *See [Loans Guide](/user-guides/loans-guide) for full details.*
-
-### How do I return a book?
-1. Go to **Dashboard** → **Loans** (`/dashboard/loans`).
-2. Find the loan with status "Active" or "Overdue".
-3. Click the **Return** button (rollback arrow icon).
-4. Confirm in the dialog.
-    *   *See [Loans Guide](/user-guides/loans-guide) for full details.*
-
-### How do I renew a loan?
-1. Go to **Dashboard** → **Loans** (`/dashboard/loans`).
-2. Find an active loan within 3 days of its due date.
-3. Click the **Renew** button (circular arrow icon).
-4. A renewal request is sent to staff for approval.
-    *   *See [Loans Guide](/user-guides/loans-guide) for full details.*
-
----
-
-## Acquisitions & Resources
-
-### How do I manage book orders?
-1. Go to **Dashboard** → **Orders** (`/dashboard/orders`).
-2. View the list of pending requests.
-3. Click on an order to view details.
-4. **Approve** or **Reject** the request.
-    *   *See [Orders Guide](/user-guides/orders-guide) for full details.*
-
-### How do I add a reference book?
-1. Navigate to **"Reference Books"**.
-2. Click **"Add Reference Book"**.
-3. Enter the book details (Title, Author, Call Number).
-4. Set the status to **"Available"** or **"In Use"**.
-5. Click **"Save"**.
-
-### How do I upload a digital resource?
-1. Go to **Dashboard** → **Digital Resources** (`/dashboard/digital-resources`).
-2. Click **Create Resource**.
-3. Select the **Resource Type** (e-book, PDF, web link, audio book).
-4. Upload the file or provide a URL.
-5. Add a title and description.
-6. Click **Save**.
-    *   *See [Digital Resources Guide](/user-guides/digital-resources-guide) for full details.*
-
-## System & Config (Admin)
-
-### How do I configure institution settings?
-1. Go to **Dashboard** → **Institution Settings** (`/dashboard/institution-settings`).
-2. Select the tab you want to configure:
-    *   **General**: Institution name, address, contact info.
-    *   **UPI Payments**: UPI ID, payee name, merchant code.
-    *   **Policies**: Borrow period, renewal period, max reservations, fine rules.
-3. Click **Save**.
-    *   *Requires admin or superuser role. See [Institution Settings Guide](/user-guides/institution-settings-guide) for full details.*
-
-### How do I view system logs?
-1. Go to **Dashboard** → **System Logs** (`/dashboard/system-logs`).
-2. Use the filters to search by **Action Type**, **Table Name**, **Date Range**, or **User ID**.
-3. Click **Export** to download logs as CSV.
-    *   *See [System Logs Guide](/user-guides/system-logs-user-guide) for full details.*
-
-### How do I manage users?
-1. Go to the **Admin Dashboard**.
-2. Select **"User Management"**.
-3. Click **"Add User"**.
-4. Fill in the user details (Name, Email, Role).
-5. The user will receive an email to set their password.
-
-### How do I send a system-wide announcement?
-1. Go to **Dashboard** → **Announcements** (`/dashboard/announcements`).
-2. Click **New Announcement**.
-3. Enter the **Title** and **Message**.
-4. Select the target audience (e.g., "All Students", "Faculty").
-5. Choose the delivery method (**In-App**, **Email**, or both).
-6. Click **Send**.
-    *   *See [Notifications Guide](/user-guides/notifications-guide) for full details.*
-
-### How do I change a user's role?
-1. Navigate to **"User Management"**.
-2. Search for and select the user.
-3. Edit their profile and select the new **Role** from the dropdown.
-4. Save changes.
-
-### How do I manage guest access?
-1. Go to **Dashboard** → **Guests** (`/dashboard/guests`).
-2. **View Guests**: Check the list for names, emails, roles, and statuses.
-3. **Add Guest**: Click **Create Guest**, enter details, and save.
-4. **Edit Guest**: Click the **Edit** icon, update details, and save.
-5. **Delete Guest**: Click the **Delete** icon and confirm.
-
-### How do I report an issue?
+### How do I get help or report a problem inside the app?
+Every user can submit an issue report from inside the app:
 1. Go to **Dashboard** → **Report an Issue** (`/dashboard/report-issue`).
 2. Fill in the form:
-    *   **Category** — bug, feature-broken, performance, ui-ux, data-loss, security, other
-    *   **Severity** — low, normal, high, critical
-    *   **Title** — 5–200 characters
-    *   **Description** — 10–5000 characters
-3. Technical context (browser, page URL, app version) is auto-captured.
-4. Click **Submit** — the report is saved and a GitHub Issue is created automatically.
-5. Track your reports in the **My Reports** tab. Click **Check for Updates** to sync status from GitHub.
-    *   *See [Issue Reports](/features/issue-reports) for full details.*
+    *   **Category** — Bug, Feature Broken, Performance, UI/UX, Data Loss, Security, or Other.
+    *   **Severity** — Low, Normal, High, or Critical.
+    *   **Title** — a short summary (5–200 characters).
+    *   **Description** — detailed steps to reproduce the problem (10–5000 characters).
+    *   **Attachments** — up to 5 screenshots (JPEG, PNG, WebP, GIF; up to 5 MB each).
+3. Technical context (browser, page URL, app version) is captured automatically — no need to enter it manually.
+4. Click **Submit**. Your report is saved and routed for review.
+5. Track all your reports in the **My Reports** tab. Click **Check for Updates** on any report to pull in the latest status.
+    *   *See [Issue Reports Guide](/user-guides/issue-reports-guide) for full details.*
+
+---
+
+**Last Updated**: August 7, 2026

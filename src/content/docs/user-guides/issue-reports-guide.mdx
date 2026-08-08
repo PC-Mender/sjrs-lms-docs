@@ -11,19 +11,18 @@ import { Aside } from '@astrojs/starlight/components';
 The **Issue Reports** system lets users report bugs, request features, and track the status of reported issues. Reports can be synced with GitHub and include image attachments.
 
 **Routes**:
-- Report a new issue: `/dashboard/issue-reports`
+- Report a new issue: `/dashboard/report-issue`
 - Public issue list: `/issue-reports`
 
 ## Reporting an Issue
 
-1. Navigate to **Dashboard** → **Issue Reports** (`/dashboard/issue-reports`)
-2. Click **Report Issue**
-3. Fill in the form:
+1. Navigate to **Dashboard** → **Report Issue** (`/dashboard/report-issue`)
+2. Fill in the form:
    - **Title** — short summary of the issue
    - **Description** — detailed explanation of what happened
    - **Type** — bug, feature request, or general feedback
    - **Attachments** — optional screenshots or files
-4. Click **Submit**
+3. Click **Submit**
 
 Your report will be visible in the public issue list unless marked otherwise by policy.
 
@@ -61,16 +60,6 @@ When GitHub integration is enabled:
 
 You can attach images to your report. Accepted formats and size limits are shown on the upload field. Attachments help the team reproduce bugs faster.
 
-## For Admins & Superusers
-
-Administrative users can:
-
-- View all reports
-- Update status (open, in progress, closed, etc.)
-- Sync issues with GitHub manually
-- Manage public visibility
-- Respond to reporters
-
 ## Status Meanings
 
 | Status | Meaning |
@@ -94,5 +83,4 @@ Administrative users can:
 
 ---
 
-**Last Updated:** July 19, 2026  
-**Version:** 7.27.0
+**Last Updated**: August 7, 2026

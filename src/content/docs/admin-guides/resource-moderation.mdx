@@ -1,0 +1,74 @@
+---
+title: "Resource Moderation"
+description: "Admin/librarian moderation and management of book reviews, issue reports, badges, announcements, system notifications, and user-submitted content."
+lifecycle: Active
+---
+
+## Overview
+
+Moderation covers all operations where staff review, approve, reject, or configure content and notices that are visible to end users.
+
+Primary routes:
+- **Book Reviews**: `/dashboard/book-reviews` (admin view)
+- **Issue Reports**: `/dashboard/issue-reports` (admin triage and status updates)
+- **Badges (admin)**: `/dashboard/badges` — badge definitions, criteria, and manual assignments
+- **Announcements**: `/dashboard/announcements`
+- **System Notifications**: `/dashboard/system-notifications`
+- **Journals (admin)**: Journals, Journal Sections, Magazines, Articles management pages
+
+## Book Reviews Moderation
+
+Librarians, admins, and superusers can see all reviews submitted by users (user-facing reviews show only reviewer-visible fields).
+
+1. Go to **Dashboard** → **Book Reviews** (admin view).
+2. Filter by status (pending, approved, rejected, flagged).
+3. Open a review to see text, rating, and any user reports.
+4. **Approve** (if not auto-approved), **Reject** with reason, or **Edit** the text in case of minor formatting issues.
+
+## Issue Reports Triage
+
+All user-submitted reports are available for staff triage:
+
+1. Go to the Issue Reports list page (admin).
+2. Review each report: category, severity, attachments, browser/app version captured automatically.
+3. Update **Status** (New → Investigating → Fixed / Deferred / Duplicate / Rejected) and **Assignee** if applicable.
+4. Add staff-only notes visible only to the moderation team. Users see public status changes via their **My Reports** tab with status timestamps.
+
+## Badges Administration
+
+The admin Badges page (`/dashboard/badges`) is separate from the end-user **My Badges** page. Use it to:
+1. Create, edit, and delete badge definitions:
+   - Name, category, rarity level (Bronze/Silver/Gold/Platinum)
+   - Criteria description and evaluator
+2. View per-badge recipient counts and last awarded timestamps.
+3. **Manually assign badges** to specific users (e.g. for milestones achieved outside automated evaluators).
+
+## Announcements & System Notifications
+
+**Announcements** (`/dashboard/announcements`) are targeted, timestamped user-visible posts:
+1. Click **New Announcement**.
+2. Enter title and body (Rich Text or Markdown as configured).
+3. Select **Audience**: All users, or a role-based segment (Students only, Faculty, etc.).
+4. Select **Delivery**: In-app only, Email only, or Both.
+5. Set publish/display start and end times if needed, then **Send**.
+
+**System Notifications** (`/dashboard/system-notifications`) are an admin-only log of generated and queued notifications with additional detail (scheduling, delivery status, error reasons). Use it to debug deliveries and to review the log.
+
+## Journals & Magazine Moderation
+
+Staff create and manage the structure of periodicals:
+- Journals → Journal Sections → Articles (full text)
+- Magazines → individual issues
+
+Admins can edit, hide, or delete any article, and moderate reader-facing metadata or access flags on journal issues.
+
+## Related Documentation
+
+- **[Book Reviews Guide (user-facing)](../user-guides/book-reviews-guide)** — Patron guide to writing and managing reviews.
+- **[Issue Reports Guide (user-facing)](../user-guides/issue-reports-guide)** — Patron guide to reporting issues and tracking reports.
+- **[Badges Guide (user-facing)](../user-guides/badges-guide)** — Patron guide to earning and viewing badges.
+- **[Notifications Guide (user-facing)](../user-guides/notifications-guide)** — Patron guide to announcements and app notifications.
+
+---
+
+**Last Updated**: August 7, 2026

@@ -1,0 +1,96 @@
+---
+title: "Catalog & Resource Administration"
+description: "Manage books, book copies, authors, publications, locations, reference items, digital resources, resource types, journals, and media assets."
+lifecycle: Active
+---
+
+## Overview
+
+Catalog administration covers configuring metadata records and inventory so the user-facing catalog works correctly. Management pages are available only to librarians, admins, and superusers.
+
+Metadata and collection routes:
+- **Books**: `/dashboard/books` — Full catalog records (title, authors, cover, etc.)
+- **Book Copies**: `/dashboard/book-copies` — Individual copies, locations, statuses, shelf codes
+- **Authors**: `/dashboard/authors`
+- **Publications**: `/dashboard/publications`
+- **Sections & Subcategories**: `/dashboard/sections`, `/dashboard/subcategories`
+- **Reference Books & Categories**: `/dashboard/reference-books`, `/dashboard/reference-categories`, `/dashboard/reference-sections`
+- **Locations & Shelf Codes**: `/dashboard/locations`, `/dashboard/shelf-codes`, `/dashboard/key-tags`
+
+Digital resource routes:
+- **Digital Resources**: `/dashboard/digital-resources`
+- **Resource Types**: `/dashboard/resource-types`
+- **Media Library**: `/dashboard/media-library`
+
+## Books Management
+
+### Adding a New Book
+
+1. Go to **Dashboard** → **Books** (`/dashboard/books`).
+2. Click **Create Book**.
+3. Fill in title, subtitle, authors (multi-select or create inline), ISBN, publication year, edition, category/section/subcategory, cover image, and description.
+4. Add at least one **Book Copy** under the Copies tab.
+5. Save.
+
+### Bulk Upload
+
+1. On the Books listing, click **Import / Bulk Upload**.
+2. Download the CSV template.
+3. Fill in one row per book (use a separate upload or the copies section for inventory).
+4. Upload the CSV. Review errors and duplicates.
+5. Confirm the import.
+
+### Managing Copies
+
+For each book you can add, edit, or remove individual copies. For each copy set:
+- **Copy Number** (unique within the book record)
+- **Location** + **Shelf Code**
+- **Status** (Available, On Loan, Lost, Damaged, Withdrawn)
+- **Price** (used for lost-book fee estimation)
+- **Book Condition** (optional)
+
+Set a copy's status to `Lost` or `Damaged` to remove it from active circulation. Use `Withdrawn` for weeding (keeps history). Use the per-copy edit page to restore status.
+
+## Reference & Special Collections
+
+Reference books are non-circulating (no check-out) with dedicated categorization.
+
+1. Go to **Dashboard** → **Reference Books**.
+2. Create or edit: title, author, call number, reference category, section, status.
+3. Use **Reference Categories** and **Reference Sections** to structure the collection tree.
+
+## Digital Resources
+
+### Creating a Digital Resource
+
+1. Go to **Dashboard** → **Digital Resources** (`/dashboard/digital-resources`).
+2. Click **Create Resource**.
+3. Set: title, author, description, resource type (e-book, PDF, web link, audio book, video, etc.), and cover image.
+4. Under **Download Sources**, add one or more access links:
+   - Direct file uploads (stored on your platform's file storage)
+   - External URLs to external repositories or publishers
+   - Priority ordering (lowest number is used first by default)
+5. Set access model (public, role-restricted, or authenticated-only), then save.
+
+### Resource Types
+
+Go to **Dashboard** → **Resource Types** to define categories and metadata used across the catalog. The listing includes a **linked resource count** column so you can safely retire unused types without breaking records.
+
+## Journals, Magazines & Articles
+
+- **Journals**: `/dashboard/journals` — journal title, publisher, ISSN, coverage
+- **Journal Sections**: `/dashboard/journal-sections` — sections within each journal
+- **Articles**: `/dashboard/articles` — individual article records (title, authors, abstract, full text, section link)
+- **Magazines**: `/dashboard/magazines` — issue-based publications
+
+For each use the standard create/edit/delete workflow with search and filters.
+
+## Related Documentation
+
+- **[Catalog Guide (user-facing)](../user-guides/catalog-guide)** — What patrons see when browsing.
+- **[Digital Resources Guide (user-facing)](../user-guides/digital-resources-guide)** — Patron view of digital books and PDFs.
+- **[Journals & Magazines Guide (user-facing)](../user-guides/journals-guide)** — Patron view of journals and articles.
+
+---
+
+**Last Updated**: August 7, 2026

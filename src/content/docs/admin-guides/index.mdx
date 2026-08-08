@@ -1,0 +1,36 @@
+---
+title: "Overview"
+description: "Administration guides for librarians, admins, and superusers: circulation management, user approvals, system configuration, moderation, oversight, and monitoring."
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+These guides document operations that require elevated access: library staff workflows, approvals, moderation, configuration, monitoring, and user management.
+
+<Aside type="caution" title="Access Control">
+The features documented in this area are permission-gated. Only signed-in users with librarian, administrator, or superuser roles (and in some cases specific grants) will see the corresponding pages and actions in the application.
+</Aside>
+
+## Superuser & System-Wide
+
+- **[Superuser Guide](./superuser-guide)** — Full system visibility, cross-role capabilities, and system-wide configuration access
+- **[Superuser Features Guide](./superuser-features-guide)** — Audit logs, emergency access, impersonation, MFA resets, and related workflows
+- **[System Logs Guide](./system-logs-user-guide)** — System log monitoring, filtering, and analysis (route: `/dashboard/system-logs`)
+- **[Action Logs Guide](./action-logs-guide)** — Activity logging overview and the Action Logs view embedded within System Logs (route: `/dashboard/system-logs`)
+- **[Institution Settings Guide](./institution-settings-guide)** — Academic year, semester dates, UPI payment settings (3 tabs: Academic Year, Semester Dates, UPI Payments). Routes: `/dashboard/institution-settings`, `/dashboard/upi-settings` (redirects)
+- **[Help System Guide](./help-system-guide)** — Role-based help content authoring and in-app documentation management (routes: `/help`, `/dashboard/help`)
+
+## Circulation & Patron Management
+
+- **[Circulation Administration](./circulation-admin)** — Order approvals/rejections, check-outs and check-ins, ready-reservation claims, returns, renewals, overdue handling, and penalty waivers
+- **[Catalog & Resource Administration](./catalog-admin)** — Book metadata, book copies, authors, publications, locations, reference items, and upload workflows
+- **[Resource Moderation](./resource-moderation)** — Review and moderation of book reviews, digital resource access, issue reports, badges, journals, announcements, and system notifications
+- **[Admin Task Index](./admin-task-index)** — Quick, task-oriented reference for librarian and administrator operations
+## Related Documentation
+
+- **[Development Documentation](../development/)** — Technical implementation and development workflows
+- **[User Guides](../user-guides/)** — Patron-facing documentation for all user features
+
+---
+
+**Last Updated**: August 7, 2026

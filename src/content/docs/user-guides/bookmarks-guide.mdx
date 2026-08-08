@@ -1,56 +1,133 @@
 ---
 title: "Bookmarks Guide"
-description: "How to save and organize bookmarks for quick access to books and resources."
-lifecycle: Active
 ---
 
 ## Overview
 
-Bookmarks let you save quick links to books, articles, and other resources for easy access later. Unlike the wishlist (which tracks books you want to borrow), bookmarks are for general reference and quick navigation.
+**Bookmarks** let you save quick links to books, catalog searches, digital resources, journals, and any other URL within the portal so you can return to them later. Each user's bookmarks are private and do not appear to other users.
 
-**Route**: `/dashboard/bookmarks`
+**Where to find it**: `/dashboard/bookmarks`
 
-## Viewing Your Bookmarks
+---
 
-1. Navigate to **Dashboard** → **Bookmarks** (`/dashboard/bookmarks`)
-2. You'll see a table listing all your saved bookmarks
-3. Use the **search bar** to find bookmarks by title
+## Core Bookmarks Concepts
 
-## Adding a Bookmark
+| Concept | Meaning |
+|---------|---------|
+| **Folder** | Groups related bookmarks together. You can nest bookmarks inside folders by topic, course, or project. |
+| **Tag** | One-word labels applied to bookmarks. Multiple tags can be applied to the same bookmark for flexible filtering. |
+| **Pinned** | A bookmark marked "Pinned" is shown in the sidebar bookmarks widget and at the top of the Bookmarks page. |
+| **URL** | The address (link) the bookmark opens when clicked. Clicking the title opens the destination in a new tab. |
+| **Description** | Optional free-text field for notes about *why* you saved the link. |
 
-1. Go to **Dashboard** → **Bookmarks**
-2. Click **Create Bookmark**
-3. Fill in the bookmark details:
-   - **Title** — a name for the bookmark
-   - **URL** — the link to the resource
-   - **Description** — optional notes
-4. Click **Save** to create the bookmark
+---
 
-You can also bookmark items directly from book detail pages and article pages.
+## Adding a New Bookmark
 
-## Editing a Bookmark
+1. Open the Bookmarks page (`/dashboard/bookmarks`).
+2. Click **New Bookmark** in the top-right toolbar.
+3. Fill in the form:
+   - **Title** – A short, recognizable name (for example, "Data Structures textbook").
+   - **URL** – Paste or type the full link you want to save.
+   - **Folder** (optional) – Choose a folder, or leave it as "Uncategorized".
+   - **Tags** (optional) – Type one or more tags, pressing Enter after each.
+   - **Pinned** – Turn the switch ON if you want this item shown at the top of the list and in the sidebar widget.
+   - **Description** (optional) – Any notes you want to attach to the bookmark.
+4. Click **Save**.
 
-1. Find the bookmark in your list
-2. Click the **Edit** button (pencil icon)
-3. Update the title, URL, or description
-4. Click **Update** to save
+The new bookmark appears immediately. Duplicate URLs are detected automatically — you are warned when saving a link that is already bookmarked, and you can decide whether to keep both or update the existing entry.
 
-## Deleting a Bookmark
+---
 
-1. Find the bookmark in your list
-2. Click the **Delete** button (trash icon)
-3. Confirm the deletion
+## Organizing With Folders and Tags
 
-## API Reference
+### Using Folders
+- Click **New Folder** in the toolbar to create a new folder.
+- When creating or editing a bookmark, select the destination folder from the Folder dropdown.
+- Use the left sidebar to filter the list to a single folder or choose **All Bookmarks**.
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/bookmarks` | List bookmarks |
-| POST | `/api/v1/bookmarks` | Create a bookmark |
-| PUT | `/api/v1/bookmarks/:id` | Update a bookmark |
-| DELETE | `/api/v1/bookmarks/:id` | Delete a bookmark |
+### Using Tags
+- Tags are created inline: type a word and press Enter in the Tags field.
+- A tag can be used on multiple bookmarks at once.
+- Choose a tag from the **Tags** filter above the list to show only bookmarks carrying that tag. Combine a folder filter and a tag filter for very specific views.
+
+---
+
+## Bulk Actions
+
+When you need to tag, move, or delete several bookmarks at once, use the bulk toolbar:
+
+1. Above the bookmarks list, turn on the **selection checkboxes** or select individual rows using the checkbox column on the left.
+2. A bulk toolbar appears showing how many items are selected.
+3. Choose any of the following actions:
+   - **Add tags** — Applies one or more tags to every selected bookmark.
+   - **Remove tags** — Removes the chosen tags from the selection.
+   - **Move to folder** — Relocates all selected bookmarks into a different folder.
+   - **Toggle pinned** — Adds or removes the Pinned flag for quick access.
+   - **Delete** — Permanently deletes the selected bookmarks. A confirmation prompt is always shown before deletion.
+
+Bulk actions apply to all selected rows in one step, which is especially useful when reorganizing large lists of bookmarks.
+
+---
+
+## Importing Bookmarks From Your Browser
+
+If you already have bookmarks saved in your web browser (Chrome, Edge, Firefox, Safari, etc.), you can bring them into the SJRSLMS portal in a few clicks.
+
+### Supported format
+Browsers export their bookmarks as an HTML file. This is the standard format and is supported directly.
+
+### Steps
+1. From the Bookmarks page toolbar, click **Import Browser Bookmarks**.
+2. Choose the HTML file exported from your browser.
+3. Review the preview that appears:
+   - Select the destination folder for the imported items.
+   - Optionally add a tag (such as "imported-2026") to make the new bookmarks easy to find later.
+   - Un-check any rows you do NOT want to import.
+4. Confirm the import.
+
+After the import finishes, a duplicate summary is shown for any URLs that matched existing bookmarks. You can keep both copies, skip duplicates, or overwrite existing bookmark metadata with the new imported values.
+
+---
+
+## Duplicate Detection
+
+The Bookmarks page helps you avoid saving the same link twice:
+
+- **On save**: If you create a new bookmark and paste a URL you already have saved, a warning appears before you confirm.
+- **After import**: Browser imports end with a **Duplicate Summary** listing exact URL matches and near-matches. You can review the list row by row and choose:
+  - **Keep both** – the original plus the new import are saved separately.
+  - **Merge** – new tags and the new description are combined onto the existing bookmark.
+  - **Skip** – only the existing bookmark remains.
+- **Anytime check**: Use the **Find Duplicates** tool in the toolbar to scan your entire existing bookmark library for duplicate URLs or very similar titles.
+
+---
+
+## Editing and Deleting
+
+- **Edit** – Choose the edit (pencil) icon on any row to update the title, URL, folder, tags, pinned flag, or description.
+- **Delete** – Use the trash icon to remove a single bookmark, or use Bulk Actions for multi-row delete. Deletions are permanent and happen immediately after the confirmation step.
+
+---
+
+## Search and Filter
+
+Use the controls above the bookmarks list to narrow down what you see:
+
+- **Search box** — Matches across the Title, URL, Description, and tag fields in real time.
+- **Folder picker** (left sidebar) — Shows only bookmarks inside a specific folder.
+- **Tag chips** — Click a tag to show only bookmarks with that tag; click again to clear.
+- **Pinned only toggle** — Filter the list to show only pinned items.
+- **Sort** — Sort the visible list alphabetically by title, by newest first, or by oldest first.
+
+---
 
 ## Related Documentation
 
-- [Catalog Guide](/user-guides/catalog-guide) — Finding books to bookmark
-- [Wishlist Guide](/user-guides/wishlist-guide) — Tracking books you want to borrow
+- [Notes Guide](/user-guides/notes-guide) — Capture longer-form personal notes alongside bookmarked resources
+- [Catalog Guide](/user-guides/catalog-guide) — Learn how to find books and digital resources worth bookmarking
+- [Settings Guide](/user-guides/settings-guide) — Display and personalization preferences that also apply to the Bookmarks page
+
+---
+
+**Last Updated**: August 7, 2026

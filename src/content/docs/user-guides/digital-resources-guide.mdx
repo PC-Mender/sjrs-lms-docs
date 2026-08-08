@@ -8,16 +8,16 @@ import { Aside } from '@astrojs/starlight/components';
 
 ## Overview
 
-Digital Resources include e-books, online articles, PDFs, and other digital materials available through the library. Unlike physical books, digital resources can be read directly in the browser without borrowing.
+Digital Resources include e-books, online articles, PDFs, and other digital materials available through the library. Unlike physical books, most digital resources can be read directly in the browser without borrowing, or downloaded when the resource publisher allows it.
 
 **Route**: `/dashboard/digital-resources`
 
 ## Browsing Digital Resources
 
 1. Navigate to **Dashboard** → **Digital Resources** (`/dashboard/digital-resources`)
-2. Resources are displayed in a table or card layout
+2. Resources are displayed in a searchable table or card layout
 3. Use the **search bar** to find resources by title, author, or keyword
-4. Filter by **resource type** (e-book, PDF, web link, etc.)
+4. Filter by **resource type** (e-book, PDF, web link, audio book, etc.)
 
 ## Viewing a Digital Resource
 
@@ -28,7 +28,7 @@ Digital Resources include e-books, online articles, PDFs, and other digital mate
    - Availability and access information
    - File size (for downloadable resources)
 3. Click **Read Now** to open the resource in the built-in reader
-4. Or click **Download** if downloading is permitted
+4. Or click **Download** if downloading is permitted for that resource
 
 ## Reading Digital Books & PDFs
 
@@ -37,82 +37,18 @@ The built-in digital book reader supports:
 - **Page navigation** — flip through pages with next/previous buttons
 - **Zoom controls** — adjust the page scale for readability
 - **Read session tracking** — progress and reading time are recorded automatically
-- **Activity panel** — librarians and admins can view aggregate read sessions and engagement
 
 Your reading progress is tracked automatically. Return to any digital book and it will resume from where you left off.
 
-**Route for reading**: `/dashboard/digital-resources/read/:id`
+**Reader route**: `/dashboard/digital-resources/read/:id`
 
 ## Download Sources
 
-A digital resource can have multiple download sources. Each source has a priority order so the system knows which link to prefer first.
+A digital resource can have more than one source so readers always have a working link:
 
-- **R2 file uploads** — files stored in Cloudflare R2
-- **External URLs** — links to third-party digital libraries
-- **Priority** — lower numbers are tried first; new external sources auto-fill the next sequential value
-
-Librarians and admins can add, edit, or remove download sources from the resource edit modal.
-
-## Resource Types
-
-**Route**: `/dashboard/resource-types`
-
-Resource types classify digital and physical items (e.g., e-book, PDF, web link, audio book). The list now supports:
-
-- Server-side pagination and search
-- A **linked resource count** column showing how many resources use each type
-- Sorting by name or linked count
-
-| Type | Description | Access |
-|------|-------------|--------|
-| E-book | Full digital books | Read online or download |
-| PDF | PDF documents | View in browser or download |
-| Web Link | External web resources | Opens in new tab |
-| Audio Book | Audio recordings | Stream in browser |
-
-## For Librarians & Admins
-
-### Managing Digital Resources
-
-1. Navigate to **Dashboard** → **Digital Resources**
-2. Click **Create Resource** to add a new digital resource
-3. Fill in:
-   - Title, author, description
-   - Resource type and format
-   - Upload the file or provide a URL
-   - Set access permissions (public, restricted, role-based)
-4. Add one or more **download sources** so patrons can access the file
-5. Click **Save** to publish the resource
-
-### Managing Resource Types
-
-1. Go to **Dashboard** → **Resource Types** (`/dashboard/resource-types`)
-2. Create, edit, or delete resource categories
-3. Use the linked resource count column to see usage before deleting a type
-
-### Read Sessions & Activity
-
-- Read sessions are stored in `resource_read_sessions`
-- The activity panel shows aggregated reading activity for analytics
-- Admins can use this data to understand which resources are most popular
-
-## API Reference
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/resources` | List digital resources |
-| GET | `/api/v1/resources/:id` | Get resource details |
-| POST | `/api/v1/resources` | Create a resource (admin/librarian) |
-| PUT | `/api/v1/resources/:id` | Update a resource (admin/librarian) |
-| DELETE | `/api/v1/resources/:id` | Delete a resource (admin/librarian) |
-| GET | `/api/v1/resource-types` | List resource types |
-| POST | `/api/v1/resource-types` | Create a resource type |
-| PUT | `/api/v1/resource-types/:id` | Update a resource type |
-| DELETE | `/api/v1/resource-types/:id` | Delete a resource type |
-| GET | `/api/v1/digital-book-reads` | Track reading progress |
-| POST | `/api/v1/digital-book-reads` | Update reading position |
-| GET | `/api/v1/resources/:id/activity` | Resource activity stats |
-| GET | `/api/v1/resources/:id/read-sessions` | Paginated read sessions |
+- **Direct file uploads** — files uploaded and hosted by the library
+- **External URLs** — links to the publisher site, open-access repositories, or third-party digital libraries
+- **Priority order** — sources are ranked so the most reliable link is tried first
 
 ## Related Documentation
 
@@ -122,5 +58,4 @@ Resource types classify digital and physical items (e.g., e-book, PDF, web link,
 
 ---
 
-**Last Updated:** July 19, 2026  
-**Version:** 7.27.0
+**Last Updated**: August 7, 2026

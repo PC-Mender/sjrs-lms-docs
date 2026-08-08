@@ -55,33 +55,6 @@ The SJRS LMS has three types of notifications:
 2. See broadcast messages from library staff
 3. Announcements may be targeted to specific roles or all users
 
-## System Notifications
-
-**Route**: `/dashboard/system-notifications`
-
-<Aside type="note" title="Access Control">
-System Notifications require the `notification_events:read` permission. Typically restricted to superusers and admins.
-</Aside>
-
-### Viewing System Notifications
-
-1. Navigate to **Dashboard** → **System Notifications** (`/dashboard/system-notifications`)
-2. View system events including:
-   - Deployment notifications (new version releases)
-   - Sentry incidents (error monitoring alerts)
-   - Platform updates
-3. Filter by status, scope, category, and severity
-4. Paginate through all events
-
-### App Notifications Log (Superuser)
-
-**Route**: `/dashboard/app-notifications-log`
-
-Superusers can view a comprehensive log of all app notifications sent to all users, with:
-- Statistics and charts
-- Advanced filtering by type, priority, status, date range
-- User information for each notification
-
 ## Configuring Notification Preferences
 
 **Route**: `/dashboard/notification-preferences`
@@ -91,20 +64,13 @@ Superusers can view a comprehensive log of all app notifications sent to all use
 3. Choose delivery channels (in-app, email)
 4. Click **Save** to update your preferences
 
-## API Reference
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/notifications` | List user notifications |
-| PUT | `/api/v1/notifications/:id/read` | Mark notification as read |
-| PUT | `/api/v1/notifications/read-all` | Mark all as read |
-| GET | `/api/v1/notifications/events` | List system notification events |
-| GET | `/api/v1/user/preferences` | Get notification preferences |
-| PUT | `/api/v1/user/preferences` | Update notification preferences |
-
 ## Related Documentation
 
 - [Reservations Guide](/user-guides/reservations-guide) — Reservation-ready notifications
 - [Loans Guide](/user-guides/loans-guide) — Due date reminders
 - [Badges Guide](/user-guides/badges-guide) — Badge award notifications
-- [Notification Types Guide](/features/notifications/notification-types-guide) — Detailed notification type reference
+
+
+---
+
+**Last Updated**: August 7, 2026

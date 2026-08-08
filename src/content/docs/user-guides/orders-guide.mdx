@@ -8,7 +8,7 @@ import { Aside } from '@astrojs/starlight/components';
 
 ## Overview
 
-Orders track borrow requests submitted through the **Request Cart**. Users add available books from the catalog to the cart, submit those requests, and then use **Orders** to track staff review. Staff can approve or reject requests, and an approved request creates the loan.
+Orders track borrow requests submitted through the **Request Cart**. Users add available books from the catalog to the cart, submit those requests, and then use **Orders** to track the review progress and resulting loan.
 
 **Route**: `/dashboard/orders`
 
@@ -17,14 +17,12 @@ Orders track borrow requests submitted through the **Request Cart**. Users add a
 | Status | Description |
 |--------|-------------|
 | Pending | Borrow request submitted and awaiting review |
-| Approved | Staff approved the request |
-| Rejected | Staff rejected the request |
-| Completed | Request workflow finished |
-| Cancelled | Request was cancelled |
+| Approved | Request was approved and the resulting loan is being processed or is ready |
+| Rejected | Request was not approved; a reason may be provided |
+| Completed | Request workflow has finished |
+| Cancelled | Request was cancelled (you cancelled it, or staff cancelled it on your behalf) |
 
-## For Students & Regular Users
-
-### Creating a Borrow Request
+## Placing a Borrow Request
 
 1. Go to **Dashboard** → **Catalog** (`/dashboard/catalog`)
 2. Open an available book
@@ -33,58 +31,18 @@ Orders track borrow requests submitted through the **Request Cart**. Users add a
 5. Click **Submit**
 6. Go to **Dashboard** → **Orders** (`/dashboard/orders`) to track the request
 
-### Tracking Your Orders
+## Tracking Your Orders
 
 1. Go to **Dashboard** → **Orders**
 2. View the status of all your orders in the table
 3. Use the **status filter** to focus on pending, approved, rejected, cancelled, or completed requests
 4. Use the **search bar** to find requests by title, author, or order number
 
-### Cancelling an Order
+## Cancelling an Order
 
 1. Find an order with status "Pending"
 2. Click the **Cancel** button
 3. Confirm the cancellation
-
-## For Librarians, Admins & Superusers
-
-### Reviewing Orders
-
-1. Navigate to **Dashboard** → **Orders**
-2. All user orders are visible with user columns
-3. Use filters to find pending orders needing review
-
-### Approving an Order
-
-1. Find an order with status "Pending"
-2. Click **Approve**
-3. The request is approved and the loan is created
-
-### Rejecting an Order
-
-1. Find an order with status "Pending"
-2. Click **Reject**
-3. Provide a reason if prompted
-4. The order moves to "Rejected" status
-
-## Order Priority Policy
-
-The system supports an order priority policy that determines processing order based on factors like:
-- Number of users requesting the same book
-- Role-based priority (faculty requests may get higher priority)
-- Strategic acquisition goals
-
-See [Order Priority Policy](/features/orders/order-priority-policy) for configuration details.
-
-## API Reference
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/orders` | List orders |
-| GET | `/api/v1/orders/:id` | Get order details |
-| POST | `/api/v1/orders` | Create an order |
-| PUT | `/api/v1/orders/:id` | Update order status |
-| DELETE | `/api/v1/orders/:id` | Delete an order |
 
 ## Related Documentation
 
@@ -92,4 +50,7 @@ See [Order Priority Policy](/features/orders/order-priority-policy) for configur
 - [Loans Guide](/user-guides/loans-guide) — Managing approved and active loans
 - [Reservations Guide](/user-guides/reservations-guide) — Reserving unavailable books
 - [Wishlist Guide](/user-guides/wishlist-guide) — Tracking books you want
-- [Order Priority Policy](/features/orders/order-priority-policy) — Priority configuration
+
+---
+
+**Last Updated**: August 7, 2026

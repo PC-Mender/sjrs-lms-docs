@@ -22,16 +22,14 @@ Reservations let you join a waitlist when a book is currently unavailable (all c
 | Expired | red | The ready reservation was not claimed in time |
 | Cancelled | default | Reservation was cancelled by the user or staff |
 
-## For Students & Regular Users
-
-### Viewing Your Reservations
+## Viewing Your Reservations
 
 1. Navigate to **Dashboard** → **Reservations** (`/dashboard/reservations`)
 2. You'll see a table with your reservations, including book title, status, queue position, and actions
 3. Use the **status filter** dropdown to filter by status (e.g., show only "Ready" or "Pending")
 4. Use the **search bar** to find reservations by book title or author
 
-### Reserving a Book
+## Reserving a Book
 
 There are two ways to reserve a book:
 
@@ -48,7 +46,7 @@ There are two ways to reserve a book:
 3. In the modal, search and select a book from the dropdown
 4. Click **Create Reservation** to submit
 
-### Claiming a Ready Reservation
+## Claiming a Ready Reservation
 
 When a copy becomes available, your reservation status changes to "Ready":
 
@@ -61,14 +59,14 @@ When a copy becomes available, your reservation status changes to "Ready":
 Ready reservations have an expiration date. If you don't claim before it expires, the reservation moves to "Expired" and the next person in the queue gets the copy.
 </Aside>
 
-### Cancelling a Reservation
+## Cancelling a Reservation
 
 1. Go to **Dashboard** → **Reservations**
 2. Find a reservation with status "Pending" or "Ready"
 3. Click the **Cancel** button (X icon)
 4. The reservation status changes to "Cancelled"
 
-### Viewing Reservation Details
+## Viewing Reservation Details
 
 1. Click the **View** button (eye icon) on any reservation
 2. The detail page shows:
@@ -79,27 +77,6 @@ Ready reservations have an expiration date. If you don't claim before it expires
    - Notification date (when you were notified)
    - Created and updated timestamps
 
-## For Librarians, Admins & Superusers
-
-### Viewing All Reservations
-
-1. Navigate to **Dashboard** → **Reservations**
-2. The table shows all reservations across all users, with user columns visible
-3. Use filters and search as described above
-
-### Managing Reservations
-
-Staff can:
-- **View** any reservation's details
-- **Claim** a ready reservation on behalf of a user
-- **Cancel** any pending or ready reservation
-
-### Creating Reservations for Users
-
-1. Click **Create Reservation**
-2. Select a book from the dropdown
-3. Click **Create Reservation** to submit
-
 ## Queue System
 
 When multiple users reserve the same book:
@@ -109,18 +86,12 @@ When multiple users reserve the same book:
 - The user is notified (via in-app notifications) that their reservation is ready
 - If they don't claim before the expiration, it moves to "Expired" and the next person gets it
 
-## API Reference
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/reservations` | List reservations (user-scoped or all) |
-| GET | `/api/v1/reservations/:id` | Get reservation details |
-| POST | `/api/v1/reservations` | Create a reservation |
-| POST | `/api/v1/reservations/:id/claim` | Claim a ready reservation |
-| POST | `/api/v1/reservations/:id/cancel` | Cancel a reservation |
-
 ## Related Documentation
 
 - [Loans Guide](/user-guides/loans-guide) — Managing borrowed books
 - [Catalog Guide](/user-guides/catalog-guide) — Browsing and searching books
 - [Notifications Guide](/user-guides/notifications-guide) — Reservation-ready notifications
+
+---
+
+**Last Updated**: August 7, 2026

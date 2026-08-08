@@ -8,92 +8,144 @@ import { Aside } from '@astrojs/starlight/components';
 
 ## Overview
 
-Your profile contains your personal information, role, and account status. Keeping your profile complete and up-to-date ensures smooth library operations and proper access to features.
+Your profile contains your personal information, account type, role, and account status. Keeping your profile complete and up-to-date ensures smooth library operations and proper access to features, borrow limits, and notification delivery.
 
-**Route**: `/dashboard/profile`
+**Where to find it**
+- **Your profile page** (after login): `/dashboard/profile`
+- **Profile Completion** (new users — first login post-verification): `/profile-completion`
+- **Pending Approval** (post-profile-submission): `/pending-approval`
+
+---
 
 ## Viewing Your Profile
 
-1. Click your **profile avatar** in the top-right corner
+1. Click your **profile avatar** in the top-right corner of the dashboard
 2. Select **My Profile** from the dropdown
 3. Or navigate directly to `/dashboard/profile`
 
 Your profile page displays:
-- **Personal information** — name, email, phone, date of birth
-- **Role and permissions** — your assigned role(s) and what you can access
-- **Account status** — active, pending, suspended
-- **Member details** — student ID, department, year (for students)
-- **Activity summary** — books borrowed, reservations, reviews, badges
+- **Personal information** — name, email, phone
+- **Role and account type** — your assigned role(s), account type (Student / Professor / Guest, etc.), and department or stream where applicable
+- **Account status** — Active, Pending, Suspended
+- **Academic / member details** — registration number, year of study, department (varies by account type)
+- **Account controls** — Password management, security settings, linked notification preferences
 
-## Completing Your Profile
-
-New users must complete their profile after email confirmation:
-
-1. After registering and confirming your email, you'll be redirected to the **Profile Completion** page (`/dashboard/profile-completion`)
-2. Fill in required fields:
-   - **First name** and **last name**
-   - **Phone number**
-   - **Date of birth**
-   - Role-specific fields (e.g., student ID for students, department for professors)
-3. Click **Submit** to complete your profile
-4. Your account moves to "Pending Approval" status
-5. A librarian or admin will review and approve your account
-
-<Aside type="note" title="Approval Required">
-After completing your profile, your account must be approved by library staff before you can access the full system. You'll receive a notification when your account is approved.
+<Aside type="tip" title="Security and MFA">
+Password change and Multi-Factor Authentication management are located on dedicated pages rather than inside the Profile form: see **Security & MFA Settings** via `/dashboard/mfa-settings` or use the links inside the Profile page's Password Management panel.
 </Aside>
+
+---
+
+## Completing Your Profile (New Users)
+
+New users must complete their profile after email verification before the dashboard is unlocked. This happens automatically on your first post-verification login at `/profile-completion`.
+
+The form is multi-step with a progress indicator at the top and **Next / Previous** navigation buttons. Exactly which fields you see depends on the account type chosen during registration.
+
+### Students
+
+| Step | Fields shown |
+|------|--------------|
+| Step 0 — Academic Information | **Registration Number** (exactly 4 digits, required), **Year of Study** (1–4; auto-filled if your account type encodes the year) |
+| Step 1 — Contact Information | **Phone Number** (10-digit Indian mobile format required: 6–9 start, no country prefix) |
+
+### Professors / Faculty
+
+| Step | Fields shown |
+|------|--------------|
+| Step 0 — Professional Information | **Stream / Department** (required, free-text) |
+| Step 1 — Contact Information | **Phone Number** (same 10-digit validation as students) |
+
+### Guests / Visitors
+
+| Step | Fields shown |
+|------|--------------|
+| Step 0 — Contact Information | **Phone Number** (same 10-digit validation) |
+| Step 1 — About / Institution | **About / Institution** free-text area (30–500 characters, required) explaining the purpose of your visit and your institution or organization |
+| Step 2 — Address | **Country** (select list with search), **State** (cascades from Country), **District** (cascades from State), plus **City** when applicable — each level is required once reachable |
+
+<Aside type="note" title="Resume support">
+If you sign out before finishing Profile Completion, you are automatically returned to `/profile-completion` on your next login. Dashboard access remains unavailable until you successfully submit this step.
+</Aside>
+
+After you submit Profile Completion, your account moves to **Pending Approval** at `/pending-approval` — see that section below.
+
+---
+
+## Pending Approval
+
+After profile submission, a library staff member reviews the account. The `/pending-approval` page shows:
+- A clear "under review" message banner
+- A read-only summary of the key information you submitted, for your confirmation
+- A **Refresh Status** button to check if an approval decision has been made yet
+- A **Logout** button
+
+When approved, a success banner appears, a brief countdown runs, and you are redirected automatically to your dashboard. If corrections are required (rare), instructions appear on-screen.
+
+---
 
 ## Editing Your Profile
 
 1. Go to **Dashboard** → **Profile** (`/dashboard/profile`)
-2. Click **Edit Profile**
-3. Update your personal information
-4. Click **Save** to update
+2. Click **Edit Profile** (the page enters edit mode)
+3. Update your editable fields
+4. Click **Save Changes**
 
 ### What You Can Edit
 
-- First name, last name
-- Phone number
-- Date of birth
-- Profile picture
-- Department/section (if applicable)
+| Field | Notes |
+|-------|-------|
+| First name, Last name | Automatically capitalized consistently with your registration name rules |
+| Phone number | Subject to the same 10-digit validation as Profile Completion |
+| Profile picture / avatar | Via the avatar uploader in the Profile header |
+| Stream / Department / Institution | Shown for applicable account types |
+| Affiliation (where configured) | Diocesan / Congregation affiliation selector and details |
 
 ### What You Cannot Edit
 
-- **Email address** — contact a superuser to change your email
-- **Role** — assigned by superusers only
-- **Account status** — managed by admins/superusers
+- **Email address** — Contact library administration if you need it corrected; for your own records, double-check that your email is correct during registration, since it is used for all password recovery and notification communication
+- **Role** — Assigned by superusers only; if you have multiple roles, use **Switch Role** instead (see below)
+- **Account status** — Managed by admin / superuser / librarian workflows
+- **Registration number and Year of Study** (students) — Set at Profile Completion and managed through admin processes (not user-editable in place), to match institutional records
+
+---
 
 ## Profile Statuses
 
-| Status | Description | What You Can Do |
-|--------|-------------|-----------------|
-| Pending Email Confirmation | Just registered, email not yet confirmed | Confirm email to proceed |
-| Profile Incomplete | Email confirmed but profile not filled | Complete profile to proceed |
-| Pending Approval | Profile complete, awaiting staff review | Wait for approval notification |
-| Active | Account approved and in good standing | Full system access |
-| Suspended | Account suspended by staff | Contact library staff |
+| Status | Meaning | What you can do |
+|--------|---------|-----------------|
+| Pending Email Confirmation | Just registered; email link not yet clicked | Click the single-use verification link in your email |
+| Profile Incomplete | Email confirmed, but Profile Completion has not been submitted | Finish all steps of `/profile-completion` |
+| Pending Approval | Profile submitted; waiting for staff review | Use **Refresh Status** on `/pending-approval` |
+| Active | Account approved and in good standing | Full dashboard access for your account type |
+| Suspended | Account suspended by staff | Contact library help desk; dashboard is unavailable until resolved |
+| Account Suspended route | `/account-suspended` — shown for suspended users on sign-in attempt | Contact library administration |
+
+---
 
 ## Switching Roles
 
-If you have multiple roles (e.g., Student and Library Assistant):
+Users who are assigned multiple roles (for example, Student and Library Assistant, or Professor and Admin) can switch between them at any time. Changes take effect immediately and the dashboard redraws with role-appropriate features.
 
-1. Click your **profile avatar** in the top-right
-2. Select **Switch Role**
-3. Choose the role you want to use
-4. The dashboard updates to show role-appropriate features
+1. Click your **profile avatar** in the top-right corner
+2. Select **Switch Role** from the dropdown
+3. The **Select Role** page opens at `/select-role`, listing every role available to your account with its description
+4. Choose the role you want to use
+5. You are returned to the dashboard with the new role active and widgets/layout adjusted
 
-## API Reference
+<Aside type="tip" title="Request Cart role switching">
+Certain activities — for example, borrowing books as a patron while using a staff role — prompt you to switch roles automatically via the Request Cart, or show a reminder banner directing you to `/select-role`.
+</Aside>
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/user/profile` | Get current user profile |
-| PUT | `/api/v1/user/profile` | Update profile |
-| POST | `/api/v1/auth/profile-completion` | Complete profile (new users) |
-| GET | `/api/v1/auth/check-status` | Check account status |
+---
 
 ## Related Documentation
 
-- [Settings Guide](/user-guides/settings-guide) — Account settings and security
-- [Registration Flow](/user-guides/registration-flow) — Account creation process
-- [Onboarding Status System](/features/onboarding-status) — Technical onboarding workflow
+- [Settings Guide](/user-guides/settings-guide) — General, Academic, Display, Data Tables, and Accessibility preferences
+- [Registration Flow](/user-guides/registration-flow) — Account creation and onboarding overview
+- [Registration Guide](/user-guides/registration-guide) — Full step-by-step instructions including password rules and troubleshooting
+
+
+---
+
+**Last Updated**: August 7, 2026

@@ -10,15 +10,16 @@ import { Aside } from '@astrojs/starlight/components';
 
 The Badges system is a gamification feature that rewards users for achieving milestones. Badges are automatically awarded based on user activity such as writing reviews, borrowing books, and maintaining good standing.
 
-**Route**: `/dashboard/badges`
+**Route**: `/dashboard/my-badges`
 
 ## Viewing Your Badges
 
-1. Navigate to **Dashboard** → **Badges** (`/dashboard/badges`)
-2. The page displays all available badges in three tabs:
-   - **Badge Catalog** — all badges available in the system
-   - **My Badges** — badges you've earned
-   - **Badge Assignments** — (admin) manually assign badges to users
+1. Navigate to **Dashboard** → **My Badges** (`/dashboard/my-badges`)
+2. The page is split into two tabs:
+   - **Badge Catalog** — all badges available in the system, with a lock or earned state on each badge
+   - **My Badges** — only the badges you have already earned, including earned date, badge level, and criteria summary
+
+Clicking any badge tile opens a detail drawer showing the badge name, its rarity level, description, exact criteria, and (for earned badges) the timestamp and context when it was awarded.
 
 ## Badge Categories
 
@@ -26,10 +27,11 @@ Badges are organized by category:
 
 | Category | Description | Examples |
 |----------|-------------|---------|
-| Reviews | Earned by writing book reviews | `review_1`, `review_5`, `review_10` |
-| Loans | Earned by borrowing books | `first_loan`, ` prolific_reader` |
-| Approval | Earned for account milestones | `approved_member` |
-| Activity | Earned for platform engagement | Various activity-based badges |
+| Reviews | Earned by writing book reviews | First Review, Review Enthusiast, Seasoned Reviewer |
+| Loans | Earned by borrowing books | First Loan, Prolific Reader |
+| Approval | Earned for account milestones | Approved Member |
+| Activity | Earned for platform engagement | Daily visitor streaks, reservation and wishlist badges |
+| Penalties | Earned for good standing | No Penalties milestones and similar standing rewards |
 
 ## Badge Levels
 
@@ -51,35 +53,15 @@ Badges are evaluated automatically by the system:
 3. **Automatic award** — if criteria are met, the badge is awarded and a notification is sent
 
 <Aside type="note" title="Automatic Evaluation">
-You don't need to do anything special to earn badges. Just use the system normally — write reviews, borrow books, and engage with the catalog. Badges will be awarded automatically.
+You don't need to do anything special to earn badges. Just use the system normally — write reviews, borrow books, and engage with the catalog. Badges are awarded the next time you are signed in after the trigger event.
 </Aside>
-
-## For Admins & Superusers
-
-### Managing Badges
-
-1. Go to **Dashboard** → **Badges**
-2. The **Badge Catalog** tab shows all configured badges
-3. From here you can view badge details including criteria and recipient counts
-
-### Manually Assigning Badges
-
-1. Switch to the **Badge Assignments** tab
-2. Select a user and a badge
-3. Click **Assign** to manually award a badge
-
-## API Reference
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/badges` | List all badges |
-| GET | `/api/v1/badges/:id` | Get badge details |
-| GET | `/api/v1/badges/my` | Get current user's badges |
-| POST | `/api/v1/badges/assign` | Manually assign a badge (admin) |
 
 ## Related Documentation
 
 - [Book Reviews Guide](/user-guides/book-reviews-guide) — Write reviews to earn review badges
 - [Loans Guide](/user-guides/loans-guide) — Borrow books to earn loan badges
-- [Badge System Architecture](/features/badges) — Technical implementation details
-- [Badge Evaluators](/features/badge-evaluators) — How badges are evaluated
+
+
+---
+
+**Last Updated**: August 7, 2026

@@ -1,0 +1,160 @@
+---
+title: "Superuser Guide"
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+The **Superuser role** provides the broadest level of access in the SJRS Library Management System. It is intended for senior system administrators, security personnel, and situations requiring full system visibility. Accounts with this role can access every section of the system and manage all configuration, users, data, and settings.
+
+<Aside type="danger" title="Use With Care">
+Changes made as a superuser apply globally and affect all users. Whenever possible, use a librarian or admin role for routine operations.
+</Aside>
+
+---
+
+## When the Superuser Role is Used
+
+### Development and Configuration
+- Testing features before they are rolled out to other roles
+- Adjusting system-wide configuration
+- Setting up new institutions or migrating data
+
+### Account and Security Support
+- Helping users who are locked out of their accounts
+- Resetting security settings when normal recovery methods fail
+- Investigating unusual account activity
+
+### System Administration
+- Managing the role and permission system
+- Approving new user accounts in bulk
+- Reviewing system-wide activity and audit logs
+
+---
+
+## What a Superuser Can Access
+
+Superusers inherit access to everything available to every other role, plus dedicated superuser-only areas.
+
+### Full Library Operations
+Everything available to librarians, admins, and deans:
+- Catalog management and book inventory
+- Order and circulation management
+- User accounts, profiles, and approvals
+- Analytics and reports
+- Penalty and payment handling
+
+### System-Level Areas
+
+| Area | Route | Purpose |
+|------|-------|---------|
+| Roles & Permissions | `/dashboard/permissions` | Configure what each role can and cannot do |
+| Roles List | `/dashboard/roles` | View and manage role definitions |
+| User Types | `/dashboard/user-types` | Configure account types (Student, Professor, Guest, etc.) and their defaults |
+| Affiliations | `/dashboard/affiliations` | Manage department and institution affiliations |
+| Migrations | `/dashboard/migrations` | Run data maintenance and schema updates |
+| Order Priority Policy | `/dashboard/order-priority-policy` | Configure how borrow requests are prioritized during staff review |
+| Dashboard Configurations | `/dashboard/dashboard-configurations` | Customize which widgets appear on each role's dashboard layout |
+| System Logs | `/dashboard/system-logs` | Review application events, errors, and structured log data |
+| App Notifications Log | `/dashboard/app-notifications-log` | Comprehensive log of all in-app notifications sent across the system |
+| Badge Management | `/dashboard/dashboard-superuser/badges` | Configure the badge catalog and manually assign badges to users (see note below about routing) |
+
+### Reference & Collection Metadata
+
+| Area | Route | Purpose |
+|------|-------|---------|
+| Authors | `/dashboard/authors` | Manage the author directory linked to books |
+| Publications | `/dashboard/publications` | Manage publisher records |
+| Sections | `/dashboard/sections` | Configure library sections and their codes |
+| Subcategories | `/dashboard/subcategories` | Manage book category taxonomy |
+| Book Copies | `/dashboard/book-copies` | Manage individual copy records, locations, and shelf codes |
+| Locations | `/dashboard/locations` | Configure physical locations (buildings, floors, rooms) |
+| Shelf Codes | `/dashboard/shelf-codes` | Define shelf classification codes |
+| Key Tags | `/dashboard/key-tags` | Configure tags used for book search and filtering |
+| Reference Books | `/dashboard/reference-books` | Manage reference-only collection |
+| Reference Categories | `/dashboard/reference-categories` | Categorize the reference collection |
+| Reference Sections | `/dashboard/reference-sections` | Organize reference sections |
+| Resource Types | `/dashboard/resource-types` | Define categories for digital resources |
+| Borrow Limits | `/dashboard/borrow-limits` | Configure how many books each user type can borrow at once, fine rates, and renewal limits |
+
+### Analytics & Engagement Tracking
+
+| Area | Route | Purpose |
+|------|-------|---------|
+| Analytics | `/dashboard/analytics` | Comprehensive analytics suite — loans, collection health, user behavior, search patterns, digital reads, and finances |
+| Reports | `/dashboard/reports` | Operational reports and exports |
+| Academic Reports | `/dashboard/academic-reports` | Academic-year-scoped reports |
+| Book Views | `/dashboard/book-views` | Track which catalog records are being viewed |
+| Book Searches | `/dashboard/book-searches` | Analyze search queries and hit rates |
+| Digital Book Reads | `/dashboard/digital-book-reads` | Track engagement with digital resources |
+
+---
+
+## Access Levels Compared
+
+| Capability | Superuser | Admin | Librarian | Regular User |
+|------------|-----------|-------|-----------|--------------|
+| Catalog browsing & borrowing | Yes | Yes | Yes | Yes |
+| Circulation & loan management | Yes | Yes | Yes | Own loans only |
+| User management & approvals | Yes | Yes | Limited | No |
+| Institution settings | Yes | Yes | No | No |
+| Role & permission configuration | Yes | No | No | No |
+| System logs & audit data | Yes | Limited | Limited | No |
+| Migrations & data maintenance | Yes | No | No | No |
+
+---
+
+## Security & Accountability
+
+### Activity Logging
+Every privileged action is recorded. This includes:
+- Starting and ending user impersonation sessions
+- Approving or revoking emergency access
+- Manual interventions and data corrections
+- Changes to roles, permissions, and system settings
+
+Each entry records who performed the action, when it happened, and (where applicable) which user account was affected.
+
+### Best Practices
+
+1. **Use the lowest role that gets the job done** — if an admin or librarian account can perform the task, prefer that over using superuser privileges.
+2. **Document why you are acting** — especially when modifying another user's account or adjusting system-wide data.
+3. **Review logs periodically** — check System Logs and Action Logs to confirm all privileged activity was legitimate.
+4. **Protect your account credentials** — require a strong password and enable Multi-Factor Authentication on your superuser account.
+5. **Limit the number of superuser accounts** — keep the list as small as the institution can safely operate with.
+
+---
+
+## Common Workflows
+
+### Resetting a User's MFA When They Lost Their Device
+1. Navigate to **Members** (`/dashboard/members`) and locate the user
+2. Open the user's record and choose the **Reset MFA** action
+3. Instruct the user to set up MFA again at their next login via `/dashboard/mfa-settings`
+4. The action is recorded in the audit log
+
+### Configuring Borrow Limits for a User Type
+1. Open **Borrow Limits** (`/dashboard/borrow-limits`)
+2. Select the user type (Student, Professor, Guest, etc.) you want to configure
+3. Set the maximum number of concurrent active loans, the fine-per-day rate, renewal limits, and the reservation claim window
+4. Save the changes — they take effect immediately for new loans and reservations
+
+### Approving New User Accounts in Bulk
+1. Open the **Members** page (`/dashboard/members`)
+2. Filter by status **Pending Approval**
+3. Select multiple rows and use the **Bulk Approve** action, or open individual rows and approve one by one
+4. Each approved user receives a confirmation email notification
+
+---
+
+## Related Documentation
+
+- [Superuser Features Guide](/user-guides/superuser-features-guide) — Impersonation, emergency access, action logging, and badge assignment walkthroughs
+- [Action Logs Guide](/user-guides/action-logs-guide) — Using the action logs page for auditing
+- [System Logs Guide](/user-guides/system-logs-user-guide) — Application event log analysis
+- [Institution Settings Guide](/user-guides/institution-settings-guide) — Academic year, semester dates, and UPI configuration
+
+---
+
+**Last Updated**: August 7, 2026

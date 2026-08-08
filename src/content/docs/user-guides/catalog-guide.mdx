@@ -63,15 +63,24 @@ Hover over the quota tag for a detailed breakdown of your used and available slo
 
 ## Viewing Book Details
 
-1. Click any **book card** to open the details modal
-2. The modal shows:
+There are two ways to view the full details of any catalog entry:
+
+1. **Quick details via the modal** — Click any **book card** to open the details modal. The modal shows:
    - Full title, author, ISBN, publication
    - Category/section information
    - Total copies and available copies
    - Description (if available)
-3. From the modal, you can:
+
+2. **Dedicated detail page** — Every catalog entry also has its own shareable page at `/dashboard/catalog/show/:id` (the modal header contains a link to this page). The dedicated page is suited for deep links, bookmarking, and reviewing all book details in one place, including:
+   - Metadata and description
+   - Availability and copies summary
+   - Reviews and average rating from readers
+   - Copy-level inventory, status and location details
+   - Related or similar recommendations (if configured)
+
+From either view, you can:
    - **Add to Request Cart** for available or limited-availability books
-   - **Reserve This Book** if copies are unavailable
+   - **Reserve This Book** if copies are currently unavailable
    - **Add to Wishlist** (to track for later)
    - **View Orders** if you already have a pending request for that book
 
@@ -104,17 +113,12 @@ Borrow requests are disabled when using an administrative role (librarian, admin
 4. If the book is already in your wishlist, you'll see: "This book is already in your wishlist."
 5. The book appears in your Wishlist page
 
-## API Reference
-
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/api/v1/catalog/books` | List catalog books (paginated) |
-| GET | `/api/v1/books/:id` | Get book details |
-| GET | `/api/v1/books` | List all books (admin) |
-| GET | `/api/v1/book-copies` | List book copies (with availability) |
-
 ## Related Documentation
 
 - [Loans Guide](/user-guides/loans-guide) — Managing borrowed books
 - [Reservations Guide](/user-guides/reservations-guide) — Reserving unavailable books
 - [Wishlist Guide](/user-guides/wishlist-guide) — Tracking books you want
+
+---
+
+**Last Updated**: August 7, 2026

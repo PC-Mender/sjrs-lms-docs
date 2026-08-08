@@ -1,0 +1,123 @@
+---
+title: "Institution Settings Guide"
+description: "How to configure institution-wide academic settings, semester dates, and UPI payment integration."
+lifecycle: Active
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Overview
+
+Institution Settings allow admins and superusers to configure library-wide academic parameters. These settings affect all users and operations in the system, including due-date calculations, academic reporting, and penalty payment processing.
+
+**Route**: `/dashboard/institution-settings`
+
+<Aside type="note" title="Access Control">
+Institution Settings are restricted to **admins** and **superusers** only.
+</Aside>
+
+## Accessing Institution Settings
+
+1. Navigate to **Dashboard** → **Institution Settings** (`/dashboard/institution-settings`)
+2. The page is organized into three tabs:
+   - **Academic Year** — configure the active academic year and start month
+   - **Semester Dates** — define semester start/end dates used for due-date calculations and reports
+   - **UPI Payments** — UPI integration for online penalty payments
+
+Changes to each tab are saved individually. Unsaved edits on a tab are kept in draft state until you click Save on that tab.
+
+---
+
+## Academic Year Tab
+
+Configure the current academic year and its annual boundaries.
+
+### Fields
+
+- **Current Academic Year** — the active academic year label shown throughout the system (for example, `2026-2027`)
+- **Academic Year Start Month** — month when the academic year begins. Affects default date ranges in reports and analytics (for example, `June` or `July`)
+- **Default Display Year** — which year is pre-selected in filters and reports for non-staff users
+
+### Saving Changes
+
+1. Update the fields as needed
+2. Click **Save** on the Academic Year tab
+3. Changes take effect immediately for all new transactions, reports, and filter defaults
+
+---
+
+## Semester Dates Tab
+
+Define the start and end dates for each semester. These dates are used by:
+
+- Due-date calculations when a borrow period crosses a semester break
+- Academic reports scoped to a specific semester
+- Borrow-limit enforcement windows
+- Dashboard analytics and trends
+
+### Fields
+
+Each semester entry includes:
+
+- **Semester Name** — displayed in filters and reports (e.g., `Semester 1`, `Monsoon`, `Spring`)
+- **Start Date** — first day of the semester
+- **End Date** — last day of the semester
+- **Active** — toggle whether this semester is currently in use
+
+### Managing Semesters
+
+1. To add a new semester, fill in the empty row at the bottom and click **Save**
+2. To edit an existing semester, update its fields and click **Save**
+3. To remove a semester, clear its name or disable the Active toggle and click **Save**
+
+<Aside type="caution">
+Updating semester dates affects due-date and report calculations. Avoid changing historical semester dates after the semester has ended unless you are correcting a data-entry error.
+</Aside>
+
+---
+
+## UPI Payments Tab
+
+Configure the UPI (Unified Payments Interface) integration used when users pay penalties online.
+
+### Fields
+
+- **UPI ID** — your institution's UPI virtual payment address (for example, `library.college@upi`)
+- **Payee Name** — the account holder name as it should appear in UPI payment apps
+- **Merchant Code** — optional merchant category code, if your payment processor provides one
+
+### Saving Changes
+
+1. Fill in or update the payment configuration fields
+2. Click **Save** on the UPI Payments tab
+3. The configuration is validated and stored
+
+<Aside type="caution" title="UPI Configuration Required for Online Payments">
+Without UPI settings configured, users cannot pay penalties online. They must pay offline and have a staff member manually mark the penalty as paid.
+</Aside>
+
+### Legacy Redirect
+
+The old route `/dashboard/upi-settings` automatically redirects to `/dashboard/institution-settings?tab=upi-payments`. No change is needed to existing bookmarks or links.
+
+---
+
+## For Superusers Only
+
+Superusers have additional capabilities via the adjacent system administration pages:
+
+- **Reset to defaults** — available on the Migrations page for full configuration resets during development or data recovery
+- **Audit log** — view all settings changes in System Logs (filter by operation `system_settings_update`)
+- **Export configuration** — download settings snapshot via the Reports or Migrations pages
+
+---
+
+## Related Documentation
+
+- [Penalties Guide](/user-guides/penalties-guide) — Penalty payment flow and UPI checkout
+- [Settings Guide](/user-guides/settings-guide) — User-level personal settings
+- [Superuser Guide](/user-guides/superuser-guide) — System administration overview
+
+---
+
+**Last Updated**: August 7, 2026
