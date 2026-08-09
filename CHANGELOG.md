@@ -2,6 +2,11 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.1](https://github.com/PC-Mender/sjrs-lms-docs/compare/v2.0.0...v2.0.1) (2026-08-09)
+
+### Bug Fixes
+
+* **deps:** upgrade nanoid, undici, fast-uri, and js-yaml to fix security vulnerabilities ([709a8af](https://github.com/PC-Mender/sjrs-lms-docs/commit/709a8af4fa11efee7210f8d87c5fdfa7baba0e71))
 ## [2.0.0](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.8.2...v2.0.0) (2026-08-09)
 
 ### ⚠ BREAKING CHANGES
