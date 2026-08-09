@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.0](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.8.2...v2.0.0) (2026-08-09)
+
+### ⚠ BREAKING CHANGES
+
+* **docs:** remove /features/ section and relocate contents
+
+### Bug Fixes
+
+* refactor feedback worker, add external links plugin, update registration guide ([5eeb42a](https://github.com/PC-Mender/sjrs-lms-docs/commit/5eeb42ac78199ca1ee18be042c2d837dd66b9076))
+
+### Documentation
+
+* audit + fix all sections for content accuracy and audience separation ([00c9d18](https://github.com/PC-Mender/sjrs-lms-docs/commit/00c9d1889cf4037a7ca19ae46b02f179612e0b93))
+* repoint all /features/ cross-links to new destinations ([f00c12d](https://github.com/PC-Mender/sjrs-lms-docs/commit/f00c12d20dc3e057ebc8b292d163f753c8d1c916))
+
+### Code Refactoring
+
+* **docs:** remove /features/ section and relocate contents ([cc30e86](https://github.com/PC-Mender/sjrs-lms-docs/commit/cc30e86f0995ac092d2c599f1abcf5b08eb704aa))
 ## [1.8.2](https://github.com/PC-Mender/sjrs-lms-docs/compare/v1.8.1...v1.8.2) (2026-07-29)
 
 ### CI
