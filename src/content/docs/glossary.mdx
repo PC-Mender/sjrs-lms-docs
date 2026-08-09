@@ -7,7 +7,7 @@ This document defines common terms, roles, and concepts used within the SJRS Lib
 
 ## Roles
 
-Roles are hierarchical — each role inherits the permissions of all roles below it. The hierarchy is database-driven, with the following default levels:
+Roles can inherit permissions through a configurable database hierarchy. By default, the hierarchy is: Superuser (6) > Admin (5) > Librarian / Dean (4) > Professor (3) > Student (2) > Guest (1 / 0). Individual permissions can also be explicitly granted or revoked per-role to override the hierarchy. The hierarchy is not hardcoded and can be modified per institution on the Roles page (/dashboard/roles).
 
 - **Superuser** (Level 6): Full system access and control. Can manage all roles, permissions, and system settings. The only role that can assign administrative roles.
 - **Admin** (Level 5): Administrative access to all features except role management. Can manage users, institution settings, and system configuration.

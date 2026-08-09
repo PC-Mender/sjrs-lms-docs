@@ -1,5 +1,7 @@
 ---
-title: "System Logs User Guide"
+title: "System Logs Guide"
+description: "Using the System Logs page for application event, error, and structured log analysis."
+lifecycle: Active
 ---
 
 **For**: Superusers and System Administrators  
@@ -244,9 +246,9 @@ Displays logs with columns:
 
 ### Export Limits & Safety
 
-**Backend Limits**:
+**Backend Rate Limit:** Export operations are rate-limited to protect system stability. If you receive a 429 error, wait one minute and try again. Log queries themselves are also rate limited. The System Logs page enforces pagination to prevent overwhelming the backend.
+
 - **Maximum**: 10,000 records per export
-- **Rate Limit**: 200 exports per hour (per user)
 
 **Confirmation Thresholds**:
 | Record Count | Warning |

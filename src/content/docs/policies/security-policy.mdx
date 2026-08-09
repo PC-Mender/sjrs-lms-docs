@@ -1,55 +1,105 @@
 ---
 title: Security Policy
-description: How to report security vulnerabilities in SJRS LMS
+description: Security principles, vulnerability disclosure, and how to report concerns through the correct channel.
 ---
 
-## Reporting a Vulnerability
+This page explains the security posture of SJRS LMS and, crucially, **how to choose the correct reporting channel for the issue you found**. Reporting through the right path ensures your report is triaged quickly without disclosing sensitive information to other users.
 
-If you believe you found a security vulnerability in SJRS LMS, please report it to the project maintainers as soon as possible.
+## Before You Report: Pick the Correct Channel
 
-### Preferred Reporting Methods
+SJRS LMS has **two separate reporting paths** and one documentation-specific path. Please choose the one that matches your report.
 
-- **GitHub Security Advisories** (if enabled): [https://github.com/PC-Mender/sjrslms/security/advisories](https://github.com/PC-Mender/sjrslms/security/advisories)
-- **GitHub Issues**: [https://github.com/PC-Mender/sjrslms/issues](https://github.com/PC-Mender/sjrslms/issues)
-  - Include `security` in the title and request that the issue be handled confidentially if it should not be made public immediately.
+### 1. Regular bugs, feature requests, UX issues, performance problems
 
-### What to Include in Your Report
+→ **Use the Report an Issue page inside the application.**
 
-Please provide the following information when reporting a security vulnerability:
+All authenticated users can submit reports directly in-app. This is the correct path for:
 
-- **Clear description** of the issue and affected components (frontend, backend, Cloudflare Workers, database layer, authentication, etc.)
-- **Steps to reproduce** the issue
-- **Expected vs actual behavior**
-- **Affected version(s)** of SJRS LMS
-- **Proof-of-concept** code, payloads, or attack scenarios
-- **Environment details** such as Node/npm versions, browser, Cloudflare deployment environment, or database schema state
+- Application bugs
+- Broken features
+- Slow performance or page errors
+- UI or UX problems
+- Data loss or incorrect data display
+- Requests for new features
+- Non-sensitive security-related observations that can be discussed publicly (for example, a missing warning on a non-admin page)
+
+**How to file it in-app:**
+
+1. Navigate to **[Report an Issue](../user-guides/issue-reports-guide)** (dashboard `→ Report an Issue`, or use the Report Issue quick-link in the app footer).
+2. Open the **Submit New** tab.
+3. Fill category, severity, title, description and optional screenshots (5 max). The form will automatically suggest similar existing reports as you type.
+4. Submit. Your report appears on the **My Reports** tab with a status badge.
+
+**What happens next:**
+
+- The library admin / maintainer team reviews and triages submissions.
+- Statuses progress through **Submitted → Acknowledged → In Progress → Resolved → Closed**.
+- Community reports are browsable by all authenticated users (upvote, comment, and attach additional info).
+- The maintainer team synchronises selected reports with the backend issue tracker as needed.
+
+Full walkthrough: **[Issue Reports User Guide](../user-guides/issue-reports-guide)**.
+
+### 2. Security vulnerabilities (private disclosure required)
+
+→ **Use GitHub Security Advisories. Do NOT use the in-app report form for embargoed vulnerabilities.**
+
+This is the correct path for:
+
+- Authentication bypass, account takeover, session hijacking
+- Authorization flaws (accessing another user's data, privilege escalation)
+- Injection-style vulnerabilities or cross-site issues
+- Any issue with an exploitable proof-of-concept, sensitive data leak, or operational impact
+- Any issue you believe should **not** be disclosed publicly until a fix is ready
+
+The in-app Report an Issue page publishes report content to the authenticated community list (and may sync with public issues automatically). Do **not** paste proof-of-concept payloads, token leaks, or credential-harvesting steps there. Use the private, encrypted Security Advisories channel instead.
+
+Choose the repository that matches where the vulnerability lives:
+
+- **SJRS LMS application, authentication, API, upload handlers, deployment, or live app behavior**
+
+  Preferred: **[GitHub Security Advisories (App)](https://github.com/PC-Mender/sjrslms/security/advisories)** — encrypted, confidential by default.
+
+  Fallback only if advisories are disabled on the repo: contact the library admin or institution maintainer channel directly and request a private ticket to be opened for you. Do **not** post exploit payloads in any public or community-visible location.
+
+- **This documentation site only** (docs publishing pipeline, navigation, docs page templates, stale links that create a docs-level security concern)
+
+  Preferred: **[GitHub Security Advisories (Docs)](https://github.com/PC-Mender/sjrs-lms-docs/security/advisories)**
+
+### 3. Errors or outdated content on a specific docs page
+
+→ **Use the page-level "Report an issue with this page" link** at the bottom of every documentation page. This pre-fills the page title, path, and body template and routes it directly to the documentation repository issue tracker.
+
+For general docs questions or feature-feedback unrelated to a specific page, use the in-app **Report an Issue** flow (pathway 1 above) and choose an appropriate category.
+
+## What to Include
+
+For **in-app** reports, follow the guidance on the Issue Reports guide page. For **Security Advisory** submissions, include:
+
+- Clear description of the vulnerability and the affected area (for example sign-in flow, password reset, a specific URL, file upload, or a named docs page).
+- Short steps to reproduce the issue reliably — you do **not** need to include a working exploit; a brief walk-through of the conditions required to trigger it is enough.
+- Expected behavior vs what you actually observed.
+- Environment if relevant (production, staging, specific browser, region, or release version).
 
 ## What to Expect
 
 The maintainers will:
 
-- Acknowledge receipt of the report promptly
-- Confirm the issue and prioritize it for remediation
-- Work to fix the vulnerability and verify the fix
-- Communicate status updates via the chosen report channel
+- Acknowledge receipt of the report promptly.
+- Validate the report and assign it an appropriate priority.
+- Work on a fix and verify it in a staging or pre-release build.
+- Communicate status updates through the same channel you used to file the report.
+- Coordinate a release date with you when a fix is ready.
 
 ## Supported Releases
 
-- This project currently supports the `6.x` release series
-- Security fixes will be provided for the current major version and any actively maintained release branches
-
-## Security Best Practices
-
-For users and contributors, this project follows secure development and release practices, including:
-
-- Static type checking with TypeScript
-- ESLint checks and quality gates
-- `npm run security-audit` for dependency and vulnerability analysis
-- Cloudflare Workers deployment with modern edge security controls
-- Use of secure storage and authorization patterns for D1, R2, and KV
+Security fixes are provided for the current active `8.x` release series and any currently maintained release branches.
 
 ## Responsible Disclosure
 
-Please do not publicly disclose security vulnerabilities before they have been fixed and released. This helps protect users and gives the maintainers time to address the issue safely.
+Do **not** publicly disclose a security vulnerability before it has been fixed and released, unless the maintainers have explicitly agreed to a disclosure timeline. This protects all active users while a fix is prepared.
 
-If you need direct assistance, the project issue tracker at [https://github.com/PC-Mender/sjrslms/issues](https://github.com/PC-Mender/sjrslms/issues) is the best available contact point.
+## In-Person / Offline Escalation
+
+If GitHub is unreachable or you cannot use any of the paths above, contact the institution's library administration directly with your report details and request that they forward it to the SJRS LMS maintainer team via the internal escalation path.
+
+**Last Updated**: August 8, 2026

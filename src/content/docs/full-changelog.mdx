@@ -10,6 +10,223 @@ slug: full-changelog
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [8.11.1] - 2026-08-07
+
+### Fixed
+- 🐛 pin js-yaml to 4.3.1 to resolve GHSA-5p4m-2wfm-xmqj
+- 🐛 resolve create/delete/list ordering and cache invalidation issues
+- 🐛 drop Domain attribute from __Host- cookies and reject COOKIE_DOMAIN
+- 🐛 allowlist FRONTEND_URL per environment and validate trusted internal calls
+
+### Technical
+- 🔧 remove unused env parameter from buildLoginSuccessResponse
+- 🔧 Default order_index to null on create to prevent D1 insertion failures
+- 🔧 __Host- prefixed cookies must not carry a Domain attribute
+- 🔧 Strengthen FRONTEND_URL validation in assertEnv to require HTTPS
+
+## [8.11.0] - 2026-08-06
+
+### Added
+- ✅ auto-capitalize first letter of bookmark title
+- ✅ add external-links acknowledgment and reject credential-bearing URLs
+- ✅ add learning achievement system with backend-owned evaluation
+
+### Fixed
+- 🐛 Fixes strict TypeScript TS6133 error reported by type-check:strict.
+- 🐛 show duplicate URL error and keep create modal open on conflict
+
+### Technical
+- 🔧 remove unused React import from BookmarkViews
+- 🔧 Add capitalizeFirst normalize function to create and edit forms
+- 🔧 Introduce a versioned, per-user acknowledgment stored in user_preferences
+- 🔧 Add client-side and backend rejection of URLs containing embedded credentials
+- 🔧 Introduce 12 learning-focused badges covering discovery and reading
+
+## [8.10.4] - 2026-08-05
+
+### Fixed
+- 🐛 remove server-side fetching of user-supplied bookmark URLs
+
+### Technical
+- 🔧 Eliminates SSRF risk by stopping the worker from fetching arbitrary URLs
+- 🔧 Title fetcher helpers are reduced to no-op shims for backward compatibility
+
+## [8.10.3] - 2026-08-05
+
+### Fixed
+- 🐛 isolate impersonation session in dedicated cookie and harden lifecycle
+
+### Technical
+- 🔧 cap workers to 2 to stabilize coverage runs
+- 🔧 bump packages to latest stable versions
+- 🔧 Move impersonation credential into a separate __Host-impersonationToken cookie
+
+## [8.10.2] - 2026-08-04
+
+### Fixed
+- 🐛 bump undici to 7.29.0 and patch vulnerable transitive deps
+- 🐛 make user filter match full display name and search any user
+- 🐛 resolve borrow limits from single source of truth in approval flow
+- 🐛 rename user type column to label and render as plain text
+- 🐛 persist granted badges tab and refine user view
+- 🐛 remove direct loan creation button from administrative loans page
+- 🐛 gate dashboard config manager behind explicit route permission
+
+### Technical
+- 🔧 add handler and router tests to meet coverage thresholds
+- 🔧 Bump undici override from ^7.28.0 to ^7.29.0 to fix 5 advisories
+- 🔧 Replace page-limited user dropdown with a debounced text input for searching
+- 🔧 Order approval and loan creation now reuse getBorrowLimitsForUser
+- 🔧 Move dashboard config manager to its own dedicated route
+
+## [8.10.1] - 2026-08-03
+
+### Fixed
+- 🐛 serve version.json uncached and refresh widget on focus
+
+### Technical
+- 🔧 Serve /version.json with no-store and /CHANGELOG.md with no-cache
+
+## [8.10.0] - 2026-08-03
+
+### Added
+- ✅ add JSON preview endpoint and media-asset awareness
+- ✅ backfill R2-backed digital resources into shared registry
+- ✅ add Media Library page and book/resource upload UI
+- ✅ add media asset service, API, and policy gate
+- ✅ add shared media asset registry schema and migrations
+
+### Fixed
+- 🐛 refresh CSP script hash and force zod jitless mode
+- 🐛 auto-create read session on first progress update
+
+### Technical
+- 🔧 Update the script-src-elem SHA to match the current bundle CSP
+- 🔧 drop Beta label from Media Library and refine page layout
+- 🔧 Introduce GET /api/v1/resources/:id/preview for JSON file preview
+- 🔧 Add data migration that registers existing R2-backed resource files
+- 🔧 Route avatar, issue, resource, and book uploads through shared service
+
+## [8.9.0] - 2026-08-02
+
+### Added
+- ✅ enforce superuser capability at the central policy gate
+
+### Fixed
+- 🐛 honor central gate for notifications and harden ingest token
+
+### Technical
+- 🔧 Introduce a requireSuperuser capability on RouteSecurityPolicy
+- 🔧 Add an isSuperuser check that reads the current database role
+- 🔧 Replace direct string comparison on the ingest token with SHA-256
+
+## [8.8.0] - 2026-08-02
+
+### Added
+- ✅ restrict admin edit modal to due-date override
+- ✅ add due-date override workflow with audit and notifications
+- ✅ add due-date override permission and migration
+
+### Fixed
+- 🐛 evaluate overdue status using IST calendar day boundary
+- 🐛 harden create flow and refine catalog filters
+
+### Technical
+- 🔧 Superuser loan edit modal now only edits due_date and override_reason
+- 🔧 Introduce dedicated loans.override_due_date action for librarians
+- 🔧 Due dates compared using IST calendar day boundary instead of UTC
+
+## [8.7.0] - 2026-08-02
+
+### Added
+- ✅ add self-service profile-options endpoint
+
+### Fixed
+- 🐛 bypass stale status caches
+- 🐛 restrict administrative read access to admin roles
+
+### Technical
+- 🔧 Revoke read permissions on roles, dioceses, and congregations from regular users
+- 🔧 Introduce GET /api/auth/profile-options returning dioceses and congregations
+- 🔧 Switch ProfileFormFields to fetch options via new endpoint
+
+## [8.6.0] - 2026-08-02
+
+### Added
+- ✅ refine loan and reservation UI
+- ✅ add server-side search, optimistic updates, and confirmations
+- ✅ add stable status filtering
+
+### Fixed
+- 🐛 harden queue and claim workflow
+- 🐛 restrict reserve button to books with copies
+
+### Technical
+- 🔧 Backend: server-side search, optimistic updates, confirmations
+- 🔧 Frontend: refined loan and reservation UI with stable status filtering
+- 🔧 Books with zero total copies no longer show the Reserve button
+
+## [8.5.0] - 2026-08-01
+
+### Added
+- ✅ surface monthly loans count on user dashboard
+
+### Fixed
+- 🐛 hide borrow quota for administrative roles
+- 🐛 award first-borrow badge for users with existing loans
+- 🐛 restore profile schema compatibility and dashboard routes
+
+### Technical
+- 🔧 Add monthlyLoans stat counting loans created in current calendar month
+- 🔧 First-borrow evaluator now awards badge for users with existing loans
+- 🔧 Register role-specific dashboard policies to prevent 500 errors
+
+## [8.4.0] - 2026-08-01
+
+### Added
+- ✅ persist badge celebration state server-side
+
+### Fixed
+- 🐛 drop MFA secret from profile queries and use explicit column allowlists
+- 🐛 refresh user stats and earned badges after loan update or delete
+- 🐛 refresh user stats and earned badges after creating a loan
+- 🐛 enforce explicit route policies for named sub-routes
+- 🐛 separate renewal request permissions from generic loan update
+
+### Technical
+- 🔧 Extract /me data-access into user-profile-repository
+- 🔧 Replace wildcard projections with explicit column allowlists
+- 🔧 Stop selecting totp_secret in current-user profile query
+- 🔧 Scope renewal approve/reject to dedicated loans:approve and loans:reject
+- 🔧 Replace localStorage-based badge tracking with persisted celebrated_at column
+
+## [8.3.0] - 2026-07-30
+
+### Added
+- ✅ add Zod validation schemas for dioceses and congregations
+
+### Fixed
+- 🐛 capitalize names on input and sort list client-side
+
+### Technical
+- 🔧 Remove dead useStudents hook (superseded by unified dashboard)
+- 🔧 Add fine_per_day CHECK constraint and prune applied migrations
+- 🔧 Normalize name and description fields in AffiliationForm
+- 🔧 Add AFFILIATION_CREATE_SCHEMA / AFFILIATION_UPDATE_SCHEMA
+- 🔧 Centralize borrow limit constants and add /my-effective endpoint
+
+## [8.2.3] - 2026-07-29
+
+### Fixed
+- 🐛 prevent non-atomic profile update on duplicate registration number
+- 🐛 improve Select Role page — centered spinner, cleaner UI, role descriptions
+- 🐛 scope granted badges by read_all permission
+
+### Technical
+- 🔧 Add pre-check for registration number uniqueness in profile update flow
+- 🔧 Surface duplicate registration number error as 400 with user-friendly message
+- 🔧 Users with only badges:read restricted to their own granted badges
+
 ## [8.2.2] - 2026-07-28
 
 ### Fixed

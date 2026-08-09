@@ -309,7 +309,7 @@ npm install -g newman
 
 # Run collection
 newman run sjrs-lms-api.postman_collection.json \
-  -e sjrs-lms-dev.postman_environment.json \
+  -e sjrs-lms-staging.postman_environment.json \
   --reporters cli,json \
   --reporter-json-export results.json
 ```
@@ -330,7 +330,7 @@ jobs:
       - name: Run API Tests
         run: |
           newman run docs/api/sjrs-lms-api.postman_collection.json \
-            -e docs/api/sjrs-lms-dev.postman_environment.json \
+            -e docs/api/sjrs-lms-staging.postman_environment.json \
             --reporters cli,json \
             --reporter-json-export test-results.json
       - name: Upload Test Results

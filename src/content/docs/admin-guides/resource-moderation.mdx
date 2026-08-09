@@ -10,7 +10,7 @@ Moderation covers all operations where staff review, approve, reject, or configu
 
 Primary routes:
 - **Book Reviews**: `/dashboard/book-reviews` (admin view)
-- **Issue Reports**: `/dashboard/issue-reports` (admin triage and status updates)
+- **Issue Reports (user submissions)**: Users submit via `/dashboard/report-issue`. Review and respond to user-submitted reports through the help desk workflow.
 - **Badges (admin)**: `/dashboard/badges` — badge definitions, criteria, and manual assignments
 - **Announcements**: `/dashboard/announcements`
 - **System Notifications**: `/dashboard/system-notifications`
@@ -27,12 +27,17 @@ Librarians, admins, and superusers can see all reviews submitted by users (user-
 
 ## Issue Reports Triage
 
-All user-submitted reports are available for staff triage:
+All user-submitted reports are available for staff triage through the help desk workflow:
 
-1. Go to the Issue Reports list page (admin).
-2. Review each report: category, severity, attachments, browser/app version captured automatically.
-3. Update **Status** (New → Investigating → Fixed / Deferred / Duplicate / Rejected) and **Assignee** if applicable.
-4. Add staff-only notes visible only to the moderation team. Users see public status changes via their **My Reports** tab with status timestamps.
+1. Locate the user-submitted report via the help desk review interface.
+2. Review each report: category, severity, attachments, and browser/app version details captured automatically at submission time.
+3. Update **Status** as the report progresses through the workflow. The available statuses are:
+   - **Submitted** — Initial state when a user first files a report.
+   - **Acknowledged** — Staff has reviewed and formally acknowledged the report.
+   - **In Progress** — Active investigation or resolution work is underway.
+   - **Resolved** — A solution or response has been provided to the reporter.
+   - **Closed** — Final state, no further action required.
+4. Communicate status updates and resolution details to the reporter through the help desk response channels.
 
 ## Badges Administration
 

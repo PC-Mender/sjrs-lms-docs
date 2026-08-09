@@ -4,11 +4,59 @@ description: Detailed history of changes and improvements
 slug: changelog
 ---
 
-> **Note:** This page highlights major updates and recent patches. For a complete list of all technical changes since inception, see the **[Full Technical Changelog](/full-changelog)**.
+> **Current Application Version:** **8.11.1** — released August 7, 2026
+>
+> This page highlights major updates and recent patches. For a complete list of all technical changes since inception, see the **[Full Technical Changelog](/full-changelog)**.
 
 ## Latest Updates
 
-### Version 8.2.2 ⭐ CURRENT (July 28, 2026)
+### Documentation Updates (August 8, 2026)
+
+#### Information Architecture Overhaul
+- **Sidebar Reorganized**: Audience-based top-level groups: For Users, For Admins, For Developers. Developer-only technical sections (Architecture, Development Guides, API, Database, Deployment, Security, Testing, Integrations, Performance) are nested under "For Developers" and collapsed by default so regular borrowers are not shown developer content.
+- **Admin Guides sidebar entry added**: The 11 Admin Guides pages (previously invisible in navigation despite existing on disk) now appear in their own top-level group, with internal cross-links repaired to point at correct admin-guide paths.
+- **40 transient files moved to Archive**: Dashboard proposals, pending-implementation checklists, quality progress reports, 18 refactoring completion summaries, and closed audit reviews (MFA, System Logs compliance) are now under archive/ with no active navigation path.
+- **System Status page removed**: Content was a stale feature list (not live operational status) that duplicated changelog entries; replaced by direct changelog linkage.
+
+#### User Guide & Policies Cleanup
+- **FAQs moved into User Guides**: 9 FAQ topic pages (Borrowing, Returns & Fines, Payments, Renewals & Reservations, Digital Resources, Library Rules, Special Services, Account Management) moved from policies/faqs → user-guides/faqs so they appear alongside the user task guides where students and professors look for them.
+- **Auto-Suspension Policies split**: Policy-facing rules (30-day overdue threshold, ₹100 unpaid-fine threshold, 3-lockout security rule) remain in Library Policies. Developer-only internals (SQL, schema columns, file paths) have been removed.
+- **Project Rules pages relocated**: Split into two clearly scoped pages under For Developers → Project Rules subgroup.
+- **15 mis-targeted cross-links repaired**: Admin-guide ↔ user-guide inter-documentation links corrected to use the new directories.
+
+### Version 8.11.1 ⭐ CURRENT (August 7, 2026)
+
+#### Security & Hardening
+- **js-yaml Pin**: Pinned `js-yaml` to 4.3.1 to resolve GHSA-5p4m-2wfm-xmqj.
+- **Cookie Security**: Removed the `Domain` attribute from `__Host-` prefixed cookies and rejected `COOKIE_DOMAIN` environment configuration. `__Host-` cookies are rejected by browsers when a Domain attribute is set.
+- **Trusted Origin Validation**: Environment-level `FRONTEND_URL` allowlist per deployment plus validation for trusted internal calls; `FRONTEND_URL` now requires HTTPS.
+
+#### Bug Fixes
+- **Order Cache Consistency**: Resolved create/delete/list ordering and cache invalidation issues in ordering flows.
+- **Default Order Index**: Default `order_index` to null on create to prevent D1 insertion failures.
+
+#### Technical
+- Removed unused env parameter from `buildLoginSuccessResponse` helper.
+
+---
+
+### Version 8.11.0 (August 6, 2026)
+
+#### New Features
+- **Bookmark Quality**: Auto-capitalize the first letter of a bookmark title on create and edit.
+- **External URL Safety**: Added an external-links acknowledgment step (per-user preference recorded) together with backend rejection of credential-bearing URLs.
+- **Learning Achievement System**: Backend-owned learning achievement evaluation covering 12 new learning-focused badges.
+
+#### Bug Fixes
+- **Strict TypeScript**: Fixed TS6133 unused-import strict errors.
+- **Duplicate URL UX**: Show explicit duplicate URL error and keep the create modal open on conflict.
+
+---
+
+### Version 8.10.4 (August 5, 2026)
+
+#### Security
+- **SSRF Prevention**: Removed server-side fetching of user-supplied bookmark URLs. Eliminates SSRF risk from the worker calling arbitrary remote resources; title-fetch helpers are reduced to backward-compatible no-op shims.
 
 #### Security & Dependencies
 - **Dependabot Fixes**: Upgraded `brace-expansion` (CVE-2026-14257) and `react-router` (GHSA-qwww-vcr4-c8h2) to patched versions.
@@ -684,3 +732,7 @@ The SJRS LMS features a **comprehensive session management system** with cross-t
 - **Improved Error Handling**: Better error messages and user feedback
 - **Performance Optimizations**: Faster role lookups and caching
 - **Security Enhancements**: Role-based access control improvements
+
+---
+
+**Last Updated**: August 8, 2026

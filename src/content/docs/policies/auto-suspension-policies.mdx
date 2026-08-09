@@ -1,109 +1,72 @@
 ---
-title: "Auto Suspension Policies"
-description: Auto-suspension policies
+title: "Auto-Suspension Policies"
+description: Account suspension and reinstatement policies enforced by the library system.
 ---
-
 
 ## Overview
 
-This system supports automatic suspension and automatic unsuspension of user accounts based on two policy groups:
+This system automatically suspends and reinstates user accounts based on two policy groups:
 
-- Business-rule suspension (scheduled)
-- Security/abuse suspension (event-driven)
+- **Business-rule suspension** (scheduled daily check) — triggered by overdue library materials or unpaid balances
+- **Security/abuse suspension** (event-driven during sign-in) — triggered by repeated failed-access attempts
 
-Manual suspension remains available and is **not** automatically reversed.
+Manually applied suspensions remain in effect until a staff member reverses them; they are never lifted automatically.
 
-## Business-Rule Policy (Scheduled)
+## Business-Rule Suspensions (Scheduled Daily)
 
-### Execution
+### When Your Account May Be Suspended
 
-- Runs daily via the Worker scheduled handler.
+A user is automatically suspended when **either** condition below is met:
 
-### Suspend Conditions
+1. **Overdue threshold breach:** you have any item that is more than **30 calendar days past its due date** and has not been returned or renewed.
+2. **Unpaid penalties threshold breach:** the total of unpaid fines and fees on your account reaches or exceeds **₹100**.
 
-A user is automatically suspended when **either** of the following is true:
+### When Your Account Is Automatically Reinstated
 
-1. Overdue threshold breach
-- Rule: Any loan overdue by more than **30 days**
-- Source table: `loans`
-- Condition:
-  - `returned_at IS NULL`
-  - `due_date IS NOT NULL`
-  - `julianday('now') - julianday(due_date) > 30`
+An automatically suspended account is reinstated the next business day after **both** are true:
 
-2. Unpaid penalties threshold breach
-- Rule: Total unpaid penalties is **>= 100**
-- Source table: `penalties`
-- Condition:
-  - `status = 'pending'`
-  - `SUM(amount) >= 100`
+- The suspension was originally applied by this business-rule system (not manually by staff and not by a security rule)
+- Neither suspend condition still applies:
+  - No items are more than 30 days overdue
+  - Unpaid fines and fees total less than ₹100
 
-### Unsuspend Conditions (Auto-Unsuspend)
+### Manually Applied Suspensions Are Protected
 
-A user is automatically unsuspended when **both** are true:
+If a librarian or administrator suspended your account manually (for any reason), the system will **not** automatically reinstate it, even if the conditions above are satisfied. Contact the library to appeal or resolve a manual suspension.
 
-- The user was suspended by this business-rule system (`suspended_source = 'auto_business'`)
-- The user no longer matches *any* suspend condition:
-  - no loans overdue by > 30 days
-  - unpaid penalties total < 100
+## Security / Abuse Suspensions (Event-Driven During Sign-In)
 
-### Safety Rule: Manual Suspensions
+### When Your Account May Be Suspended
 
-If a user is suspended manually (or by a different mechanism), the system will not auto-unsuspend them.
+A user is automatically suspended for security reasons when **3 or more account lockouts occur within a rolling 24-hour window**.
 
-This is enforced by storing suspension metadata on the user record:
+A lockout is the temporary sign-in block applied after a series of failed password or verification attempts. Three consecutive lockouts on the same account within 24 hours triggers a full suspension to stop credential-guessing or abuse.
 
-- `suspended_source`
-- `suspended_reason`
-- `suspended_at`
-- `suspended_prev_status`
+### Typical Triggers
 
-## Security/Abuse Policy (Event-Driven)
+Examples of activity that can reach the suspension threshold:
 
-### Execution
+- Repeated failed sign-in attempts in a 24-hour period
+- An unusually high volume of failed verification attempts
+- Sign-in attempts from many different locations or devices (credential-stuffing patterns)
 
-- Enforced during authentication flows.
+### Suspension Consequences
 
-### Implemented trigger: repeated lockouts
+When a security suspension is applied:
 
-- Rule: Auto-suspend after **3 account lockouts within a 24-hour window**.
-- Enforcement point:
-  - `functions/api/auth/services/login-rate-limiting.ts` (`handleInvalidCredentials`)
-  - Lockout events are tracked in `env.CACHE` (KV) using a 24h TTL counter.
-- Suspension metadata written to `library_users`:
-  - `status = 'suspended'`
-  - `suspended_source = 'auto_security'`
-  - `suspended_reason` includes a JSON payload (policy + counts)
-  - `suspended_at = now`
-  - `suspended_prev_status = previous status`
+- The account cannot sign in until a staff member reviews it
+- All active sessions on the account are ended immediately
+- The action is recorded in the account's action log
 
-### Login behavior for suspended users
-
-- Suspended users are blocked at credential validation time.
-- The login endpoint returns a standardized error envelope with code:
-  - `AUTH_ACCOUNT_SUSPENDED`
-
-### Typical triggers
-
-Examples (thresholds configurable):
-
-- Repeated lockouts in a 24h window
-- Extremely high failed login attempt volume
-- Multi-IP credential stuffing patterns
-
-### Tuning knobs
-
-Current defaults (can be adjusted in code):
+### Default Thresholds
 
 - Lockout window: **24 hours**
-- Auto-suspend threshold: **3 lockouts**
+- Auto-suspend after: **3 lockouts** within that window
 
-### Behavior
+These defaults are set by the institution and can be adjusted at the system level.
 
-- Suspend user
-- Deactivate all sessions
-- Record audit/action log entry
+## Getting Help
 
-## Audit Logging
+If you believe your account was suspended in error, or if you have questions about a suspension, contact the library front desk or a system administrator through the help channels listed in **[Help & FAQs](../user-guides/faqs/)**.
 
-All automatic status transitions should write to `action_logs` with `user_id = 0` and include the policy details in the stored payload.
+**Last Updated**: August 8, 2026

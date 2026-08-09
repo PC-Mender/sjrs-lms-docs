@@ -1,9 +1,8 @@
 ---
 title: "Superuser Features Guide"
----
-
-**Audience:** Superusers, System Administrators  
-
+description: "Privileged superuser operations including action logging, emergency access, user impersonation, and badge management."
+lifecycle: Active
+audience: Superusers, System Administrators
 ---
 
 ## Table of Contents
@@ -48,18 +47,19 @@ Action logging automatically tracks all superuser activities including:
 
 ### Viewing Action Logs
 
-**Step 1:** Navigate to Dashboard
-```
-/dashboard → Superuser Actions
-```
+## Action Logging Navigation
+Action Logs are accessed via the System Logs page.
+1. Navigate to **System Logs** (`/dashboard/system-logs`)
+2. Switch to the **Action Logs** tab within the page.
+There is no separate "Superuser Actions" navigation entry.
 
-**Step 2:** Filter Actions
+**Step 1:** Filter Actions
 - By action type (impersonation_start, emergency_access_request, etc.)
 - By target user
 - By date range
 - By superuser (who performed the action)
 
-**Step 3:** View Details
+**Step 2:** View Details
 - Click on any action to see full details
 - View JSON action_details for comprehensive information
 - See IP address and user agent
@@ -87,21 +87,14 @@ For actions not automatically logged:
 - Any privileged action outside the system
 
 **How to Log:**
-1. Navigate to Superuser Actions page
-2. Click "Log Action" button
-3. Fill in details:
-   - Action type
-   - Target user (if applicable)
-   - Description/reason
-   - Any relevant details
-4. Submit
+The manual action logging API endpoint is available for use. Manual action logging is typically performed programmatically via the API or during migrations. If your version does not expose a frontend Log Action button, use the available API endpoint or contact your system administrator. Do NOT perform manual database changes outside of the API and then fail to log them.
 
 **Example:**
 ```
-Action Type: manual_database_update
+Action Type: manual_intervention
 Target User: john.doe@example.com
-Reason: Fixed corrupted loan record after database recovery
-Details: Updated loans table, record ID 123, set status to 'returned'
+Reason: Corrected loan status during system recovery
+Details: Manual action: Corrected loan status during system recovery; ticket #12345 reference.
 ```
 
 ---
@@ -127,12 +120,19 @@ A formal workflow for requesting and approving temporary access to user accounts
 - Bypassing permissions for convenience
 - Unauthorized access requests
 
+## Emergency Access Navigation
+Emergency access APIs exist on the backend for programmatic use.
+The frontend UI for requesting and approving emergency access is implemented as inline actions within the Members and Users list pages, or through the API for automated integration.
+
+To grant emergency access, locate the target user on the Members page, use the superuser action menu on that user's row, and select the Emergency Access option. To review pending emergency access requests, contact another superuser or use the System Logs to audit events. Note: This feature is backend-supported; if the dedicated UI controls are not visible in your version, use the API or contact development.
+
 ### Requesting Emergency Access
 
-**Step 1:** Navigate to Emergency Access
-```
-/dashboard → Emergency Access → Request Access
-```
+**Step 1:** Locate Target User
+- Navigate to **Members** (`/dashboard/members`) or other user list page
+- Find the target user row
+- Use the superuser action menu on that user's row
+- Select the Emergency Access option
 
 **Step 2:** Fill Request Form
 - **Target User:** Select user needing emergency access
@@ -160,18 +160,18 @@ Need to check user's account
 
 **As an Approver:**
 
-1. Navigate to Pending Requests
-   ```
-   /dashboard → Emergency Access → Pending
-   ```
+There is no dedicated Pending Requests dashboard page. Approval/rejection actions are handled:
+- Via the inline action menu on the relevant user's row on the Members page
+- Or programmatically via the API for automated integration
+- To review pending emergency access requests, use the System Logs to audit events or coordinate with another superuser
 
-2. Review Each Request:
+**Step 1:** Review Each Request:
    - Who requested it
    - Which user account
    - Reason provided
    - Duration requested
 
-3. Make Decision:
+**Step 2:** Make Decision:
    - **Approve:** If reason is valid and justified
    - **Reject:** If insufficient justification
      - Must provide rejection reason
@@ -180,18 +180,20 @@ Need to check user's account
 ### Monitoring Active Access
 
 **Check Active Access:**
-```
-/dashboard → Emergency Access → Active
-```
+There is no dedicated Active Access dashboard page. Monitoring is handled:
+- Via System Logs (`/dashboard/system-logs`) to audit emergency access events
+- Through the inline action menu on individual user rows
+- Or programmatically via the API
 
-**You'll see:**
+**You'll see (via audit logs):**
 - Who has access
 - To which account
 - When it expires
 - Original reason
 
 **Revoking Access:**
-- Click "Revoke" on any active access
+- Use the superuser action menu on the user's row to select Revoke Emergency Access
+- Or use the API endpoint directly
 - Access immediately terminated
 - Action logged in audit trail
 
@@ -235,26 +237,30 @@ Temporarily log in as another user to:
 - Long-term access (use emergency access)
 - Unauthorized snooping
 
+## User Impersonation Navigation
+User impersonation is triggered **inline** from user list pages:
+1. Navigate to **Members** (`/dashboard/members`), **Students** (`/dashboard/students`), **Professors** (`/dashboard/professors`), or **Guests** (`/dashboard/guests`)
+2. Locate the target user row
+3. Use the row-level action menu and choose **Impersonate User** (visible only to superusers)
+There is no dedicated "User Impersonation" dashboard page; it is an inline action on each individual user record.
+
 ### Starting Impersonation
 
-**Step 1:** Navigate to Dashboard
-```
-/dashboard → User Impersonation
-```
-
-**Step 2:** Search for User
+**Step 1:** Locate Target User
+- Navigate to **Members** (`/dashboard/members`), **Students** (`/dashboard/students`), **Professors** (`/dashboard/professors`), or **Guests** (`/dashboard/guests`)
 - Search by email, name, or student ID
+- Locate the target user row
 - View user details before impersonating
 
-**Step 3:** Start Impersonation
-- Click "Impersonate" button
+**Step 2:** Start Impersonation
+- Use the row-level action menu and choose **Impersonate User**
 - Enter reason (required):
   ```
   Example: Support ticket #789 - User reports missing loans in dashboard
   ```
 - Confirm
 
-**Step 4:** You're Now Impersonating
+**Step 3:** You're Now Impersonating
 - **Banner appears** at top of screen:
   ```
    Currently Impersonating: John Doe (student@example.com)
@@ -287,15 +293,14 @@ Temporarily log in as another user to:
 - Click "Exit Impersonation" in the warning banner
 - Immediately returns to your superuser account
 
-**Method 2:** Navigate to Dashboard
-```
-/dashboard → Stop Impersonation
-```
+**Method 2:** If Banner Not Visible
+- Navigate to any dashboard page
+- The impersonation banner should appear at the top; if not, log out completely and log back in
 
 **After Stopping:**
 - You're back in your superuser account
 - Impersonation session logged (start and stop times)
-- Can view full action log in Superuser Actions
+- Can view full action log in the **Action Logs** tab of **System Logs** (`/dashboard/system-logs`)
 
 ### Impersonation Best Practices
 
@@ -583,22 +588,22 @@ Total time: 15-20 minutes
 
 ### Support Resources
 
-- **Documentation:** [docs/user-guides/](/user-guides)
-- **API Reference:** [docs/api/superuser-endpoints.md](/api/superuser-endpoints)
+- **Documentation:** [User Guides](/user-guides)
+- **API Reference:** [API Superuser Endpoints](/api/superuser-endpoints)
 
 
 ### Contact Information
 
-- **System Administrator:** [Your institution's contact]
-- **Security Team:** [For security incidents]
-- **Technical Support:** [For technical issues]
+> For security incidents: Contact the designated security officer at your institution immediately
+> For technical issues with this system: Contact your institution's LMS administrator or IT help desk
+> For questions about policies: Consult your library staff or administration
 
 ---
 
 ## Related Documentation
 
-- [Superuser Guide](/user-guides/superuser-guide) - Role overview and capabilities
-- [API Endpoints Reference](/api/superuser-endpoints) - API documentation
+- [Superuser Guide](/admin-guides/superuser-guide) - Role overview and capabilities
+- [API Superuser Endpoints](/api/superuser-endpoints) - API documentation
 
 - [Security Best Practices](/security/index) - Security guidelines
 
@@ -608,4 +613,4 @@ Total time: 15-20 minutes
 
 ---
 
-**Last Updated**: August 7, 2026
+**Last Updated**: August 9, 2026

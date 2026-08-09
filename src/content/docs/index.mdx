@@ -18,23 +18,26 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 
 <div class="primary-card-grid">
 <CardGrid>
-  <Card title="New Users">
-    For new users joining the library.
+  <Card title="For Users">
+    Borrowers, students, and professors.
     - [Getting Started Guide](/getting-started/)
     - [Registration Guide](/user-guides/registration-guide)
     - [Task Index](/user-guides/task-index)
+    - [Frequently Asked Questions](/user-guides/faqs/)
   </Card>
-  <Card title="User Guides">
-    Task-oriented guides for students, staff, and admins.
-    - [User Guides Overview](/user-guides/)
-    - [Loans Guide](/user-guides/loans-guide)
-    - [Help System Guide](/user-guides/help-system-guide)
+  <Card title="For Admins">
+    Librarians, superusers, and institution staff.
+    - [Admin Guides Overview](/admin-guides/)
+    - [Circulation Admin](/admin-guides/circulation-admin)
+    - [Catalog Admin](/admin-guides/catalog-admin)
+    - [Superuser Guide](/admin-guides/superuser-guide)
   </Card>
-  <Card title="Developer Docs">
-    Technical implementation and setup.
+  <Card title="For Developers">
+    Technical implementation, deployment, and setup.
     - [Architecture Overview](/architecture/)
     - [Development Guide](/development/)
     - [Setup Guide](/getting-started/setup)
+    - [API Reference](/api/)
   </Card>
 </CardGrid>
 </div>
@@ -50,7 +53,7 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
     - [Book Catalog](/user-guides/catalog-guide)
     - [Loans](/user-guides/loans-guide)
     - [Reservations](/user-guides/reservations-guide)
-    - [Members & Users](/admin-guides/user-management)
+    - [Members & Users](/admin-guides/circulation-admin)
   </Card>
   <Card title="Forms & Personal Tools">
     Claims, requests, and user productivity tools.
@@ -59,18 +62,19 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
     - [User Notes](/user-guides/notes-guide)
     - [Wishlist](/user-guides/wishlist-guide)
   </Card>
-  <Card title="Security">
+  <Card title="Security & Sessions">
     Authentication, sessions, and safety controls.
     - [MFA System](/security/mfa-system)
     - [Session Management](/development/session-management)
     - [Security Overview](/security/)
+    - [Auto-Suspension Policies](/policies/auto-suspension-policies)
   </Card>
   <Card title="Digital Resources">
     E-books, PDFs, and online materials.
     - [Digital Resources Guide](/user-guides/digital-resources-guide)
   </Card>
   <Card title="API & Integration">
-    Endpoints, tokens, and response standards for developers.
+    Endpoints and response standards for developers.
     - [API Overview](/api/)
     - [Endpoints](/api/endpoints)
     - [Token Config](/api/token-requirements)
@@ -87,21 +91,24 @@ import { Card, CardGrid } from '@astrojs/starlight/components';
 <CardGrid>
   <Card title="Project Rules">
     Architecture, security, and code standards.
-    - [Docs Rules](/project-rules-docs)
-    - [App Rules](/project-rules-app)
+    - [Application Rules](/project-rules-app)
+    - [Docs Site Rules](/project-rules)
     - [Documentation Standards](/documentation-standards)
   </Card>
-  <Card title="Status & Deployment">
-    Operational status and release workflows.
-    - [Status](/status)
-    - [Deployment Guide](/deployment/)
-    - [Registration Troubleshooting](/deployment/registration-troubleshooting)
+  <Card title="Library Policies">
+    Account, security, and content policies.
+    - [Library Policies Overview](/policies/)
+    - [Auto-Suspension Policies](/policies/auto-suspension-policies)
+    - [Security Policy (Vulnerability Reporting)](/policies/security-policy)
   </Card>
-  <Card title="Changelog">
-    Detailed history of changes.
-    - [View Updates](/changelog)
+  <Card title="Deployment & Releases">
+    Deployment, release workflows, and change history.
+    - [Deployment Guide](/deployment/)
     - [Release Workflow](/deployment/version-and-release-management)
-    - [Docs Review](/documentation-review)
+    - [Registration Troubleshooting](/deployment/registration-troubleshooting)
+    - [View Changelog](/changelog)
   </Card>
 </CardGrid>
 </div>
+
+**Last Updated**: August 8, 2026

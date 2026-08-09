@@ -25,7 +25,7 @@ graph TD
 
 ## Step-by-Step Registration Process
 
-**Start here**: [https://sjrslms.in/register](https://sjrslms.in/register) — all three steps below run on this single page (Step 1, then Step 2, then Step 3).
+**Start here**: Navigate to the Register page on your SJRS LMS instance — all three steps below run on this single page (Step 1, then Step 2, then Step 3).
 
 ### 📍 Step 1: Personal Information
 
@@ -78,7 +78,7 @@ Your institution configures the account types shown to match its community of li
 ```
 ✅  8–128 characters
 ✅  At least one uppercase letter, one lowercase letter, one number, one special character
-❌  Cannot contain first name, last name, or email username — even with substitutions (0→o, 3→e, 4→a)
+❌  Cannot contain first name, last name, or email username — even with common character substitutions
 ❌  Cannot be a known weak or common password
 ❌  Cannot use sequential or repeating characters (1234, abcd, qwer, aaaa, 1111)
 ```
@@ -91,14 +91,14 @@ Your institution configures the account types shown to match its community of li
 - **Avoid personal info**: Don't use names, email username, birthday, phone number, student ID, or institution name.
 
 #### Additional Security
-- **CAPTCHA / Bot Protection**: A Cloudflare Turnstile challenge must be completed. If CAPTCHA is temporarily unavailable, registration cannot proceed — please try again later or contact the administrator.
+- **CAPTCHA / Bot Protection**: A CAPTCHA / human verification challenge must be completed. If CAPTCHA is temporarily unavailable, registration cannot proceed — please try again later or contact the administrator.
 - All data sent over HTTPS; registration and related actions are rate-protected against abuse.
 
 ---
 
 ## 📧 Email Verification
 
-**Go here after submitting the form**: [https://sjrslms.in/email-confirmation](https://sjrslms.in/email-confirmation) — you're redirected here automatically, and can also navigate to it directly.
+**Go here after submitting the form**: Navigate to the Email Confirmation page on your SJRS LMS instance — you're redirected here automatically, and can also navigate to it directly.
 
 ### Process
 
@@ -109,7 +109,7 @@ Your institution configures the account types shown to match its community of li
 ### Details
 
 - **Expires in 24 hours**: Request a new one if needed ([see Troubleshooting](#troubleshooting)).
-- **Single-use only**: Clicking a used link shows a friendly "already verified" message — just log in at [https://sjrslms.in/login](https://sjrslms.in/login).
+- **Single-use only**: Clicking a used link shows a friendly "already verified" message — just log in at the Login page on your SJRS LMS instance.
 - **Resend button**: Available on this page with a 30-second cooldown between requests.
 - **No link in the URL? You're still in the right place**: If you land here without clicking the verification link from your email (e.g. you refreshed the page after registering, or bookmarked this address), the page still shows what to do next: a "Check Your Email" summary with the Next Steps, a "Wrong email?" shortcut to re-enter your email, and the Resend Email and Go to Login buttons.
 
@@ -121,7 +121,7 @@ Once your email is verified, the system guides you through two final stages befo
 
 ### 1. Complete Your Profile
 
-**Location**: [https://sjrslms.in/profile-completion](https://sjrslms.in/profile-completion) — appears automatically after your first post-verification login.
+**Location**: Navigate to the Profile Completion page on your SJRS LMS instance — it appears automatically after your first post-verification login.
 
 The exact fields depend on your chosen account type, with a step-by-step guided form and Next / Previous navigation plus a progress indicator.
 
@@ -133,7 +133,7 @@ The exact fields depend on your chosen account type, with a step-by-step guided 
 
 ### 2. Pending Admin Approval
 
-**Location**: [https://sjrslms.in/pending-approval](https://sjrslms.in/pending-approval)
+**Location**: Navigate to the Pending Approval page on your SJRS LMS instance
 
 After profile submission, your account enters a **Pending Approval** state — normal and required for most institutions.
 
@@ -177,7 +177,7 @@ Instead, an appropriate email is always sent:
 
 **CAPTCHA / Human Verification Problem**
 ```
-1. Complete the Turnstile challenge in Step 3 — a checkmark should appear.
+1. Complete the CAPTCHA / human verification challenge in Step 3 — a checkmark should appear.
 2. If it expires, the challenge resets automatically; complete it again.
 3. If CAPTCHA appears unavailable on screen, refresh the page.
 4. If still unavailable, registration cannot proceed — try again later or contact the administrator.

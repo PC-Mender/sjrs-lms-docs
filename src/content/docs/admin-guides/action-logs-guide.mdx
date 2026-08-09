@@ -1,5 +1,7 @@
 ---
 title: "Action Logs Guide"
+description: "How to use the Action Logs tab within the System Logs page for security auditing and privileged activity review."
+lifecycle: Active
 ---
 
 ## Overview
@@ -19,10 +21,11 @@ The Action Logs page provides administrators with comprehensive visibility into 
 1. Login to the SJRS LMS system with your admin credentials
 2. Ensure you have the appropriate role (superuser, admin, or librarian)
 
-### Step 2: Navigate to Action Logs
-- **From Superuser Dashboard**: Click "Action Logs" in the left sidebar
-- **From Admin Dashboard**: Click "Action Logs" in the left sidebar
-- **From Librarian Dashboard**: Click "Action Logs" in the left sidebar
+## Accessing Action Logs
+1. Navigate to **System Logs** (`/dashboard/system-logs`)
+2. Switch to the **Action Logs** tab within the page
+
+Action logs are accessed exclusively through the System Logs page, not a separate navigation entry.
 
 ### Step 3: View the Dashboard
 The Action Logs page will display:
@@ -193,29 +196,11 @@ When you click the details button, you'll see:
 - **Audit Trail**: Complete history of all system activities
 
 ## Troubleshooting
-
-### Common Issues
-
-#### No Logs Displayed
-- **Check Permissions**: Ensure you have the correct role
-- **Check Filters**: Clear all filters to see all logs
-- **Check Date Range**: Ensure date range includes current time
-- **Refresh Page**: Try refreshing the page
-
-#### Slow Loading
-- **Reduce Page Size**: Use smaller page limits
-- **Apply Filters**: Use specific filters to reduce data
-- **Check Network**: Ensure stable internet connection
-
-#### Missing Data
-- **Check Database**: Ensure action_logs table exists
-- **Check Permissions**: Verify user has proper access
-- **Contact Admin**: Report to system administrator
-
-### Getting Help
-- **System Administrator**: Contact your system admin
-- **Documentation**: Refer to technical documentation
-- **Support**: Contact technical support team
+If the Action Logs tab shows no records or appears empty:
+1. Verify your user role has the `action_logs` permission granted
+2. Check that date filters aren't set to a range with no activity
+3. Clear filters and refresh the page
+4. For permission or display issues, contact a superuser to review your role's permission grants
 
 ## Mobile Usage
 
@@ -251,9 +236,7 @@ The Action Logs page is fully responsive and works on:
 ## Support
 
 For technical support or questions about the Action Logs feature:
-- **Email**: support@example.com
-- **Documentation**: Check the technical documentation
-- **Admin Contact**: Contact your system administrator
+Contact your institution's system administrator or help desk for further assistance.
 
 ---
 

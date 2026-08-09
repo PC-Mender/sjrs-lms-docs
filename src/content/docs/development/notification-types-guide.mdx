@@ -15,21 +15,8 @@ The platform uses three distinct notification systems, each serving different pu
 
 ---
 
-## UI Navigation (Header Menu)
-
-The app exposes these notification areas under the header **Notifications** menu. All roles use the unified `/dashboard/` route.
-
-### Common
-- **My Notifications**: `/dashboard/notifications`
-  - Shows only the signed-in user's in-app notifications (App Notifications).
-
-### Superuser / Permission-Based
-- **System Notifications**: `/dashboard/system-notifications`
-  - Requires `notification_events` permissions.
-- **App Notifications Log**: `/dashboard/app-notifications-log`
-  - Superuser/audit view across users.
-- **Announcements**: `/dashboard/announcements`
-  - Requires `announcements` permissions.
+## Overview
+This document describes the internal architecture, API endpoints, and database schema for system notifications. For user-facing guidance on using the notification UI, see [Notifications Guide in For Users](/user-guides/notifications-guide). For admin configuration, see the admin help system.
 
 ---
 

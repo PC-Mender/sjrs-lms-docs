@@ -55,76 +55,95 @@ export default defineConfig({
           items: [{ autogenerate: { directory: 'getting-started' } }],
         },
         {
-          label: 'User Guides',
-          collapsed: true,
-          items: [{ autogenerate: { directory: 'user-guides' } }],
+          label: 'Glossary',
+          slug: 'glossary',
         },
         {
-          label: 'Architecture',
+          label: 'For Users',
           collapsed: true,
-          items: [{ autogenerate: { directory: 'architecture' } }],
+          items: [
+            { autogenerate: { directory: 'user-guides' } },
+            {
+              label: 'Library Policies',
+              collapsed: true,
+              items: [{ autogenerate: { directory: 'policies' } }],
+            },
+          ],
         },
         {
-          label: 'Development',
+          label: 'For Admins',
           collapsed: true,
-          items: [{ autogenerate: { directory: 'development' } }],
+          items: [{ autogenerate: { directory: 'admin-guides' } }],
         },
         {
-          label: 'Deployment',
+          label: 'For Developers',
           collapsed: true,
-          items: [{ autogenerate: { directory: 'deployment' } }],
-        },
-        {
-          label: 'Security',
-          collapsed: true,
-          items: [{ autogenerate: { directory: 'security' } }],
-        },
-        {
-          label: 'API',
-          collapsed: true,
-          items: [{ autogenerate: { directory: 'api' } }],
-        },
-        {
-          label: 'Database',
-          collapsed: true,
-          items: [{ autogenerate: { directory: 'database' } }],
-        },
-        {
-          label: 'Testing',
-          collapsed: true,
-          items: [{ autogenerate: { directory: 'testing' } }],
-        },
-        {
-          label: 'Policies',
-          collapsed: true,
-          items: [{ autogenerate: { directory: 'policies' } }],
-        },
-        {
-          label: 'Integrations',
-          collapsed: true,
-          items: [{ autogenerate: { directory: 'integrations' } }],
-        },
-        {
-          label: 'Performance',
-          collapsed: true,
-          items: [{ autogenerate: { directory: 'performance' } }],
-        },
-        {
-          label: 'System Status',
-          slug: 'status',
+          items: [
+            {
+              label: 'Project Rules',
+              collapsed: true,
+              items: [
+                { label: 'Application Rules', slug: 'project-rules-app' },
+                { label: 'Docs Site Rules', slug: 'project-rules-docs' },
+                { label: 'Documentation Standards', slug: 'documentation-standards' },
+              ],
+            },
+            {
+              label: 'Architecture',
+              collapsed: true,
+              items: [{ autogenerate: { directory: 'architecture' } }],
+            },
+            {
+              label: 'Development Guides',
+              collapsed: true,
+              items: [{ autogenerate: { directory: 'development' } }],
+            },
+            {
+              label: 'API',
+              collapsed: true,
+              items: [{ autogenerate: { directory: 'api' } }],
+            },
+            {
+              label: 'Database',
+              collapsed: true,
+              items: [{ autogenerate: { directory: 'database' } }],
+            },
+            {
+              label: 'Deployment',
+              collapsed: true,
+              items: [{ autogenerate: { directory: 'deployment' } }],
+            },
+            {
+              label: 'Security',
+              collapsed: true,
+              items: [
+                { label: 'Permission-Based Security', slug: 'permission-based-security' },
+                { autogenerate: { directory: 'security' } },
+              ],
+            },
+            {
+              label: 'Testing',
+              collapsed: true,
+              items: [
+                { label: 'Quality Gates Guide', slug: 'quality-gates-guide' },
+                { autogenerate: { directory: 'testing' } },
+              ],
+            },
+            {
+              label: 'Integrations',
+              collapsed: true,
+              items: [{ autogenerate: { directory: 'integrations' } }],
+            },
+            {
+              label: 'Performance',
+              collapsed: true,
+              items: [{ autogenerate: { directory: 'performance' } }],
+            },
+          ],
         },
         {
           label: 'Changelog',
           slug: 'changelog',
-        },
-        {
-          label: 'Project Rules',
-          slug: 'project-rules',
-        },
-        {
-          label: 'Archive',
-          collapsed: true,
-          items: [{ autogenerate: { directory: 'archive' } }],
         },
       ],
       head: [

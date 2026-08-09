@@ -1,9 +1,8 @@
 ---
 title: "Error Codes Explained"
+description: "User-friendly explanations of common error messages and what to do about them."
+lifecycle: Active
 ---
-
-Last updated: February 2026  
-Audience: End users, librarians, and support staff
 
 This guide explains what each error means in plain language, why it appears, and what to do next.
 
@@ -74,15 +73,11 @@ Before contacting support, try these first:
 | 3011 | VALIDATION_NAME_TOO_SHORT | Name is too short. | Name does not meet minimum length. | Enter a longer valid name. |
 | 3012 | VALIDATION_NAME_INVALID | Name contains unsupported characters. | Invalid symbols or formatting used. | Use letters/spaces and allowed punctuation only. |
 
-### Database and record errors
+### Temporary System Issue (4000-series)
 
 | Error Number | Error Code | What this means | Why this happened | What you can do now |
 |---|---|---|---|---|
-| 4000 | DATABASE_CONNECTION_ERROR | The system cannot reach the database right now. | Temporary connectivity/service issue. | Wait and retry; contact support if it continues. |
-| 4001 | DATABASE_QUERY_ERROR | A data query failed unexpectedly. | Request could not be processed correctly server-side. | Retry once; report if repeatable. |
-| 4002 | DATABASE_CONSTRAINT_VIOLATION | Data rule was violated. | Save/update breaks required data constraints. | Correct related fields and retry. |
-| 4003 | DATABASE_RECORD_NOT_FOUND | Requested record does not exist. | Record may have been removed or ID is invalid. | Refresh list and open the record again. |
-| 4004 | DATABASE_DUPLICATE_KEY | A unique key already exists. | Duplicate value for a unique database field. | Change unique field value and retry. |
+| 4000–4099 | TEMPORARY_SYSTEM_ISSUE | A temporary system issue occurred. | An unexpected server-side data operation failed. | Try again in a few moments. If the problem persists, contact support with the error code and timestamp shown. |
 
 ### Library business and order workflow
 
@@ -111,14 +106,11 @@ Before contacting support, try these first:
 | 5020 | DUPLICATE_PENDING_ORDER | A pending request already exists for this book. | Duplicate order submission. | Wait for current request decision. |
 | 5021 | RECENTLY_REJECTED_COOLDOWN | You must wait before requesting this item again. | Cooldown period after recent rejection is active. | Retry after cooldown expires. |
 
-### API request routing
+### Application Routing Error (6000-series)
 
 | Error Number | Error Code | What this means | Why this happened | What you can do now |
 |---|---|---|---|---|
-| 6000 | API_INVALID_REQUEST | API request is malformed. | Invalid body, parameters, or headers. | Retry using the correct app flow. |
-| 6001 | API_RESOURCE_NOT_FOUND | API endpoint/resource does not exist. | Wrong URL/path or removed endpoint. | Refresh app; if persistent, contact support. |
-| 6002 | API_METHOD_NOT_ALLOWED | HTTP method is not supported here. | Action used wrong request method. | Retry action from the correct UI action button. |
-| 6003 | API_CONFLICT | API operation conflicts with current state. | Duplicate or state conflict detected. | Refresh data and retry. |
+| 6000–6099 | APPLICATION_ROUTING_ERROR | The app encountered an unexpected routing error. | A page navigation or action request could not be processed correctly. | Refresh the page and try again. If this continues, contact support with the exact error code. |
 
 ### File upload errors
 
@@ -149,12 +141,12 @@ Before contacting support, try these first:
 
 | Error Number | Error Code | What this means | Why this happened | What you can do now |
 |---|---|---|---|---|
-| 9500 | TURNSTILE_NOT_CONFIGURED | CAPTCHA service is unavailable. | System CAPTCHA configuration is missing. | Contact support/admin and retry later. |
-| 9501 | TURNSTILE_TOKEN_MISSING | CAPTCHA step was not completed. | Verification token was not submitted. | Complete CAPTCHA and submit again. |
-| 9502 | TURNSTILE_VERIFY_FAILED | CAPTCHA check could not be verified. | Verification failed with CAPTCHA provider. | Retry CAPTCHA and submit again. |
-| 9503 | TURNSTILE_VERIFICATION_FAILED | CAPTCHA challenge failed. | Invalid CAPTCHA response or failed verification. | Complete challenge again and retry. |
-| 9504 | TURNSTILE_TOKEN_EXPIRED | CAPTCHA token expired. | Too much delay before form submit. | Complete CAPTCHA again and resubmit quickly. |
-| 9505 | TURNSTILE_ERROR | General CAPTCHA validation error. | Temporary verification/service issue. | Refresh page and retry; contact support if repeated. |
+| 9500 | CAPTCHA_NOT_CONFIGURED | Human verification service is unavailable. | System verification configuration is missing. | Contact support/admin and retry later. |
+| 9501 | CAPTCHA_TOKEN_MISSING | CAPTCHA step was not completed. | Human verification challenge was not submitted. | Complete the human verification challenge and submit again. |
+| 9502 | CAPTCHA_VERIFY_FAILED | Human verification check could not be processed. | Verification failed on the server side. | Retry the verification challenge and submit again. |
+| 9503 | CAPTCHA_VERIFICATION_FAILED | Human verification challenge failed. | Invalid challenge response or failed verification. | Complete the CAPTCHA challenge again and retry. |
+| 9504 | CAPTCHA_TOKEN_EXPIRED | Verification challenge expired. | Too much delay before form submit after challenge. | Complete the human verification challenge again and resubmit. |
+| 9505 | CAPTCHA_ERROR | General human verification error. | Temporary verification/service issue. | Refresh page and retry; contact support if repeated. |
 | 9600 | REGISTRATION_EMAIL_RATE_LIMIT | Too many registration attempts for this email. | Email-based signup guard was triggered. | Wait for retry window before registering again. |
 | 9601 | REGISTRATION_IP_RATE_LIMIT | Too many registration attempts from this network. | IP-based abuse protection was triggered. | Wait and retry later, or use a trusted network. |
 | 9602 | REGISTRATION_RATE_LIMIT | Registration attempt limit reached. | Composite registration guard was triggered. | Wait for cooldown and retry once. |
@@ -169,4 +161,4 @@ If an error persists and you need help from library staff, include:
 
 ---
 
-**Last Updated**: August 7, 2026
+**Last Updated**: August 9, 2026

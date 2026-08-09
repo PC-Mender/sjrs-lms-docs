@@ -10,7 +10,7 @@ The application now uses a **fully database-driven permission system** for acces
 ## Key Principles
 
 1. **Database-Driven**: All permissions are stored in the database, not hardcoded
-2. **Role-Agnostic**: Any role can have any permission - there's no hardcoded role hierarchy
+2. **Role-Agnostic Permissions with Configurable Hierarchy**: Any role can be individually granted any permission. The system also supports an OPTIONAL database-driven role hierarchy where higher-level roles (e.g., Superuser) automatically inherit the permissions of lower-level roles. The hierarchy is configurable via the Roles page (/dashboard/roles) and is not hardcoded — it can be redefined per-institution.
 3. **Centralized**: Security middleware handles permission checks consistently
 4. **Flexible**: Permissions can be granted/revoked without code changes
 

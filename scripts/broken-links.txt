@@ -1,1 +1,252 @@
-No broken links found.
+Found 50 broken links:
+
+File: admin-guides\institution-settings-guide.mdx
+  Link Text: [Superuser Guide]
+  Target: (/user-guides/superuser-guide)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\user-guides\superuser-guide
+---
+File: admin-guides\superuser-features-guide.mdx
+  Link Text: [Superuser Guide]
+  Target: (/user-guides/superuser-guide)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\user-guides\superuser-guide
+---
+File: admin-guides\superuser-guide.mdx
+  Link Text: [Action Logs Guide]
+  Target: (/user-guides/action-logs-guide)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\user-guides\action-logs-guide
+---
+File: admin-guides\superuser-guide.mdx
+  Link Text: [System Logs Guide]
+  Target: (/user-guides/system-logs-user-guide)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\user-guides\system-logs-user-guide
+---
+File: admin-guides\superuser-guide.mdx
+  Link Text: [Institution Settings Guide]
+  Target: (/user-guides/institution-settings-guide)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\user-guides\institution-settings-guide
+---
+File: api\superuser-endpoints.mdx
+  Link Text: [Superuser Guide]
+  Target: (/user-guides/superuser-guide)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\user-guides\superuser-guide
+---
+File: api\troubleshooting-guide.mdx
+  Link Text: [Profile Completion UX]
+  Target: (/development/profile-completion-ux-proposal)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\development\profile-completion-ux-proposal
+---
+File: archive\deployment-workflow-organization.mdx
+  Link Text: [Notification System]
+  Target: (/features/notifications)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\notifications
+---
+File: archive\features-audit-logs\badges\index.mdx
+  Link Text: [Badge Evaluators]
+  Target: (../badge-evaluators)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\features-audit-logs\badge-evaluators
+---
+File: archive\features-audit-logs\badges\index.mdx
+  Link Text: [Action Logging System]
+  Target: (../action-logging)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\features-audit-logs\action-logging
+---
+File: archive\features-audit-logs\badges\index.mdx
+  Link Text: [API Documentation]
+  Target: (../../api/)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\api
+---
+File: archive\features-audit-logs\email-service\enhanced-three-stage-process.mdx
+  Link Text: [Email Templates Overview]
+  Target: (/features/email-service/email-templates)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\email-service\email-templates
+---
+File: archive\features-audit-logs\email-service\enhanced-three-stage-process.mdx
+  Link Text: [User Management Guide]
+  Target: (/features/users/index)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\users\index
+---
+File: archive\features-audit-logs\email-service\enhanced-three-stage-process.mdx
+  Link Text: [Admin Dashboard Guide]
+  Target: (/features/superuser/index)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\superuser\index
+---
+File: archive\features-audit-logs\email-service\index.mdx
+  Link Text: [Email Trigger Frequency Matrix]
+  Target: (./email-trigger-frequency-matrix)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\features-audit-logs\email-service\email-trigger-frequency-matrix
+---
+File: archive\features-audit-logs\email-service\index.mdx
+  Link Text: [Email Trigger Frequency Matrix]
+  Target: (./email-trigger-frequency-matrix)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\features-audit-logs\email-service\email-trigger-frequency-matrix
+---
+File: archive\features-audit-logs\email-service\index.mdx
+  Link Text: [API Documentation]
+  Target: (../../api/)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\api
+---
+File: archive\features-audit-logs\email-service\index.mdx
+  Link Text: [Architecture Documentation]
+  Target: (../../architecture/)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\architecture
+---
+File: archive\features-audit-logs\email-service\index.mdx
+  Link Text: [Deployment Guide]
+  Target: (../../deployment/)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\deployment
+---
+File: archive\features-audit-logs\notifications\configuration-status.mdx
+  Link Text: [Full Configuration Guide]
+  Target: (/features/notifications/configuration-guide)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\notifications\configuration-guide
+---
+File: archive\features-audit-logs\notifications\configuration-status.mdx
+  Link Text: [External Sources Configuration]
+  Target: (/features/notifications/external-sources-configuration)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\notifications\external-sources-configuration
+---
+File: archive\features-audit-logs\notifications\configuration-status.mdx
+  Link Text: [System Notifications Root Analysis]
+  Target: (/features/notifications/system-notifications-root-analysis)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\notifications\system-notifications-root-analysis
+---
+File: archive\features-audit-logs\notifications\external-sources-configuration.mdx
+  Link Text: [System Notifications Root Analysis]
+  Target: (/features/notifications/system-notifications-root-analysis)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\notifications\system-notifications-root-analysis
+---
+File: archive\features-audit-logs\notifications\sentry-webhook-setup.mdx
+  Link Text: [Configuration Status]
+  Target: (/features/notifications/configuration-status)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\notifications\configuration-status
+---
+File: archive\features-audit-logs\notifications\sentry-webhook-setup.mdx
+  Link Text: [Full Configuration Guide]
+  Target: (/features/notifications/configuration-guide)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\notifications\configuration-guide
+---
+File: archive\features-audit-logs\notifications\sentry-webhook-setup.mdx
+  Link Text: [External Sources Configuration]
+  Target: (/features/notifications/external-sources-configuration)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\notifications\external-sources-configuration
+---
+File: archive\features-audit-logs\notifications\system-notifications.mdx
+  Link Text: [Permission System]
+  Target: (/features/permissions)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\permissions
+---
+File: archive\features-audit-logs\notifications\system-notifications.mdx
+  Link Text: [User Dashboard]
+  Target: (/features/enhanced-user-dashboard)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\enhanced-user-dashboard
+---
+File: archive\features-audit-logs\notifications\troubleshooting.mdx
+  Link Text: [Configuration Guide]
+  Target: (/features/notifications/configuration-guide)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\notifications\configuration-guide
+---
+File: archive\features-audit-logs\notifications\troubleshooting.mdx
+  Link Text: [Configuration Status]
+  Target: (/features/notifications/configuration-status)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\notifications\configuration-status
+---
+File: archive\features-audit-logs\notifications\troubleshooting.mdx
+  Link Text: [External Sources Configuration]
+  Target: (/features/notifications/external-sources-configuration)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\features\notifications\external-sources-configuration
+---
+File: archive\features-audit-logs\permissions\index.mdx
+  Link Text: [Permission System Architecture]
+  Target: (../../architecture/permission-system)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\architecture\permission-system
+---
+File: archive\features-audit-logs\permissions\index.mdx
+  Link Text: [Roles and Permissions]
+  Target: (../../development/roles-and-permissions)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\development\roles-and-permissions
+---
+File: archive\features-audit-logs\permissions\index.mdx
+  Link Text: [API Documentation]
+  Target: (../../api/endpoints#permissions)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\api\endpoints
+---
+File: archive\features-audit-logs\permissions\index.mdx
+  Link Text: [Security Documentation]
+  Target: (../../security/index)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\security\index
+---
+File: archive\features-audit-logs\reference-books-index.mdx
+  Link Text: [System Guide]
+  Target: (./system-guide)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\features-audit-logs\system-guide
+---
+File: archive\features-audit-logs\reference-books-index.mdx
+  Link Text: [Database Diagram]
+  Target: (./database-diagram)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\features-audit-logs\database-diagram
+---
+File: archive\features-audit-logs\superuser\index.mdx
+  Link Text: [Roles and Permissions System]
+  Target: (../../development/roles-and-permissions)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\development\roles-and-permissions
+---
+File: archive\features-audit-logs\superuser\index.mdx
+  Link Text: [Session Management]
+  Target: (../../development/session-management)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\archive\development\session-management
+---
+File: archive\index.mdx
+  Link Text: [Refactoring Summary]
+  Target: (../development/refactoring-summary)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\development\refactoring-summary
+---
+File: development\refactoring-summaries\index.mdx
+  Link Text: [Loans & Wishlist Refactoring]
+  Target: (./loans-wishlist-refactoring)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\development\refactoring-summaries\loans-wishlist-refactoring
+---
+File: development\refactoring-summaries\index.mdx
+  Link Text: [Book Copies Refactoring]
+  Target: (./book-copies-refactoring)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\development\refactoring-summaries\book-copies-refactoring
+---
+File: development\refactoring-summaries\index.mdx
+  Link Text: [Guests Refactoring]
+  Target: (./guests-refactoring)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\development\refactoring-summaries\guests-refactoring
+---
+File: development\refactoring-summaries\index.mdx
+  Link Text: [Refactoring Archive]
+  Target: (../refactoring-archive)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\development\refactoring-archive
+---
+File: getting-started\administrators.mdx
+  Link Text: [Action Logs]
+  Target: (/user-guides/action-logs-guide)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\user-guides\action-logs-guide
+---
+File: getting-started\index.mdx
+  Link Text: [Help & Support]
+  Target: (../user-guides/help-system-guide)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\user-guides\help-system-guide
+---
+File: index.mdx
+  Link Text: [Help System Guide]
+  Target: (/user-guides/help-system-guide)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\user-guides\help-system-guide
+---
+File: index.mdx
+  Link Text: [Members & Users]
+  Target: (/admin-guides/user-management)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\admin-guides\user-management
+---
+File: user-guides\issue-reports-guide.mdx
+  Link Text: [System Logs Guide]
+  Target: (/user-guides/system-logs-user-guide)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\user-guides\system-logs-user-guide
+---
+File: user-guides\superuser-features-guide.mdx
+  Link Text: [Superuser Guide]
+  Target: (/user-guides/superuser-guide)
+  Resolved to: E:\GitHub\sjrs-lms-docs\src\content\docs\user-guides\superuser-guide
+---
