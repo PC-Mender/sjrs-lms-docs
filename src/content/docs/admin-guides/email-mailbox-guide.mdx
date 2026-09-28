@@ -1,0 +1,50 @@
+---
+title: "Email Mailbox Guide"
+description: "Superuser-only email mailbox: compose, inbox, drafts, and sent history backed by Cloudflare Email Service."
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+The **Email** page (`/dashboard/email`) is a superuser-only mailbox introduced in v8.14.0. It provides four tabs — **Compose**, **Inbox**, **Drafts**, and **Sent** — for sending library email and reading mail received through Cloudflare Email Routing.
+
+<Aside type="caution" title="Superuser Only">
+This feature requires the `superuser` role. Compose is additionally rate-limited per user per day (`SJRS_EMAIL_DAILY_QUOTA`, default 100).
+</Aside>
+
+## Tabs
+
+### Compose
+- Rich-text editor (TipTap): bold/italic/underline, lists, links, font size.
+- Attachments from the **Media Library** picker (only email-eligible assets are offered) or direct upload.
+- Draft body HTML is sanitized on save (allowlist-based `xss` sanitizer plus a CSS property allowlist that strips tracking pixels and layout-breaking styles).
+- Sender address must be on the `SJRS_ALLOWED_SENDERS` allowlist; the default sender is `library@sjrslms.in`.
+
+### Inbox
+- Lists mail received by Cloudflare Email Routing for allowlisted recipients (`SJRS_INBOX_ALLOWLIST`).
+- Read/star/archive flags, folder filter, and search.
+- Attachments are stored in R2 and downloadable per message.
+- Deleting a message also deletes its R2 attachments.
+
+### Drafts
+- Auto-sanitized on persistence; resume editing from the list or via the `?draft=` URL parameter on Compose.
+
+### Sent (History)
+- Paginated log of sent email with per-message detail.
+
+## Backend Routes
+
+Mounted under `/api/v1/email/` (see [Endpoints](/api/endpoints#email-service-endpoints)):
+
+- `POST /compose`, `GET /history`, `GET /history/:id`
+- `GET|POST /drafts`, `PUT|DELETE /drafts/:id`
+- `GET /inbox`, `GET|PATCH|DELETE /inbox/:id`, `GET /inbox/:id/attachments/:attachmentId`
+
+## Configuration
+
+See [Environment Variables](/deployment/environment-variables) for `SJRS_FROM_EMAIL`, `SJRS_FROM_NAME`, `SJRS_ALLOWED_SENDERS`, `SJRS_INBOX_ALLOWLIST`, quota, and retention settings. Retention cleanup runs with the daily cron trigger.
+
+## Related
+
+- [Superuser Guide](./superuser-guide)
+- [Media Library](./catalog-admin) — asset uploads used by the attachment picker
+- [Environment Variables](/deployment/environment-variables)
