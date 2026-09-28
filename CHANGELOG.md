@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.3](https://github.com/PC-Mender/sjrs-lms-docs/compare/v2.0.2...v2.0.3) (2026-09-28)
+
+### Documentation
+
+* **api:** cover all registered route prefixes and current loan/email endpoints ([1d78f10](https://github.com/PC-Mender/sjrs-lms-docs/commit/1d78f10a499e7a1bd20dbe59c51553363e5bb417))
+* **architecture:** reflect unified dashboard, css modules, and current stack ([690f60d](https://github.com/PC-Mender/sjrs-lms-docs/commit/690f60d62cdd3b691c339ffaeec0232420ca6ffa))
+* **changelog:** sync application releases 8.12.0 through 8.17.0 ([d051097](https://github.com/PC-Mender/sjrs-lms-docs/commit/d0510973f58a5c437eeea5918cc6d4c2ba9890e7))
+* **deployment:** rewrite environment variables for current bindings ([cd69fbf](https://github.com/PC-Mender/sjrs-lms-docs/commit/cd69fbf8ed928557e406fdee962310ce0449d9e3))
+* **development:** update auth flow, borrow-limits, and dashboard test refs ([98d11c2](https://github.com/PC-Mender/sjrs-lms-docs/commit/98d11c21a1bbc7432ee850ca73daea95623b9fc0))
+* **guides:** add superuser email mailbox admin guide ([a71dbc1](https://github.com/PC-Mender/sjrs-lms-docs/commit/a71dbc1fc4eabe8e7929517b95b0a16259c420af))
+* **integrations:** correct penalty fine-rate source ([0bc994a](https://github.com/PC-Mender/sjrs-lms-docs/commit/0bc994a9a53b006975fa9c8e25e51fdcb6f7052e))
+* **rules:** sync application project rules ([24609ad](https://github.com/PC-Mender/sjrs-lms-docs/commit/24609ad50d9a4020eb99b0d2bd3162036fc74eb2))
+* **security:** document CSP nonce and mark MFA as implemented ([71f8fef](https://github.com/PC-Mender/sjrs-lms-docs/commit/71f8fefefbc0b718e9d48388cac4db57d089eeaa))
+
 ## [2.0.2](https://github.com/PC-Mender/sjrs-lms-docs/compare/v2.0.1...v2.0.2) (2026-09-23)
 
 ### Bug Fixes
