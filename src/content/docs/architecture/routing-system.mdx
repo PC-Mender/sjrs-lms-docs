@@ -10,16 +10,11 @@ The AppRouter has been completely refactored to address critical issues while ma
 ## Current Route Model
 
 - The canonical dashboard entry point is `/dashboard/*` for all roles.
-- Role-specific dashboard paths are no longer canonical and are maintained only as compatibility redirects:
-  - `/dashboard-superuser/*`
-  - `/dashboard-admin/*`
-  - `/dashboard-librarian/*`
-  - `/dashboard-dean/*`
-  - `/dashboard-user/*`
-- Role-specific UI is rendered inside the unified dashboard route using role-aware dashboard components.
-- The Dashboard page (`src/pages/dashboard.tsx`) uses `ROLE_COMPONENT_MAP` to lazy-load the appropriate role view (e.g., `dashboard-admin.tsx`, `dashboard-librarian.tsx`, `dashboard-user.tsx`).
+- The former role-specific dashboard paths (`/dashboard-superuser/*`, `/dashboard-admin/*`, `/dashboard-librarian/*`, `/dashboard-dean/*`, `/dashboard-user/*`) have been **removed** — they no longer exist as routes or redirects. The old per-role page files (`dashboard-admin.tsx`, `dashboard-librarian.tsx`, etc.) were deleted when the unified dashboard shipped.
+- `/dashboard` renders a single **configuration-driven dashboard**: layout, widgets, stats, and quick actions come from a role-specific config resolved against the widget registry (`src/components/features/dashboard/unified/`). See [Dashboard Config Guide](/architecture/dashboard-config-guide).
 - Feature sub-routes under `/dashboard/*` are dynamically generated from `feature-routes.ts` via `generateDashboardRoutes()` and matched by `DashboardSubRouter`.
 - `DashboardSubRouter` deduplicates routes by path, preferring role-specific variants over generic ones for the same path (e.g., `/dashboard/loans` has both a generic user view and an admin view).
+- Navigation menu items render as real anchor/Link elements, so "open in new tab" works (v8.16.0).
 - All API routes use the `/api/v1/` prefix (see [API Versioning](/architecture/api-versioning)).
 
 ## Fixed Critical Issues
@@ -183,7 +178,7 @@ The refactored AppRouter is now:
 - Public routes wrapped in `PublicLayoutWrapper`
 - Auth routes (login, register, MFA, password reset, etc.) with minimal footer
 - Single `/dashboard` route wrapped in `AuthGuard` + `Layout`
-  - Index route renders `Dashboard` (role dispatcher)
+  - Index route renders `Dashboard` (unified, config-driven dashboard resolved by role)
   - `/dashboard/my-badges` renders `MyBadgesPage`
   - `/dashboard/*` renders `DashboardSubRouter` for feature sub-routes
 - Standalone protected routes: `/mfa-settings`, `/notification-preferences`, `/reference-books`, `/select-role`

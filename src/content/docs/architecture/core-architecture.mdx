@@ -10,12 +10,13 @@ The SJRS LMS (Library Management System) is a modern, cloud-native **Single Page
 ## System Architecture
 
 ### Technology Stack
-- **Frontend**: React 18 + TypeScript + Vite + Ant Design (Single Page Application)
+- **Frontend**: React 19 + TypeScript + Vite + Ant Design (Single Page Application)
 - **Backend**: Cloudflare Workers (Direct Function APIs)
 - **Database**: Cloudflare D1 (SQLite)
 - **Storage**: Cloudflare R2 for file uploads
 - **Caching**: Cloudflare KV
-- **Real-time**: Durable Objects
+- **Email**: Mailjet (transactional) + Cloudflare Email Service `send_email` binding (mailbox compose/inbox)
+- **AI**: Cloudflare Workers AI (release notes generation)
 - **Analytics**: Cloudflare Analytics Engine
 - **Deployment**: Cloudflare Workers with Static Assets (Unified)
 
@@ -68,15 +69,34 @@ functions/
 │   ├── publications/      # Publication management
 │   ├── roles/             # Role management
 │   ├── students/          # Student-specific operations
+│   ├── notes/             # Personal notes (revisions, trash)
+│   ├── tada/              # TADA claim forms
+│   ├── papm/              # PAPM submissions
+│   ├── email/             # Mailbox (compose/inbox/drafts/history) + notifications
+│   ├── media-assets/      # Media library assets
+│   ├── issue-reports/     # Issue reporting + GitHub sync
+│   ├── analytics/         # Analytics endpoints
+│   ├── reports/           # Report endpoints
+│   ├── reservations/      # Reservations
 │   ├── upload/            # File upload handling
 │   └── wishlist/          # Wishlist management
 ├── middleware/              # Request processing
 │   ├── auth/              # Authentication middleware
 │   ├── cors/              # CORS handling
-│   └── kv-utils.ts         # KV utilities
-├── durable-objects/         # Real-time features
-├── queue-handlers/          # Background jobs (planned)
-└── email-templates/         # Email system
+│   ├── security/          # Security policies, CSP nonce, route policy manifest
+│   ├── permissions/       # Permission enforcement
+│   ├── validation/        # Request validation (zod)
+│   ├── rate-limiting/     # Rate limiting
+│   ├── idempotency/       # Idempotent mutations
+│   ├── normalization/     # Request normalization
+│   ├── session-security/  # Session security checks
+│   ├── api-versioning/    # /api/v1 prefix handling
+│   └── kv-utils/          # KV utilities
+├── scheduled/               # Cron jobs (overdue reminders, penalties, retention, badges)
+├── services/                # Shared services (email)
+├── router/                  # Route registry, SPA fallback, static assets
+├── lib/                     # Shared backend libraries (env, types)
+└── email-templates/         # Email templates
 ```
 
 ### Frontend Core (`src/`)
@@ -84,14 +104,16 @@ functions/
 src/
 ├── App.tsx                  # Main application component
 ├── index.tsx                # Application entry point
-├── index.css                # Global styles (responsive CSS classes, design tokens)
+├── styles/
+│   ├── global.css          # True globals (html/body, themes, Ant Design overrides)
+│   └── shared/             # Shared CSS Module primitives (forms, modals, layouts)
 ├── components/              # Reusable UI components
 │   ├── auth/               # Auth guards, login forms, MFA
 │   ├── layout/             # Layout wrappers, header, footer
-│   ├── features/           # Feature-specific UI components
+│   ├── features/           # Feature-specific UI components (styles co-located as CSS Modules)
 │   └── ui/                 # Shared UI primitives
 ├── pages/                   # Route components (SPA routing)
-│   ├── dashboard.tsx       # Unified dashboard (role dispatcher → lazy-loads role views)
+│   ├── dashboard.tsx       # Unified dashboard (config-driven; role resolved via widget registry)
 │   ├── login.tsx           # Authentication
 │   ├── [feature]/          # Feature-specific pages (e.g., roles/, borrow-limits/)
 │   └── ...                  # Other page components
@@ -109,7 +131,7 @@ src/
 └── services/                # API service layer
 ```
 
-**Note**: The frontend is a **Single Page Application (SPA)**. All routing is handled client-side by React Router, meaning the server serves a single `index.html` file and React Router manages all navigation and page rendering on the client side. The canonical dashboard entry point is `/dashboard` for all roles — role-specific rendering is handled by the Dashboard page via `ROLE_COMPONENT_MAP` which lazy-loads the appropriate role view (e.g., `dashboard-admin.tsx`, `dashboard-librarian.tsx`). Legacy role-prefixed paths (`/dashboard-superuser`, `/dashboard-admin`, etc.) redirect to `/dashboard`.
+**Note**: The frontend is a **Single Page Application (SPA)**. All routing is handled client-side by React Router, meaning the server serves a single `index.html` file and React Router manages all navigation and page rendering on the client side. The canonical dashboard entry point is `/dashboard` for all roles — it renders a single configuration-driven dashboard whose layout and widgets resolve per role via the widget registry (`src/components/features/dashboard/unified/`). The old role-prefixed paths (`/dashboard-superuser`, `/dashboard-admin`, etc.) and per-role dashboard pages were removed.
 
 ### Database (`sql/`)
 ```
@@ -137,7 +159,7 @@ sql/
 
 ### 3. User Management
 - **Three user types**: Student, Professor, Guest
-- **Role-based dashboards**
+- **Unified config-driven dashboard** (role-aware widgets)
 - **Profile management**
 - **Account suspension handling**
 
@@ -270,7 +292,7 @@ npm run test:e2e:local     # Run E2E tests against local server
 
 ### Authentication & Authorization
 - **JWT tokens** with configurable expiration
-- **Session timeout** (15 minutes default)
+- **Session timeout** (30 minutes default, `SESSION_TIMEOUT`)
 - **Secure cookies** with proper flags
 - **CSRF protection** on all state-changing operations
 
@@ -312,10 +334,9 @@ npm run test:e2e:local     # Run E2E tests against local server
 - **Lazy loading** for large datasets
 
 ### Backend
-- **Connection pooling** for database access
 - **Caching layer** with KV storage
-- **Background job processing** with queues
-- **Real-time updates** with Durable Objects
+- **Scheduled jobs** via cron trigger (`functions/scheduled/` — overdue reminders, penalty calculation, retention cleanup, badge evaluation)
+- **CSP hardening** with per-response nonces for script and style directives
 
 ### Database
 - **Indexed queries** for fast lookups

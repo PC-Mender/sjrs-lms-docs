@@ -19,52 +19,110 @@ The library management system now uses a comprehensive **role-based permission s
 
 ### User Management
 - `users` - User Management
-- `guests` - Guest Management  
+- `guests` - Guest Management
 - `students` - Student Management
 - `professors` - Professor Management
+- `user_types` - User Types
 - `roles` - Role Management
+- `auth_sessions` - Auth Sessions
 
-### Book Management
+### Catalog & Collection
 - `books` - Book Management
 - `book_copies` - Book Copies
+- `catalog` - Public Catalog
 - `authors` - Author Management
 - `publications` - Publication Management
 - `sections` - Section Management
 - `subcategories` - Subcategory Management
+- `shelf_codes` - Shelf Codes
+- `storage_locations` - Storage Locations
+- `key_tags` - Key Tags
 - `resources` - Resource Management
+- `resource_types` - Resource Types
+- `media_assets` - Media Library Assets
+
+### Reference Materials
+- `reference_books` - Reference Books
+- `reference_categories` - Reference Categories
+- `reference_sections` - Reference Sections
+- `dioceses` - Dioceses
+- `congregations` - Congregations
+
+### Journals & Periodicals
+- `journals` - Journals
+- `journal_sections` - Journal Sections
+- `journal_articles` - Journal Articles
+- `magazines` - Magazines
 
 ### Circulation
-- `loans` - Loan Management
-- `borrow_limits` - Borrow Limits
+- `loans` - Loan Management (incl. `return`, `renew`, `approve`, `reject`, `override_due_date` actions)
+- `borrow_limits` - Borrow Limits (also the single source of truth for fine rates)
 - `borrow_records` - Borrow Records
+- `reservations` - Reservations
 - `penalties` - Penalty Management
+- `orders` - Order Management
+- `order_priority_policy` / `order_priority_policy_config` - Order Priority Policy
+- `payments` - Payments
+- `receipts` - Receipts
 
 ### User Features
 - `wishlist` - Wishlist Management
+- `bookmarks` - Bookmarks
+- `notes` - Personal Notes
 - `book_reviews` - Book Reviews
 - `book_searches` - Book Searches
 - `book_views` - Book Views
 - `digital_book_reads` - Digital Book Reads
+- `citations` - Citation Generator
+- `plagiarism` - Plagiarism Checker
+- `issue_reports` - Issue Reports
 
-### Analytics
+### Forms
+- `tada` - TADA Claims
+- `papm` - PAPM Submissions
+
+### Communication
+- `notifications` - Notification Management
+- `notification_events` - System Notification Events
+- `announcements` - Announcements
+- `email` - Email Mailbox (superuser compose/inbox/drafts/history)
+- `help` - Help Content
+
+### Analytics & System
 - `analytics` - Analytics
+- `reports` - Reports
+- `dashboard_configs` - Dashboard Configurations
 - `system_logs` - System Logs
 - `action_logs` - Action Logs
-
-### Notifications
-- `notifications` - Notification Management
-
-### System
+- `migrations` - Database Migrations
 - `permissions` - Permission Management
-- `orders` - Order Management
-- `system_settings` - System Settings
+- `system` / `system_settings` - System Settings
+- `upload` - File Uploads
+- `superuser` - Superuser Operations
+- `badges` - Badge Management
+- `auth` - Authentication
 
 ## Permission Actions
 
+Core CRUD:
 - **create** - Create new records
 - **read** - View and read records
 - **update** - Modify existing records
 - **delete** - Remove records
+
+Extended actions (resource-specific):
+- **return** - Return a loan (`loans`)
+- **renew** - Renew/request renewal (`loans`)
+- **approve** / **reject** - Review renewal requests (`loans`) and other approval queues
+- **override_due_date** - Override loan due dates (`loans`)
+- **manage** - Broad management capability
+- **read_all** / **update_others** / **create_for_others** - Cross-user record access
+- **mark_overdue** / **get_penalty** - Penalty lifecycle actions
+- **send** - Send communications (`email`, `notifications`)
+- **export** / **configure** / **login** / **impersonate** - Administrative and session actions
+- **update_email** - Change another user's email (`users`)
+
+*The authoritative list lives in the `permission_resources` and `permission_actions` tables; run pending migrations in `sql/migrations/` to bring a database to the latest set.*
 
 ## Role Permissions
 

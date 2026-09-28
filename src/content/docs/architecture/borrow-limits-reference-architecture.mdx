@@ -124,16 +124,15 @@ import { useD1BorrowLimitQuery } from '../../hooks/d1/borrowLimits';  //  Direct
 - Types imported from `src/types/circulation` (shared)
 - UI components imported from feature module
 
-#### Feature Module: Only One Deep Import (Acceptable)
+#### Feature Module: Shared Constants Import
 ```tsx
-//  BorrowLimitFormFields.tsx - One acceptable deep import
-import { BORROW_LIMITS_CONFIG } from '../../../../constants/borrow-limits';
+//  BorrowLimitFormFields.tsx
+import { generateUserTypeOptions } from '../utils/borrow-limit.constants';
+import { BORROW_LIMIT_BOUNDS } from 'shared/types/borrow-limits';
+import { useActiveUserTypes } from '../../../../hooks/useUserTypes';
 ```
 
-**Reason**: Feature components need shared config. This is acceptable since:
-1. It's a UI component importing shared configuration
-2. Alternative would be prop drilling (worse)
-3. Only one occurrence in the entire feature
+**Reason**: Feature components import shared bounds/options. The single source of truth for bounds and the generic fallback is `shared/types/borrow-limits.ts` (`BORROW_LIMIT_BOUNDS`, `BORROW_LIMIT_FALLBACK`) — per-user-type values live in the `borrow_limits` table.
 
 **Result**: Clean import structure with no unnecessary deep relative paths.
 

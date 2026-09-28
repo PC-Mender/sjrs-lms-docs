@@ -25,8 +25,8 @@ This document provides a comprehensive guide to all Cloudflare products used in 
                                 │
                                 ▼
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   KV Store      │    │   Queues        │    │   Durable Obj.  │
-│   (Caching)     │    │   (Background)  │    │   (Real-time)   │
+│   KV Store      │    │   Email Service │    │  Workers AI +   │
+│   (Caching)     │    │   (send_email)  │    │  Analytics Eng. │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
@@ -230,57 +230,39 @@ await env.CACHE.put(`rate_limit:${ip}`, requestTimestamps, {
 - **Automatic Expiration**: TTL-based cleanup
 - **High Availability**: 99.9% uptime SLA
 
-## Cloudflare Queues
+## Cloudflare Email Service (send_email)
 
 ### What It Is
-Reliable message queue service for background job processing.
-
-### Features Used
-- **Email Processing**: Send emails in the background
-- **Notification Queues**: Process system notifications
-- **Retry Logic**: Automatic retry with exponential backoff
-- **Dead Letter Queues**: Handle failed messages
+Cloudflare's native email-sending binding, used for the superuser mailbox compose feature. Inbound mail arrives via **Cloudflare Email Routing** and is parsed with `postal-mime`.
 
 ### Configuration
 ```toml
 # wrangler.toml
-[[queues]]
-binding = "EMAIL_QUEUE"
-name = "email-queue"
-
-[[queues]]
-binding = "NOTIFICATION_QUEUE"
-name = "notification-queue"
+[[send_email]]
+name = "SJRS_EMAIL"
+allowed_sender_addresses = ["library@sjrslms.in"]
 ```
 
-### Usage Examples
+### Usage
 ```typescript
-// Send a message to queue
-await env.EMAIL_QUEUE.send({
-  type: 'welcome_email',
-  data: { userId, email, name }
-});
-
-// Process queue messages
-export default {
-  async queue(batch: MessageBatch<EmailMessage>, env: any) {
-    for (const message of batch.messages) {
-      await processEmail(message.body, env);
-    }
-  }
-};
+await env.SJRS_EMAIL.send(message); // functions/services/email/email-sender.ts
 ```
 
-### Benefits
-- **Reliable Delivery**: At-least-once delivery guarantee
-- **Automatic Retries**: Built-in retry logic
-- **Scalable**: Handles high message volumes
-- **Cost Effective**: Pay only for messages processed
+Related variables: `SJRS_FROM_EMAIL`, `SJRS_FROM_NAME`, `SJRS_ALLOWED_SENDERS`, `SJRS_INBOX_ALLOWLIST`, `SJRS_EMAIL_DAILY_QUOTA`, and retention settings — see [Environment Variables](/deployment/environment-variables).
+
+### Scheduled Jobs (cron)
+Background work runs via the `[triggers] crons = ["0 2 * * *"]` trigger — handlers live in `functions/scheduled/` (overdue reminders, penalty calculation, retention cleanup, badge evaluation, GitHub issue sync, token/log cleanup). No Queues or Durable Objects are currently provisioned.
 
 ## Email Service Architecture
 
 ### Overview
-Our email system uses a **hybrid approach** combining **Mailjet** for email delivery with **Cloudflare Queues** for reliability and scalability.
+The email system uses two sending paths plus inbound routing:
+
+1. **Mailjet** — transactional/notification emails (account confirmation, password reset, loan/order/payment/system notifications) via `functions/utilities/email-service.ts` and the `/api/v1/email/send-*` endpoints.
+2. **Cloudflare Email Service (`SJRS_EMAIL` binding)** — the superuser mailbox compose feature (`/dashboard/email`) sends through the `send_email` binding.
+3. **Cloudflare Email Routing** — inbound mail is parsed with `postal-mime` in `functions/services/email/email-receiver.ts`, sanitized, stored in D1 (`email_inbox`), with attachments in R2 (`email-attachments/`).
+
+There is no queue-based sending pipeline — outbound email is sent synchronously from the Worker.
 
 ### Architecture Strategy
 
@@ -312,75 +294,28 @@ async function sendConfirmationEmail(email: string, firstName: string, token: st
 }
 ```
 
-####  Transactional Emails (Queue + Mailjet Backend)
+####  Transactional Emails (Mailjet)
 - **Purpose**: Loan notifications, return reminders, overdue notices, system notifications
-- **Reason**: Background processing preferred, high volume, reliability needed
-- **Implementation**: Cloudflare Queues with Mailjet backend
+- **Implementation**: Synchronous Mailjet sends via `functions/utilities/email-service.ts`; overdue reminders and similar batch mail are triggered by the daily cron trigger in `functions/scheduled/`
+- Retry behavior is governed by `EMAIL_RETRY_ATTEMPTS`
 
-```typescript
-// Queue-based approach for transactional emails
-async function sendLoanNotification(userEmail: string, bookTitle: string) {
-  await env.EMAIL_QUEUE.send({
-    type: 'borrow_notification',
-    data: { 
-      userId: user.id,
-      email: userEmail, 
-      name: userName,
-      bookTitle,
-      dueDate 
-    }
-  });
-}
+####  Mailbox Compose (Cloudflare Email Service)
+- **Purpose**: Superuser outbound mailbox (`/dashboard/email` → `POST /api/v1/email/compose`)
+- **Implementation**: `send_email` binding via `functions/services/email/email-sender.ts`; per-user daily quota (`SJRS_EMAIL_DAILY_QUOTA`), sender allowlist enforcement, sent log in D1
+- **Drafts**: body HTML sanitized on persistence (allowlist `xss` sanitizer + CSS property allowlist)
 
-// Queue processor with Mailjet backend
-async processEmailMessage(message: EmailQueueMessage, env: any) {
-  const emailContent = this.generateBorrowNotification(message.data);
-  await this.sendEmailViaMailjet(message.data.email, emailContent, env);
-}
-```
-
-### Why This Hybrid Approach?
-
-####  Direct Mailjet Benefits (Account Emails)
-- **Immediate Feedback**: User gets instant confirmation
-- **Simple Implementation**: No queue complexity
-- **Low Volume**: Account emails are infrequent
-- **Critical Path**: Registration flow shouldn't be delayed
-
-####  Queue + Mailjet Benefits (Transactional Emails)
-- **Non-Blocking**: User experience isn't affected
-- **Reliability**: Automatic retries and dead letter queues
-- **Scalability**: Handles traffic spikes automatically
-- **Background Processing**: Emails send in background
+####  Inbound Mail (Email Routing)
+- **Purpose**: Superuser inbox
+- **Implementation**: Cloudflare Email Routing → Worker `email()` handler → `postal-mime` parsing → D1 `email_inbox` rows (allowlisted recipients via `SJRS_INBOX_ALLOWLIST`), attachments to R2
+- **Defense in depth**: size limits, sender/envelope separation, HTML sanitization before storage, duplicate `message_id` protection, fail-closed rejects
 
 ### Email Service Comparison
 
-| Approach | Use Case | Benefits | Drawbacks |
-|----------|----------|----------|-----------|
-| **Direct Mailjet** | Account emails | Immediate feedback, simple | No retry logic, can block UI |
-| **Queue + Mailjet** | Transactional emails | Reliable, scalable, non-blocking | More complex, slight delay |
-
-### Implementation Examples
-
-#### Account Email (Direct Mailjet)
-```typescript
-// Registration confirmation
-if (env.MAILJET_API_KEY && env.MAILJET_API_SECRET) {
-  await sendConfirmationEmail(user.email, user.first_name, confirmationToken, env);
-}
-```
-
-#### Transactional Email (Queue + Mailjet)
-```typescript
-// Loan notification
-await sendLoanNotification('borrow_notification', {
-  userId: user.id,
-  userEmail: user.email,
-  userName: user.first_name,
-  bookTitle: book.title,
-  dueDate: dueDate
-});
-```
+| Approach | Use Case | Benefits |
+|----------|----------|----------|
+| **Mailjet** | Account + transactional emails | Template support, analytics, established sender reputation |
+| **Cloudflare Email Service** | Mailbox compose | Native binding, no external API key, sender allowlist |
+| **Email Routing** | Inbound mailbox | Native Workers integration, no mailbox hosting needed |
 
 ### Environment Variables Required
 ```bash
@@ -399,8 +334,9 @@ VITE_API_BASE_URL=https://your-api-domain.com
 ### Best Practices
 
 #### 1. Choose the Right Approach
-- **Account emails** → Direct Mailjet
-- **Transactional emails** → Queue + Mailjet
+- **Account + transactional emails** → Mailjet
+- **Mailbox compose (superuser)** → Cloudflare Email Service (`SJRS_EMAIL`)
+- **Inbound mail** → Cloudflare Email Routing → Worker `email()` handler
 
 #### 2. Error Handling
 ```typescript
@@ -411,27 +347,11 @@ try {
   console.error('Failed to send confirmation email:', error);
   // Don't break registration flow
 }
-
-// Queue error handling (automatic)
-async queue(batch: MessageBatch<EmailQueueMessage>, env: any) {
-  for (const message of batch.messages) {
-    try {
-      await this.processEmailMessage(message.body, env);
-      message.ack();
-    } catch (error) {
-      if (message.body.retries < 3) {
-        message.retry(); // Automatic retry
-      } else {
-        message.ack(); // Move to dead letter queue
-      }
-    }
-  }
-}
 ```
 
 #### 3. Monitoring
-- **Direct Mailjet**: Log success/failure immediately
-- **Queue + Mailjet**: Monitor queue metrics and dead letter queues
+- **Mailjet**: Log success/failure immediately; Mailjet dashboard for delivery analytics
+- **Mailbox**: sent log table (`/api/v1/email/history`) records outcomes
 
 ### Migration Guide
 
@@ -451,45 +371,16 @@ const response = await fetch('https://api.mailjet.com/v3.1/send', {
 });
 ```
 
-This hybrid approach provides the best of both worlds: **immediate feedback for critical account emails** and **reliable, scalable processing for transactional emails**.
+This split keeps **transactional mail on a proven ESP (Mailjet)** while the **superuser mailbox runs entirely on Cloudflare primitives** (send_email + Email Routing + D1 + R2).
 
 ## Cloudflare Durable Objects
 
+:::note[Not currently used]
+No `durable_objects` bindings are configured in `wrangler.toml`. This section is retained for reference if real-time/stateful features are introduced later.
+:::
+
 ### What It Is
-Stateful serverless objects for real-time features and distributed coordination.
-
-### Features Used
-- **Live Counters**: Real-time statistics
-- **Session Management**: Stateful session tracking
-- **WebSocket Connections**: Real-time communication
-- **Distributed Coordination**: Multi-user features
-
-### Configuration
-```toml
-# wrangler.toml
-[[durable_objects.bindings]]
-name = "LIVE_COUNTERS"
-class_name = "LiveCounters"
-
-[[durable_objects.bindings]]
-name = "REALTIME_SESSIONS"
-class_name = "RealtimeSessions"
-```
-
-### Usage Examples
-```typescript
-// Get a Durable Object instance
-const counter = env.LIVE_COUNTERS.get(env.LIVE_COUNTERS.idFromName('global'));
-
-// Update counter
-await counter.fetch('/increment', { method: 'POST' });
-```
-
-### Benefits
-- **Stateful Computing**: Maintain state across requests
-- **Real-time Features**: WebSocket and live updates
-- **Global Coordination**: Distributed state management
-- **Low Latency**: Edge-based stateful computing
+Stateful serverless objects for real-time features and distributed coordination (live counters, WebSocket sessions, distributed coordination).
 
 ## Cloudflare Analytics
 
