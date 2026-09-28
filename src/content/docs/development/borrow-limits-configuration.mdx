@@ -88,55 +88,33 @@ CREATE TABLE borrow_limits (
 ```
 
 ## Validation Rules
-All forms use consistent validation from `src/constants/borrow-limits.ts`:
-- **Max Books**: 1-50
-- **Loan Period**: 1-365 days
-- **Max Renewals**: 0-365
-- **Fine per Day**: ₹0-100
+Input guardrails are defined as `BORROW_LIMIT_BOUNDS` in `shared/types/borrow-limits.ts` (shared by the admin form and backend Zod schemas):
+- **Max Books**: 1–100
+- **Loan Period**: 1–365 days
+- **Max Renewals**: 0–10
+- **Fine per Day**: ₹0–100
 
 ## User Types Supported
-- **Student_1**: 1st year students (5 books, 14 days, 2 renewals)
-- **Student_2**: 2nd year students (10 books, 14 days, 2 renewals)
-- **Student_3**: 3rd year students (12 books, 14 days, 2 renewals)
-- **Student_4**: 4th year students (15 books, 14 days, 2 renewals)
-- **Professor**: Faculty (10 books, 30 days, 3 renewals)
-- **Guest**: Visitors (2 books, 7 days, 1 renewal)
+Per-user-type limits (max books, loan period, renewals, fine/day) are **configured in the `borrow_limits` table**, not hardcoded. Rows exist for the institution's user types (e.g., students by year, professors, guests) — manage them via the superuser dashboard at `/dashboard/borrow-limits`.
 
-## Hardcoded Fallback Values
+## Fallback Values
 
-The system uses hardcoded fallback values when the database has no configured limits. These are defined in `src/constants/borrow-limits.ts`:
+`BORROW_LIMIT_FALLBACK` in `shared/types/borrow-limits.ts` is the single last-resort fallback used when the `borrow_limits` table has no row for a user type. It is **generic** (same for every user type) — per-user-type defaults must live in the database, not in code:
 
-### Default Fallback
-Used when no specific user type configuration exists:
-- **Max Books**: 5
+- **Max Books**: 3
 - **Loan Period**: 14 days
 - **Max Renewals**: 2
-- **Fine per Day**: ₹1.00
+- **Fine per Day**: ₹0.00
 
-### Student Limits (Year-Based)
-
-| Year | Max Books | Loan Period | Renewals | Fine/Day |
-|------|-----------|-------------|----------|----------|
-| **Student_1** (1st year) | 5 | 14 days | 2 | ₹25.00 |
-| **Student_2** (2nd year) | 10 | 14 days | 2 | ₹25.00 |
-| **Student_3** (3rd year) | 12 | 14 days | 2 | ₹25.00 |
-| **Student_4** (4th year) | 15 | 14 days | 2 | ₹25.00 |
-
-### Other User Types
-
-| User Type | Max Books | Loan Period | Renewals | Fine/Day |
-|-----------|-----------|-------------|----------|----------|
-| **Professor** | 10 | 30 days | 3 | ₹50.00 |
-| **Guest** | 2 | 7 days | 1 | ₹100.00 |
+Both backend (`getBorrowLimitsForUser`, orders, reservations, overdue-penalty calculation) and frontend consumers import the same constant so every layer agrees on the no-row behavior.
 
 ### Fallback Behavior
 
-1. **Database First**: System attempts to fetch limits from `borrow_limits` table
-2. **Fallback on Error**: If database query fails or returns no results, uses hardcoded values
-3. **Silent Fallback**: No error shown to user when falling back to hardcoded values
-4. **Override Anytime**: Database values always take precedence when configured
+1. **Database First**: System fetches limits from the `borrow_limits` table for the user type
+2. **Generic Fallback**: If no row exists, `BORROW_LIMIT_FALLBACK` applies
+3. **Override Anytime**: A database row always takes precedence when configured
 
-**Important**: To ensure consistent behavior across the system, configure limits in the database via the superuser dashboard at `/dashboard/borrow-limits`.
+**Important**: The `borrow_limits` table is also the single source of truth for **fine rates** — the overdue-penalty calculator and reminder emails read `fine_per_day` from it (the old hardcoded ₹25/day fallback was removed in v8.12.0).
 
 ## Backend Integration
 - **API endpoints**: `/api/v1/borrow-limits`
