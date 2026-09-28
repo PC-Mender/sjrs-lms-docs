@@ -10,15 +10,12 @@ The penalty system has been enhanced with UPI-focused online payment integration
 ### INR Implementation
 - **Default Currency**: Changed from USD to INR (₹)
 - **Formatting**: Uses Indian number formatting (e.g., ₹1,000.00)
-- **Fine Rates**:
-  - Students: ₹25 per day
-  - Professors: ₹50 per day
-  - Guests: ₹100 per day
+- **Fine Rates**: Read per user type from the `borrow_limits` table (`fine_per_day`), which is the single source of truth. A generic `BORROW_LIMIT_FALLBACK` in `shared/types/borrow-limits.ts` applies only when no row exists (currently ₹0/day). The old hardcoded per-role rates (₹25/₹50/₹100) were removed in v8.12.0.
 
 ### Files Modified
 - `src/utilities/formatting/data.ts` - Currency formatting
 - `functions/email-templates/base/template-utils.ts` - Email currency
-- `src/constants/borrow-limits.ts` - Fine amounts
+- `shared/types/borrow-limits.ts` - Bounds + generic fallback (DB table holds actual rates)
 - `src/constants/config.ts` - Library rules
 
 ## 2. UPI Payment Integration
