@@ -46,6 +46,7 @@ These standards are enforced through tooling where possible; deviations must be 
 
 - **Project Policy - File Size Limits**: Keep Components/Handlers ≤ 300 lines, Pages ≤ 500 lines  
   These limits are guardrails, not goals. Prefer logical cohesion and readability over artificial file splitting.
+  - CSS is not subject to imperative-code line-count limits. CSS quality is governed by scoped ownership (CSS Modules for feature/page styles), controlled global styles, selector specificity, duplication, and production bundle output.
   - Documented exceptions exist for configuration files, migration files, and complex form components (see `scripts/check-file-sizes.js` for the complete ignore list)
 - **Industry Standard - Complexity Budget**: Functions, modules, and components must remain understandable without excessive mental context.
   - Refactor code that introduces excessive branching, deep nesting, or multiple unrelated responsibilities before merge.
@@ -200,6 +201,16 @@ These standards are enforced through tooling where possible; deviations must be 
   - Never echo secrets into logs or error responses.
 - **Industry Standard - Sensitive Data Logging**: Never log passwords, tokens, cookies, session IDs, OTPs, or full request/response payloads for authentication and authorization endpoints.
   - Redact sensitive fields in structured logs and audit logs.
+- **Industry Standard - Sensitive Data Minimization**: Treat every data boundary as an explicit allowlist: database projections, internal service records, API response DTOs, response headers, cookies, logs, metrics, and error details.
+  - API-facing row queries must use explicit column lists; never use `SELECT *`, `table.*`, or equivalent wildcard row projections in runtime application queries. Aggregate expressions such as `COUNT(*)` are not row projections and remain permitted when appropriate.
+  - Internal-only queries must also avoid wildcard projections when a table contains credentials, authentication material, payment data, personal data, device metadata, or audit/security fields.
+  - Response DTOs must be explicitly mapped and schema-validated where the endpoint handles sensitive or externally consumed data. Unknown fields must not pass through from database rows.
+  - Never return passwords, password hashes, access/refresh/session tokens, token hashes, MFA secrets, OTPs, recovery codes, API keys, signing secrets, raw SQL, stack traces, file paths, or internal infrastructure details in response bodies or headers.
+  - Do not echo request `Authorization`, cookies, CSRF secrets, or other credential material in response headers. `Set-Cookie` is permitted only for intentionally issued cookies that meet the cookie security policy below.
+  - Response headers must be limited to protocol/security metadata, opaque correlation identifiers, rate-limit metadata, API-version metadata, and other documented client-contract fields. Authentication diagnostics must use coarse allowlisted values and must not enable account or credential enumeration.
+  - Personal, payment, browser, IP, and device metadata may be returned only through an authorized, documented DTO with the minimum fields required for the use case.
+  - Add regression tests that assert sensitive fields are absent from response DTOs and that sensitive runtime queries contain no wildcard projections.
+  - **Current Repository Constraint**: Existing runtime wildcard projections are security technical debt and must be tracked and remediated; they must not be copied into new code or expanded. Migration/data-copy SQL is excluded from this runtime-query rule when it is not used to construct an API response.
 - **Industry Standard - Cookie & Session Security**: For cookie-based auth:
   - Auth cookies must be `HttpOnly`, `Secure`, and set an explicit `SameSite` policy.
   - Production and staging cookies must be host-only (no `Domain` attribute). `COOKIE_DOMAIN` must not be set in production or staging unless cross-subdomain authentication is a documented hard requirement.
