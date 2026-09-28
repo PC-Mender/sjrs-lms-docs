@@ -5,100 +5,137 @@ title: "Environment Variables"
 
 ## Overview
 
-This project uses Cloudflare Workers for deployment, and environment variables are managed through Cloudflare's Workers settings rather than local `.env` files.
+SJRS LMS runs as a single Cloudflare Worker (`sjrslms`) that serves both the API and the React SPA static assets. Non-sensitive configuration lives in `wrangler.toml` under `[vars]`; secrets are stored via `wrangler secret put`. Local development uses `.dev.vars` (gitignored) which overrides `[vars]` when running `wrangler dev`.
 
-## Configuration Locations
+## Bindings (wrangler.toml)
 
-### Cloudflare Workers Dashboard
-- **Secrets**: Sensitive data like API keys, database credentials
-- **Environment Variables**: Non-sensitive configuration values
-- **KV Bindings**: Key-value storage bindings
-- **D1 Bindings**: Database bindings
+| Binding | Type | Purpose |
+|---------|------|---------|
+| `ASSETS` | Static Assets | Serves the built SPA from `./dist` (`single-page-application` not-found handling) |
+| `DB` | D1 Database | Primary database (`sjrs-lms-db`); migrations dir `sql/migrations` |
+| `STORAGE` | R2 Bucket | File/asset storage (`sjrslms-assets`, preview `sjrslms-assets-dev`) |
+| `CACHE` | KV Namespace | Caching and rate-limit state |
+| `SJRS_EMAIL` | Send Email | Cloudflare Email Service for the compose feature; `allowed_sender_addresses` restricts senders (default `library@sjrslms.in`) |
+| `AI` | Workers AI | Release notes generation |
+| `ANALYTICS` | Analytics Engine | Structured log dataset (`sjrslms-logs`) |
 
-### Local Development
-- **Not Required**: Environment variables are not needed locally for development
-- **wrangler.toml**: Contains some public configuration (non-sensitive)
-- **Local Testing**: Use `wrangler dev` to simulate the Workers environment
+**Triggers:** a cron trigger runs scheduled jobs daily at `0 2 * * *` UTC (overdue reminders, penalty calculation, retention cleanup, badge evaluation, etc.).
 
-## Required Environment Variables
+A separate `env.staging` block defines the staging worker (`sjrslms-staging`) with its own D1 database, R2 bucket, KV namespace, and `staging.sjrslms.in` route.
 
-### Database Configuration
+## Required Secrets
+
+Set with `wrangler secret put <NAME>`:
+
+| Secret | Purpose |
+|--------|---------|
+| `JWT_SECRET` | **Required.** Session token signing key (at least 32 characters) |
+| `JWT_ISS` | JWT issuer claim — required in production (default `sjrslms`) |
+| `JWT_AUD` | JWT audience claim — required in production (default `sjrslms-client`) |
+| `CSRF_SECRET` | Optional dedicated CSRF secret; falls back to `JWT_SECRET` |
+| `MAILJET_API_KEY` / `MAILJET_API_SECRET` | Mailjet credentials for transactional emails |
+| `TURNSTILE_SECRET_KEY` | Cloudflare Turnstile verification |
+| `SENTRY_DSN` | Backend error tracking |
+| `GITHUB_ISSUES_TOKEN` | Fine-grained PAT (Issues: Read/Write) for the Report Issues feature |
+| `NOTIFICATION_INGEST_TOKEN` | Shared token for automated notification ingest; per-source overrides available (`NOTIFICATION_INGEST_TOKEN_RELEASE`, `NOTIFICATION_INGEST_TOKEN_SENTRY`, `NOTIFICATION_INGEST_TOKEN_CLOUDFLARE`) |
+| `ANALYTICS_PII_SECRET` | Required when `ANALYTICS_PII_MODE=hash` |
+| `JWT_KEYS_JSON` / `JWT_DEFAULT_KID` | Optional multi-key JWT signing/rotation support |
+
+## Public Variables ([vars])
+
+Key non-sensitive variables in `wrangler.toml`:
+
 ```
-D1_DATABASE_ID=your-d1-database-id
-D1_DATABASE_NAME=your-database-name
+NODE_ENV = "production"
+FRONTEND_URL = "https://sjrslms.in"            # HTTPS enforced; allowlisted per environment
+VITE_API_BASE_URL = "https://sjrslms.in"
+VITE_TURNSTILE_SITE_KEY = "0x4AAAAA..."        # public site key
+MAILJET_FROM_EMAIL = "no-reply@sjrslms.in"
+
+LOG_LEVEL = "info"                             # debug|info|warn|error
+LOG_CONSOLE = "false"
+LOG_ANALYTICS = "true"
+ANALYTICS_PII_MODE = "hash"
+
+ALLOWED_ORIGINS = "https://sjrslms.in"
+ALLOWED_METHODS = "GET,POST,PUT,DELETE,OPTIONS,PATCH"
+ALLOWED_HEADERS = "Content-Type,Authorization,..."
+ALLOW_CREDENTIALS = "true"
+CORS_MAX_AGE = "86400"
+
+RATE_LIMIT_REQUESTS = "100"
+RATE_LIMIT_WINDOW = "3600"
+
+SECURE_COOKIES = "true"
+SESSION_TIMEOUT = "1800000"                    # 30 minutes
+
+MAX_FILE_SIZE = "10485760"                     # 10MB
+ALLOWED_FILE_TYPES = "image/jpeg,image/png,image/webp,application/pdf"
+
+CACHE_TTL = "3600"
+USER_PREFERENCES_TTL = "86400"
+EMAIL_RETRY_ATTEMPTS = "3"
+
+GITHUB_REPO_OWNER = "PC-Mender"
+GITHUB_REPO_NAME = "sjrslms"                   # release-detection cron (public API)
 ```
 
-### Authentication & Security
-```
-JWT_SECRET=your-jwt-secret-key
-ENCRYPTION_KEY=your-encryption-key
-SESSION_SECRET=your-session-secret
-```
+## Email Compose Feature (SJRS_*)
 
-### Email Service (Optional)
-```
-EMAIL_SERVICE_API_KEY=your-email-api-key
-EMAIL_FROM_ADDRESS=noreply@yourdomain.com
-```
+Separate from Mailjet transactional email. Superuser-only mailbox (compose/inbox/drafts/history):
 
-### SMS Service (Optional)
-```
-SMS_API_KEY=your-sms-api-key
-SMS_SENDER_ID=your-sender-id
-```
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `SJRS_FROM_EMAIL` | `library@sjrslms.in` | Sender address; must match `allowed_sender_addresses` in the `send_email` binding |
+| `SJRS_FROM_NAME` | `SJRS Library` | Sender display name |
+| `SJRS_ALLOWED_SENDERS` | `library@sjrslms.in` | Comma-separated allowlist of approved sender addresses |
+| `SJRS_EMAIL_DAILY_QUOTA` | `100` | Per-user daily outbound limit; `0` disables |
+| `SJRS_INBOX_ALLOWLIST` | — | Envelope recipients that create inbox rows (Cloudflare Email Routing). **Unset = all recipients accepted (open mailbox — not recommended for production)** |
+| `SJRS_EMAIL_SENT_LOG_RETENTION_DAYS` | `180` | Sent log retention |
+| `SJRS_EMAIL_INBOX_RETENTION_DAYS` | `365` | Inbox retention |
+| `SJRS_EMAIL_DRAFT_RETENTION_DAYS` | `90` | Drafts retention |
 
-## Setup Instructions
+## Local Development
 
-### 1. Cloudflare Workers Dashboard
-1. Navigate to your Workers & Pages dashboard
-2. Select your worker
-3. Go to **Settings** → **Variables**
-4. Add environment variables and secrets as needed
-
-### 2. Using Wrangler CLI
 ```bash
-# Set secrets (sensitive data)
-wrangler secret put JWT_SECRET
-wrangler secret put ENCRYPTION_KEY
-
-# Set environment variables (non-sensitive)
-wrangler env put ENVIRONMENT production
+cp .dev.vars.example .dev.vars
+# Edit .dev.vars: set JWT_SECRET (>=32 chars), FRONTEND_URL/ALLOWED_ORIGINS
+# to your dev origin, SECURE_COOKIES=false for http://localhost
+npm run dev:api   # wrangler dev on :8787
+npm run dev       # Vite frontend
 ```
 
-### 3. Local Development
-```bash
-# Start local development server
-wrangler dev
+`.dev.vars` overrides `[vars]` under `wrangler dev`. See `.dev.vars.example` for the annotated list.
 
-# The local server will automatically use your configured variables
-```
+## Frontend Variables (build-time, `VITE_*`)
+
+| Variable | Purpose |
+|----------|---------|
+| `VITE_API_BASE_URL` | API base URL baked into the SPA build |
+| `VITE_TURNSTILE_SITE_KEY` | Public Turnstile site key |
+| `VITE_SENTRY_DSN` / `VITE_SENTRY_DEBUG` | Frontend error tracking |
 
 ## Verification
 
-### Check Current Variables
 ```bash
-# List all secrets
-wrangler secret list
-
-# List environment variables
-wrangler env list
+wrangler secret list           # List configured secrets
+wrangler deploy --dry-run      # Validate configuration
 ```
 
 ### Quality Gates Integration
-The quality gates system (`scripts/enhanced-quality-gates.js`) validates environment variables by:
-- Checking `wrangler secret list` for required secrets
-- Validating D1 database connectivity
-- Ensuring all required bindings are configured
+The quality gates system (`scripts/enhanced-quality-gates.js`) validates environment configuration — checking required secrets and bindings before release.
 
 ## Important Notes
 
-1. **No Local .env Required**: Unlike traditional Node.js applications, this project doesn't require local environment files
-2. **Secrets vs Variables**: Use secrets for sensitive data, environment variables for public configuration
-3. **Development vs Production**: Use different Workers for different environments
-4. **Quality Gates**: Environment validation is part of the automated quality gates process
+1. **`.dev.vars` for local secrets**: Unlike `env.example`, which documents production variable names, `.dev.vars` holds actual local values and is gitignored.
+2. **Secrets vs Variables**: Use secrets for sensitive data; `[vars]` for public configuration committed to the repo.
+3. **`__Host-` cookies**: No `Domain` attribute is set; `COOKIE_DOMAIN` configuration is rejected.
+4. **Environments**: `env.staging` in `wrangler.toml` defines the staging worker; use `wrangler deploy --env staging`.
+5. **Quality Gates**: Environment validation is part of the automated quality gates process.
 
 ## Related Documentation
 
 - [Cloudflare Workers Environment Variables](https://developers.cloudflare.com/workers/configuration/environment-variables/)
 - [Wrangler CLI Documentation](https://developers.cloudflare.com/workers/wrangler/)
+- [Setup Guide](/getting-started/setup)
 - [Quality Gates Guide](/quality-gates-guide)
