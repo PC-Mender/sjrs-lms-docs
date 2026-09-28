@@ -10,6 +10,212 @@ slug: full-changelog
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [8.17.0] - 2026-09-28
+
+### Added
+- ✅ tighten style CSP with per-response nonce
+
+### Fixed
+- 🐛 drain pending react work before jsdom teardown
+- 🐛 remove pointer cursor from non-clickable recently added cards
+- 🐛 validate generate-template request body
+- 🐛 propagate page CSP nonce to generated style elements
+- 🐛 restrict public header home navigation to logo area
+
+### Technical
+- 🔧 The route policy had validation 'none', so middleware never parsed the
+- 🔧 Inline `<style>` blocks in iframe previews and generated print/receipt
+- 🔧 Replace broad style-src 'unsafe-inline' with a nonce applied to
+
+## [8.16.1] - 2026-09-28
+
+### Fixed
+- 🐛 sanitize chunk output file names and type dev proxy config
+- 🐛 set NODE_ENV=production via cross-env for cross-platform builds
+
+## [8.16.0] - 2026-09-28
+
+### Added
+- ✅ add per-response CSP nonce for HTML script directives
+
+### Fixed
+- 🐛 render nav menu items as real links for open-in-new-tab
+- 🐛 prevent duplicate headers when serving assets and SPA fallback
+
+### Technical
+- 🔧 remove unused responsive navigation components
+- 🔧 DesktopNav, MobileMenu, and the layout/sections barrel had no importers
+- 🔧 Navigation items rendered as non-anchor elements with navigate() in
+- 🔧 - Wrap leaf menu labels in react-router Link via linkifyMenuItems
+
+## [8.15.1] - 2026-09-28
+
+### Fixed
+- 🐛 correct New Arrivals sort so card shows newest books
+- 🐛 remove inline theme script from CSP violations
+
+### Technical
+- 🔧 The widget requested ?sort=created_at&order=desc, but
+- 🔧 - Use canonical sortField/sortOrder params in the widget
+- 🔧 update packages to latest stable versions
+- 🔧 - Bump runtime deps: react/react-dom 19.3.0, react-router 8.4.0,
+- 🔧 Move the theme bootstrap into a same-origin static asset so it is
+
+## [8.15.0] - 2026-09-03
+
+### Added
+- ✅ expose loan renewal review actions for delegation
+
+### Fixed
+- 🐛 prevent renewal review of returned loans
+- 🐛 add missing parameterized borrow-limits route policies
+- 🐛 prevent stale SPA HTML from serving deleted asset chunks
+
+### Technical
+- 🔧 bump @tiptap/* to 3.31.0 and fast-uri to 3.1.7
+- 🔧 - Bump `@tiptap/{extension-text-align,extension-text-style,pm,react,starter-kit}`
+- 🔧 Verified: 0 vulnerabilities, type-check, lint, build, and 1551 tests pass.
+- 🔧 extract renewal mutations into dedicated module
+- 🔧 mutations.ts exceeded the 300-line handler limit after adding the
+- 🔧 register loan renewal migrations in config and sql map
+- 🔧 Wire the add-loan-renewal-review-permissions and
+- 🔧 Returning a loan previously left any pending renewal request attached,
+- 🔧 - Clear renewal_request_status, renewal_requested_at,
+- 🔧 Add dedicated approve and reject permission actions scoped to the loans
+- 🔧 - Add migration creating loans:approve and loans:reject actions and
+- 🔧 The borrow-limits handler supports single-resource routes keyed by
+- 🔧 Add explicit parameterized :id policies for GET/PUT/DELETE, mirroring
+- 🔧 Mark SPA HTML responses with no-store cache directives so Cloudflare
+- 🔧 - assets.ts: no-store for root index.html and HTML asset responses
+
+## [8.14.1] - 2026-08-21
+
+### Fixed
+- 🐛 correct CSS module import path in ImpersonationBanner
+
+### Technical
+- 🔧 extract ImpersonationBanner from AppLayout
+- 🔧 replace monolithic index.css with co-located CSS modules
+- 🔧 Eliminate the 3,425-line src/index.css that mixed global rules,
+- 🔧 Establish CSS architecture with clear ownership boundaries:
+- 🔧 - True globals (html/body, themes, scrollbar, Ant Design overrides,
+- 🔧 - Feature and page styles co-located as CSS Modules alongside their
+- 🔧 - Shared cross-feature primitives in src/styles/shared/ modules:
+- 🔧 - Layout primitives in dedicated modules: header-layout,
+- 🔧 - Vendor theming via :global() only where CSS Modules must target
+- 🔧 Normalize folder-per-page structure for pages that gained CSS
+- 🔧 Remove stale dashboard-header string literal from AppHeader (class
+- 🔧 Global CSS bundle reduced from ~28 KB to ~16 KB (-43%). Route-
+- 🔧 All consumers verified, legacy selectors removed after migration,
+- 🔧 add stylelint config and CSS-aware quality gates
+- 🔧 Add Stylelint configuration for scoped CSS Module linting with
+- 🔧 Update file-size checker to exclude CSS from imperative-code line
+- 🔧 Update enhanced quality gates and pre-push hook to run lint:css
+- 🔧 Add stylelint and stylelint-config-standard as devDependencies.
+
+## [8.14.0] - 2026-08-13
+
+### Added
+- ✅ improve form UX with auto ref id and dropdowns
+- ✅ validate ISBN format and accept numeric edition
+- ✅ migrate rich text editor to TipTap
+- ✅ sanitize draft bodyHtml on persistence
+- ✅ add CSS property allowlist for email HTML sanitization
+- ✅ upgrade backend HTML sanitizer to xss library
+- ✅ add compose, inbox, history, and drafts UI pages
+- ✅ support email-eligible filter and pagination
+- ✅ add compose-and-send backend with Cloudflare Email Service
+- ✅ add superuser-only policies and rate limit for email compose
+- ✅ add email compose, inbox, drafts, and attachment tables
+
+### Fixed
+- 🐛 remove redundant console.error in API catch block
+
+### Technical
+- 🔧 extract HTML filter config from xss-sanitizer
+- 🔧 Extract the xss library FilterXSS configuration (allowlist, strip-tags,
+- 🔧 handleError already routes errors through the structured logging
+- 🔧 use numeric id for view, edit, and delete actions
+- 🔧 - Update table columns and card grid callbacks to pass numeric id
+- 🔧 - Disable reference_id input on create and auto-generate via backend
+- 🔧 switch client hooks and types to numeric id
+- 🔧 - Add id field to ReferenceBook type and zod schema
+- 🔧 - Add ISBN-10/ISBN-13 regex validation on the isbn field
+- 🔧 route CRUD by numeric id and auto-generate reference_id
+- 🔧 - Switch GET/PUT/DELETE to look up records by numeric id
+- 🔧 remove unsupported fields and dead legacy code
+- 🔧 - Remove birth_date, death_date, email, website, nationality from
+- 🔧 Replace the contentEditable + document.execCommand editor with a
+- 🔧 - RichTextEditor.tsx: TipTap-based editor with bold/italic/underline,
+- 🔧 Apply sanitizeHTMLContent to bodyHtml in handleCreateDraft and
+- 🔧 Add drafts-sanitization.test.ts verifying that script tags, on*
+- 🔧 DOMPurify strips expression()/javascript: injection vectors but does
+- 🔧 Add css-allowlist.ts with an explicit denylist of CSS properties
+- 🔧 Add tests covering tracking pixel blocking, content hiding, layout
+- 🔧 Replace the regex-based blacklisting in sanitizeHTMLContent with the
+- 🔧 - Builds the tag/attribute allowlist from the xss library's vetted
+- 🔧 Updates the property-based tests to assert the security property on
+- 🔧 add xss and tiptap packages for email sanitization and editor
+- 🔧 - xss: allowlist-based HTML sanitizer for the backend (replaces regex
+- 🔧 add Cloudflare Email Service binding and env vars
+- 🔧 add postal-mime for inbound email parsing
+
+## [8.13.0] - 2026-08-10
+
+### Added
+- ✅ restrict loan-only actions to Loan Management resource
+- ✅ wire client return action to dedicated return endpoint
+- ✅ add dedicated loans:return permission migration
+- ✅ add dedicated return endpoint with permission-gated handler
+
+### Technical
+- 🔧 cover return route, handler, policy, and permission matrix
+- 🔧 Add unit tests for the new dedicated return flow and the permission
+- 🔧 - Assert the loans router dispatches POST /:id/return to
+- 🔧 The override_due_date and return actions only apply to the loans
+- 🔧 - Add a LOAN_ONLY_ACTIONS set covering override_due_date and return
+- 🔧 Stop returning loans via the generic update mutation and use the new
+- 🔧 - Add useD1ReturnLoan mutation hook with optimistic status/returned_at
+- 🔧 Returning a loan is not a generic loan update or due-date override, so
+- 🔧 - Add 2026-08-10_add-loan-return-permission.sql migration that inserts
+- 🔧 Introduce a dedicated POST /api/loans/:id/return route instead of reusing
+- 🔧 - Add handleReturnLoan handler enforcing the new loans:return permission
+
+## [8.12.0] - 2026-08-10
+
+### Added
+- ✅ add waive action with audit tracking and overdue edit protection
+- ✅ enrich penalty records with user, book, and loan details
+- ✅ include current fine amount in overdue reminder emails
+
+### Fixed
+- 🐛 override nanoid to 3.3.18 to resolve GHSA-2v37-7h3g-55p8
+- 🐛 remove client-side token storage and secret env reads
+- 🐛 show user type label instead of slug in profile completion email
+- 🐛 gate Pay action and Bulk Pay by payments:create permission
+- 🐛 restrict manual creation and conversion of overdue penalties
+- 🐛 use borrow_limits as single source of truth for fine rates
+- 🐛 replace runtime SELECT * with explicit projections for bookmarks and media assets
+
+### Technical
+- 🔧 improve form UX and return full records from handlers
+- 🔧 Return the complete penalty record (with joined user and book details)
+- 🔧 Add a Waive action to the penalty table that sets status to waived and
+- 🔧 Join user_types, students, loans, book_copies, and books in penalty
+- 🔧 extract penalty notification into dedicated module
+- 🔧 Move the inline sendPenaltyNotification helper out of
+- 🔧 Token manager set/get for auth and refresh tokens are now no-ops; tokens
+- 🔧 The Pay row action was always rendered regardless of whether the user had
+- 🔧 - Add canPay prop to usePenaltyTableActions and only emit the Pay action
+- 🔧 Overdue penalties are an automatic scheduler concern. Manual creation or
+- 🔧 - Reject penalty_type='overdue' in validatePenaltyData and
+- 🔧 The automatic calculator writes penalty_type='overdue' directly through
+- 🔧 Overdue reminder emails previously omitted the accumulated fine even though
+- 🔧 - Join user_types into the reminder query to expose ut.slug for rate lookup
+- 🔧 Replace hardcoded ₹25 fallback in the overdue penalty calculator with
+- 🔧 - Remove duplicated getFineRateForUserType helper from calculate-overdue-penalties
+- 🔧 Wildcard row projections in API-facing queries risk accidental disclosure
+
 ## [8.11.1] - 2026-08-07
 
 ### Fixed
