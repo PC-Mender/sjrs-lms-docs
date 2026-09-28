@@ -518,16 +518,14 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 }
 ```
 
-### Update Loan (Return Book)
-**Endpoint:** `PUT /api/loans/:id`  
-**Description:** Update loan status (e.g., return book)  
-**Authentication:** Required (cookie-based session + Librarian role)
+### Return Loan
+**Endpoint:** `POST /api/loans/:id/return`  
+**Description:** Return a borrowed book (dedicated endpoint since v8.13.0)  
+**Authentication:** Required (cookie-based session + `loans:return` permission)
 
 #### Request Body
 ```json
 {
-  "status": "returned",
-  "returned_date": "2024-01-15T11:00:00Z",
   "notes": "Book returned in good condition"
 }
 ```
@@ -536,7 +534,7 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
 ```json
 {
   "success": true,
-  "message": "Loan updated successfully",
+  "message": "Loan returned successfully",
   "data": {
     "id": 1,
     "status": "returned",
@@ -545,6 +543,11 @@ Cookie: secure_authToken=<HttpOnly cookie set on login>
   }
 }
 ```
+
+#### Notes
+- Returning a loan clears any pending renewal request attached to it.
+- Renewal review uses dedicated routes: `POST /api/loans/:id/renew/approve` (requires `loans:approve`) and `POST /api/loans/:id/renew/reject` (requires `loans:reject`).
+- `PUT /api/loans/:id` remains for other field updates (requires `loans:update` or `loans:override_due_date`) but is no longer used for returns.
 
 ## User Management Endpoints
 
@@ -855,9 +858,19 @@ description: "Book cover image"
 
 ## Email Service Endpoints
 
-### Send Email
-**Endpoint:** `POST /api/email`  
-**Description:** Send an email through the system  
+The email API has two surfaces:
+
+1. **Mailbox (superuser, v8.14.0+)** — backed by the Cloudflare Email Service `SJRS_EMAIL` binding:
+   - `POST /api/email/compose` — compose and send (rate limited)
+   - `GET /api/email/history`, `GET /api/email/history/:id` — sent log
+   - `GET|POST /api/email/drafts`, `PUT|DELETE /api/email/drafts/:id` — drafts (body HTML sanitized on save)
+   - `GET /api/email/inbox`, `GET /api/email/inbox/:id`, `PATCH /api/email/inbox/:id`, `DELETE /api/email/inbox/:id` — received mail
+   - `GET /api/email/inbox/:id/attachments/:attachmentId` — attachment download
+2. **Transactional notifications** — `POST /api/email/send-loan-notification`, `send-order-notification`, `send-system-notification`, `send-payment-notification`, `send-auth-email`, `send-template-email` (sent via Mailjet).
+
+### Send Transactional Email
+**Endpoint:** `POST /api/email/send-template-email`  
+**Description:** Send a template-based email through the system  
 **Authentication:** Required (cookie-based session + appropriate permissions)
 
 #### Request Body

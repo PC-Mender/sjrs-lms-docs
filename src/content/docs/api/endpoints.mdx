@@ -85,6 +85,13 @@ All API routes use the `/api/v1/` prefix. The main request pipeline normalizes `
 - **PUT** `/api/v1/professors/:id` - Update professor
 - **DELETE** `/api/v1/professors/:id` - Delete professor
 
+### User Types
+- **GET** `/api/v1/user-types` - Get user types
+- **GET** `/api/v1/user-types/:id` - Get specific user type
+- **POST** `/api/v1/user-types` - Create user type
+- **PUT** `/api/v1/user-types/:id` - Update user type
+- **DELETE** `/api/v1/user-types/:id` - Delete user type
+
 ## Location Endpoints
 
 ### Location Data
@@ -190,17 +197,77 @@ All API routes use the `/api/v1/` prefix. The main request pipeline normalizes `
 - **PUT** `/api/v1/journals/:id` - Update journal
 - **DELETE** `/api/v1/journals/:id` - Delete journal
 
+### Journal Sections
+- **GET** `/api/v1/journal-sections` - Get journal sections
+- **GET** `/api/v1/journal-sections/:id` - Get specific section
+- **POST** `/api/v1/journal-sections` - Create section
+- **PUT** `/api/v1/journal-sections/:id` - Update section
+- **DELETE** `/api/v1/journal-sections/:id` - Delete section
+
+### Journal Articles
+- **GET** `/api/v1/journal-articles` - Get journal articles
+- **GET** `/api/v1/journal-articles/:id` - Get specific article
+- **POST** `/api/v1/journal-articles` - Create article
+- **PUT** `/api/v1/journal-articles/:id` - Update article
+- **DELETE** `/api/v1/journal-articles/:id` - Delete article
+
+### Magazines
+- **GET** `/api/v1/magazines` - Get magazines
+- **GET** `/api/v1/magazines/:id` - Get specific magazine
+- **POST** `/api/v1/magazines` - Create magazine
+- **PUT** `/api/v1/magazines/:id` - Update magazine
+- **DELETE** `/api/v1/magazines/:id` - Delete magazine
+
+### Subcategories
+- **GET** `/api/v1/subcategories` - Get subcategories
+- **GET** `/api/v1/subcategories/:id` - Get specific subcategory
+- **POST** `/api/v1/subcategories` - Create subcategory
+- **PUT** `/api/v1/subcategories/:id` - Update subcategory
+- **DELETE** `/api/v1/subcategories/:id` - Delete subcategory
+
+### Dioceses & Congregations
+- **GET** `/api/v1/dioceses` - Get dioceses
+- **GET** `/api/v1/dioceses/:id` - Get specific diocese
+- **POST** `/api/v1/dioceses` - Create diocese
+- **PUT** `/api/v1/dioceses/:id` - Update diocese
+- **DELETE** `/api/v1/dioceses/:id` - Delete diocese
+- **GET** `/api/v1/congregations` - Get congregations
+- **GET** `/api/v1/congregations/:id` - Get specific congregation
+- **POST** `/api/v1/congregations` - Create congregation
+- **PUT** `/api/v1/congregations/:id` - Update congregation
+- **DELETE** `/api/v1/congregations/:id` - Delete congregation
+
+### Shelf Codes & Storage Locations
+- **GET** `/api/v1/shelf-codes` - Get shelf codes
+- **GET** `/api/v1/shelf-codes/:id` - Get specific shelf code
+- **POST** `/api/v1/shelf-codes` - Create shelf code
+- **PUT** `/api/v1/shelf-codes/:id` - Update shelf code
+- **DELETE** `/api/v1/shelf-codes/:id` - Delete shelf code
+- **GET** `/api/v1/storage-locations` - Get storage locations
+- **GET** `/api/v1/storage-locations/:id` - Get specific storage location
+- **POST** `/api/v1/storage-locations` - Create storage location
+- **PUT** `/api/v1/storage-locations/:id` - Update storage location
+- **DELETE** `/api/v1/storage-locations/:id` - Delete storage location
+
+### Key Tags
+- **GET** `/api/v1/key-tags` - Get key tags
+- **GET** `/api/v1/key-tags/:id` - Get specific key tag
+- **POST** `/api/v1/key-tags` - Create key tag
+- **PUT** `/api/v1/key-tags/:id` - Update key tag
+- **DELETE** `/api/v1/key-tags/:id` - Delete key tag
+
 ## Loan Management Endpoints
 
 ### Loan Operations
 - **GET** `/api/v1/loans` - Get all loans
 - **GET** `/api/v1/loans/:id` - Get specific loan
 - **POST** `/api/v1/loans` - Create loan (requires `loans:create`)
-- **PUT** `/api/v1/loans/:id` - Update loan (requires `loans:update`)
+- **PUT** `/api/v1/loans/:id` - Update loan details (requires `loans:update` or `loans:override_due_date`)
 - **DELETE** `/api/v1/loans/:id` - Delete loan (requires `loans:delete`)
+- **POST** `/api/v1/loans/:id/return` - Return a loan (requires `loans:return`). *Since v8.13.0 returns use this dedicated endpoint; the generic `PUT` update no longer performs returns.*
 - **POST** `/api/v1/loans/:id/renew` - Request/perform loan renewal (permission-gated)
-- **POST** `/api/v1/loans/:id/renew/approve` - Approve a renewal request (requires `loans:update`)
-- **POST** `/api/v1/loans/:id/renew/reject` - Reject a renewal request (requires `loans:update`)
+- **POST** `/api/v1/loans/:id/renew/approve` - Approve a renewal request (requires `loans:approve`)
+- **POST** `/api/v1/loans/:id/renew/reject` - Reject a renewal request (requires `loans:reject`)
 
 ### Borrow Limits
 - **GET** `/api/v1/borrow-limits` - Get borrow limits
@@ -217,11 +284,14 @@ All API routes use the `/api/v1/` prefix. The main request pipeline normalizes `
 - **DELETE** `/api/v1/digital-book-reads/:id` - Delete read record
 
 ### Book Views
+
+:::caution[Route not currently mounted]
+The `book-views` handler exists under `functions/api/book-views/` and a security policy is defined, but the route is **not registered in `routeRegistry`** (`functions/router/registry.ts`), so these endpoints currently fall through to the generic API-info response. Tracked as an application issue.
+:::
+
 - **GET** `/api/v1/book-views` - Get book views
-- **GET** `/api/v1/book-views/:id` - Get specific book view
-- **POST** `/api/v1/book-views` - Create book view
-- **PUT** `/api/v1/book-views/:id` - Update book view
-- **DELETE** `/api/v1/book-views/:id` - Delete book view
+- **GET** `/api/v1/book-views/stats` - Book view statistics
+- **POST** `/api/v1/book-views` - Record a book view (requires `book_views:create`)
 
 ## Order & Payment Endpoints
 
@@ -231,6 +301,19 @@ All API routes use the `/api/v1/` prefix. The main request pipeline normalizes `
 - **POST** `/api/v1/orders` - Create order
 - **PUT** `/api/v1/orders/:id` - Update order
 - **DELETE** `/api/v1/orders/:id` - Delete order
+
+### Reservations
+- **GET** `/api/v1/reservations` - Get reservations
+- **GET** `/api/v1/reservations/:id` - Get specific reservation
+- **POST** `/api/v1/reservations` - Create reservation
+- **PUT** `/api/v1/reservations/:id` - Update reservation
+- **DELETE** `/api/v1/reservations/:id` - Delete reservation
+- **POST** `/api/v1/reservations/:id/cancel` - Cancel a reservation
+- **POST** `/api/v1/reservations/:id/claim` - Claim a ready reservation
+
+### Order Priority Policy (superuser)
+- **GET** `/api/v1/order-priority-policy` - Get order priority policy
+- **PUT** `/api/v1/order-priority-policy` - Update order priority policy
 
 ### Payments
 - **GET** `/api/v1/payments` - Get payments
@@ -277,6 +360,26 @@ All API routes use the `/api/v1/` prefix. The main request pipeline normalizes `
 - **GET** `/api/v1/migrations` - Get migration status
 - **POST** `/api/v1/migrations` - Run migrations
 
+### System Settings
+- **GET** `/api/v1/system/settings` - Get institution/system settings
+- **PUT** `/api/v1/system/settings` - Update settings (admin/superuser)
+
+### Superuser Operations
+- **GET** `/api/v1/superuser/actions` - Available superuser actions
+- **POST** `/api/v1/superuser/impersonate/start` - Start user impersonation
+- **POST** `/api/v1/superuser/impersonate/stop` - Stop impersonation
+- **GET** `/api/v1/superuser/impersonate/active` - Get active impersonation
+- **POST** `/api/v1/superuser/emergency-access/request` - Request emergency access
+- **POST** `/api/v1/superuser/emergency-access/approve` - Approve emergency access
+- **POST** `/api/v1/superuser/emergency-access/reject` - Reject emergency access
+- **GET** `/api/v1/superuser/emergency-access/list` - List emergency access requests
+- **POST** `/api/v1/superuser/emergency-access/revoke` - Revoke emergency access
+- **POST** `/api/v1/superuser/rate-limit/clear` - Clear rate-limit state
+
+### Admin (Versioned)
+- **GET** `/api/v1/admin/usage-analytics` - Platform usage analytics
+- **GET** `/api/v1/admin/system-health` - System health summary
+
 ## User Experience Endpoints
 
 ### Wishlist
@@ -294,11 +397,65 @@ All API routes use the `/api/v1/` prefix. The main request pipeline normalizes `
 - **DELETE** `/api/v1/notifications/:id` - Delete notification
 
 ### Penalties
-- **GET** `/api/v1/penalties` - Get penalties
+- **GET** `/api/v1/penalties` - Get penalties (records include joined user, book, and loan details)
 - **GET** `/api/v1/penalties/:id` - Get specific penalty
-- **POST** `/api/v1/penalties` - Create penalty
-- **PUT** `/api/v1/penalties/:id` - Update penalty
+- **POST** `/api/v1/penalties` - Create penalty (manual creation of `overdue` penalties is rejected — they are scheduler-generated)
+- **PUT** `/api/v1/penalties/:id` - Update penalty / record the waive action (audit tracked)
 - **DELETE** `/api/v1/penalties/:id` - Delete penalty
+
+### Notes
+- **GET** `/api/v1/notes` - List current user's notes
+- **GET** `/api/v1/notes/trash` - List trashed notes
+- **GET** `/api/v1/notes/:id` - Get a specific note
+- **GET** `/api/v1/notes/:id/revisions` - Get note revision history
+- **POST** `/api/v1/notes` - Create a note
+- **POST** `/api/v1/notes/:id/restore` - Restore a note from trash
+- **POST** `/api/v1/notes/:id/revisions/:revisionId/restore` - Restore a specific revision
+- **PUT** `/api/v1/notes/:id` - Update a note
+- **DELETE** `/api/v1/notes/:id` - Move a note to trash (`?permanent=true` deletes permanently)
+
+### Bookmarks
+- **GET** `/api/v1/bookmarks` - List bookmarks
+- **POST** `/api/v1/bookmarks` - Create a bookmark
+- **PUT** `/api/v1/bookmarks/:id` - Update a bookmark
+- **DELETE** `/api/v1/bookmarks/:id` - Delete a bookmark
+- **POST** `/api/v1/bookmarks/bulk` - Bulk bookmark operations
+- **GET/POST/PUT/DELETE** `/api/v1/bookmarks/folders` - Bookmark folder management
+- **GET/POST/DELETE** `/api/v1/bookmarks/tags` - Bookmark tag management
+- **POST** `/api/v1/bookmarks/reorder` - Reorder bookmarks
+
+### Issue Reports
+- **GET** `/api/v1/issue-reports` - List issue reports
+- **GET** `/api/v1/issue-reports/all` - All reports (staff view)
+- **GET** `/api/v1/issue-reports/search` - Search issue reports
+- **POST** `/api/v1/issue-reports` - Submit an issue report
+- **PUT** `/api/v1/issue-reports/:id` - Update a report (status: closed/completed)
+- **DELETE** `/api/v1/issue-reports/:id` - Delete a report
+- **POST** `/api/v1/issue-reports/:id/upvotes` - Upvote a report
+- **GET/POST** `/api/v1/issue-reports/:id/comments` - Report comments
+- **POST** `/api/v1/issue-reports/sync` - Sync reports to GitHub issues
+- **GET/POST** `/api/v1/issue-reports/uploads` - Issue attachments
+
+### User Preferences
+- **GET** `/api/v1/user/preferences` - Get current user's preferences
+- **PUT/PATCH/POST** `/api/v1/user/preferences` - Update preferences (notification prefs, external-links acknowledgment, dashboard config)
+
+## Forms Endpoints
+
+### TADA (Travel Allowance / Dearness Allowance)
+- **GET** `/api/v1/tada` - List TADA submissions (requires `tada:read`)
+- **GET** `/api/v1/tada/:id` - Get a submission
+- **POST** `/api/v1/tada` - Create a submission
+- **PUT** `/api/v1/tada/:id` - Update a submission
+- **DELETE** `/api/v1/tada/:id` - Delete a submission
+
+### PAPM (Private Account Payment Module)
+- **GET** `/api/v1/papm` - List PAPM submissions (requires `papm:read`)
+- **GET** `/api/v1/papm/:id` - Get a submission
+- **POST** `/api/v1/papm` - Create a submission
+- **PUT** `/api/v1/papm/:id` - Update a submission
+- **DELETE** `/api/v1/papm/:id` - Delete a submission
+- **GET** `/api/v1/papm/search-students` - Student lookup for PAPM forms
 
 ## Badge System Endpoints
 
@@ -326,6 +483,55 @@ All API routes use the `/api/v1/` prefix. The main request pipeline normalizes `
 - **GET** `/api/v1/upload/:id` - Get uploaded file
 - **DELETE** `/api/v1/upload/:id` - Delete uploaded file
 
+### Media Assets
+Files are stored in the R2 `STORAGE` bucket; metadata is managed via `media_assets` permission resource.
+
+- **GET** `/api/v1/media-assets` - List media assets (`?email_eligible=true` filter and pagination supported)
+- **GET** `/api/v1/media-assets/:id` - Get asset metadata
+- **GET** `/api/v1/media-assets/:id/file` - Download the asset file
+- **POST** `/api/v1/media-assets` - Upload/register an asset (kinds: `book-cover`, `book-index`, `resource-document`, `cover`, `resource`)
+- **PUT** `/api/v1/media-assets/:id` - Update asset metadata
+- **DELETE** `/api/v1/media-assets/:id` - Delete an asset
+- **POST** `/api/v1/media-assets/:id/attach` - Attach an asset to a book/resource
+- **POST** `/api/v1/media-assets/:id/detach` - Detach an asset
+
+### Avatars
+- **GET** `/api/v1/avatars/:userId` - Get a user's avatar
+- **POST** `/api/v1/avatars` - Upload an avatar
+
+## Analytics & Reporting Endpoints
+
+### Analytics
+- **GET** `/api/v1/analytics/collection` - Collection analytics
+- **GET** `/api/v1/analytics/collection-growth` - Collection growth over time
+- **GET** `/api/v1/analytics/my-loans` - Current user's loan analytics
+- **GET** `/api/v1/analytics/my-reading-history` - Current user's reading history
+- **GET** `/api/v1/analytics/search` - Search analytics
+- **GET** `/api/v1/analytics/user-behavior` - User behavior analytics
+
+### Reports
+- **GET** `/api/v1/reports/academic` - Academic reports
+- **GET** `/api/v1/reports/financial` - Financial reports
+- **GET** `/api/v1/reports/loans` - Loan reports
+- **GET** `/api/v1/reports/popularity` - Book popularity reports
+- **GET** `/api/v1/reports/users` - User activity reports
+
+### Dashboard
+- **GET** `/api/v1/dashboard-stats/:role` - Role-scoped dashboard statistics (`admin`, `dean`, `librarian`, `superuser`, `user`)
+- **GET** `/api/v1/dashboard-configs` - Get dashboard layouts
+- **PUT** `/api/v1/dashboard-configs` - Save dashboard layout
+- **GET** `/api/v1/dashboard-configs/registry/widgets` - Widget registry metadata
+
+### Search
+- **GET** `/api/v1/search` - Global search (query-param driven)
+
+## Public Endpoints
+
+### Public Catalog
+- **GET** `/api/v1/public/books` - Public book catalog (no authentication required)
+- **GET** `/api/v1/catalog/books` - Catalog items for the catalog pages
+- **GET** `/api/v1/system/upi-config` - Public UPI payment configuration
+
 ## Help & Support Endpoints
 
 ### Help System
@@ -342,10 +548,29 @@ All API routes use the `/api/v1/` prefix. The main request pipeline normalizes `
 
 ## Email Service Endpoints
 
-### Email Management
-- **GET** `/api/v1/email` - Get email configuration
-- **POST** `/api/v1/email` - Send email
-- **PUT** `/api/v1/email` - Update email configuration
+### Mailbox (superuser, v8.14.0+)
+Backed by the Cloudflare Email Service `SJRS_EMAIL` binding; Mailjet remains in use for transactional notifications.
+
+- **POST** `/api/v1/email/compose` - Compose and send an email (rate limited, superuser only)
+- **GET** `/api/v1/email/history` - Sent email log (paginated)
+- **GET** `/api/v1/email/history/:id` - Sent email detail
+- **GET** `/api/v1/email/drafts` - List drafts
+- **POST** `/api/v1/email/drafts` - Create a draft (body HTML sanitized on persistence)
+- **PUT** `/api/v1/email/drafts/:id` - Update a draft
+- **DELETE** `/api/v1/email/drafts/:id` - Delete a draft
+- **GET** `/api/v1/email/inbox` - Received emails (paginated; inbound mail parsed via `postal-mime`)
+- **GET** `/api/v1/email/inbox/:id` - Inbox email detail
+- **PATCH** `/api/v1/email/inbox/:id` - Update read/star/archive flags
+- **DELETE** `/api/v1/email/inbox/:id` - Delete a received email and its R2 attachments
+- **GET** `/api/v1/email/inbox/:id/attachments/:attachmentId` - Download an attachment
+
+### Transactional Notifications
+- **POST** `/api/v1/email/send-loan-notification` - Loan notification email
+- **POST** `/api/v1/email/send-order-notification` - Order notification email
+- **POST** `/api/v1/email/send-system-notification` - System notification email
+- **POST** `/api/v1/email/send-payment-notification` - Payment notification email
+- **POST** `/api/v1/email/send-auth-email` - Authentication email (confirmation, reset)
+- **POST** `/api/v1/email/send-template-email` - Template-based email
 
 ## Legacy Permission Endpoints
 
@@ -372,16 +597,20 @@ All API routes use the `/api/v1/` prefix. The main request pipeline normalizes `
 | Resource Type | Endpoints | CRUD Operations | Admin Required |
 |---------------|-----------|-----------------|----------------|
 | **Authentication** | 20+ | Full | Partial |
-| **Users** | 4 | Full | Yes |
+| **Users & User Types** | 10 | Full | Yes |
 | **Books** | 6 | Full | Librarian+ |
-| **Loans** | 5 | Full | Librarian+ |
+| **Loans** | 8 | Full | Librarian+ |
+| **Reservations** | 7 | Full | Partial |
 | **Reference Materials** | 25+ | Full | Librarian+ |
 | **Resources** | 5 | Full | Admin+ |
-| **Orders & Payments** | 15 | Full | Admin+ |
-| **System Management** | 20+ | Full | Admin+ |
-| **User Experience** | 15 | Full | Partial |
+| **Orders & Payments** | 20 | Full | Admin+ |
+| **System Management** | 25+ | Full | Admin+ |
+| **User Experience** | 30+ | Full | Partial |
+| **Forms (TADA/PAPM)** | 11 | Full | Partial |
 | **Badge System** | 5 | Full | Admin+ |
-| **File Management** | 3 | Full | Admin+ |
+| **File & Media Management** | 15 | Full | Admin+ |
+| **Analytics & Reports** | 12 | Read | Admin+ |
+| **Email Mailbox** | 15 | Full | Superuser |
 | **Help & Support** | 5 | Full | Admin+ |
 
 ## Quick Reference
@@ -413,9 +642,6 @@ All API routes use the `/api/v1/` prefix. The main request pipeline normalizes `
 - Advanced system management
 
 ---
-
-**Last Updated:** November 2025  
-**Version:** 7.27.0
 
 ## Academic Tools Endpoints
 
@@ -455,3 +681,8 @@ All API routes use the `/api/v1/` prefix. The main request pipeline normalizes `
 - **DELETE** `/api/v1/plagiarism/:id` — Delete a plagiarism check result
   - Permissions: `plagiarism:delete`
   - Implementation: `functions/api/plagiarism/handlers/delete-plagiarism-result.ts:7`
+
+---
+
+**Last Updated:** September 2026
+**Version:** 8.17.0
