@@ -60,9 +60,9 @@ This directory contains comprehensive documentation for the SJRS LMS API, includ
 - **API Keys** - For external service integrations
 
 ### Email Service Integration
-- **Mailjet API** - Direct integration for account emails
-- **Cloudflare Queues** - Background processing for transactional emails
-- **Hybrid Approach** - Optimized for different email types
+- **Mailjet API** - Transactional emails (account, loan/order/system notifications)
+- **Cloudflare Email Service** - `SJRS_EMAIL` `send_email` binding for the superuser mailbox compose feature
+- **Cloudflare Email Routing** - Inbound mail for the mailbox inbox
 
 ### Core Endpoints
 - **Authentication** - Login, registration, password reset
@@ -285,16 +285,25 @@ await fetch(`${apiBaseUrl}/api/books`, { credentials: 'include', headers });
 
 ### 3. Email Service Setup
 ```typescript
-// Account emails (direct Mailjet)
-await sendConfirmationEmail(user.email, user.first_name, token, env);
+// Transactional emails (Mailjet via /api/v1/email/send-* endpoints)
+await fetch(`${API_BASE}/api/v1/email/send-loan-notification`, {
+  method: 'POST',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': csrfToken },
+  body: JSON.stringify({
+    to: user.email,
+    subject: 'Loan Due Reminder',
+    template: 'loan_notification',
+    data: { userName: user.first_name, bookTitle: book.title, dueDate }
+  })
+});
 
-// Transactional emails (queue + Mailjet)
-await sendLoanNotification('borrow_notification', {
-  userId: user.id,
-  userEmail: user.email,
-  userName: user.first_name,
-  bookTitle: book.title,
-  dueDate: dueDate
+// Mailbox compose (superuser; Cloudflare send_email binding)
+await fetch(`${API_BASE}/api/v1/email/compose`, {
+  method: 'POST',
+  credentials: 'include',
+  headers: { 'Content-Type': 'application/json', 'X-XSRF-TOKEN': csrfToken },
+  body: JSON.stringify({ to: user.email, subject, bodyHtml })
 });
 ```
 
@@ -307,7 +316,7 @@ await sendLoanNotification('borrow_notification', {
 
 ### Email Service Security
 - **Mailjet API** - Basic authentication with API key and secret
-- **Queue Security** - Internal Cloudflare Queues with automatic encryption
+- **Send Email Binding** - Sender allowlist enforced via `allowed_sender_addresses` + `SJRS_ALLOWED_SENDERS`
 - **Error Handling** - Graceful degradation for email failures
 
 ## API Patterns
@@ -394,7 +403,7 @@ export async function newResource(request: Request, env: any) {
 - **Session State**: Use `tokenManager` for non-sensitive session/UI state (never `localStorage` directly); use `unifiedAPIClient` for cookie + CSRF handling
 - **Error Handling**: Check response status, implement retry logic, log errors for debugging
 - **Security**: Use HTTPS, validate CSRF tokens, sanitize user inputs
-- **Email Service**: Use direct Mailjet for account emails, queues for transactional emails
+- **Email Service**: Mailjet for transactional emails; `SJRS_EMAIL` send_email binding for the superuser mailbox
 - **API Development**: Follow direct function pattern, use consistent routing, apply CORS headers, implement unified error handling
 
 ---

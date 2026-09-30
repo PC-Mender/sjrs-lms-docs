@@ -88,15 +88,12 @@ const response = await fetch('https://api.mailjet.com/v3.1/send', {
 });
 ```
 
-###  Transactional Emails (Queue + Mailjet)
+###  Transactional Emails (Mailjet)
 ```typescript
-// Send to queue
-await env.EMAIL_QUEUE.send({
-  type: 'borrow_notification',
-  data: { userId, email, name, bookTitle, dueDate }
-});
+// Loan/notification emails are sent synchronously via Mailjet —
+// POST /api/v1/email/send-loan-notification (or scheduled jobs)
 
-// Queue processor sends via Mailjet backend
+// Mailjet send (functions/utilities/email-service.ts)
 async sendEmailViaMailjet(to: string, content: { subject: string; body: string; html?: string }, env: any) {
   const emailData = {
     Messages: [{

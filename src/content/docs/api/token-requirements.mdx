@@ -93,13 +93,16 @@ await csrfProtection.validateToken(token);
 API keys for Mailjet email service to send account-related and transactional emails.
 
 ### Architecture
-Our email system uses a **hybrid approach**:
-- **Account emails** (registration, password reset): Direct Mailjet API calls
-- **Transactional emails** (loans, notifications): Cloudflare Queues with Mailjet backend
+The email system uses two sending paths:
+- **Transactional emails** (registration, password reset, loan/order/system notifications): synchronous **Mailjet** API calls via `functions/utilities/email-service.ts` and the `/api/v1/email/send-*` endpoints
+- **Mailbox compose** (superuser `/dashboard/email`): **Cloudflare Email Service** `SJRS_EMAIL` `send_email` binding via `functions/services/email/email-sender.ts`
+- **Inbound mail**: Cloudflare Email Routing → Worker `email()` handler (`functions/services/email/email-receiver.ts`)
+
+There is no queue-based sending pipeline — outbound email is sent synchronously from the Worker.
 
 ### Implementation
-- **Direct Mailjet**: `functions/middleware/auth/index.ts` (account emails)
-- **Queue + Mailjet**: `functions/email-templates/index.ts` (transactional emails)
+- **Mailjet**: `functions/utilities/email-service.ts` (transactional emails)
+- **Mailbox compose/inbox**: `functions/services/email/` (send_email + Email Routing)
 
 ### Configuration
 
@@ -129,46 +132,20 @@ const response = await fetch('https://api.mailjet.com/v3.1/send', {
 });
 ```
 
-#### Queue + Mailjet (Transactional Emails)
+#### Transactional Emails (Mailjet)
+Loan notifications, return reminders, overdue notices, and system notifications are sent synchronously via Mailjet — either from API handlers (`POST /api/v1/email/send-*-notification`) or from the daily cron jobs in `functions/scheduled/` (e.g., overdue reminders, penalty calculation).
+
+#### Mailbox Compose (Cloudflare Email Service)
 ```typescript
-// Send to queue
-await env.EMAIL_QUEUE.send({
-  type: 'borrow_notification',
-  data: {
-    userId: user.id,
-    email: user.email,
-    name: user.first_name,
-    bookTitle: book.title,
-    dueDate: dueDate
-  }
-});
-
-// Queue processor sends via Mailjet
-async sendEmailViaMailjet(to: string, content: { subject: string; body: string; html?: string }, env: any) {
-  const emailData = {
-    Messages: [{
-      From: { Email: env.MAILJET_FROM_EMAIL, Name: "SJRS Library Management System" },
-      To: [{ Email: to, Name: to.split('@')[0] }],
-      Subject: content.subject,
-      TextPart: content.body,
-      HTMLPart: content.html
-    }]
-  };
-
-  const response = await fetch('https://api.mailjet.com/v3.1/send', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Basic ${btoa(`${env.MAILJET_API_KEY}:${env.MAILJET_API_SECRET}`)}`
-    },
-    body: JSON.stringify(emailData)
-  });
-}
+// POST /api/v1/email/compose (superuser; functions/services/email/email-sender.ts)
+await env.SJRS_EMAIL.send(message); // send_email binding
+// Sender must be on allowed_sender_addresses / SJRS_ALLOWED_SENDERS
+// Daily quota enforced via SJRS_EMAIL_DAILY_QUOTA
 ```
 
 ### Environment Variables Required
 ```bash
-# Mailjet Configuration (for both direct and queue)
+# Mailjet Configuration (transactional emails)
 MAILJET_API_KEY=your_mailjet_api_key
 MAILJET_API_SECRET=your_mailjet_api_secret
 MAILJET_FROM_EMAIL=noreply@yourdomain.com
@@ -185,12 +162,14 @@ FRONTEND_URL=https://your-frontend-domain.com
 - **Email verification**
 - **Account status changes**
 
-####  Transactional Emails (Queue + Mailjet)
-- **Loan notifications** (`borrow_notification`)
-- **Return reminders** (`return_reminder`)
-- **Overdue notices** (`overdue_notification`)
-- **System notifications** (`system_notification`)
-- **Order status updates** (`order_notification`)
+####  Transactional Emails (Mailjet)
+- **Loan notifications** (`send-loan-notification`)
+- **Return reminders / overdue notices** (scheduled jobs + Mailjet)
+- **System notifications** (`send-system-notification`)
+- **Order status updates** (`send-order-notification`)
+- **Payment notifications** (`send-payment-notification`)
+- **Auth emails** (`send-auth-email`)
+- **Mailbox compose** (superuser; `send_email` binding, not Mailjet)
 
 ### Benefits of This Approach
 
@@ -199,11 +178,10 @@ FRONTEND_URL=https://your-frontend-domain.com
 - **Simple implementation** for low-volume emails
 - **No queue complexity** for account flows
 
-####  Queue + Mailjet Benefits
-- **Reliability** with automatic retries
-- **Scalability** for high-volume transactional emails
-- **Non-blocking** user experience
-- **Background processing** for notifications
+####  Mailjet Benefits
+- **Reliable delivery** via an established ESP
+- **Template support** for branded emails
+- **Delivery analytics** in the Mailjet dashboard
 
 ### Usage Examples
 
@@ -215,16 +193,10 @@ if (env.MAILJET_API_KEY && env.MAILJET_API_SECRET) {
 }
 ```
 
-#### Transactional Email (Queue)
+#### Transactional Email (Mailjet)
 ```typescript
-// Loan notification
-await sendLoanNotification('borrow_notification', {
-  userId: user.id,
-  userEmail: user.email,
-  userName: user.first_name,
-  bookTitle: book.title,
-  dueDate: dueDate
-});
+// Loan notification — handled server-side via /api/v1/email/send-loan-notification
+// or by the daily scheduled job for due/overdue reminders
 ```
 
 ### Error Handling
@@ -239,23 +211,8 @@ try {
 }
 ```
 
-#### Queue Error Handling (Automatic)
-```typescript
-async queue(batch: MessageBatch<EmailQueueMessage>, env: any) {
-  for (const message of batch.messages) {
-    try {
-      await this.processEmailMessage(message.body, env);
-      message.ack();
-    } catch (error) {
-      if (message.body.retries < 3) {
-        message.retry(); // Automatic retry
-      } else {
-        message.ack(); // Move to dead letter queue
-      }
-    }
-  }
-}
-```
+#### Transactional Error Handling
+Mailjet send failures are logged via the structured logger; `EMAIL_RETRY_ATTEMPTS` controls retry behavior. Mailbox compose failures are recorded in the sent log (`GET /api/v1/email/history`) with the failure status.
 
 ## 4. Cloudflare API Tokens
 

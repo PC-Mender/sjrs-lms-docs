@@ -74,20 +74,20 @@ async function handleLogin(request: Request, env: any) {
     const deviceInfo = getDeviceInfo(userAgent);
     const loginTime = new Date().toISOString();
     
-    // Queue login alert email
-    await env.EMAIL_QUEUE.send({
-      type: 'login_alert',
+    // Send login alert via the system-notification email endpoint
+    // (Mailjet; functions/api/email/send-* handlers)
+    await sendSystemNotificationEmail(env, {
+      to: user.email,
+      subject: 'New sign-in to your SJRS LMS account',
       data: {
-        userId: user.id,
-        email: user.email,
         name: `${user.first_name} ${user.last_name}`,
         loginTime: loginTime,
-        loginLocation: 'Unknown Location', // Could be enhanced with IP geolocation
+        loginLocation: 'Unknown Location',
         deviceInfo: deviceInfo,
         ipAddress: ipAddress,
         userAgent: userAgent
-      },
-      priority: 'high'
+      }
+    }
     });
   } catch (emailError) {
     console.error('Failed to send login alert email:', emailError);
@@ -176,12 +176,9 @@ emailContent = generateLoginAlertTemplate(data);
 
 ### 3. Integrate with Authentication
 ```typescript
-// In your login handler
-await env.EMAIL_QUEUE.send({
-  type: 'login_alert',
-  data: loginData,
-  priority: 'high'
-});
+// In your login handler — login alerts go through Mailjet
+// (functions/utilities/email-service.ts), not a queue
+await sendSystemNotificationEmail(env, loginData);
 ```
 
 ### 4. Test the Template

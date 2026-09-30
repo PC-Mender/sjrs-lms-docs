@@ -48,11 +48,14 @@ This directory contains comprehensive documentation for the SJRS LMS architectur
 
 The SJRS LMS is built as a **modern, cloud-native application** with:
 
-- **Frontend**: React 18 + TypeScript + Vite + Ant Design
+- **Frontend**: React 19 + TypeScript + Vite + Ant Design
 - **Backend**: Cloudflare Workers (Direct Function APIs)  
 - **Database**: Cloudflare D1 (SQLite)
 - **Storage**: Cloudflare R2 for file uploads
-- **Real-time**: Durable Objects for live features
+- **Caching**: Cloudflare KV
+- **Email**: Mailjet (transactional) + Cloudflare Email Service/Email Routing (superuser mailbox)
+- **AI**: Cloudflare Workers AI (release notes)
+- **Analytics**: Cloudflare Analytics Engine
 
 ### Key Architectural Principles
 
@@ -92,9 +95,8 @@ The SJRS LMS is built as a **modern, cloud-native application** with:
 - **Optimized components** with React.memo
 
 ### Backend Performance
-- **Connection pooling** for database access
 - **Caching layer** with KV storage
-- **Background job processing** with queues
+- **Scheduled jobs** via cron trigger (`functions/scheduled/`)
 - **Optimized database queries** with proper indexing
 
 ### Database Performance

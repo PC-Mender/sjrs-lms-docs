@@ -13,22 +13,28 @@ This document provides a comprehensive guide to all Cloudflare products used in 
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Frontend      │    │   Cloudflare    │    │   Edge Network  │
-│   (React/TS)    │───►│   Pages         │───►│   (Global CDN)  │
+│   Client        │    │  Cloudflare     │    │   Edge Network  │
+│   (React SPA)   │───►│  Worker         │───►│   (Global CDN)  │
+└─────────────────┘    │  (API + Assets) │    └─────────────────┘
+                       └────────┬────────┘
+                                │
+        ┌───────────────────────┼───────────────────────┐
+        ▼                       ▼                       ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   D1 Database   │    │   R2 Storage    │    │   KV Store      │
+│   (SQLite)      │    │   (Object)      │    │   (Caching)     │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
                                 │
-                                ▼
+        ┌───────────────────────┼───────────────────────┐
+        ▼                       ▼                       ▼
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Workers       │    │   D1 Database   │    │   R2 Storage    │
-│   (Serverless)  │◄──►│   (SQLite)      │◄──►│   (Object)      │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-                                │
-                                ▼
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   KV Store      │    │   Email Service │    │  Workers AI +   │
-│   (Caching)     │    │   (send_email)  │    │  Analytics Eng. │
+│  Email Service  │    │   Workers AI    │    │  Analytics Eng. │
+│  (send_email +  │    │   (Release      │    │   (Logs)        │
+│  Email Routing) │    │   notes gen)    │    │                 │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
+
+The SPA's static files are served by the **same Worker** via the `ASSETS` static-assets binding — there is no separate Cloudflare Pages deployment.
 
 ## Cloudflare Workers with Static Assets
 
