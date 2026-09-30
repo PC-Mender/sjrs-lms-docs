@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.4](https://github.com/PC-Mender/sjrs-lms-docs/compare/v2.0.3...v2.0.4) (2026-09-30)
+
+### Documentation
+
+* remove phantom Cloudflare Pages and Queues references ([c0838ca](https://github.com/PC-Mender/sjrs-lms-docs/commit/c0838ca91bb461be6a88ebc1923cb5eaf1781070))
+
 ## [2.0.3](https://github.com/PC-Mender/sjrs-lms-docs/compare/v2.0.2...v2.0.3) (2026-09-28)
 
 ### Documentation
