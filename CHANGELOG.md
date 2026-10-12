@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.5](https://github.com/PC-Mender/sjrs-lms-docs/compare/v2.0.4...v2.0.5) (2026-10-12)
+
+### Bug Fixes
+
+* **deps:** resolve remaining vulnerabilities via transitive dep overrides ([1e9de9c](https://github.com/PC-Mender/sjrs-lms-docs/commit/1e9de9c9e6b7d47d7676d3a2edd64aac29a124c7))
+
 ## [2.0.4](https://github.com/PC-Mender/sjrs-lms-docs/compare/v2.0.3...v2.0.4) (2026-09-30)
 
 ### Documentation
