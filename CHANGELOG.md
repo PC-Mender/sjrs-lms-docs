@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [2.0.6](https://github.com/PC-Mender/sjrs-lms-docs/compare/v2.0.5...v2.0.6) (2026-11-09)
+
 ## [2.0.5](https://github.com/PC-Mender/sjrs-lms-docs/compare/v2.0.4...v2.0.5) (2026-10-12)
 
 ### Bug Fixes
