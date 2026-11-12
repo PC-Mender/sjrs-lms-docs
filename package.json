@@ -55,7 +55,7 @@
     "volar-service-yaml": "0.0.71",
     "yaml": "2.9.1",
     "esbuild": "0.28.2",
-    "fast-xml-parser": ">=5.10.1",
+    "fast-xml-parser": ">=5.12.0",
     "undici": ">=7.29.0 <8.0.0",
     "postcss": ">=8.5.18",
     "sharp": ">=0.35.5",
